@@ -1,0 +1,37 @@
+#themeselecta {
+    position: fixed; 
+    padding: 8px; 
+    right: 0; 
+    bottom: 0; 
+    background-color: #eee; 
+    z-index:10000000;
+    font-family: Helvetica, Sans Serif;
+    font-size: 14px;
+    border: 1px solid #555;
+}
+
+#themeselecta button {
+    margin-top: 10px;
+    width: 80%;
+    height: 25px;
+}
+
+#themeselecta label {
+    display: inline-block;
+    width: 80px;
+}
+
+#themeselecta select {
+    display: inline-block;
+    width: 150px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+#themeselecta input[type=checkbox] {
+    margin-left: 80px;
+}
+
+#themeselecta .actions {
+    text-align: center;
+}

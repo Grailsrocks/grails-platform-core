@@ -1,0 +1,15 @@
+overview: 
+  title: Overview
+  apis: The APIs
+gettingStarted: Getting Started
+configuration:
+  title: Configuration API
+security:
+  title: Security API
+  security_implementing_bridge: Implementing a Security Bridge
+injection:
+  title: Injection API
+navigation:
+  title: NOT YET - Navigation API
+convention:
+  title: NOT YET - Convention API

@@ -1,0 +1,12 @@
+To use the Security API, an application must have a Security Bridge bean that implements the [SecurityBridge|api:org.grails.plugin.platform.security.SecurityBridge] interface,
+
+Typically this bean will be provided by the security plugin you are using. However you can easily implement your own in your own plugin or application.
+
+Simply implement the interface and register the bean as "grailsSecurityBridge" in your Spring context either in a plugin's @doWithSpring@ or your application's @resources.groovy@:
+
+{code:groovy}
+grailsSecurityBridge(com.mycorp.security.MySecurityProvider) {
+    // wire in any other dependencies it has
+    grailsApplication = ref('grailsApplication')
+}
+{code}

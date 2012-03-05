@@ -1,0 +1,1 @@
+The doWithConfigOptions closure in plugin descriptors is used to declare the Config options that your plugin supports.

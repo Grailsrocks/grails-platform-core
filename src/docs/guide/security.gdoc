@@ -1,0 +1,21 @@
+The Security API provides common security related functionality so that plugins and in some cases applications no longer need to be tied to a specific security implementation.
+
+It is deliberately minimal to place few requirements on implementations.
+
+It is not intended to be a complete security abstraction, but "just enough" for the needs of most applications and plugins that do not require advanced security manipulation - which will likely always require direct knowledge of the underlying provider.
+
+h3. Dynamic methods
+
+These methods are added to Services, Controllers, TagLibs and Domain Classes:
+
+* getSecurityIdentity() - The string used to identify the current logged in user. Typically a user id, user name or email address. The nature of this value is dependent on your security implementation
+* getSecurityInfo() - The object representing the current logged in user's information.
+* userHasAnyRole(roleOrRoles)
+* userHasAllRoles(roleOrRoles)
+* userIsAllowed(object, action)
+
+h3. Tags
+
+* s:identity
+* s:info
+* ...

@@ -1,0 +1,6 @@
+Quick Overview
+
+Dymamic methods added to all artefacts from other plugins:
+
+* getPluginConfig() - returns a ConfigObject for the configuration of the plugin that declared the artefact. Equivalent to grailsApplication.config.plugin.<grailsPluginName>
+
