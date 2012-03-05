@@ -27,7 +27,7 @@ log4j = {
 grails.views.gsp.encoding="UTF-8"
 grails.views.default.codec="none" // none, html, base64
 
-grails.doc.title = "Grails Plugin Platform"
+grails.doc.title = "Grails Plugin Platform Core"
 grails.doc.subtitle = "APIs and Tags for advanced Plugin integration"
 grails.doc.images = new File("resources/img")
 grails.doc.css = new File('src/docs/css')

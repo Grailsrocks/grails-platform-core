@@ -16,12 +16,6 @@
  * limitations under the License.
  */
 
-import org.grails.plugin.platform.events.dispatcher.DefaultEventsDispatcher
-import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
-import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
-import org.grails.plugin.platform.events.publisher.DefaultEventsPublisher
-import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
-import org.springframework.beans.factory.config.PropertiesFactoryBean
 import org.springframework.core.io.FileSystemResource
 
 class PlatformCoreGrailsPlugin {
@@ -39,10 +33,7 @@ class PlatformCoreGrailsPlugin {
             "grails-app/i18n/test.properties",
             "grails-app/domain/org/grails/plugin/platform/test/**/*.groovy",
             "grails-app/controllers/org/grails/plugin/platform/test/**/*.groovy",
-            "grails-app/services/org/grails/plugin/platform/test/**/*.groovy",
             "grails-app/src/groovy/org/grails/plugin/platform/test/**/*.groovy",
-            "grails-app/src/precompile/org/grails/plugin/platform/test/**/*.*",
-            "grails-app/src/precompile/org/codehaus/groovy/grails/compiler/PrecompileTest.java",
             "grails-app/src/java/org/grails/plugin/platform/test/**/*.java",
             "grails-app/views/error.gsp",
             "grails-app/views/test/**/*.gsp",
@@ -50,7 +41,7 @@ class PlatformCoreGrailsPlugin {
 
     def observe = ['*'] // We observe everything so we can re-apply dynamic methods, conventions etc
 
-    def title = "Plugin Platform"
+    def title = "Plugin Platform Core"
     def author = "Marc Palmer"
     def authorEmail = "marc@grailsrocks.com"
     def description = '''\
