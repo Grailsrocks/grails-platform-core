@@ -1,1 +1,172 @@
-x
+The Navigation API provides a way to expose the navigational structure of your plugins and applications so that you can merge in functionality from plugins and render navigation easily.
+
+This enabled you to render navigation menus and breadcrumbs.
+
+h2. Declaring Navigation Items
+
+The Navigation structure for an application is a list of named groups, each containing items. This flattened approach is chosen to avoid deeply nested navigation which is generally a bad idea from a UX perspective. You can have tiered navigation by rendering the navigation for other groups based on your current parent.
+
+Example pseudo structure of a site:
+
+{code}
+Main navigation
+  |---- Home
+  |---- About
+  |---- Contact
+  |---- Log in / Sign up
+
+Logged-in user navigation
+  |---- Manage products
+  |---- Add products
+  |---- Reports
+ 
+Contact options navigation
+  |---- Email us
+  |---- Call us
+  |---- Online chat
+
+Site admin navigation
+  |---- Admin Reports
+  |---- User management
+  |---- Billing management
+  |---- Debug console
+{code}
+
+In essence navigation groups contain navigation items. These items can have the following properties:
+
+| Property | Description 
+| id | The unique identifier of this item within this group, used to locate title etc.
+| link | The map of arguments, or a Closure, used to create the link to the item
+| enabled | A boolean or Closure used to determine if the item should be enabled for the current request
+| visible | A boolean or Closure used to determine if the item should be visible for the current request
+
+When rendering navigation information for a group, this information is evaluated and provided to your view code with all calculated fields expanded to their final values i.e. link will be a URL, enabled/visible will always be boolean. In addition there will be extra properties:
+
+| Property | Description 
+| active | True if the item is on the current "active path" in the navigation
+
+h2. Hierarchical navigation and breadcrumbs
+
+By locating navigation items by convention and enforcing a given controller/action combination to be unique within the entire navigation system, we are able to back-calculate a breadcrumb trail from any given current controller/action.
+
+The IDs of navigation ids are used to create a logical path within the navigation structure of the application:
+
+{code}
+// Capture some beans for efficiency
+def grailsSecurity = grailsApplication.mainContext.grailsSecurity
+
+def loggedIn = { ->
+    grailsSecurity.userLoggedIn
+}
+def notLoggedIn = { ->
+    !grailsSecurity.userLoggedIn
+}
+
+// Define our structure
+navigation = {
+    main {
+        help view:'help'
+        about controller:'content', action:'about'
+        contact controller:'contact'
+        home controller:'portal'
+        dashboard controller:'dashboard'
+    }
+    user {
+        login controller:'user', action:'login', visible: notLoggedIn
+        logout controller:'user', action:'logout', visible: loggedIn
+        profile controller:'user', action:'profile', visible: notLoggedIn
+    }
+    'main/dashboard' {
+        list controller:'products', enabled: loggedIn
+        create controller:'products', action:'create', enabled: loggedIn
+    }
+}
+{code}
+
+The path + symbolic name defines a nav structure for the app. The symbolic name is the leaf node of the path so the above defines nodes for:
+
+main/help
+main/about
+main/contact
+main/home
+main/dashboard
+main/dashboard/list
+main/dashboard/create
+user/login
+user/logout
+user/profile
+
+You could render nav only for a non-leaf node:
+
+main
+main/dashboard
+user
+
+GSP views need <nav:active path="x/y/z"/> in to indicate what the active path should be. They require presence in the DSL *and* that tag so that they can be included in rendered navs.
+
+<nav:set path="x/y/z"/> ---- active path breadcrumb
+<nav:set path="x/y/z"/> ---- active path breadcrumb
+<nav:breadcrumb/> ---- active path breadcrumb
+<nav:breadcrumb path="x/y/z"/> ---- arbitrary breadcrumb
+<nav:activePath/> --- return current active path
+<nav:primary/> ---- render primary (1st level of active path) nav
+<nav:secondary/> ---- render secondary (2nd level of active path) nav
+<nav:render path="x"/> ---- render arbitrary non-leaf path, 1 level only
+
+With the above declarations, a user viewing the "portal" controller will be at "main/home" in the structure and may see a breadcrumb such as "Main > Home"
+
+A user who is viewing the "products" controller will see a breadcrumb of either "Main > Dashboard > List" or "Main > Dashboard > Create" depending of the action they are viewing.
+
+The text for the breadcrumb would be obtained from i18n bundles based on the navigation id of each step.
+
+The "main/dashboard" group name shows that this is a group that applies when the user is in the dashboard.
+
+By default all controllers in the application will have a place in the nevigation structure under "main", with their controller and action specifying their path therein.
+
+Plugin controllers are auto namespaced under root node, so that installing a plugin does not screw up your nav.
+
+To exclude a controller or action, or remap them you use the DSL:
+
+// Define the navigation structure of our application
+// Controllers and their action are automatically mapped into a 
+// navigation "scope".
+// Default scopes:
+// 'app' - for application controllers
+// 'user' - for security plugins etc, automatically populated by Security API
+// 'plugin/<pluginName>' - for each plugin that exposes controllers
+// 'dev' - for dev-time controllers, contains items exposed by platform
+
+navigation = {
+    // These are app controller/actions we want to exclude from nav
+    hide 'app/debug'
+    hide 'app/inbox/deleted' // controller:'inbox', action:'deleted'
+
+    // Move app's admin controllers into separate nav group 'admin'
+    move 'app/admin', 'admin'
+    
+    // Remap auto-namespaced plugin nav to main
+    // Plugin controllers are namespaced to "plugin/<pluginName>/<controllerName>/<actionName>"
+    move 'plugin/activity/activityStream', 'app/activity'
+
+    // Apply security based visibility to plugin's nav items
+    'app/activity' {
+        '*'(visible:loggedIn)
+    }
+
+    // Define the "user" nav root, will yield nav paths:
+    // user/login
+    // user/logout
+    // user/profile
+    user {
+        reset() // clear out default items in this group defined by Sec API
+        
+        signup controller:'register', action:'signup', visible: notLoggedIn
+
+        // shortcut to set controller for all following
+        controller = 'user'
+        login action:'login', visible: notLoggedIn
+        logout action:'logout', visible: loggedIn
+        profile action:'profile', visible: notLoggedIn
+    }
+}
+

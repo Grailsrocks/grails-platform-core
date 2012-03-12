@@ -4,6 +4,9 @@ overview:
 gettingStarted: Getting Started
 configuration:
   title: Configuration API
+  changing_config: Changing Application and Plugin Config Values
+  declaring_configuration_options: Declaring Configuration Options
+  accessing_plugin_config: Accessing Plugin Config  
 security:
   title: Security API
   security_implementing_bridge: Implementing a Security Bridge

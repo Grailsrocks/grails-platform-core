@@ -1,0 +1,26 @@
+To change application or plugin configuration from without a plugin you need to declare the *doWithConfig* hook in your plugin descriptor.
+
+The code uses a simple DSL that is identical to normal Config except:
+
+# The top level nodes are plugin names or "application" to determine what scope of config you are changing
+# The closure is passed the existing config
+
+{code}
+def doWithConfig = { config ->
+    platformUi {
+        ui.Bootstrap.button.cssClass = 'btn'
+        ui.Bootstrap.tab.cssClass = 'tab-pane'
+        ui.Bootstrap.field.cssClass = 'input'
+    }
+    
+    application {
+        // set something based on another config value that has already been
+        // by the application
+        grails.x.y = confg.p.q == 'somethign' ? true : false
+    }
+}
+{code}
+
+The plugin name scope is the camel case beanNameConventionStyle. So the above is setting config values for the "grails-platform-ui" plugin.
+
+

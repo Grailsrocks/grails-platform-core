@@ -1,6 +1,10 @@
-Quick Overview
+The Configuration API adds the following features:
 
-Dymamic methods added to all artefacts from other plugins:
+* A way to declare the Config properties that a plugin supports
+* Automatic namespacing of plugin Config values to avoid clashes
+* Validation of Config values
+* Merging of config from plugins into main Application config
+* The ability for plugins to configure other plugins
+* An injected "pluginConfig" variable in all artefacts containing the plugin's configuration
 
-* getPluginConfig() - returns a ConfigObject for the configuration of the plugin that declared the artefact. Equivalent to grailsApplication.config.plugin.<grailsPluginName>
-
+All of this adds up to more powerful integration and less frustration and confusion for developers.
