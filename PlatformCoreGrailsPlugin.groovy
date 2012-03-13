@@ -152,7 +152,7 @@ Grails Plugin Platform Core APIs
         switch (event.source) {
             case Class:
                 ctx.grailsInjection.applyTo(event.source)
-                // @todo add call to update auto nav for controllers
+                // @todo add call to update auto nav for controllers, we badly need "onreload" events for this
                 break
         }
     }

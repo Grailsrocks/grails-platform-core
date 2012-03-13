@@ -1,12 +1,60 @@
-The Navigation API provides a way to expose the navigational structure of your plugins and applications so that you can merge in functionality from plugins and render navigation easily.
+The Navigation API provides a way to expose the navigational structure of your plugins and applications so that you can merge in functionality from plugins and easily render navigation menus and breadcrumbs.
 
-This enabled you to render navigation menus and breadcrumbs.
+h2. Flat vs. Tree navigation, and multiple navigation scopes
+
+It is generally understood that deep menu navigations are a bad thing for user experience. 
+
+It is usually enough to have a primary and secondary level of main navigation on your site. 
+
+Most sites have other "sub navigation" contexts such as user options like "Log in"/"Sign up"/"Your Profile", and footer nav like "T&Cs", "Privacy Policy", "Contact us" etc that are actually entirely orthogonal navigation structures.
+
+This API uses a flattened approach and scopes. This serves the basic goals very well, and will also provide for those crazy people who also want to have 4-deep nesting of their product catalogue on hideous pop-out menus.
+
+Navigation scopes provide for the different kinds of menus you have; your main "app" menu, your "user" menu and "footer" menu for example.
+
+They also provide the basis for rendering secondary navigation based on the currently active primary navigation item.
+
+h2. You can only be in one place at a time. And breadcrumbs
+
+A major issue with "smart" navigation is determining "where" the user is in your site's navigation structure, so that you can highlight the relevant primary and secondary navigation items as active.
+
+This is also somewhat related to rendering "breadcrumb trails" that are typically only needed when your users can browse to pages that are not uniquely identified by items in your existing primary and secondary navigation.
+
+The underlying fact here is that the user can only be on one page at a time, and that means there is usually only one "path" to that place through your navigation.
+
+There may be augmentations to that current "activation path", i.e. specific document or object names appended to the breadcrumb trail, but you are effectively - no matter how many different menus are rendered on the page, only in one place at a time.
+
+h2. Automatic Navigation
+
+By default all your application controllers and actions are added to your site's navigation in the scope "app".
+
+After installing the platform-core plugin, you can just add the following to your Sitemesh layout to get instant navigatin for all controllers and actions:
+
+{code}
+   <nav:menu/>
+{code}
+
+All plugin controllers are automatically added to a "plugin/<pluginName>" scope. (caveat: platform-core controllers are added to a special "dev" scope)
+
+Both plugins and applications can change the default scope of their controllers trivially by adding a simple convention to the controller:
+
+{code}
+class MyController {
+    static navigationScope = "user"
+}
+{code}
+
+This is a simple shortcut. Finer grained control of navigation items is provided by the DSL.
 
 h2. Declaring Navigation Items
 
-The Navigation structure for an application is a list of named groups, each containing items. This flattened approach is chosen to avoid deeply nested navigation which is generally a bad idea from a UX perspective. You can have tiered navigation by rendering the navigation for other groups based on your current parent.
+The Navigation structure for an application is a list of named scaope, each containing navigation nodes.
 
-Example pseudo structure of a site:
+You can have tiered navigation by rendering the other scopes based on your current active node.
+
+Nodes identify themselves by "id" and are considerd "active" if their activationPath matches the request's current "active path".
+
+Here's an example navigation structure of a site:
 
 {code}
 Main navigation
@@ -19,8 +67,12 @@ Logged-in user navigation
   |---- Manage products
   |---- Add products
   |---- Reports
- 
-Contact options navigation
+
+Reports sub-options
+  |---- New report
+  |---- Saved reports
+  
+Footer navigation
   |---- Email us
   |---- Call us
   |---- Online chat
@@ -32,25 +84,30 @@ Site admin navigation
   |---- Debug console
 {code}
 
-In essence navigation groups contain navigation items. These items can have the following properties:
+The top level items here are "scopes" and the items beneath them are navigation nodes.
+
+Navigation nodes can have the following properties:
 
 | Property | Description 
-| id | The unique identifier of this item within this group, used to locate title etc.
-| link | The map of arguments, or a Closure, used to create the link to the item
+| id | The unique identifier of this item within this group.
+| linkArgs | The map of arguments used to create the link to the item
+| activationPath | The path that indicates this node should be shown as active. If the current request active path is 
+the same or "deeper" than the current path (delimited by '>' characters) this node will be active
 | enabled | A boolean or Closure used to determine if the item should be enabled for the current request
 | visible | A boolean or Closure used to determine if the item should be visible for the current request
+| titleMessageCode | An i18n message code to use as the navigation text. Defaults to "nav.<id>" where id is the id of the node
+| titleDefault | A default string to use as the navigation text if no i18n string is defined. Not recommended. i18n is cleaner
 
-When rendering navigation information for a group, this information is evaluated and provided to your view code with all calculated fields expanded to their final values i.e. link will be a URL, enabled/visible will always be boolean. In addition there will be extra properties:
+h2. How to do hierarchical navigation and breadcrumbs
 
-| Property | Description 
-| active | True if the item is on the current "active path" in the navigation
+Every request has an "active path". This is set either automatically by the
+built-in filter for controller/action pairs, or in your code or GSP pages
+using the <nav:setActivePath path="x>y>z"/> tag.
 
-h2. Hierarchical navigation and breadcrumbs
-
-By locating navigation items by convention and enforcing a given controller/action combination to be unique within the entire navigation system, we are able to back-calculate a breadcrumb trail from any given current controller/action.
-
-The IDs of navigation ids are used to create a logical path within the navigation structure of the application:
-
+The activation path of a navigation node does not have to be unique. This
+means that you can have items in different scopes showing as "active" for the
+same path, for example if you have different menus for different kinds of users.
+ 
 {code}
 // Capture some beans for efficiency
 def grailsSecurity = grailsApplication.mainContext.grailsSecurity
@@ -58,6 +115,7 @@ def grailsSecurity = grailsApplication.mainContext.grailsSecurity
 def loggedIn = { ->
     grailsSecurity.userLoggedIn
 }
+
 def notLoggedIn = { ->
     !grailsSecurity.userLoggedIn
 }
