@@ -63,7 +63,8 @@ class NavigationTagLib {
         if (attrs.path == null) {
             throwTagError('The [path] attribute is required')
         }
-        grailsNavigation.setActivePath(request, attrs.path)
+        grailsNavigation.setActivePath(request, 
+            attrs.path instanceof List ? grailsNavigation.makeActivationPath(attrs.path) : attrs.path)
     }
 
     private findActiveNode() {

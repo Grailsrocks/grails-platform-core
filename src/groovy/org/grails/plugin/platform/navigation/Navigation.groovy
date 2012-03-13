@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
  */
 class Navigation {
     
-    static ACTIVE_PATH_SEPARATOR = '>'
+    static ACTIVE_PATH_SEPARATOR = ':'
     
     final log = LoggerFactory.getLogger(Navigation)
 

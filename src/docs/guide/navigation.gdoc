@@ -127,61 +127,70 @@ navigation = {
         about controller:'content', action:'about'
         contact controller:'contact'
         home controller:'portal'
-        dashboard controller:'dashboard'
+        dashboard controller:'dashboard' // default action is index
     }
     user {
         login controller:'user', action:'login', visible: notLoggedIn
         logout controller:'user', action:'logout', visible: loggedIn
         profile controller:'user', action:'profile', visible: notLoggedIn
     }
-    'main/dashboard' {
+    dashboard {
         list controller:'products', enabled: loggedIn
         create controller:'products', action:'create', enabled: loggedIn
     }
 }
 {code}
 
-The path + symbolic name defines a nav structure for the app. The symbolic name is the leaf node of the path so the above defines nodes for:
+The scope + id defines a nav structure for the app. 
 
-main/help
-main/about
-main/contact
-main/home
-main/dashboard
-main/dashboard/list
-main/dashboard/create
-user/login
-user/logout
-user/profile
+main: help
+main: about
+main: contact
+main: home
+main: dashboard
+dashboard: list
+dashboard: create
+user: login
+user: logout
+user: profile
 
-You could render nav only for a non-leaf node:
+You could render nav now for these scopes:
 
 main
-main/dashboard
+dashboard
 user
 
-GSP views need <nav:active path="x/y/z"/> in to indicate what the active path should be. They require presence in the DSL *and* that tag so that they can be included in rendered navs.
+If you have non-controller views or other mechanisms that need to control the
+active path, you use the <nav:setActivePath path="x/y/z"/> tag to indicate what
+the active path should be.
 
-<nav:set path="x/y/z"/> ---- active path breadcrumb
-<nav:set path="x/y/z"/> ---- active path breadcrumb
+By default the active path is set to controller name + action name of the current request.
+
+Tag examples:
+
+<nav:setActivePath path="['x', 'y', 'z']"/> ---- set active path
+<nav:activePath/> --- return current active path
+<nav:menu scope="x"/> ---- render menu for given scope. With no scope, defaults to "app"
 <nav:breadcrumb/> ---- active path breadcrumb
 <nav:breadcrumb path="x/y/z"/> ---- arbitrary breadcrumb
-<nav:activePath/> --- return current active path
-<nav:primary/> ---- render primary (1st level of active path) nav
-<nav:secondary/> ---- render secondary (2nd level of active path) nav
-<nav:render path="x"/> ---- render arbitrary non-leaf path, 1 level only
 
-With the above declarations, a user viewing the "portal" controller will be at "main/home" in the structure and may see a breadcrumb such as "Main > Home"
+With the above declarations, a user viewing the "portal" controller will be at
+"main/home" in the structure and may see a breadcrumb such as "Main > Home"
 
-A user who is viewing the "products" controller will see a breadcrumb of either "Main > Dashboard > List" or "Main > Dashboard > Create" depending of the action they are viewing.
+A user who is viewing the "products" controller will see a breadcrumb of
+either "Main > Dashboard > List" or "Main > Dashboard > Create" depending of
+the action they are viewing.
 
 The text for the breadcrumb would be obtained from i18n bundles based on the navigation id of each step.
 
 The "main/dashboard" group name shows that this is a group that applies when the user is in the dashboard.
 
-By default all controllers in the application will have a place in the nevigation structure under "main", with their controller and action specifying their path therein.
+By default all controllers in the application will have a place in the
+nevigation structure under "main", with their controller and action specifying
+their path therein.
 
-Plugin controllers are auto namespaced under root node, so that installing a plugin does not screw up your nav.
+Plugin controllers are auto namespaced under root node, so that installing a
+plugin does not screw up your nav.
 
 To exclude a controller or action, or remap them you use the DSL:
 
