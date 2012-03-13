@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Plugin Platform</title>
-		<meta name="layout" content="main">
+        <meta name="layout" content="platform/dev"/>
 	</head>
 	<body>
         <h1>Grails Plugin Platform</h1>
@@ -12,6 +12,7 @@
         <ul>
             <li><g:link controller="platformTools" action="security">Security information</g:link></li>
             <li><g:link controller="platformTools" action="showPluginConfig">Plugin Configuration</g:link></li>
+            <li><g:link controller="platformTools" action="showNavigation">Navigation</g:link></li>
 <%-- <li><g:link controller="platformTools" action="jsmodel" params="[id:5150, max:50, offset:0]">See the JSON model test</g:link></li>
 --%>            
         </ul>

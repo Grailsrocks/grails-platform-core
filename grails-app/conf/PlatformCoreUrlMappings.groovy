@@ -21,11 +21,11 @@ class PlatformCoreUrlMappings {
     static mappings = {
         if ( Environment.current == Environment.DEVELOPMENT) {
             "/platform"(controller:'platformTools', action:'index')
-            "/platform/themes/$id?"(controller:'platformTools', action:'themes')
-            "/platform/ui/$id?"(controller:'platformTools', action:'uisets')
             "/platform/security/$id?"(controller:'platformTools', action:'security')
             "/platform/plugin-config/$id?"(controller:'platformTools', action:'showPluginConfig')
-            "/platform/js"(controller:'platformTools', action:'jsmodel')
+            //"/platform/js"(controller:'platformTools', action:'jsmodel')
+            "/platform/navigation"(controller:'platformTools', action:'showNavigation')
+
             "/platform/event/$action?"(controller:'sample')
     	}
     	

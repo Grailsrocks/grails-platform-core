@@ -35,3 +35,16 @@
 #themeselecta .actions {
     text-align: center;
 }
+
+ul.nav {
+    list-style-type: none;
+}
+
+ul.nav li {
+    display: inline;
+    margin-right: 10px;
+}
+
+ul.nav li.active {
+    font-weight: bold;
+}

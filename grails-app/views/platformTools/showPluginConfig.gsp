@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Plugin Config</title>
+        <meta name="layout" content="platform/dev"/>
     </head>
     <body>
         <h1>Plugin Config</h1>

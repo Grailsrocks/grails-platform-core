@@ -113,6 +113,17 @@ Grails Plugin Platform Core APIs
         grailsInjection(org.grails.plugin.platform.injection.Injection) {
             grailsApplication = ref('grailsApplication')
         }
+
+        // Navigation API
+        grailsNavigation(org.grails.plugin.platform.navigation.Navigation) {
+            grailsApplication = ref('grailsApplication')
+            grailsConventions = ref('grailsConventions')
+        }
+
+        // Navigation API
+        grailsConventions(org.grails.plugin.platform.conventions.Conventions) {
+            grailsApplication = ref('grailsApplication')
+        }
     }
 
     def doWithDynamicMethods = { ctx ->
@@ -139,8 +150,9 @@ Grails Plugin Platform Core APIs
         def ctx = event.application.mainContext
         def config = event.application.config
         switch (event.source) {
-            case Object:
+            case Class:
                 ctx.grailsInjection.applyTo(event.source)
+                // @todo add call to update auto nav for controllers
                 break
         }
     }

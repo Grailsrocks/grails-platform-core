@@ -20,6 +20,9 @@ package org.grails.plugin.platform.controllers
 class PlatformToolsController {
     
     def grailsSecurity
+    def grailsNavigation
+    
+    static navigationScope = "test"
     
     def index = {
     }
@@ -31,6 +34,15 @@ class PlatformToolsController {
     def showPluginConfig = {
         [configInfo:pluginConfig]
     }
+
+    def showNavigation = {
+        println "params: $params"
+        if (params.activePath) {
+            grailsNavigation.setActivePath(request, params.activePath)
+        }
+        [navScopes:grailsNavigation.scopes]
+    }
+
 /*    
     def jsmodel = {
         [book:[title:'Test book title', author:'Test Author']]

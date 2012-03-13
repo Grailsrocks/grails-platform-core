@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Security</title>
+        <meta name="layout" content="platform/dev"/>
     </head>
     <body>
         <h1>Security</h1>
