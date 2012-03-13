@@ -20,24 +20,30 @@ package org.grails.plugin.platform
 class NavigationTagLib {
     static namespace = "nav"
 
-    static returnObjectForTags = ['activePath', 'activeNode']
+    static returnObjectForTags = ['activePath', 'activeNode', 'scopeForActivePath']
     
     def grailsNavigation
 
     def menu = { attrs ->
+        println "ATTRS: $attrs"
         def scope = attrs.scope
         if (!scope) {
-            scope = grailsNavigation.getActiveScope(request)
-            if (!scope) {
-                scope = 'app'
-            }
+            scope = 'app'
+        }
+        println "scope: $scope is a (${scope.getClass()})"
+        if (!(scope instanceof String)) {
+            println "xxxscope: $scope"
+            scope = scope.id
+        }
+        
+        println "scope: $scope"
+        if (log.debugEnabled) {
+            log.debug "Rendering menu for scope [${scope}]"
         }
 
-        println "Scope is: ${scope}"
         def activeNode = findActiveNode()
         
         def scopeNode = grailsNavigation.scopeByName(scope)
-        println "Node is: ${scopeNode?.dump()}"
         if (scopeNode) {
             out << "<ul class=\"nav primary\">"
             for (n in scopeNode.children) {
@@ -59,6 +65,11 @@ class NavigationTagLib {
         }
     }
 
+    def scopeForActivePath = { attrs ->
+        grailsNavigation.getDefaultScopeForActivePath(
+            attrs.path ?: grailsNavigation.getActivePath(request))
+    }
+    
     def setActivePath = { attrs ->
         if (attrs.path == null) {
             throwTagError('The [path] attribute is required')

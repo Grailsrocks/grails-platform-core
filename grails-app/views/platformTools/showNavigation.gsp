@@ -9,14 +9,14 @@
         
         <p>The current active path is "${nav.activePath().encodeAsHTML()}", which means the active node is ${nav.activeNode()?.id.encodeAsHTML()}</p>
 
-        <p>Set the current active path:</p>
+        <p>Show default navigation for the active path:</p>
         <g:form action="showNavigation">
             <input name="activePath" value="${params.activePath}"/>
             <input type="submit"/>
         </g:form>
 
         <p>Primary navigation for this path:</p>
-        <nav:menu/>
+        <nav:menu scope="${nav.scopeForActivePath(path:params.activePath)}"/>
 
         <p>The available navigation nodes are:
             <ul>

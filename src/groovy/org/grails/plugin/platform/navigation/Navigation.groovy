@@ -34,6 +34,9 @@ class Navigation {
         if (log.debugEnabled) {
             log.debug "Setting navigation active path from current request controller/action [$controller] and [$action]"
         }
+        
+        // @todo reverse-lookup this to an activation path from the nav structure
+        // and only if not found, use controller:action
         if (controller) {
             if (!action) {
                 def artef = grailsApplication.getArtefact('Controller', controller)
@@ -49,9 +52,18 @@ class Navigation {
         request['plugin.platformCore.navigation.activePath']
     }
     
-    String getActiveScope(request) {
-        def elements = splitActivationPath(getActivePath(request))
-        return elements ? elements[0] : null
+    /**
+     * Reverse-lookup the current active path to find out what the default scope
+     * would be based on the node found for that activation path.
+     * If multiple nodes have same path, only the last one will be found
+     */
+    String getDefaultScopeForActivePath(String path) {
+        def node = nodeForActivationPath(path)
+        def scope
+        if (node) {
+            scope = node.parent
+        }
+        return scope?.id
     }
     
     NavigationScope scopeByName(String name) {

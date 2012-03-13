@@ -36,10 +36,6 @@ class PlatformToolsController {
     }
 
     def showNavigation = {
-        println "params: $params"
-        if (params.activePath) {
-            grailsNavigation.setActivePath(request, params.activePath)
-        }
         [navScopes:grailsNavigation.scopes]
     }
 
