@@ -41,16 +41,17 @@ class Conventions {
         }
         
         // Get post-2.0 style public methods defined
-        for (meth in actualClass.declaredMethods) {
-            if ( meth.getAnnotation(annotation) ) {
-                if (allowArgs || (parameterTypes.size() == 0)) {
-                    if (!gettersToIgnore.contains(meth.name)) {
-                        namedCodeBlocks << meth.name
+        if (annotation) {
+            for (meth in actualClass.declaredMethods) {
+                if ( meth.getAnnotation(annotation) ) {
+                    if (allowArgs || (parameterTypes.size() == 0)) {
+                        if (!gettersToIgnore.contains(meth.name)) {
+                            namedCodeBlocks << meth.name
+                        }
                     }
                 }
             }
         }
-        
         if (log.debugEnabled) {
             log.debug "Discovered code blocks ${namedCodeBlocks} on artefact ${actualClass}"
         }

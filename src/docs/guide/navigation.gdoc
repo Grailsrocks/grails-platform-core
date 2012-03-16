@@ -169,30 +169,29 @@ By default the active path is set to controller name + action name of the curren
 Tag examples:
 
 <nav:setActivePath path="['x', 'y', 'z']"/> ---- set active path
-<nav:activePath/> --- return current active path
+<nav:setActivePath path="x:y:z"/> ---- set active path
+Path is ${nav.activePath()} --- return current active path
 <nav:menu scope="x"/> ---- render menu for given scope. With no scope, defaults to "app"
 <nav:breadcrumb/> ---- active path breadcrumb
-<nav:breadcrumb path="x/y/z"/> ---- arbitrary breadcrumb
+<nav:breadcrumb path="x:y:z"/> ---- arbitrary breadcrumb
 
 With the above declarations, a user viewing the "portal" controller will be at
-"main/home" in the structure and may see a breadcrumb such as "Main > Home"
+the activation path "home" in the structure and may see a breadcrumb such as "Home".
 
 A user who is viewing the "products" controller will see a breadcrumb of
-either "Main > Dashboard > List" or "Main > Dashboard > Create" depending of
+either "Dashboard > List" or "Dashboard > Create" depending on
 the action they are viewing.
 
 The text for the breadcrumb would be obtained from i18n bundles based on the navigation id of each step.
 
-The "main/dashboard" group name shows that this is a group that applies when the user is in the dashboard.
-
 By default all controllers in the application will have a place in the
-nevigation structure under "main", with their controller and action specifying
-their path therein.
+nevigation structure under scope "app", with their controller and action specifying
+their activation path therein.
 
 Plugin controllers are auto namespaced under root node, so that installing a
-plugin does not screw up your nav.
+plugin does not change your nav immediately.
 
-To exclude a controller or action, or remap them you use the DSL:
+To exclude a controller or action, or change their options you use the DSL:
 
 // Define the navigation structure of our application
 // Controllers and their action are automatically mapped into a 
@@ -204,33 +203,31 @@ To exclude a controller or action, or remap them you use the DSL:
 // 'dev' - for dev-time controllers, contains items exposed by platform
 
 navigation = {
-    // These are app controller/actions we want to exclude from nav
-    hide 'app/debug'
-    hide 'app/inbox/deleted' // controller:'inbox', action:'deleted'
 
-    // Move app's admin controllers into separate nav group 'admin'
-    move 'app/admin', 'admin'
-    
-    // Remap auto-namespaced plugin nav to main
-    // Plugin controllers are namespaced to "plugin/<pluginName>/<controllerName>/<actionName>"
-    move 'plugin/activity/activityStream', 'app/activity'
+    overrides {
+        // These are app controller/actions we want to exclude from nav
+        'debug.*' visible: false
+        'inbox.deleted' visible: false
 
-    // Apply security based visibility to plugin's nav items
-    'app/activity' {
-        '*'(visible:loggedIn)
+        // Move app's admin controllers into separate nav scope 'admin'
+        'admin.*' scope:'admin' 
+
+        // Remap auto-namespaced plugin nav to main
+        // Plugin controllers are namespaced to "plugin/<pluginName>/<controllerName>/<actionName>"
+        'activity.activityStream' scope:'app'
+
+        // Apply security based visibility to plugin's nav items
+        'activity.*' visible: loggedIn
     }
 
-    // Define the "user" nav root, will yield nav paths:
-    // user/login
-    // user/logout
-    // user/profile
+
+    // Define the "user" scope
     user {
-        reset() // clear out default items in this group defined by Sec API
-        
         signup controller:'register', action:'signup', visible: notLoggedIn
 
-        // shortcut to set controller for all following
-        controller = 'user'
+        // ??? shortcut to set controller for all following
+        // controller = 'user' for later maybe
+        
         login action:'login', visible: notLoggedIn
         logout action:'logout', visible: loggedIn
         profile action:'profile', visible: notLoggedIn

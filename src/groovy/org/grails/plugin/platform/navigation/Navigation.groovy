@@ -1,6 +1,7 @@
 package org.grails.plugin.platform.navigation
 
 import org.grails.plugin.platform.util.PluginUtils
+import org.grails.plugin.platform.conventions.*
 import grails.util.GrailsNameUtils
 
 import org.slf4j.LoggerFactory
@@ -15,6 +16,7 @@ class Navigation {
 
     Map<String, NavigationScope> rootScopes
     Map<String, NavigationScope> nodesByActivationPath
+    Map<String, NavigationScope> nodesByControllerAction
     
     def grailsApplication
     def grailsConventions
@@ -35,8 +37,6 @@ class Navigation {
             log.debug "Setting navigation active path from current request controller/action [$controller] and [$action]"
         }
         
-        // @todo reverse-lookup this to an activation path from the nav structure
-        // and only if not found, use controller:action
         if (controller) {
             if (!action) {
                 def artef = grailsApplication.getArtefact('Controller', controller)
@@ -44,7 +44,18 @@ class Navigation {
                     action = artef.defaultAction
                 }
             }
-            setActivePath(request, makeActivationPath([controller, action]))
+            
+            def path 
+            // See if we can reverse map from controller/action to an activation path
+            def node = nodeForControllerAction(controller, action)
+            if (node) {
+                path = node.activationPath
+            }
+            // If not, we build a default activation path from controller/action pair
+            if (!path) {
+                path = makeActivationPath([controller, action])
+            }
+            setActivePath(request, path)
         }
     }
     
@@ -74,25 +85,37 @@ class Navigation {
         nodesByActivationPath[path]
     }
     
+    NavigationNode nodeForControllerAction(String controller, String action) {
+        nodesByControllerAction["$controller:$action"]
+    }
+    
     void reloadAll() {
         log.info "Reloading navigation structure"
         clearScopes()
-
-        loadControllers()
+        clearCaches()
+        
         loadDSL()
+        loadControllers()
         
         updateCaches()
     }
 
+    void clearCaches() {
+        nodesByControllerAction = [:]
+        nodesByActivationPath = [:]
+    }
+    
     void clearScopes() {
         rootScopes = [:]
     }
     
     void updateCaches() {
-        nodesByActivationPath = [:]
         for (scope in rootScopes.values()) { 
             for (node in scope.children) {
                 nodesByActivationPath[node.activationPath] = node
+                if (node.linkArgs.controller) {
+                    nodesByControllerAction["${node.linkArgs.controller}:${node.linkArgs.action}"] = node
+                }
             }
         }
     }
@@ -100,14 +123,83 @@ class Navigation {
     void loadDSL() {
         // get all the XXXNavigation artefacts and evaluate, with app's last
     }
+
+    // @todo temporary dangerous method, remove this later when artefacts implemented
+    void registerNavigation(Closure dsl) {
+        clearCaches() // this may hose other stuff
+        List<DSLCommand> commands = new DSLEvaluator().evaluate(dsl)
+        parseDSL(commands, null)
+        updateCaches()
+    }
     
+    void parseDSL(List<DSLCommand> commands, NavigationScope scope) {
+        for (c in commands) {
+            switch (c) {
+                case DSLSetValueCommand:
+                case DSLCallCommand:
+                    throw new IllegalArgumentException( "We don't support property setting or simple method calls in this DSL. Your DSL tried to set [${c.name}] to ${c.value}")
+                    break;
+                case DSLNamedArgsCallCommand:
+                    if (!scope) {
+                        throw new IllegalArgumentException( "We don't support named argument method calls unless you are in a scope. Your DSL tried to call [$c.name]($c.arguments)")
+                    } 
+                    def linkArgs = [:]
+                    for (p in ['controller', 'action', 'mapping', 'uri', 'url', 'view']) {
+                        if (c.arguments.containsKey(p)) {
+                            linkArgs[p] = c.arguments[p]
+                        }
+                    }
+                    def nodeArgs = [
+                        id:c.name,
+                        titleDefault:c.arguments.titleText ?: GrailsNameUtils.getNaturalName(c.name),
+                        activationPath:c.arguments.activationPath ?: makeActivationPath([c.name]),
+                        linkArgs:linkArgs,
+                        titleMessageCode:c.arguments.title,
+                        visible:c.arguments.visible,
+                        enabled:c.arguments.enabled
+                    ]
+                    def node = new NavigationNode(nodeArgs)
+                    if (log.debugEnabled) {
+                        log.debug "Adding node ${node.id} to scope ${scope.id} with link args ${node.linkArgs}"
+                    }
+                    scope.addChild(node)
+                    break;
+                case DSLBlockCommand:
+                    if (log.debugEnabled) {
+                        log.debug "DSL block [${c.name}]"
+                    }
+                    if (scope) {
+                        throw new IllegalArgumentException( "You cannot nest scopes - declare scopes at the top level only")
+                    }
+                    if (c.name == 'overrides') {
+                        // 
+                    } else {
+                        def newScope = getOrCreateScope(c.name)
+                        if (newScope) {
+                            parseDSL(c.children, newScope)
+                        } else {
+                            
+                        }
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException( "We don't support command type ${c.getClass()}")
+            }
+        }
+    }
+
     void loadControllers() {
         def rootScopesNeeded = []
         
+        Class grails2ActionAnnotation
+        try {
+            grails2ActionAnnotation = grailsApplication.classLoader.loadClass('grails.web.Action')
+        } catch (Throwable t) {
+        }
+
         for (art in grailsApplication.controllerClasses) {
             def controllerClass = art.clazz
             def controllerName = GrailsNameUtils.getPropertyName(art.name)
-            Class grails2ActionAnnotation = grailsApplication.classLoader.loadClass('grails.web.Action')
             def actionNames = grailsConventions.discoverCodeBlockConventions(controllerClass, grails2ActionAnnotation)
             
             log.debug "Found actions $actionNames for controller $controllerName"
@@ -131,6 +223,7 @@ class Navigation {
             
             log.debug "Scope for actions of controller $controllerName is ${scope}"
             for (a in actionNames) {
+                // @todo ONLY do this if the controller/action has not already been mapped by already
                 declareControllerNode(
                     scopeName:scope,
                     path:[controllerName], 

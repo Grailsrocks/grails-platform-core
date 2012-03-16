@@ -19,6 +19,7 @@ class NavigationScope {
     }
     
     void addChild(NavigationNode child) {
+        child.parent = this
         this.children << child
     }
     

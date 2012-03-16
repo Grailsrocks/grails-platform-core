@@ -25,18 +25,17 @@ class NavigationTagLib {
     def grailsNavigation
 
     def menu = { attrs ->
-        println "ATTRS: $attrs"
+        def cssClass = attrs.class != null ? attrs.class : 'nav primary'
+        def id = attrs.id ? "id=\"${attrs.id.encodeAsHTML()}\" " : ''
         def scope = attrs.scope
         if (!scope) {
             scope = 'app'
         }
-        println "scope: $scope is a (${scope.getClass()})"
         if (!(scope instanceof String)) {
             println "xxxscope: $scope"
             scope = scope.id
         }
         
-        println "scope: $scope"
         if (log.debugEnabled) {
             log.debug "Rendering menu for scope [${scope}]"
         }
@@ -45,7 +44,7 @@ class NavigationTagLib {
         
         def scopeNode = grailsNavigation.scopeByName(scope)
         if (scopeNode) {
-            out << "<ul class=\"nav primary\">"
+            out << "<ul ${id}class=\"${cssClass}\">"
             for (n in scopeNode.children) {
                 if (n.visible) {
                     def liClass 
@@ -56,8 +55,8 @@ class NavigationTagLib {
                         liClass = ' class="disabled"'
                     }
                     out << "<li${liClass ?: ''}>"
-                    def linkArgs = [:]
-                    out << g.link(n.linkArgs, g.message(code:n.titleMessageCode, default:n.titleDefault))
+                    def linkArgs = n.linkArgs.clone() // Clone! naughty g.link changes them otherwise. Naughty g.link!
+                    out << g.link(linkArgs, g.message(code:n.titleMessageCode, default:n.titleDefault))
                     out << "</li>"
                 }
             }

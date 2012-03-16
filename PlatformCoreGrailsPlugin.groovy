@@ -16,6 +16,11 @@
  * limitations under the License.
  */
 
+ import org.grails.plugin.platform.events.dispatcher.DefaultEventsDispatcher
+ import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
+ import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
+ import org.grails.plugin.platform.events.publisher.DefaultEventsPublisher
+ import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 import org.springframework.core.io.FileSystemResource
 
 class PlatformCoreGrailsPlugin {
@@ -124,6 +129,38 @@ Grails Plugin Platform Core APIs
         grailsConventions(org.grails.plugin.platform.conventions.Conventions) {
             grailsApplication = ref('grailsApplication')
         }
+
+        // Events API
+        task.executor(id: "grailsTopicExecutor", 'pool-size': 10)//todo config
+
+        //init api bean
+        if (grailsVersion.startsWith('1')) {
+            gormTopicSupport(GormTopicSupport1X)
+        } else {
+            gormTopicSupport(GormTopicSupport2X) {
+                translateTable = [
+                        'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate', 'PreLoadEvent': 'beforeLoad',
+                        'PreDeleteEvent': 'beforeDelete', 'ValidationEvent': 'beforeValidate', 'PostInsertEvent': 'afterInsert',
+                        'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete', 'PostLoadEvent': 'afterLoad',
+                        'SaveOrUpdateEvent': 'onSaveOrUpdate'
+                ]
+            }
+        }
+
+        grailsEventsRegistry(DefaultEventsRegistry)
+        grailsEventsPublisher(DefaultEventsPublisher) {
+            grailsEventsRegistry = ref('grailsEventsRegistry')
+            taskExecutor = ref('grailsTopicExecutor')
+            persistenceInterceptor = ref("persistenceInterceptor")
+            gormTopicSupport = ref("gormTopicSupport")
+        }
+        grailsEventsDispatcher(DefaultEventsDispatcher)
+
+        grailsEvents(org.grails.plugin.platform.events.Events) {
+            grailsEventsRegistry = ref('grailsEventsRegistry')
+            grailsEventsPublisher = ref('grailsEventsPublisher')
+            grailsEventsDispatcher = ref('grailsEventsDispatcher')
+        }
     }
 
     def doWithDynamicMethods = { ctx ->
@@ -141,6 +178,7 @@ Grails Plugin Platform Core APIs
 
         register ctx.grailsPluginConfiguration.injectedMethods
         register ctx.grailsSecurity.injectedMethods
+        register ctx.grailsEvents.injectedMethods
     }
 
     def doWithApplicationContext = { applicationContext ->
@@ -153,6 +191,10 @@ Grails Plugin Platform Core APIs
             case Class:
                 ctx.grailsInjection.applyTo(event.source)
                 // @todo add call to update auto nav for controllers, we badly need "onreload" events for this
+
+                if (application.isServiceClass(event.source)) {
+                    ctx.grailsEvents.reloadListener(event.source)
+                }
                 break
         }
     }
