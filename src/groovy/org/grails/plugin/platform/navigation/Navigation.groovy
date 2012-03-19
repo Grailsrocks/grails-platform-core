@@ -12,7 +12,7 @@ class Navigation {
     
     static transactional = false
     
-    static ACTIVE_PATH_SEPARATOR = ':'
+    static ACTIVE_PATH_SEPARATOR = '#'
     
     final log = LoggerFactory.getLogger(Navigation)
 
@@ -204,7 +204,7 @@ class Navigation {
                     if (log.debugEnabled) {
                         log.debug "Adding node ${node.id} to scope ${scope.name} with link args ${node.linkArgs}"
                     }
-                    scope.addNode(node)
+                    addNode(scope, node)
                     break;
                 case DSLBlockCommand:
                     if (log.debugEnabled) {
@@ -267,6 +267,7 @@ class Navigation {
 
             declareControllerNode(
                 scopeName:scope,
+                id:controllerName,
                 activationPath:makePath([controllerName], definingPluginName),
                 controller:controllerName, 
                 action:getDefaultControllerAction(controllerClass))
@@ -279,6 +280,7 @@ class Navigation {
                 // @todo ONLY do this if the controller/action has not already been mapped by already
                 declareControllerNode(
                     scopeName:controllerScope,
+                    id:controllerName+'.'+action,
                     activationPath:makePath([controllerName, action], definingPluginName),
                     controller:controllerName, 
                     action:action)
@@ -292,7 +294,7 @@ class Navigation {
         
         def nodeArgs = [
             scope:scope,
-            id:args.controller+'.'+args.action,
+            id:args.id,
             titleDefault:GrailsNameUtils.getNaturalName(args.action),
             activationPath:args.activationPath,
             linkArgs:[controller:args.controller,action:args.action]
@@ -300,6 +302,13 @@ class Navigation {
         def node = new NavigationNode(nodeArgs)
         if (log.debugEnabled) {
             log.debug "Adding node ${node.activationPath} to scope ${scope.name}"
+        }
+        addNode(scope, node)
+    }
+
+    void addNode(NavigationScope scope, NavigationNode node) {
+        if (nodesByActivationPath.values().find { it.id == node.id }) {
+            throw new IllegalArgumentException("Cannot add navigation node with id [${node.id}] and path [${node.activationPath}] because a node with the same id already exists")
         }
         scope.addNode(node)
     }
