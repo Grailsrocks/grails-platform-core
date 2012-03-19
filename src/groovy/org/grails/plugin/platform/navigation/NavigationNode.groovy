@@ -5,9 +5,10 @@ package org.grails.plugin.platform.navigation
  * Instances of this are shared globally and available to requests so 
  * this must be immutable and threadsafe
  */
-class NavigationNode extends NavigationScope {
-    private NavigationScope parent
+class NavigationNode {
+    private NavigationScope scope
         
+    private String id
     private int order
     
     private String activationPath
@@ -23,8 +24,8 @@ class NavigationNode extends NavigationScope {
     private Closure enabledClosure
 
     NavigationNode(Map args) {
-        super(args)
-        this.parent = args.parent
+        this.id = args.id
+        this.scope = args.scope
         this.order = args.order ?: 0
         this.activationPath = args.activationPath
         this.linkArgs = args.linkArgs
@@ -45,10 +46,14 @@ class NavigationNode extends NavigationScope {
         this.enabledClosure = args.enabled instanceof Closure ? args.enabled : null
     }
     
-    NavigationScope getParent() {
-        this.parent
+    NavigationScope getScope() {
+        this.scope
     }
 
+    String getId() {
+        this.id
+    }
+    
     int getOrder() {
         this.order
     }

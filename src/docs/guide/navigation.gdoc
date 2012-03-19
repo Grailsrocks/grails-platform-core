@@ -48,11 +48,11 @@ This is a simple shortcut. Finer grained control of navigation items is provided
 
 h2. Declaring Navigation Items
 
-The Navigation structure for an application is a list of named scaope, each containing navigation nodes.
+The Navigation structure for an application is a list of named scope, each containing navigation nodes.
 
 You can have tiered navigation by rendering the other scopes based on your current active node.
 
-Nodes identify themselves by "id" and are considerd "active" if their activationPath matches the request's current "active path".
+Nodes identify themselves by "id" and are considered "active" if their activationPath matches the request's current "active path".
 
 Here's an example navigation structure of a site:
 
@@ -102,7 +102,7 @@ h2. How to do hierarchical navigation and breadcrumbs
 
 Every request has an "active path". This is set either automatically by the
 built-in filter for controller/action pairs, or in your code or GSP pages
-using the <nav:setActivePath path="x>y>z"/> tag.
+using the <nav:setActivePath path="x:y:z"/> tag.
 
 The activation path of a navigation node does not have to be unique. This
 means that you can have items in different scopes showing as "active" for the

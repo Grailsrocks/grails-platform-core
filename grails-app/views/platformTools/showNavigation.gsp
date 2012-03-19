@@ -15,13 +15,18 @@
             <input type="submit"/>
         </g:form>
 
+        <p>Scope for this path is: ${nav.scopeForActivationPath(path:params.activePath)}</p>
+        <p>First active node for this path is: ${nav.firstActiveNode(path:params.activePath)?.id}</p>
         <p>Primary navigation for this path:</p>
-        <nav:menu scope="${nav.scopeForActivePath(path:params.activePath)}"/>
+        <nav:menu scope="${nav.firstActiveNode(path:params.activePath)?.scope}" path="${params.activePath}"/>
+
+        <p>Secondary navigation for this path:</p>
+        <nav:menu scope="${nav.scopeForActivationPath(path:params.activePath)}" path="${params.activePath}"/>
 
         <p>The available navigation nodes are:
             <ul>
             <g:each in="${navScopes}" var="scope"> 
-                <li>${scope.id.encodeAsHTML()}</li>
+                <li>${scope.name.encodeAsHTML()}</li>
                 <ul>
                     <g:each in="${scope.children}" var="item">
                         <li>id: ${item.id.encodeAsHTML()}<br/>

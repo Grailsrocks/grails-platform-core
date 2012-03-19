@@ -17,14 +17,17 @@
  */
 package org.grails.plugin.platform
 
+import org.grails.plugin.platform.navigation.NavigationNode
+
 class NavigationTagLib {
     static namespace = "nav"
 
-    static returnObjectForTags = ['activePath', 'activeNode', 'scopeForActivePath']
+    static returnObjectForTags = ['activePath', 'activeNode', 'scopeForActivationPath', 'firstActiveNode']
     
     def grailsNavigation
 
     def menu = { attrs ->
+        println "menu: $attrs"
         def cssClass = attrs.class != null ? attrs.class : 'nav primary'
         def id = attrs.id ? "id=\"${attrs.id.encodeAsHTML()}\" " : ''
         def scope = attrs.scope
@@ -33,22 +36,23 @@ class NavigationTagLib {
         }
         if (!(scope instanceof String)) {
             println "xxxscope: $scope"
-            scope = scope.id
+            scope = scope.name
         }
         
         if (log.debugEnabled) {
             log.debug "Rendering menu for scope [${scope}]"
         }
 
-        def activeNode = findActiveNode()
+        def activeNodes = findActiveNodes(attrs.path)
         
+        println "Active nodes: ${activeNodes}"
         def scopeNode = grailsNavigation.scopeByName(scope)
         if (scopeNode) {
             out << "<ul ${id}class=\"${cssClass}\">"
             for (n in scopeNode.children) {
                 if (n.visible) {
                     def liClass 
-                    if (activeNode == n) {
+                    if (activeNodes.contains(n)) {
                         liClass = ' class="active"'
                     }
                     if (!n.enabled) {
@@ -64,21 +68,29 @@ class NavigationTagLib {
         }
     }
 
-    def scopeForActivePath = { attrs ->
-        grailsNavigation.getDefaultScopeForActivePath(
-            attrs.path ?: grailsNavigation.getActivePath(request))
+    def scopeForActivationPath = { attrs ->
+        attrs.path ? grailsNavigation.getScopeForActivationPath(attrs.path) : grailsNavigation.getScopeForActiveNode(request)
     }
     
+    def firstActiveNode = { attrs ->
+        def r = attrs.path ? grailsNavigation.getFirstNodeOfActivationPath(attrs.path) : grailsNavigation.getFirstActiveNode(request)
+        return r ?: [id:''] // workaround for grails 2 bug
+    }
+
     def setActivePath = { attrs ->
         if (attrs.path == null) {
             throwTagError('The [path] attribute is required')
         }
         grailsNavigation.setActivePath(request, 
-            attrs.path instanceof List ? grailsNavigation.makeActivationPath(attrs.path) : attrs.path)
+            attrs.path instanceof List ? grailsNavigation.makePath(attrs.path) : attrs.path)
     }
 
-    private findActiveNode() {
-        grailsNavigation.nodeForActivationPath(grailsNavigation.getActivePath(request))
+    private List<NavigationNode> findActiveNodes(String activePath) {
+        grailsNavigation.nodesForActivationPath(activePath ?: grailsNavigation.getActivePath(request))
+    }
+    
+    private NavigationNode findActiveNode(String activePath) {
+        grailsNavigation.nodeForActivationPath(activePath ?: grailsNavigation.getActivePath(request))
     }
     
     def activePath = { attrs ->
@@ -86,7 +98,7 @@ class NavigationTagLib {
     }
     
     def activeNode = { attrs ->
-        findActiveNode() ?: [id:''] //workaround for 2.0.0 bug
+        findActiveNode(attrs.path) ?: [id:''] //workaround for 2.0.0 null return value bug
     }
     
     def breadcrumb = { attrs ->

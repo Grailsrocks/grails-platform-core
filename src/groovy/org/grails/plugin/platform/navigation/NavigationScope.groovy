@@ -7,27 +7,27 @@ package org.grails.plugin.platform.navigation
 class NavigationScope {
     private List<NavigationNode> children
         
-    private String id
+    private String name
 
     NavigationScope(Map args) {
         this.children = args.children == null ? [] : args.children
-        this.id = args.id
+        this.name = args.name
     }
     
     List<NavigationNode> getChildren() {
         this.children
     }
     
-    void addChild(NavigationNode child) {
-        child.parent = this
-        this.children << child
+    void addNode(NavigationNode node) {
+        node.scope = this
+        this.children << node
     }
     
     void lockChildren() {
         this.children = Collections.asImmutableList(this.children)
     }
 
-    String getId() {
-        this.id
+    String getName() {
+        this.name
     }
 }

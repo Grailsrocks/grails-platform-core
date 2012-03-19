@@ -81,6 +81,7 @@ called grailsSecurityBridge.
 
 The interface is defined here:
 
+{code}
     interface SecurityBridge {
 
         /**
@@ -112,4 +113,5 @@ The interface is defined here:
          */
         String createLink(String action)
     }
+{code}
     

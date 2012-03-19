@@ -10,13 +10,15 @@ import org.slf4j.LoggerFactory
  */
 class Navigation {
     
+    static transactional = false
+    
     static ACTIVE_PATH_SEPARATOR = ':'
     
     final log = LoggerFactory.getLogger(Navigation)
 
     Map<String, NavigationScope> rootScopes
-    Map<String, NavigationScope> nodesByActivationPath
-    Map<String, NavigationScope> nodesByControllerAction
+    Map<String, NavigationNode> nodesByActivationPath
+    Map<String, NavigationNode> nodesByControllerAction
     
     def grailsApplication
     def grailsConventions
@@ -30,8 +32,14 @@ class Navigation {
             log.debug "Setting navigation active path for this request to: $path"
         }
         request['plugin.platformCore.navigation.activePath'] = path
+        request['plugin.platformCore.navigation.activeNode'] = nodeForActivationPath(path)
     }
-    
+
+    String getDefaultControllerAction(Class controller) {
+        def artef = grailsApplication.getArtefact('Controller', controller.name)
+        return artef?.defaultAction
+    }
+
     void setActivePathFromRequest(request, controller, action) {
         if (log.debugEnabled) {
             log.debug "Setting navigation active path from current request controller/action [$controller] and [$action]"
@@ -39,10 +47,7 @@ class Navigation {
         
         if (controller) {
             if (!action) {
-                def artef = grailsApplication.getArtefact('Controller', controller)
-                if (artef) {
-                    action = artef.defaultAction
-                }
+                action = getDefaultControllerAction(controller)
             }
             
             def path 
@@ -53,7 +58,7 @@ class Navigation {
             }
             // If not, we build a default activation path from controller/action pair
             if (!path) {
-                path = makeActivationPath([controller, action])
+                path = makePath([controller, action]) // @todo if controller is in plugin and has no activation path, this will fail
             }
             setActivePath(request, path)
         }
@@ -63,18 +68,44 @@ class Navigation {
         request['plugin.platformCore.navigation.activePath']
     }
     
+    NavigationNode getActiveNode(request) {
+        request['plugin.platformCore.navigation.activeNode']
+    }
+    
     /**
      * Reverse-lookup the current active path to find out what the default scope
      * would be based on the node found for that activation path.
      * If multiple nodes have same path, only the last one will be found
      */
-    String getDefaultScopeForActivePath(String path) {
-        def node = nodeForActivationPath(path)
-        def scope
-        if (node) {
-            scope = node.parent
+    String getScopeForActivationPath(String path) {
+        def n = nodeForActivationPath(path)
+        def scope = n?.scope
+        return scope?.name
+    }
+    
+    String getScopeForActiveNode(request) {
+        def n = nodeForActivationPath(getActivePath(request))
+        def scope = n?.scope
+        return scope?.name
+    }
+
+    NavigationNode getFirstNodeOfActivationPath(String path) {
+        getFirstAncestor(path)
+    }
+    
+    NavigationNode getFirstActiveNode(request) {
+        getFirstAncestor(getActiveNode(request)?.activationPath)
+    }
+    
+    NavigationNode getFirstAncestor(String path) {
+        println "gFA: $path"
+        def parts = splitActivationPath(path)
+        println "gFA parts: $path - $parts"
+        if (parts) {
+            return nodeForActivationPath(parts[0])
+        } else {
+            return null
         }
-        return scope?.id
     }
     
     NavigationScope scopeByName(String name) {
@@ -83,6 +114,16 @@ class Navigation {
 
     NavigationNode nodeForActivationPath(String path) {
         nodesByActivationPath[path]
+    }
+    
+    List<NavigationNode> nodesForActivationPath(String path) {
+        def elements = splitActivationPath(path)
+        def nodes = []
+        int n = elements.size()
+        for (int i = 0; i < n; i++) {
+            nodes << nodeForActivationPath(makePath(elements[0..i]))
+        }
+        return nodes
     }
     
     NavigationNode nodeForControllerAction(String controller, String action) {
@@ -128,11 +169,12 @@ class Navigation {
     void registerNavigation(Closure dsl) {
         clearCaches() // this may hose other stuff
         List<DSLCommand> commands = new DSLEvaluator().evaluate(dsl)
-        parseDSL(commands, null)
+        String definingPlugin = "platformCore"
+        parseDSL(commands, null, definingPlugin)
         updateCaches()
     }
     
-    void parseDSL(List<DSLCommand> commands, NavigationScope scope) {
+    void parseDSL(List<DSLCommand> commands, NavigationScope scope, String definingPlugin) {
         for (c in commands) {
             switch (c) {
                 case DSLSetValueCommand:
@@ -152,7 +194,7 @@ class Navigation {
                     def nodeArgs = [
                         id:c.name,
                         titleDefault:c.arguments.titleText ?: GrailsNameUtils.getNaturalName(c.name),
-                        activationPath:c.arguments.activationPath ?: makeActivationPath([c.name]),
+                        activationPath:c.arguments.activationPath ?: makePath([c.name], definingPlugin),
                         linkArgs:linkArgs,
                         titleMessageCode:c.arguments.title,
                         visible:c.arguments.visible,
@@ -160,9 +202,9 @@ class Navigation {
                     ]
                     def node = new NavigationNode(nodeArgs)
                     if (log.debugEnabled) {
-                        log.debug "Adding node ${node.id} to scope ${scope.id} with link args ${node.linkArgs}"
+                        log.debug "Adding node ${node.id} to scope ${scope.name} with link args ${node.linkArgs}"
                     }
-                    scope.addChild(node)
+                    scope.addNode(node)
                     break;
                 case DSLBlockCommand:
                     if (log.debugEnabled) {
@@ -217,18 +259,29 @@ class Navigation {
                         scope = "app"
                         break
                     default: 
-                        scope = 'plugin/'+definingPluginName
+                        scope = makePath([controllerName], definingPluginName)
                 }
             }
             
             log.debug "Scope for actions of controller $controllerName is ${scope}"
-            for (a in actionNames) {
+
+            declareControllerNode(
+                scopeName:scope,
+                activationPath:makePath([controllerName], definingPluginName),
+                controller:controllerName, 
+                action:getDefaultControllerAction(controllerClass))
+
+            def controllerScope = makePath([controllerName], definingPluginName)
+
+            log.debug "Scope for actions of controller $controllerName is ${controllerScope}"            
+            
+            for (action in actionNames) {
                 // @todo ONLY do this if the controller/action has not already been mapped by already
                 declareControllerNode(
-                    scopeName:scope,
-                    path:[controllerName], 
+                    scopeName:controllerScope,
+                    activationPath:makePath([controllerName, action], definingPluginName),
                     controller:controllerName, 
-                    action:a)
+                    action:action)
             }
         }
     }
@@ -237,24 +290,23 @@ class Navigation {
         def path = args.path
         def scope = getOrCreateScope(args.scopeName)
         
-        for (pathElement in path) {
-            def nodeArgs = [
-                parent:scope,
-                id:args.controller+'.'+args.action,
-                titleDefault:GrailsNameUtils.getNaturalName(args.action),
-                activationPath:makeActivationPath(args.path + [args.action]),
-                linkArgs:[controller:args.controller,action:args.action]
-            ]
-            def node = new NavigationNode(nodeArgs)
-            if (log.debugEnabled) {
-                log.debug "Adding node ${node.activationPath} to scope ${scope.id}"
-            }
-            scope.addChild(node)
+        def nodeArgs = [
+            scope:scope,
+            id:args.controller+'.'+args.action,
+            titleDefault:GrailsNameUtils.getNaturalName(args.action),
+            activationPath:args.activationPath,
+            linkArgs:[controller:args.controller,action:args.action]
+        ]
+        def node = new NavigationNode(nodeArgs)
+        if (log.debugEnabled) {
+            log.debug "Adding node ${node.activationPath} to scope ${scope.name}"
         }
+        scope.addNode(node)
     }
     
-    String makeActivationPath(List<String> elements) {
-        elements.join(ACTIVE_PATH_SEPARATOR)
+    String makePath(List<String> elements, String definingPluginName = null) {
+        def p = elements.join(ACTIVE_PATH_SEPARATOR)
+        return definingPluginName ? "plugin.${definingPluginName}." + p : p
     }
     
     def splitActivationPath(String path) {
@@ -265,9 +317,9 @@ class Navigation {
         def scope = rootScopes[name]
         if (!scope) {
             if (log.debugEnabled) {
-                log.debug "Creating root scope [$name]"
+                log.debug "Creating scope [$name]"
             }
-            scope = new NavigationScope(id:name)
+            scope = new NavigationScope(name:name)
             rootScopes[name] = scope
         }
         return scope
