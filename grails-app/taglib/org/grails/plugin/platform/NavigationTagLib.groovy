@@ -26,6 +26,18 @@ class NavigationTagLib {
     
     def grailsNavigation
 
+    def primary = { attrs ->
+        def scope = grailsNavigation.getPrimaryScopeFor(attrs.path ?: grailsNavigation.getActivePath(request))
+        out << nav.menu(scope:scope, path:attrs.path)
+    }
+    
+    def secondary = { attrs ->
+        def scope = grailsNavigation.getSecondaryScopeFor(attrs.path ?: grailsNavigation.getActivePath(request))
+        if (scope) {
+            out << nav.menu(scope:scope, path:attrs.path)
+        }
+    }
+    
     def menu = { attrs ->
         println "menu: $attrs"
         def cssClass = attrs.class != null ? attrs.class : 'nav primary'

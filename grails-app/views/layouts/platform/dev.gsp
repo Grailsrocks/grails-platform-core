@@ -6,7 +6,8 @@
 </head>
 <body>
     <div id="nav">
-        <nav:menu scope="dev"/>
+        <nav:primary/>
+        <nav:secondary/>
     </div>
     <g:layoutBody/>
     <r:layoutResources/>

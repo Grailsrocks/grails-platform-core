@@ -60,8 +60,17 @@ class Navigation {
             if (!path) {
                 path = makePath([controller, action]) // @todo if controller is in plugin and has no activation path, this will fail
             }
+            setActivePathWasAuto(request, true)
             setActivePath(request, path)
         }
+    }
+    
+    String getActivePathWasAuto(request) {
+        request['plugin.platformCore.navigation.activePath.auto']
+    }
+    
+    void setActivePathWasAuto(request, boolean value) {
+        request['plugin.platformCore.navigation.activePath.auto'] = true
     }
     
     String getActivePath(request) {
@@ -98,9 +107,7 @@ class Navigation {
     }
     
     NavigationNode getFirstAncestor(String path) {
-        println "gFA: $path"
         def parts = splitActivationPath(path)
-        println "gFA parts: $path - $parts"
         if (parts) {
             return nodeForActivationPath(parts[0])
         } else {
@@ -124,6 +131,20 @@ class Navigation {
             nodes << nodeForActivationPath(makePath(elements[0..i]))
         }
         return nodes
+    }
+    
+    NavigationScope getPrimaryScopeFor(path) {
+        (path ? getFirstNodeOfActivationPath(path) : getFirstActiveNode(request))?.scope
+    }
+    
+    NavigationScope getSecondaryScopeFor(path) {
+        def elements = splitActivationPath(path)
+        switch (elements.size()) {
+            case 0:
+                return null
+            default:
+                return scopeByName(elements[0])
+        }
     }
     
     NavigationNode nodeForControllerAction(String controller, String action) {
@@ -214,7 +235,7 @@ class Navigation {
                         throw new IllegalArgumentException( "You cannot nest scopes - declare scopes at the top level only")
                     }
                     if (c.name == 'overrides') {
-                        // 
+                        throw new IllegalArgumentException( "Sorry but the 'overrides' block is not yet implemented")
                     } else {
                         def newScope = getOrCreateScope(c.name)
                         if (newScope) {
@@ -266,11 +287,12 @@ class Navigation {
             log.debug "Scope for actions of controller $controllerName is ${scope}"
 
             declareControllerNode(
-                scopeName:scope,
-                id:controllerName,
-                activationPath:makePath([controllerName], definingPluginName),
-                controller:controllerName, 
-                action:getDefaultControllerAction(controllerClass))
+                scopeName: scope,
+                id: definingPluginName ? "plugin.${definingPluginName}.${controllerName}" : controllerName,
+                activationPath: makePath([controllerName], definingPluginName),
+                titleDefault: GrailsNameUtils.getNaturalName(controllerName),
+                controller: controllerName, 
+                action: getDefaultControllerAction(controllerClass))
 
             def controllerScope = makePath([controllerName], definingPluginName)
 
@@ -280,8 +302,9 @@ class Navigation {
                 // @todo ONLY do this if the controller/action has not already been mapped by already
                 declareControllerNode(
                     scopeName:controllerScope,
-                    id:controllerName+'.'+action,
+                    id: definingPluginName ? "plugin.${definingPluginName}.${controllerName}.${action}" : "${controllerName}.${action}",
                     activationPath:makePath([controllerName, action], definingPluginName),
+                    titleDefault: GrailsNameUtils.getNaturalName(action),
                     controller:controllerName, 
                     action:action)
             }
@@ -295,7 +318,7 @@ class Navigation {
         def nodeArgs = [
             scope:scope,
             id:args.id,
-            titleDefault:GrailsNameUtils.getNaturalName(args.action),
+            titleDefault:args.titleDefault,
             activationPath:args.activationPath,
             linkArgs:[controller:args.controller,action:args.action]
         ]
