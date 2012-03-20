@@ -48,3 +48,7 @@ ul.nav li {
 ul.nav li.active {
     font-weight: bold;
 }
+
+ul.nav-primary {
+    font-size: 120%;
+}

@@ -28,13 +28,15 @@ class NavigationTagLib {
 
     def primary = { attrs ->
         def scope = grailsNavigation.getPrimaryScopeFor(attrs.path ?: grailsNavigation.getActivePath(request))
-        out << nav.menu(scope:scope, path:attrs.path)
+        attrs.scope = scope
+        out << nav.menu(attrs)
     }
     
     def secondary = { attrs ->
         def scope = grailsNavigation.getSecondaryScopeFor(attrs.path ?: grailsNavigation.getActivePath(request))
         if (scope) {
-            out << nav.menu(scope:scope, path:attrs.path)
+            attrs.scope = scope
+            out << nav.menu(attrs)
         }
     }
     
@@ -47,7 +49,6 @@ class NavigationTagLib {
             scope = 'app'
         }
         if (!(scope instanceof String)) {
-            println "xxxscope: $scope"
             scope = scope.name
         }
         

@@ -6,8 +6,9 @@
 </head>
 <body>
     <div id="nav">
-        <nav:primary/>
-        <nav:secondary/>
+        <nav:primary class="nav nav-primary"/>
+        <hr/>
+        <nav:secondary class="nav nav-secondary"/>
     </div>
     <g:layoutBody/>
     <r:layoutResources/>
