@@ -27,9 +27,8 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.codehaus.groovy.grails.plugins.metadata.GrailsPlugin
 import org.grails.plugin.platform.events.dispatcher.DefaultEventsDispatcher
-import org.codehaus.groovy.grails.plugins.support.aware.GrailsApplicationAware
 
-class Events implements GrailsApplicationAware {
+class Events {
 
     static final private log = Logger.getLogger(Events.class)
 
@@ -37,7 +36,8 @@ class Events implements GrailsApplicationAware {
     EventsPublisher grailsEventsPublisher
     DefaultEventsDispatcher grailsEventsDispatcher
     private ApplicationContext applicationContext
-
+    def grailsApplication
+    
     def injectedMethods = { theContext ->
 
         'controller, domain, service' { Class clazz ->
@@ -111,7 +111,7 @@ class Events implements GrailsApplicationAware {
         }
     }
 
-    void setGrailsApplication(org.codehaus.groovy.grails.commons.GrailsApplication grailsApplication) {
+    void initListeners() {
         this.applicationContext = grailsApplication.mainContext
         registerListeners(grailsApplication.serviceClasses*.clazz)
     }

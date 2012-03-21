@@ -135,6 +135,9 @@ Grails Plugin Platform Core APIs
         // Events API
         task.executor(id: "grailsTopicExecutor", 'pool-size': 10)//todo config
 
+        // UI Helper API
+        grailsUiHelper(org.grails.plugin.platform.ui.UiHelper) 
+        
         //init api bean
         if (grailsVersion.startsWith('1')) {
             gormTopicSupport(GormTopicSupport1X)
@@ -159,6 +162,7 @@ Grails Plugin Platform Core APIs
         grailsEventsDispatcher(DefaultEventsDispatcher)
 
         grailsEvents(org.grails.plugin.platform.events.Events) {
+            grailsApplication = ref('grailsApplication')
             grailsEventsRegistry = ref('grailsEventsRegistry')
             grailsEventsPublisher = ref('grailsEventsPublisher')
             grailsEventsDispatcher = ref('grailsEventsDispatcher')
@@ -167,6 +171,7 @@ Grails Plugin Platform Core APIs
 
     def doWithDynamicMethods = { ctx ->
         ctx.grailsInjection.initInjections()
+        ctx.grailsEvents.initListeners()
     }
 
     def doWithConfigOptions = {
@@ -181,6 +186,7 @@ Grails Plugin Platform Core APIs
         register ctx.grailsPluginConfiguration.injectedMethods
         register ctx.grailsSecurity.injectedMethods
         register ctx.grailsEvents.injectedMethods
+        register ctx.grailsUiHelper.injectedMethods
     }
 
     def doWithApplicationContext = { applicationContext ->

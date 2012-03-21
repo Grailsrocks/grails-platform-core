@@ -160,7 +160,16 @@ public class DefaultEventsRegistry implements EventsRegistry {
             if (result != null) results.add(result);
         }
 
-        return new InvokeResult(results.size(), results.size() != 1 ? results : results.get(0));
+        Object resultValues = null;
+        // Make sure no-result does not cause an error
+        if (results.size() >= 1) {
+            if (results.size() != 1) {
+                resultValues = results;
+            } else {
+                resultValues = results.get(0);
+            }
+        } 
+        return new InvokeResult(results.size(), resultValues);
     }
 
     public class InvokeResult {
