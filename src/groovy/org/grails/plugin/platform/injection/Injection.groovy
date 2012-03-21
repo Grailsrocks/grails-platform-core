@@ -48,6 +48,7 @@ class Injection {
      */
     void register(Closure injectionBuilder) {
         def builder = new InjectionBuilder()
+        
         def injections = builder.build(injectionBuilder, grailsApplication.mainContext)
         for (typeToClosureApplicators in injections) {
             for (applicator in typeToClosureApplicators.value) {

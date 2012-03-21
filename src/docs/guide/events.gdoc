@@ -1,0 +1,5 @@
+The Events API provides a single mechanism for sending and receiving events both synchronously and asynchronously.
+
+It has a pluggable implementation, by default using a lightweight in-memory mechanism.
+
+You use this API to send notifications between parts of your application or from plugin to plugin, or plugin to application.

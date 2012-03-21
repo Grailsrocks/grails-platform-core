@@ -38,6 +38,7 @@ class PlatformCoreGrailsPlugin {
             "grails-app/i18n/test.properties",
             "grails-app/domain/org/grails/plugin/platform/test/**/*.groovy",
             "grails-app/controllers/org/grails/plugin/platform/test/**/*.groovy",
+            "grails-app/services/org/grails/plugin/platform/test/**/*.groovy",
             "grails-app/src/groovy/org/grails/plugin/platform/test/**/*.groovy",
             "grails-app/src/java/org/grails/plugin/platform/test/**/*.java",
             "grails-app/views/error.gsp",

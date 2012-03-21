@@ -10,7 +10,7 @@ grails.project.dependency.resolution = {
         // uncomment to disable ehcache
         // excludes 'ehcache'
     }
-    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    log "debug" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {
         grailsCentral()
         // uncomment the below to enable remote dependency resolution
@@ -30,7 +30,7 @@ grails.project.dependency.resolution = {
 
     plugins {
         build(":tomcat:$grailsVersion",
-                ":release:1.0.2-SNAPSHOT") {
+                /*":release:1.0.2-SNAPSHOT"*/) {
             export = false
         }
 

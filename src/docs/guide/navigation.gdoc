@@ -8,11 +8,23 @@ It is usually enough to have a primary and secondary level of main navigation on
 
 Most sites have other "sub navigation" contexts such as user options like "Log in"/"Sign up"/"Your Profile", and footer nav like "T&Cs", "Privacy Policy", "Contact us" etc that are actually entirely orthogonal navigation structures.
 
-This API uses a flattened approach and scopes. This serves the basic goals very well, and will also provide for those crazy people who also want to have 4-deep nesting of their product catalogue on hideous pop-out menus.
+This API uses a flattened approach with scopes. This serves the basic goals well, and will also provide for those people who also want to have 4-deep nesting of their product catalogue on pop-out menus.
+
+h2. Scopes
 
 Navigation scopes provide for the different kinds of menus you have; your main "app" menu, your "user" menu and "footer" menu for example.
 
 They also provide the basis for rendering secondary navigation based on the currently active primary navigation item.
+
+You render a menu of a given scope i.e. "app" or "user", or you render a primary/secondary menu based on the current "active path" - the scope of these is worked out for you.
+
+h2. Active Path
+
+The active navigation path is set either automatically by inference from the current controller/action.
+
+Alternatively your GSP views or controllers can set the active path by calling tags/methods.
+
+This allows you to "fake" active paths for those tricky UI edge cases.
 
 h2. You can only be in one place at a time. And breadcrumbs
 

@@ -22,6 +22,7 @@ import java.lang.reflect.Method
 import org.apache.log4j.Logger
 import org.grails.plugin.platform.events.publisher.EventsPublisher
 import org.grails.plugin.platform.events.registry.EventsRegistry
+import org.grails.plugin.platform.util.PluginUtils
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.codehaus.groovy.grails.plugins.metadata.GrailsPlugin
@@ -37,23 +38,25 @@ class Events implements GrailsApplicationAware {
     DefaultEventsDispatcher grailsEventsDispatcher
     private ApplicationContext applicationContext
 
-    def injectedMethods = {
-        def self = this
+    def injectedMethods = { theContext ->
+        println "In events injections, theContext is $theContext"
 
         'controller, domain, service' { Class clazz ->
+            Class definingPlugin = PluginUtils.getNameOfDefiningPlugin(theContext, clazz)
+            String scope = definingPlugin?.name()
+            def self = theContext.grailsEvents
+            
             event {String topic, data = null, Map params = null ->
-                self._event(delegate.getClass().getAnnotation(GrailsPlugin)?.name(), topic, data, params)
+                self._event(scope, topic, data, params)
             }
             eventAsync {String topic, data = null, Map params = null ->
-                self._eventAsync(delegate.getClass().getAnnotation(GrailsPlugin)?.name(), topic, data, params)
+                self._eventAsync(scope, topic, data, params)
             }
             eventAsync {String topic, data, Closure callback, params = null ->
-                self._eventAsyncClosure(delegate.getClass().getAnnotation(GrailsPlugin)?.name(), topic,
-                        data, callback, params)
+                self._eventAsyncClosure(scope, topic, data, callback, params)
             }
             eventAsync {String topic, Closure callback ,  params = null ->
-                self._eventAsyncClosure(delegate.getClass().getAnnotation(GrailsPlugin)?.name(), topic,
-                        null, callback, params)
+                self._eventAsyncClosure(scope, topic, null, callback, params)
             }
             copyFrom(self.grailsEventsPublisher, 'waitFor')
             copyFrom(self.grailsEventsRegistry, 'addListener', 'removeListeners', 'countListeners')
@@ -61,14 +64,23 @@ class Events implements GrailsApplicationAware {
     }
 
     EventReply _event(String scope, String topic, data = null, Map params = null) {
+        if (log.debugEnabled) {
+            log.debug "Sending event of scope [$scope] and topic [$topic] with data [${data}] and params [${params}]"
+        }
         grailsEventsPublisher.event(new EventObject(source: scope, event: topic, data: data))
     }
 
     EventReply _eventAsync(String scope, String topic, data = null, Map params = null) {
+        if (log.debugEnabled) {
+            log.debug "Sending async event of scope [$scope] and topic [$topic] with data [${data}] and params [${params}]"
+        }
         grailsEventsPublisher.eventAsync(new EventObject(source: scope, event: topic, data: data))
     }
 
     void _eventAsyncClosure(String scope, String topic, data, Closure callback,  Map params = null) {
+        if (log.debugEnabled) {
+            log.debug "Sending event of scope [$scope] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
+        }
         grailsEventsPublisher.eventAsync(new EventObject(source: scope, event: topic, data: data), callback)
     }
 

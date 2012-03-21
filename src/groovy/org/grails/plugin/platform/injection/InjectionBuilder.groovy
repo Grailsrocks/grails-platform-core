@@ -17,14 +17,19 @@
  */
 package org.grails.plugin.platform.injection
 
+import org.springframework.context.ApplicationContext
+
 /**
  * Supports simple DSL for adding methods to classes
  */
 class InjectionBuilder {
-    Map<String, List<Closure>> build(Closure c, def context) {
+    Map<String, List<Closure>> build(Closure c, ApplicationContext context) {
         Map<String, List<Closure>> res = [:]
         c.delegate = new InjectionBuilderArtefactTypeDelegate(res)
-        c.call(context)
+        ApplicationContext contextCopy = context
+        println "In IB about to call with type ctx copy $contextCopy"
+        c(contextCopy)
+        println "In IB done call with ctx $context"
         return res
     }
 }

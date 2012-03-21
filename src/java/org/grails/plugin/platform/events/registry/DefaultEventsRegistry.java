@@ -85,6 +85,9 @@ public class DefaultEventsRegistry implements EventsRegistry {
     */
 
     private String registerHandler(Closure callback, String topic) {
+        if (log.isDebugEnabled()) {
+            log.debug("Registering event handler ["+callback.getClass()+ "] for topic ["+topic+"]");
+        }
 
         ListenerId listener = ListenerId.build(topic, callback);
         ListenerHandler handler = new ListenerHandler(callback, ReflectionUtils.findMethod(
@@ -99,6 +102,10 @@ public class DefaultEventsRegistry implements EventsRegistry {
     }
 
     private String registerHandler(Object bean, Method callback, String topic) {
+        if (log.isDebugEnabled()) {
+            log.debug("Registering event handler on bean ["+bean+"] method ["+callback+"] for topic ["+topic+"]");
+        }
+
         Object target = bean;
 
         if (bean instanceof Advised) {
