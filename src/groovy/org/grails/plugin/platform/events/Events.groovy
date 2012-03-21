@@ -39,11 +39,10 @@ class Events implements GrailsApplicationAware {
     private ApplicationContext applicationContext
 
     def injectedMethods = { theContext ->
-        println "In events injections, theContext is $theContext"
 
         'controller, domain, service' { Class clazz ->
-            Class definingPlugin = PluginUtils.getNameOfDefiningPlugin(theContext, clazz)
-            String scope = definingPlugin?.name()
+            String scope = null
+            //PluginUtils.getNameOfDefiningPlugin(theContext, clazz)
             def self = theContext.grailsEvents
             
             event {String topic, data = null, Map params = null ->

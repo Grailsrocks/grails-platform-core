@@ -24,15 +24,17 @@ import grails.util.GrailsNameUtils
  */
 class InjectionBuilderArtefactTypeDelegate {
     Map<String, List<Closure>> results
+    def appCtx
     
-    InjectionBuilderArtefactTypeDelegate(Map<String, List<Closure>> res) {
+    InjectionBuilderArtefactTypeDelegate(Map<String, List<Closure>> res, applicationContext) {
         results = res
+        appCtx = applicationContext
     }
     
     void register(Closure nestedDeclarations) {
         def target = nestedDeclarations.clone()
         target.delegate = this
-        target()
+        target(appCtx)
     }
     
     def methodMissing(String name, args) {

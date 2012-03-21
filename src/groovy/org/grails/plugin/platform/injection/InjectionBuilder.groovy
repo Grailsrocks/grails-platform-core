@@ -25,10 +25,10 @@ import org.springframework.context.ApplicationContext
 class InjectionBuilder {
     Map<String, List<Closure>> build(Closure c, ApplicationContext context) {
         Map<String, List<Closure>> res = [:]
-        c.delegate = new InjectionBuilderArtefactTypeDelegate(res)
+        c.delegate = new InjectionBuilderArtefactTypeDelegate(res, context)
         ApplicationContext contextCopy = context
         println "In IB about to call with type ctx copy $contextCopy"
-        c(contextCopy)
+        c.call(contextCopy)
         println "In IB done call with ctx $context"
         return res
     }

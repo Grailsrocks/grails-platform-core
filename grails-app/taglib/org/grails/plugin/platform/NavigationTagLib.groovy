@@ -41,7 +41,6 @@ class NavigationTagLib {
     }
     
     def menu = { attrs ->
-        println "menu: $attrs"
         def cssClass = attrs.class != null ? attrs.class : 'nav primary'
         def id = attrs.id ? "id=\"${attrs.id.encodeAsHTML()}\" " : ''
         def scope = attrs.scope
@@ -58,7 +57,6 @@ class NavigationTagLib {
 
         def activeNodes = findActiveNodes(attrs.path)
         
-        println "Active nodes: ${activeNodes}"
         def scopeNode = grailsNavigation.scopeByName(scope)
         if (scopeNode) {
             out << "<ul ${id}class=\"${cssClass}\">"

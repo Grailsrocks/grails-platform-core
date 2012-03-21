@@ -107,6 +107,7 @@ Grails Plugin Platform Core APIs
         // Config API
         grailsPluginConfiguration(org.grails.plugin.platform.config.PluginConfigurationFactory) { bean ->
             bean.factoryMethod = 'getInstance'
+            grailsApplication = ref('grailsApplication')
         }
 
         def deployed = application.warDeployed

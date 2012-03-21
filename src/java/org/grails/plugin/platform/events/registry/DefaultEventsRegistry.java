@@ -93,7 +93,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         ListenerHandler handler = new ListenerHandler(callback, ReflectionUtils.findMethod(
                 callback.getClass(),
                 "call",
-                Object[].class
+                Object.class
         ), listener);
 
         listeners.add(handler);
@@ -125,6 +125,9 @@ public class DefaultEventsRegistry implements EventsRegistry {
     }
 
     private Set<ListenerHandler> findAll(ListenerId listener) {
+        if (log.isDebugEnabled()) {
+            log.debug("Finding listeners matching listener id ["+listener.toString()+"]");
+        }
         Set<ListenerHandler> listeners =
                 new HashSet<ListenerHandler>();
 
@@ -138,12 +141,21 @@ public class DefaultEventsRegistry implements EventsRegistry {
     }
 
     public InvokeResult invokeListeners(EventObject evt) {
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking listeners for event ["+evt.getEvent()+"] with data ["+evt.getData()+"]");
+        }
         ListenerId listener = new ListenerId(evt.getEvent());
         Set<ListenerHandler> listeners = findAll(listener);
 
+        if (log.isDebugEnabled()) {
+            log.debug("Found "+listeners.size()+" listeners for event ["+evt.getEvent()+"] with data ["+evt.getData()+"]");
+        }
         List<Object> results = new ArrayList<Object>();
         Object result;
         for (ListenerHandler _listener : listeners) {
+            if (log.isDebugEnabled()) {
+                log.debug("Invoking listener ["+_listener.bean+'.'+_listener.method.getName()+"(arg)] for event ["+evt.getEvent()+"] with data ["+evt.getData()+"]");
+            }
             result = _listener.invoke(evt.getData());
             if (result != null) results.add(result);
         }
@@ -184,10 +196,21 @@ public class DefaultEventsRegistry implements EventsRegistry {
 
         public Object invoke(Object... args) {
             Object res = null;
+            if (log.isDebugEnabled()) {
+                StringBuilder argTypes = new StringBuilder();
+                for (Object e : method.getParameterTypes()) {
+                    argTypes.append(e.toString());
+                    argTypes.append(',');
+                }
+                log.debug("About to invoke listener method "+bean+"."+method.getName()+" with arg types "+argTypes+
+                    " with args "+args.toString());
+            }
             try {
                 res = method.invoke(bean, args);
             }catch (IllegalArgumentException e){
-                log.trace("ignoring call for bean "+bean+ " with args "+args.toString());
+                if (log.isDebugEnabled()) {
+                    log.debug("Ignoring call to "+bean+"."+method.getName()+" with args "+args.toString()+" - illegal arg execption: "+e.toString());
+                }
             }catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
