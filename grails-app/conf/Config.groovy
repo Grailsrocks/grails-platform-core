@@ -32,5 +32,5 @@ grails.doc.subtitle = "APIs and Tags for advanced Plugin integration"
 grails.doc.images = new File("resources/img")
 grails.doc.authors = "Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (stephane.maldini@gmail.com)"
 grails.doc.license = "ASL 2"
-grails.doc.copyright = "2012 Marc Palmer & Stéphane Maldini"
+grails.doc.copyright = "&copy; 2012 Marc Palmer & Stéphane Maldini"
 grails.doc.footer = "Please contact the authors with any corrections or suggestions"

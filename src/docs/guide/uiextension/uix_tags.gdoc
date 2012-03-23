@@ -1,16 +1,16 @@
 
 h3. Linking tags
 
-The [ui:smartLink|Tags UI Extension] tag renders links, with convenience
+The [g:smartLink|Tags UI Extension] tag renders links, with convenience
 features for i18n. It resolves the text of the link automatically using the
 controller and action names:
 
 {code:xml}
 <%-- Link to default action of BooksController --%>
-<ui:link controller="books"/>
+<g:smartLink controller="books"/>
 
 <%-- Link to list action of current controller --%>
-<ui:link action="list"/>
+<g:smartLink action="list"/>
 {code}
 
 These will use i18n messages located by convention of the form: @action.*controllerName*.*actionName*@
