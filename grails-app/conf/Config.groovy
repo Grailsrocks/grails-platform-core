@@ -30,7 +30,6 @@ grails.views.default.codec="none" // none, html, base64
 grails.doc.title = "Grails Plugin Platform Core"
 grails.doc.subtitle = "APIs and Tags for advanced Plugin integration"
 grails.doc.images = new File("resources/img")
-grails.doc.css = new File('src/docs/css')
 grails.doc.authors = "Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (stephane.maldini@gmail.com)"
 grails.doc.license = "ASL 2"
 grails.doc.copyright = "2012 Marc Palmer & Stéphane Maldini"
