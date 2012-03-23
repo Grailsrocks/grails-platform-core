@@ -39,6 +39,10 @@ class PlatformToolsController {
         [navScopes:grailsNavigation.scopes]
     }
 
+    def showUiExtensions = {
+        displayMessage text:"This is an alert message", type:'alert'
+    }
+
 /*    
     def jsmodel = {
         [book:[title:'Test book title', author:'Test Author']]

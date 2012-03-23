@@ -75,4 +75,28 @@ class TagLibUtils {
         } 
         return defaultValue
     }
+    
+    /**
+     * Resolve a tag string of the form x:yyyyy into a tag namespace and tag name, with optional no-namespacing for
+     * implicit g: tags
+     */
+    static resolveTagName(String name) {
+        def parts = name.tokenize(':')
+        def ns
+        def tagName
+        switch (parts.size()) {
+            case 1: 
+                ns = "g"
+                tagName = parts[0]
+                break;
+            case 2:
+                ns = parts[0]
+                tagName = parts[1]
+                break;
+            default:
+                throwTagError "The name needs to have a g: namespace tag name or a 'namespace:tagName' value"
+                break;
+        }
+        return [ns, tagName]
+    }
 }

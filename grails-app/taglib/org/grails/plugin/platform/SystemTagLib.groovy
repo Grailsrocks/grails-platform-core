@@ -34,41 +34,11 @@ class SystemTagLib {
         return !(conf[n] instanceof ConfigObject) ? conf[n] : defaultValue
     }
 
-    private hasPlugin(String plugin, String ver) {
-        if (!ver) {
-            return pluginManager.getGrailsPlugin(plugin)
-        } else {
-            return pluginManager.getGrailsPlugin(plugin, ver)
-        }
-    }
-
     def requiresBean = { attrs ->
         def name = attrs.name
         def clazz = attrs['class']
         if (pageScope.variables[name] == null) {
             pageScope.variables[name] = grailsApplication.classLoader.loadClass	(clazz).newInstance()
-        }
-    }
-    
-    def ifInstalled = { attrs, body ->
-        def plugin = attrs.plugin
-        if (!plugin) {
-            throwTagError "You must specify a plugin name (camelCase bean name style) in the [plugin] attribute"
-        }
-        def ver = attrs.version
-        if (hasPlugin(plugin, ver)) {
-            out << body()
-        }
-    }
-
-    def ifNotInstalled = { attrs, body ->
-        def plugin = attrs.plugin
-        if (!plugin) {
-            throwTagError "You must specify a plugin name (camelCase bean name style) in the [plugin] attribute"
-        }
-        def ver = attrs.version
-        if (!hasPlugin(plugin, ver)) {
-            out << body()
         }
     }
 }

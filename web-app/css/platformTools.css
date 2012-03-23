@@ -52,3 +52,14 @@ ul.nav li.active {
 ul.nav-primary {
     font-size: 120%;
 }
+
+.tag-demo {
+    margin-bottom: 20px;
+}
+
+.tag-source, .tag-result, .tag-output {
+    margin: 4px 20px 4px 20px;
+    padding: 4px;
+    background-color: #eee;
+}
+

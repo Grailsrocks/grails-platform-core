@@ -22,6 +22,7 @@ class PlatformCoreUrlMappings {
         if ( Environment.current == Environment.DEVELOPMENT) {
             "/platform"(controller:'platformTools', action:'index')
             "/platform/security/$id?"(controller:'platformTools', action:'security')
+            "/platform/ui-extensions/$id?"(controller:'platformTools', action:'showUiExtensions')
             "/platform/plugin-config/$id?"(controller:'platformTools', action:'showPluginConfig')
             //"/platform/js"(controller:'platformTools', action:'jsmodel')
             "/platform/navigation"(controller:'platformTools', action:'showNavigation')

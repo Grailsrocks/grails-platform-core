@@ -1,7 +1,11 @@
 package org.grails.plugin.platform
 
+import org.grails.plugin.platform.util.TagLibUtils
+
 class UiExtensionsTagLib {
     static namespace = "g"
+    
+    static returnObjectForTags = ['joinClasses']
     
     // @todo OK if the machine stays up over new year this will become invalid...
     def thisYear = new Date()[Calendar.YEAR].toString()
@@ -9,12 +13,13 @@ class UiExtensionsTagLib {
     def grailsUiHelper
     
     def label = { attrs, body ->
-        out << "<label "
+        out << "<label"
+        def t = getMessageOrBody(attrs, body)
         if (attrs) {
             out << TagLibUtils.attrsToString(attrs)
         }
         out << ">"
-        out << getMessageOrBody(attrs, body)
+        out << t
         out << "</label>"
     }
     
@@ -36,7 +41,9 @@ class UiExtensionsTagLib {
                 out << g.link(attrs, text)
                 break;
             case 'submit':
-                attrs.value = text
+                if (!attrs.value) {
+                    attrs.value = text
+                }
                 out << g.actionSubmit(attrs)
                 break;
         }
@@ -55,10 +62,13 @@ class UiExtensionsTagLib {
             def msgParams = grailsUiHelper.getDisplayMessage(scope)
             if (msgParams) {
                 if (attrs.type) {
-                    classes = classes + " ${attrs.type}"
+                    classes = joinClasses(values:[classes, attrs.type])
+                } else if (msgParams.type){
+                    classes = joinClasses(values:[classes, msgParams.type])
                 }
-                attrs.code = msg
-                attrs.args = msgArgs
+                attrs.code = msgParams.text
+                attrs.args = msgParams.args
+                attrs.encodeAs = 'HTML'
             
                 out << "<div class=\"${classes.encodeAsHTML()}\">"
                 out << g.message(attrs)
@@ -100,4 +110,37 @@ class UiExtensionsTagLib {
     def year = { attrs ->
         out << thisYear
     }        
+    
+    def joinClasses = { attrs ->
+        StringBuilder res = new StringBuilder()
+        def first = true
+        attrs.values?.each { v ->
+            if (v) {
+                if (!first) {
+                    res << ' '
+                } else {
+                    first = false
+                }
+                res << v
+            }
+        }
+        return res.toString()
+    }
+    
+    def callTag = { attrs, body ->
+        def name = attrs.remove('tag')
+        def bodyAttr = attrs.remove('bodyContent')
+        def (ns, tagName) = TagLibUtils.resolveTagName(name)
+        def mergedAttrs
+        if (attrs.attrs != null) {
+            mergedAttrs = attrs.remove('attrs')
+        }
+        if (mergedAttrs) {
+            mergedAttrs.putAll(attrs)
+        } else {
+            mergedAttrs = attrs
+        }
+        def taglib = this[ns]
+        out << taglib."${tagName}"(mergedAttrs, bodyAttr ?: body)
+    }    
 }
