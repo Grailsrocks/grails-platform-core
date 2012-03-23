@@ -1,0 +1,36 @@
+
+h3. Linking tags
+
+The [ui:smartLink|Tags UI Extension] tag renders links, with convenience
+features for i18n. It resolves the text of the link automatically using the
+controller and action names:
+
+{code:xml}
+<%-- Link to default action of BooksController --%>
+<ui:link controller="books"/>
+
+<%-- Link to list action of current controller --%>
+<ui:link action="list"/>
+{code}
+
+These will use i18n messages located by convention of the form: @action.*controllerName*.*actionName*@
+    
+h3. Label tag
+
+h3. Button tag
+
+h3. Display message tag
+
+h3. Branding tags
+
+siteLink
+
+siteName
+
+siteURL
+
+year
+
+company
+
+

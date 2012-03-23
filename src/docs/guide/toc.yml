@@ -2,6 +2,10 @@ overview:
   title: Overview
   apis: The APIs
 gettingStarted: Getting Started
+uiextension:
+  title: UI Extensions
+  uix_tags: Tags
+  uix_code: Beans and utilities
 configuration:
   title: Configuration API
   changing_config: Changing Application and Plugin Config Values
@@ -10,9 +14,14 @@ configuration:
 security:
   title: Security API
   security_implementing_bridge: Implementing a Security Bridge
+events:
+  title: Events API
+  what_is_an_event: What is an event?
+  listening: Listening for events
+  sending: Sending events
 injection:
   title: Injection API
 navigation:
-  title: NOT YET - Navigation API
+  title: Navigation API
 convention:
-  title: NOT YET - Convention API
+  title: Convention API

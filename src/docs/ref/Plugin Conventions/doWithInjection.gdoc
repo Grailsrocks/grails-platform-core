@@ -1,1 +1,3 @@
-The doWithInjection closure in your plugin descriptor is used instead of the core Grails doWithDynamicMethods closure, to easily add dynamic methods to artefacts in the application.
+The doWithInjection closure in your plugin descriptor is used instead of the
+core Grails doWithDynamicMethods closure, to easily add dynamic methods to
+artefacts in the application.

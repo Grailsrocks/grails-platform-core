@@ -1,3 +1,8 @@
-The grailsPluginConfiguration bean is responsible for merging plugin evaluating the configuration options DSL and merging configurations from plugins with the application's configuration.
+The grailsPluginConfiguration bean is responsible for merging plugin
+evaluating the configuration options DSL and merging configurations from
+plugins with the application's configuration.
 
-Normally you will not need to access this bean, but you may want need to object the relevant plugin Config data for an artefact defined by a plugin - to do so you can call @getPluginConfigFor(objectInstance)@ and you will receive the ConfigObject if any.
+Normally you will not need to access this bean, but you may want need to
+object the relevant plugin Config data for an artefact defined by a plugin -
+to do so you can call @getPluginConfigFor(objectInstance)@ and you will
+receive the ConfigObject if any.

@@ -76,46 +76,4 @@ class HTMLTagLib {
         out << '\n</html>'
     }
     
-    def label = { attrs, body ->
-        out << "<label "
-        if (attrs) {
-            out << TagLibUtils.attrsToString(attrs)
-        }
-        out << ">"
-        // @todo messageorbody!
-        out << body()
-        out << "</label>"
-    }
-    
-    def button = { attrs, body ->
-        def kind = attrs.remove('kind') ?: 'button'
-        def text = getMessageOrBody(attrs, body)
-        switch (kind) {
-            case 'button':
-                out << "<button"
-                if (attrs) {
-                    out << TagLibUtils.attrsToString(attrs)
-                }
-                out << ">${text}</button>"
-                break;
-            case 'anchor':
-                if (!attrs.'class') {
-                    attrs.'class' = "button"
-                }
-                out << g.link(attrs, text)
-                break;
-            case 'submit':
-                attrs.value = text
-                out << g.actionSubmit(attrs)
-                break;
-        }
-    }
-    
-    // @todo move this to TagLibUtils and use messageSource
-    protected getMessageOrBody(Map attrs, Closure body) {
-        def textCode = attrs.remove('text')
-        def v = textCode ? g.message(code:textCode, encodeAs:'HTML') : body()
-        return v
-    }
-
 }

@@ -1,0 +1,5 @@
+Several simple UI Extensions are included in platform-core.
+
+The tags supplied make it trivial to render links to controllers and actions
+using i18n messages, display messages to the end user, and render buttons and
+labels in i18n friendly ways.
