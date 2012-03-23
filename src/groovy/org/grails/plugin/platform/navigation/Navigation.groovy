@@ -37,7 +37,10 @@ class Navigation {
 
     String getDefaultControllerAction(String controllerName) {
         def artef = grailsApplication.getArtefact('Controller', controllerName)
-        return artef?.defaultAction
+        if (log.debugEnabled) {
+            log.debug "Getting default action for [$controllerName]"
+        }
+        return artef?.defaultAction ?: 'index' 
     }
 
     void setActivePathFromRequest(request, controllerName, action) {
@@ -56,6 +59,7 @@ class Navigation {
             if (node) {
                 path = node.activationPath
             }
+
             // If not, we build a default activation path from controller/action pair
             if (!path) {
                 path = makePath([controllerName, action]) // @todo if controller is in plugin and has no activation path, this will fail
@@ -269,6 +273,7 @@ class Navigation {
             
             def definingPluginName = PluginUtils.getNameOfDefiningPlugin(grailsApplication.mainContext, controllerClass)
             
+            log.debug "Controller for navigation is defined in plugin [${definingPluginName}]"
             def scope = controllerClass.metaClass.hasProperty(null, 'navigationScope') ? controllerClass.navigationScope : null
             
             if (!scope) {
