@@ -22,7 +22,7 @@ class PlatformToolsController {
     def grailsSecurity
     def grailsNavigation
     
-//    static navigationScope = "test"
+    static navigationScope = "platform"
     
     def index = {
     }

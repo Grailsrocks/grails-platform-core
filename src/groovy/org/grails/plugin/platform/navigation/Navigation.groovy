@@ -35,30 +35,30 @@ class Navigation {
         request['plugin.platformCore.navigation.activeNode'] = nodeForActivationPath(path)
     }
 
-    String getDefaultControllerAction(Class controller) {
-        def artef = grailsApplication.getArtefact('Controller', controller.name)
+    String getDefaultControllerAction(String controllerName) {
+        def artef = grailsApplication.getArtefact('Controller', controllerName)
         return artef?.defaultAction
     }
 
-    void setActivePathFromRequest(request, controller, action) {
+    void setActivePathFromRequest(request, controllerName, action) {
         if (log.debugEnabled) {
-            log.debug "Setting navigation active path from current request controller/action [$controller] and [$action]"
+            log.debug "Setting navigation active path from current request controller/action [$controllerName] and [$action]"
         }
         
-        if (controller) {
+        if (controllerName) {
             if (!action) {
-                action = getDefaultControllerAction(controller)
+                action = getDefaultControllerAction(controllerName)
             }
             
             def path 
             // See if we can reverse map from controller/action to an activation path
-            def node = nodeForControllerAction(controller, action)
+            def node = nodeForControllerAction(controllerName, action)
             if (node) {
                 path = node.activationPath
             }
             // If not, we build a default activation path from controller/action pair
             if (!path) {
-                path = makePath([controller, action]) // @todo if controller is in plugin and has no activation path, this will fail
+                path = makePath([controllerName, action]) // @todo if controller is in plugin and has no activation path, this will fail
             }
             setActivePathWasAuto(request, true)
             setActivePath(request, path)
@@ -292,7 +292,7 @@ class Navigation {
                 activationPath: makePath([controllerName], definingPluginName),
                 titleDefault: GrailsNameUtils.getNaturalName(controllerName),
                 controller: controllerName, 
-                action: getDefaultControllerAction(controllerClass))
+                action: getDefaultControllerAction(controllerClass.name))
 
             def controllerScope = makePath([controllerName], definingPluginName)
 
