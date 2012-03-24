@@ -37,7 +37,9 @@ This might output:
 
 h2. Attributes
 
-| *Name* | *Purpose* |
-| class | CSS classes to apply to the div. The value of the message "type" will be appended to the class list |
+{table}
+*Name* | *Purpose*
+class | CSS classes to apply to the div. The value of the message "type" will be appended to the class list
+{table}
 
-Any specified are passed through to g:message to create the text
+Any other attributes specified are passed through to g:message to create the text.

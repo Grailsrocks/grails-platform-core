@@ -1,9 +1,7 @@
 
 h3. Linking tags
 
-The [g:smartLink|Tags UI Extension] tag renders links, with convenience
-features for i18n. It resolves the text of the link automatically using the
-controller and action names:
+The [g:smartLink|Tags UI] tag renders links for controllers and actions, automatically working out the text of the link using i18n.
 
 {code:xml}
 <%-- Link to default action of BooksController --%>
@@ -17,19 +15,43 @@ These will use i18n messages located by convention of the form: @action.*control
     
 h3. Label tag
 
+The label tag will render a <label> with the text optionally loaded from i18n:
+
+{code:xml}
+<g:label text="field.user.name"/>
+{code}
+
+See [g:label| Tags UI] for full details of the attributes, which include passing arguments to the i18n message.
+
 h3. Button tag
+
+The button tag will render a text-based button using either a <button>, <input type="submit"> or <a> tag, with the text optionally loaded from i18n:
+
+{code:xml}
+<g:button text="button.save"/>
+{code}
+
+See [g:button| Tags UI] for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.
 
 h3. Display message tag
 
+The displayMessage tag works with the @displayMessage@ and @displayFlashMessage@ controller methods to make it easy to render messages to the user in a uniform way.
+
+{code:xml}
+<g:displayMessage/>
+{code}
+
+See [g:displayMessage| Tags UI] for full details of the attributes and the [displayMessage|Controller Methods] and [displayFlashMessage|Controller Methods] controller methods.
+
+The tag will render both request and flash messages, and wraps them in a div with CSS classes according to the type of message.
+
 h3. Branding tags
 
-siteLink
+There are several simple but useful site branding tags included. Commonly to be used in site footers and emails templates.
 
-siteName
-
-siteURL
-
-year
-
-company
+* [g:company|Tags UI] - Renders the name of the business, taken from Config var @plugin.platformCore.company.name@
+* [g:siteName|Tags UI] - Renders the name of the site/product, taken from Config var @plugin.platformCore.site.name@
+* [g:siteURL|Tags UI] - Renders an absolute URL for the root of the site
+* [g:siteLink|Tags UI] - Renders an absolute link to the site, with the site name as the link text
+* [g:year|Tags UI] - Renders the current year, for use in copyright footers
 

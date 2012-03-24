@@ -1,6 +1,4 @@
-To get started you need to install the platform plugin, and perhaps some other plugins that provide implementations of the abstracted interfaces.
-
-h2. Installing the platform
+To get started you need to install the platform-core plugin.
 
 Add the plugin platform as a dependency to your application or plugin, either directly or transitively. To do so directly edit your @BuildConfig.groovy@ to look something like this:
 
@@ -8,19 +6,11 @@ Add the plugin platform as a dependency to your application or plugin, either di
     ...
     plugins {
         ...
-        compile "\:plugin-platform\:1.0-M1"
+        compile "\:platform-core\:1.0.M1"
     }
 {code}
 
-You can run your code now and browse to [http://localhost:8080/<appname>/platform/], a special page available only in the development environment. From there you can explore some of the plugin platform features, preview UI Sets and Themes etc.
+You can run your code now and browse to [http://localhost:8080/<appname>/platform/], a special page available only in the development environment. From there you can explore some of the plugin platform features in the debug interface.
 
-The platform includes a default Grails Theme and UI Set out of the box. There is however no default bridge for the Security API, this will need to come from the security plugin you use, or your application. See [implementing a security bridge|guide:security_implementing_bridge]
-
-h2. Some recipes to get you started
-
-h3. Build an application using themes
-
-h3. Declaring your own plugin's Config options
-
-h3. Adopting the Security API
+There is no default security implementation for the Security API, this will need to come from the security plugin you use, or your application. See [implementing a security bridge|guide:security_implementing_bridge]
 

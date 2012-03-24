@@ -1,6 +1,8 @@
 overview: 
   title: Overview
   apis: The APIs
+  changelog: Change log
+  knownissues: Known Issues
 gettingStarted: Getting Started
 uiextension:
   title: UI Extensions

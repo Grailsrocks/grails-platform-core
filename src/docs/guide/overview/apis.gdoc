@@ -1,17 +1,12 @@
-The APIs include in this release include:
+The features include in this release include:
 
-* Configuration - Plugin-namespaced config, Config merging, validation and default values
-* Security - An abstraction of basic security features that most applications require, with implementations to be provided by plugins or your application
-* UI - Provides UI tags for plugins and applications to use for basic common UI elements. The rendering of the tags is pluggable and interacts with Themes, though you can use the UI Sets without using themes. Many of these tags also make it easier to internationalize plugins and applications
-* Themes - A set of tags and logic for page layout and theming, such that themes can be plugged in or supplied by an application and plugins can provide UI that works within your theme.
-* Injection - An API and implementation that greatly simplifies the addition of dynamic methods to application and plugin artefacts
-* Events - An API and default implementation for sending synchronous and asynchronous events to other beans. For plugins and applications to communicate with each other in a uniform way
-* Navigation - NOT IMPLEMENTED - A simple menu navigation API and tags to establish a standard navigation mechanism
-* Convention - NOT IMPLEMENTED - A way for plugins to declare the conventions that they expect on artefacts, and mechanisms for the application and other plugins to override the values of these conventions to alter behaviour originally defined in the plugin that declared the artefact
+* Configuration API - Plugin-namespaced config, Config merging, validation and default values
+* Security API - An abstraction of basic security features that most applications require, with implementations to be provided by plugins or your application
+* UI Extensions - A set of tags and helper functions 
 
-Each API is covered in more detail later in this documentation.
+Each feature is covered in more detail later in this documentation.
 
-The Plugin Platform is very self-referential - it uses own APIs - for example to provide event hooks for Grails application lifecycle, to declare dynamic methods on your controller and service artefacts, and to declare the configuration values that it uses.
+The platform is very self-referential - it uses own APIs - for example to provide event hooks for Grails application lifecycle, to declare dynamic methods on your controller and service artefacts, and to declare the configuration values that it uses.
 
 All of these APIs are designed to be as simple as possible while providing some very high level features. 
 

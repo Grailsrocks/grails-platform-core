@@ -1,1 +1,4 @@
-Pending
+There are a some UI utility classes and beans:
+
+* [grailsUiHelper|Beans] - Provides methods for setting and getting displayMessages
+* [TagLibUtils|Utility Classes] - Provides helper functions for manipulating attributes, CSS class name lists etc.

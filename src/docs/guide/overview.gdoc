@@ -1,6 +1,4 @@
-The Plugin Platform provides APIs that provide the glue required for advanced
-Grails plugins to interoperate with each other and applications to achieve
-tight integration and compatibility across multiple Grails versions, and turbo-charge the development of a new generation of plugins.
+The Plugin Platform provides APIs and utilities that provide the glue required for advanced Grails plugin development and integration across multiple Grails versions, and turbo-charge the development of a new generation of plugins.
 
 The founding principle is that these platform features should not be part of
 Grails core because this would tie plugins that use the APIs to specific Grails versions.

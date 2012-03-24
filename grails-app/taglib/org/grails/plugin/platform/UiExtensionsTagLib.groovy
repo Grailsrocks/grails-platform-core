@@ -52,7 +52,12 @@ class UiExtensionsTagLib {
     // @todo move this to TagLibUtils and use messageSource
     protected getMessageOrBody(Map attrs, Closure body) {
         def textCode = attrs.remove('text')
-        def v = textCode ? g.message(code:textCode, encodeAs:'HTML') : body()
+        def textCodeArgs = attrs.remove('textArgs')
+        def textFromCode = textCode ? g.message(code:textCode, args:textCodeArgs) : null
+        if (textFromCode) {
+            textFromCode = textFromCode.encodeAsHTML()
+        }
+        def v = textFromCode ?: body()
         return v
     }
 
