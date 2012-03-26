@@ -4,21 +4,32 @@ It is deliberately minimal to place few requirements on implementations.
 
 It is not intended to be a complete security abstraction, but "just enough" for the needs of most applications and plugins that do not require advanced security manipulation - which will likely always require direct knowledge of the underlying provider.
 
+This API provides the most basic security features to enable this
+interoperatibility, using a bridging interface that security plugins must
+implement to actually provide these services.
+
+Security plugins must implement the "provider" bean - out of the box there is no security implementation.
+
 h3. Dynamic methods
 
 These methods are added to Services, Controllers, TagLibs and Domain Classes:
 
 * getSecurityIdentity() - The string used to identify the current logged in user. Typically a user id, user name or email address. The nature of this value is dependent on your security implementation
 * getSecurityInfo() - The object representing the current logged in user's information.
-* userHasAnyRole(roleOrRoles)
-* userHasAllRoles(roleOrRoles)
-* userIsAllowed(object, action)
+* userHasAnyRole(roleOrRoles) - test if the current user has any of the roles
+* userHasAllRoles(roleOrRoles) - test if the current user has all of the roles
+* userIsAllowed(object, action) - test if the current user has a specified permission on an object
+* withUser(identity) - run a section of code as another user
+
+See the reference guide for further details on these.
 
 h3. Tags
 
+Here's an example of some of the security tags available:
+
 {code}
-<s:userName/>
-<s:userInfo property="email"/>
+<s:identity/>
+<s:info property="email"/>
 <s:ifPermitted role="ROLE_ADMIN">
     ...
 </s:ifPermitted>
@@ -30,88 +41,18 @@ h3. Tags
 <a href="${s.createSignupLink()}">Sign up</a>
 {code}
 
-Plugins that provide high level functionality often need to make use of
-security - to either restrict access to their features or to interact with the
-user's identity.
+h3. grailsSecurity bean
 
-This API provides the most basic security features to enable this
-interoperatibility, using a bridging interface that security plugins must
-implement to actually provide these services.
+The Security bean provides access to all the basic security functions. These are passed through to the security bridge implementation.
 
-#### grailsSecurity bean
+This includes methods for applications and plugins to use such as:
 
-The Security bean provides access to the basic security functions. These are passed through to the security bridge implementation.
-
-{code}
-    String getUserName()
-    /**
-     * Get user info object i.e. email address, other stuff defined by the application
-     */
-    def getUserInfo()
-
-    def userHasRole(role)
-
-    /**
-     * Can the current user access this object to perform the named action?
-     * @param object The object, typically domain but we don't care what
-     * @param action Some application-defined action string i.e. "view" or "edit"
-     */
-    def userIsAllowed(object, action)
-
-    def ifUserHasRole(role, Closure code)
-
-    /**
-     * Can the current user access this object to perform the named action?
-     * @param object The object, typically domain but we don't care what
-     * @param action Some application-defined action string i.e. "view" or "edit"
-     */
-    def ifUserIsAllowed(object, action, Closure code)
-{code}
+* String getUserIdentity()
+* def getUserInfo()
+* boolean userHasRole(role)
+* boolean userIsAllowed(object, action)
+* def ifUserHasRole(role, Closure code)
 
 You simply auto wire this bean into your classes using the name "grailsSecurity"
 
-#### Security Provider Interface
-
-The information required to implement the basic security features is provided
-by an implementation of the SecurityBridge interface.
-
-An application or more typically a plugin that provides the security
-implementation will have to implement this interface and expose it as a bean
-called grailsSecurityBridge.
-
-The interface is defined here:
-
-{code}
-    interface SecurityBridge {
-
-        /**
-         * Get user id string i.e. "marcpalmer" of the currently logged in user, from whatever
-         * underlying security API is in force
-         */
-        String getUserName()
-
-        /**
-         * Get user info object i.e. email address, other stuff defined by the application
-         */
-        def getUserInfo()
-
-        /**
-         * Return true if the current logged in user has the specified role
-         */
-        boolean userHasRole(role)
-
-        /**
-         * Can the current user access this object to perform the named action?
-         * @param object The object, typically domain but we don't care what
-         * @param action Some application-defined action string i.e. "view" or "edit"
-         */
-        boolean userIsAllowed(object, action)
-
-        /**
-         * Create a link to the specified security action
-         * @param action One of "login", "logout", "signup"
-         */
-        String createLink(String action)
-    }
-{code}
-    
+For more details see [grailsSecurity|beans].

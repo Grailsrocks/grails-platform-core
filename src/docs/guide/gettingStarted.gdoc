@@ -10,7 +10,7 @@ Add the plugin platform as a dependency to your application or plugin, either di
     }
 {code}
 
-You can run your code now and browse to [http://localhost:8080/<appname>/platform/], a special page available only in the development environment. From there you can explore some of the plugin platform features in the debug interface.
+You can run your code now and browse to @http://localhost:8080/<appname>/platform/@, a special page available only in the development environment. From there you can explore some of the plugin platform features in the debug interface.
 
 There is no default security implementation for the Security API, this will need to come from the security plugin you use, or your application. See [implementing a security bridge|guide:security_implementing_bridge]
 

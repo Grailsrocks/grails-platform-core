@@ -1,1 +1,24 @@
-Pending
+h1. displayMessage
+
+Call this method in controllers to set the display message for the current request.
+
+The view can render this message using the [g:displayMessage|tagsUiExtension] tag.
+
+There are two forms of the method:
+
+@displayMessage(String msg)@ - set the message string (or message code)
+@displayMessage(Map args)@ - set the message arguments (or message code)
+
+The @args@ supported are:
+
+{table}
+*Name* | *Purpose* 
+text | The text of the label, or an i18n code to resolve to use as the text 
+textArgs | Optional arguments to pass when creating the i18n message text 
+type | Optional message type indicator i.e. 'warning', 'error', 'info', 'debug' 
+{table}
+
+This method stores the message information in the current request scope.
+
+
+

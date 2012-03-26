@@ -1,6 +1,9 @@
+h1. grailsSecurity
+
 The grailsSecurity bean is an instance of
-org.grails.plugin.platform.security.Security that provides access to the
+@org.grails.plugin.platform.security.Security@ that provides access to the
 generic security features of the platform.
 
 The implementation itself delegates much of the functionality to a
-grailsSecurityBridge bean provided by any security plugins that are installed.
+@grailsSecurityBridge@ bean provided by any security plugins that are installed.
+

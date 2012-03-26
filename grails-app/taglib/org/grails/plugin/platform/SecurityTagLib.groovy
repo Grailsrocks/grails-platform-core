@@ -52,6 +52,7 @@ class SecurityTagLib {
     }
 
     def ifNotPermitted = { attrs, body ->
+        // @todo using bean + action here we can also implement object permission checks
         if (!grailsSecurity.userHasRole(attrs.role)) {
             out << body()
         }

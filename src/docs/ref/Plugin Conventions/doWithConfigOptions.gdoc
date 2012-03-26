@@ -1,2 +1,27 @@
-The doWithConfigOptions closure in plugin descriptors is used to declare the
-Config options that your plugin supports.
+h1. doWithConfigOptions
+
+This event hook closure defines the config options that your plugin supports.
+
+Example:
+
+{code}
+def doWithConfigOptions = {
+    'organization.name'(type: String, defaultValue: 'My Corp (set plugin.platformCore.organization.name)')
+    'site.name'(type: String, defaultValue: 'Our App (set plugin.platformCore.site.name)')
+}
+{code}
+
+This block, from the platform-core plugin, defines two configuration values of type String, with a default value.
+
+You can also supply a custom validator:
+
+{code}
+def doWithConfigOptions = {
+    'concurrentConnections'(type: Integer, defaultValue: 10, 
+        validator: { v -> v < 500 ? null : 'concurrent.connections.too.big' }
+}
+{code}
+
+Behaving just like constraint validators, your validator returns null for "ok" or an i18n message string for the error.
+
+

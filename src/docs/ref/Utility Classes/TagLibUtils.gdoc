@@ -1,0 +1,6 @@
+h1. TagLibUtils
+
+This class has several static methods to help with rendering attribute lists,
+CSS class lists and receiving attributes that may be strings or lists.
+
+See the source code for full details.

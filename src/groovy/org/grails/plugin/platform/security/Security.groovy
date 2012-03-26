@@ -82,14 +82,14 @@ class Security implements ApplicationContextAware {
         getSecurityBridge()?.userInfo
     }
 
-    def userHasAnyRole(roleOrRoles) {
+    boolean userHasAnyRole(roleOrRoles) {
         def roles = roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles]
         roles.any { r ->
             getSecurityBridge()?.userHasRole(r)
         }
     }
 
-    def userHasAllRoles(roleOrRoles) {
+    boolean userHasAllRoles(roleOrRoles) {
         def roles = roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles]
         roles.every { r ->
             getSecurityBridge()?.userHasRole(r)
@@ -101,7 +101,7 @@ class Security implements ApplicationContextAware {
      * @param object The object, typically domain but we don't care what
      * @param action Some application-defined action string i.e. "view" or "edit"
      */
-    def userIsAllowed(object, action) {
+    boolean userIsAllowed(object, action) {
         getSecurityBridge()?.userIsAllowed(object, action)
     }
 

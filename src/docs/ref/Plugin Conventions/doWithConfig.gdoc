@@ -1,3 +1,40 @@
 The doWithConfig closure in your plugin descriptor allows you to merge
 configuration values into the applications config, and to configure other
 plugins' declared configuration values safely.
+
+The DSL takes the form of:
+{code}
+    <pluginName> {
+         <config.path.here> = <value>
+    }
+    // optional if monkeying with legacy grails config
+    application {
+         <config.path.here> = <value>
+    }
+{code}
+
+So for example:
+
+{code}
+def doWithConfig = { config ->
+    platformUi {
+        ui.Bootstrap.button.cssClass = 'btn'
+        ui.Bootstrap.tab.cssClass = 'tab-pane'
+        ui.Bootstrap.field.cssClass = 'input'
+    }
+    
+    application {
+        // set something based on another config value that has already been
+        // by the application
+        grails.x.y = config.p.q == 'something' ? true : false
+    }
+}
+{code}
+
+The above code configures values of the "platform-ui" plugin, and also changes some legacy Grails global config value called "grails.x.y".
+
+The @config@ argument passed in contains a reference to the ConfigObject of the grails application so that you can read existing values in order to set other values. Obviously the values read from here are dependent on plugin execution order.
+
+{note}
+The Config API always gives the application developer the final say on the config values. So if 3 plugins try to change a value and the app Config.groovy also changes it, the app setting *always* wins.
+{note}

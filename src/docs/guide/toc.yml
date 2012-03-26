@@ -18,9 +18,6 @@ security:
   security_implementing_bridge: Implementing a Security Bridge
 events:
   title: Events API
-  what_is_an_event: What is an event?
-  listening: Listening for events
-  sending: Sending events
 injection:
   title: Injection API
 navigation:
