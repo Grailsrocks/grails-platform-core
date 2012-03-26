@@ -1,1 +1,19 @@
-Pending
+h1. s:createLogoutLink
+
+h2. Purpose
+
+Returns a URL that will logout the use when visited.
+
+This gets the URL from the security provider that is installed.
+
+To render a button that will take the user to this page, see [s:logoutButton|tagsSecurity].
+
+h2. Example
+
+{code:xml}
+<s:createLogoutLink/>
+{code}
+
+h2. Attributes
+
+None.

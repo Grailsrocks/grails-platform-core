@@ -1,1 +1,17 @@
-Pending
+h1. s:logoutButton
+
+h2. Purpose
+
+Renders a button for users to click to Sign up using the installed security provider.
+
+Uses the [s:createLogoutLink|tagsSecurity] tag to get a URL from the security provider.
+
+h2. Example
+
+{code:xml}
+<s:logoutButton/>
+{code}
+
+h2. Attributes
+
+None.

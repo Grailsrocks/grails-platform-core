@@ -1,1 +1,23 @@
-Pending
+h1. s:ifNotPermitted
+
+h2. Purpose
+
+Renders the body of the tag only if the user permissions are *not* met.
+
+This uses the underlying security provider to test the condition.
+
+h2. Example
+
+{code:xml}
+<s:ifNotPermitted role="ADMIN">
+   Sorry you can't do this
+</s:ifNotPermitted>
+{code}
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+role | Required - The role to test for. If the user does not have this role the body will be rendered
+{table}
+

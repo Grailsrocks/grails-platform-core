@@ -1,1 +1,19 @@
-Pending
+h1. s:createLoginLink
+
+h2. Purpose
+
+Returns a URL that will take the user to a login screen.
+
+This gets the URL from the security provider that is installed.
+
+To render a button that will take the user to this page, see [s:loginButton|tagsSecurity].
+
+h2. Example
+
+{code:xml}
+<s:createLoginLink/>
+{code}
+
+h2. Attributes
+
+None.
