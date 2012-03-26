@@ -26,7 +26,7 @@
         <p:tagDemo tag="g:smartLink" action="showPluginConfig"/>
 
         <h2>Branding</h2>
-        <p:tagDemo tag="g:company"/>
+        <p:tagDemo tag="g:organization"/>
         <p:tagDemo tag="g:siteName"/>
         <p:tagDemo tag="g:siteURL"/>
         <p:tagDemo tag="g:siteLink"/>

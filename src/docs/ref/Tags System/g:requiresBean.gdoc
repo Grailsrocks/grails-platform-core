@@ -1,1 +1,23 @@
-Pending
+h1. g:requiresBean
+
+h2. Purpose
+
+Ensures that the model contains a bean of the given type and name, creating a default instance if there is none.
+
+Use this to avoid having to create empty domain or command objects in your controller actions that simply display a form.
+
+h2. Example
+
+{code:xml}
+<g:requiresBean name="form" class="MyFormCommand"/>
+<input name="title" value="${form.title}"/>
+{code}
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+name | Required - The name of the model variable to use
+class | Required - The class name of the object to create if it does not exist. It must have a default no-argument constructor
+{table}
+

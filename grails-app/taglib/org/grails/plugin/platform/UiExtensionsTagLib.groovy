@@ -90,9 +90,9 @@ class UiExtensionsTagLib {
         out << g.link(attrs, text)
     }
     
-    def company = { attrs ->
+    def organization = { attrs ->
         def codec = attrs.encodeAs ?: 'HTML'
-        def s = pluginConfig.company.name
+        def s = pluginConfig.organization.name
         out << (codec != 'none' ? s."encodeAs$codec"() : s)
     }
     

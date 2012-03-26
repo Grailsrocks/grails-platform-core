@@ -1,0 +1,18 @@
+h1. g:siteURL
+
+h2. Purpose
+
+Renders an absolute URL pointing to the site. This is a shortcut for using g:createLink with absolute="true".
+
+See [g:siteLink|tagUiExtensions] for details of the site link tag that uses this and @g:siteName@.
+
+h2. Example
+
+{code:xml}
+<g:siteURL/>
+{code}
+
+h2. Attributes
+
+None
+

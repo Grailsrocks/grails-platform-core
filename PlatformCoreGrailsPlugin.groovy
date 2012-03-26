@@ -175,7 +175,7 @@ Grails Plugin Platform Core APIs
     }
 
     def doWithConfigOptions = {
-        'company.name'(type: String, defaultValue: 'My Corp (set plugin.platformCore.company.name)')
+        'organization.name'(type: String, defaultValue: 'My Corp (set plugin.platformCore.organization.name)')
         'site.name'(type: String, defaultValue: 'Our App (set plugin.platformCore.site.name)')
     }
 

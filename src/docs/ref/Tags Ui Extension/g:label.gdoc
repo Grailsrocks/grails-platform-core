@@ -1,0 +1,24 @@
+h1. g:label
+
+h2. Purpose
+
+Renders a <label> element, with the text optionally loaded from i18n if required.
+
+h2. Example
+
+{code:xml}
+<g:label text="field.user.name"/>
+<g:label text="field.user.name" textArgs="[user.name]"/>
+{code}
+
+This is really useful for i18n.
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+text | The text of the label, or an i18n code to resolve to use as the text 
+textArgs | Optional arguments to pass when creating the i18n message text 
+{table}
+
+Any other attributes specified are passed through to the output.

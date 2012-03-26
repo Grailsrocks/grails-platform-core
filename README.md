@@ -101,23 +101,6 @@ Example:
 
 This is simply the direct inverse of g:ifInstalled
 
-### General purpose tags
-
-There are some general purpose tags provided for convenience.
-
-#### g:html
-
-The g:html tag replaces <html> and renders the correct doctype for
-you (<g:html doctype="html 4.01">...).
-
-This saves you having to worry about the details of HTML doctypes, and also
-allows you to easily parameterise them in the case of plugins that provide
-views.
-
-Attributes
-
-* doctype - Optional. Defaults to "html 5". Also supports "html 4.01", "xhtml 1.0" and "xhtml 1.1"
-
 ### Themes
 
 The ability to provide high level UI functionality separate from their styling
