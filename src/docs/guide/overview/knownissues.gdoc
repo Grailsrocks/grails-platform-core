@@ -4,4 +4,4 @@ h3. 1.0.M1
 * Navigation API - controllers do not auto-register in Grails 1.3.x, no DSL artefact, no reloading
 * Conventions API - API not for public use. Not fully implemented / TBD
 * Events - API not for public use. Scopes not fully implemented / TBD
-* Injection - injection may not re-apply everything to reloaded or new artefacts, API is not for public use at all yet
+* Injection - injection may not re-apply dynamic methods and properties to reloaded or new artefacts, API is not for public use at all yet

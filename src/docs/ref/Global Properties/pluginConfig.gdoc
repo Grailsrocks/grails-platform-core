@@ -14,5 +14,6 @@ class MyPluginService {
        }
     }
 }
+{code}
 
 This provides a valuable shortcut to accessing config that removes the responsibility to maintain this information from your code.

@@ -1,1 +1,18 @@
-Plugins that declare their configuration with [doWithConfigOptions|
+Plugins that declare their configuration with [doWithConfigOptions|pluginConventions] can get access 
+to their "slice" of the Config using the [pluginConfig|globalProperties] variable.
+
+The @pluginConfig@ variable is automatically injected into all artefacts of
+your plugin, automatically namespace for your plugin using the @plugin.<pluginName>.@ prefix.
+
+So in a service you can trivially access this config inside a service or controller for example:
+
+{code}
+class MyPluginService {
+    def doSomething() {
+       if (pluginConfig.enabled) {
+          println "It worked!"
+       }
+    }
+}
+{code}
+
