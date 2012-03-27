@@ -1,0 +1,225 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    package org.grails.plugin.platform.events.dispatcher.builder;<a name="line.1"></a>
+<FONT color="green">002</FONT>    <a name="line.2"></a>
+<FONT color="green">003</FONT>    import grails.util.GrailsUtil;<a name="line.3"></a>
+<FONT color="green">004</FONT>    import groovy.lang.GroovySystem;<a name="line.4"></a>
+<FONT color="green">005</FONT>    import groovy.lang.MetaClass;<a name="line.5"></a>
+<FONT color="green">006</FONT>    import groovy.lang.MissingMethodException;<a name="line.6"></a>
+<FONT color="green">007</FONT>    import groovy.lang.MissingPropertyException;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import groovy.util.BuilderSupport;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import org.grails.plugin.platform.events.Listener;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import org.springframework.beans.InvalidPropertyException;<a name="line.10"></a>
+<FONT color="green">011</FONT>    import org.springframework.util.ReflectionUtils;<a name="line.11"></a>
+<FONT color="green">012</FONT>    <a name="line.12"></a>
+<FONT color="green">013</FONT>    import java.lang.reflect.Method;<a name="line.13"></a>
+<FONT color="green">014</FONT>    import java.util.Collections;<a name="line.14"></a>
+<FONT color="green">015</FONT>    import java.util.LinkedHashMap;<a name="line.15"></a>
+<FONT color="green">016</FONT>    import java.util.Map;<a name="line.16"></a>
+<FONT color="green">017</FONT>    <a name="line.17"></a>
+<FONT color="green">018</FONT>    /**<a name="line.18"></a>
+<FONT color="green">019</FONT>     * @author Stephane Maldini &lt;smaldini@doc4web.com&gt;<a name="line.19"></a>
+<FONT color="green">020</FONT>     * @version 1.0<a name="line.20"></a>
+<FONT color="green">021</FONT>     * @file<a name="line.21"></a>
+<FONT color="green">022</FONT>     * @date 17/01/12<a name="line.22"></a>
+<FONT color="green">023</FONT>     * @section DESCRIPTION<a name="line.23"></a>
+<FONT color="green">024</FONT>     * &lt;p/&gt;<a name="line.24"></a>
+<FONT color="green">025</FONT>     * [Does stuff]<a name="line.25"></a>
+<FONT color="green">026</FONT>     */<a name="line.26"></a>
+<FONT color="green">027</FONT>    public class EventsMethodBuilder extends BuilderSupport {<a name="line.27"></a>
+<FONT color="green">028</FONT>        private Map&lt;String, MappedEventMethod&gt; mappedProperties = new LinkedHashMap&lt;String, MappedEventMethod&gt;();<a name="line.28"></a>
+<FONT color="green">029</FONT>        private int order = 1;<a name="line.29"></a>
+<FONT color="green">030</FONT>        private Class&lt;?&gt; targetClass;<a name="line.30"></a>
+<FONT color="green">031</FONT>        private MetaClass targetMetaClass;<a name="line.31"></a>
+<FONT color="green">032</FONT>    <a name="line.32"></a>
+<FONT color="green">033</FONT>        public EventsMethodBuilder(Object target) {<a name="line.33"></a>
+<FONT color="green">034</FONT>            this(target.getClass());<a name="line.34"></a>
+<FONT color="green">035</FONT>        }<a name="line.35"></a>
+<FONT color="green">036</FONT>    <a name="line.36"></a>
+<FONT color="green">037</FONT>        public EventsMethodBuilder(Class&lt;?&gt; targetClass) {<a name="line.37"></a>
+<FONT color="green">038</FONT>            this.targetClass = targetClass;<a name="line.38"></a>
+<FONT color="green">039</FONT>            this.targetMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(targetClass);<a name="line.39"></a>
+<FONT color="green">040</FONT>        }<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>        @Override<a name="line.43"></a>
+<FONT color="green">044</FONT>        protected Object doInvokeMethod(String methodName, Object name, Object args) {<a name="line.44"></a>
+<FONT color="green">045</FONT>            try {<a name="line.45"></a>
+<FONT color="green">046</FONT>                return super.doInvokeMethod(methodName, name, args);<a name="line.46"></a>
+<FONT color="green">047</FONT>            } catch (MissingMethodException e) {<a name="line.47"></a>
+<FONT color="green">048</FONT>                return targetMetaClass.invokeMethod(targetClass, methodName, args);<a name="line.48"></a>
+<FONT color="green">049</FONT>            }<a name="line.49"></a>
+<FONT color="green">050</FONT>        }<a name="line.50"></a>
+<FONT color="green">051</FONT>    <a name="line.51"></a>
+<FONT color="green">052</FONT>        @Override<a name="line.52"></a>
+<FONT color="green">053</FONT>        public Object getProperty(String property) {<a name="line.53"></a>
+<FONT color="green">054</FONT>            try {<a name="line.54"></a>
+<FONT color="green">055</FONT>                return super.getProperty(property);<a name="line.55"></a>
+<FONT color="green">056</FONT>            } catch (MissingPropertyException e) {<a name="line.56"></a>
+<FONT color="green">057</FONT>                return targetMetaClass.getProperty(targetClass, property);<a name="line.57"></a>
+<FONT color="green">058</FONT>            }<a name="line.58"></a>
+<FONT color="green">059</FONT>        }<a name="line.59"></a>
+<FONT color="green">060</FONT>    <a name="line.60"></a>
+<FONT color="green">061</FONT>        @Override<a name="line.61"></a>
+<FONT color="green">062</FONT>        public void setProperty(String property, Object newValue) {<a name="line.62"></a>
+<FONT color="green">063</FONT>            try {<a name="line.63"></a>
+<FONT color="green">064</FONT>                super.setProperty(property, newValue);<a name="line.64"></a>
+<FONT color="green">065</FONT>            } catch (MissingPropertyException e) {<a name="line.65"></a>
+<FONT color="green">066</FONT>                targetMetaClass.setProperty(targetClass, property, newValue);<a name="line.66"></a>
+<FONT color="green">067</FONT>            }<a name="line.67"></a>
+<FONT color="green">068</FONT>    <a name="line.68"></a>
+<FONT color="green">069</FONT>        }<a name="line.69"></a>
+<FONT color="green">070</FONT>    <a name="line.70"></a>
+<FONT color="green">071</FONT>        @SuppressWarnings("rawtypes")<a name="line.71"></a>
+<FONT color="green">072</FONT>        @Override<a name="line.72"></a>
+<FONT color="green">073</FONT>        protected Object createNode(Object name, final Map attributes) {<a name="line.73"></a>
+<FONT color="green">074</FONT>            // we do this so that missing property exception is throw if it doesn't exist<a name="line.74"></a>
+<FONT color="green">075</FONT>    <a name="line.75"></a>
+<FONT color="green">076</FONT>            try {<a name="line.76"></a>
+<FONT color="green">077</FONT>                final String method = (String) name;<a name="line.77"></a>
+<FONT color="green">078</FONT>                MappedEventMethod mm;<a name="line.78"></a>
+<FONT color="green">079</FONT>                if (mappedProperties.containsKey(method)) {<a name="line.79"></a>
+<FONT color="green">080</FONT>                    mm = mappedProperties.get(method);<a name="line.80"></a>
+<FONT color="green">081</FONT>                } else {<a name="line.81"></a>
+<FONT color="green">082</FONT>                    mm = new MappedEventMethod(targetClass, method);<a name="line.82"></a>
+<FONT color="green">083</FONT>                    final MappedEventMethod _mm = mm;<a name="line.83"></a>
+<FONT color="green">084</FONT>                    ReflectionUtils.doWithMethods(targetClass, new ReflectionUtils.MethodCallback() {<a name="line.84"></a>
+<FONT color="green">085</FONT>                        public void doWith(Method _methodNode) throws IllegalArgumentException, IllegalAccessException {<a name="line.85"></a>
+<FONT color="green">086</FONT>                            if (_methodNode.getName().equals(method)) {<a name="line.86"></a>
+<FONT color="green">087</FONT>                                if (_methodNode.getAnnotation(Listener.class) == null) {<a name="line.87"></a>
+<FONT color="green">088</FONT>                                    throw new RuntimeException(targetClass.getName() + "#" + _methodNode.getName() + " is not" +<a name="line.88"></a>
+<FONT color="green">089</FONT>                                            "a @Listener");<a name="line.89"></a>
+<FONT color="green">090</FONT>                                }<a name="line.90"></a>
+<FONT color="green">091</FONT>                                if (_methodNode == null) {<a name="line.91"></a>
+<FONT color="green">092</FONT>                                    throw new MissingMethodException(method, targetClass, new Object[]{attributes}, true);<a name="line.92"></a>
+<FONT color="green">093</FONT>                                }<a name="line.93"></a>
+<FONT color="green">094</FONT>    <a name="line.94"></a>
+<FONT color="green">095</FONT>                                _mm.setMethodNode(_methodNode);<a name="line.95"></a>
+<FONT color="green">096</FONT>                                _mm.setOrder(order++);<a name="line.96"></a>
+<FONT color="green">097</FONT>                                mappedProperties.put(method, _mm);<a name="line.97"></a>
+<FONT color="green">098</FONT>                                return;<a name="line.98"></a>
+<FONT color="green">099</FONT>                            }<a name="line.99"></a>
+<FONT color="green">100</FONT>                        }<a name="line.100"></a>
+<FONT color="green">101</FONT>                    });<a name="line.101"></a>
+<FONT color="green">102</FONT>    <a name="line.102"></a>
+<FONT color="green">103</FONT>                }<a name="line.103"></a>
+<FONT color="green">104</FONT>    <a name="line.104"></a>
+<FONT color="green">105</FONT>                if (mm.getMethodNode() == null) {<a name="line.105"></a>
+<FONT color="green">106</FONT>                    return mm;<a name="line.106"></a>
+<FONT color="green">107</FONT>                }<a name="line.107"></a>
+<FONT color="green">108</FONT>    <a name="line.108"></a>
+<FONT color="green">109</FONT>                for (Object o : attributes.keySet()) {<a name="line.109"></a>
+<FONT color="green">110</FONT>                    String mappingName = (String) o;<a name="line.110"></a>
+<FONT color="green">111</FONT>                    final Object value = attributes.get(mappingName);<a name="line.111"></a>
+<FONT color="green">112</FONT>                    if (mm.supportsMapping(mappingName)) {<a name="line.112"></a>
+<FONT color="green">113</FONT>                        mm.applyMapping(mappingName, value);<a name="line.113"></a>
+<FONT color="green">114</FONT>                    } else {<a name="line.114"></a>
+<FONT color="green">115</FONT>                        if (MappedEventMethod.hasRegisteredMapping(mappingName)) {<a name="line.115"></a>
+<FONT color="green">116</FONT>                            // constraint is registered but doesn't support this property's type<a name="line.116"></a>
+<FONT color="green">117</FONT>                            GrailsUtil.warn("Method [" + mm.getMethodName() + "] of domain class " +<a name="line.117"></a>
+<FONT color="green">118</FONT>                                    targetClass.getName() + " has type [" + mm.getMethodNode().getName() +<a name="line.118"></a>
+<FONT color="green">119</FONT>                                    "] and doesn't support mapping [" + mappingName +<a name="line.119"></a>
+<FONT color="green">120</FONT>                                    "]. This mapping will not be checked.");<a name="line.120"></a>
+<FONT color="green">121</FONT>                        } else {<a name="line.121"></a>
+<FONT color="green">122</FONT>                            // in the case where the constraint is not supported we still retain meta data<a name="line.122"></a>
+<FONT color="green">123</FONT>                            // about the constraint in case its needed for other things<a name="line.123"></a>
+<FONT color="green">124</FONT>                            mm.addMetaMapping(mappingName, value);<a name="line.124"></a>
+<FONT color="green">125</FONT>                        }<a name="line.125"></a>
+<FONT color="green">126</FONT>                    }<a name="line.126"></a>
+<FONT color="green">127</FONT>                }<a name="line.127"></a>
+<FONT color="green">128</FONT>    <a name="line.128"></a>
+<FONT color="green">129</FONT>                return mm;<a name="line.129"></a>
+<FONT color="green">130</FONT>            } catch (InvalidPropertyException ipe) {<a name="line.130"></a>
+<FONT color="green">131</FONT>                throw new MissingMethodException((String) name, targetClass, new Object[]{attributes});<a name="line.131"></a>
+<FONT color="green">132</FONT>            }<a name="line.132"></a>
+<FONT color="green">133</FONT>        }<a name="line.133"></a>
+<FONT color="green">134</FONT>    <a name="line.134"></a>
+<FONT color="green">135</FONT>        @SuppressWarnings("rawtypes")<a name="line.135"></a>
+<FONT color="green">136</FONT>        @Override<a name="line.136"></a>
+<FONT color="green">137</FONT>        protected Object createNode(Object name, Map attributes, Object value) {<a name="line.137"></a>
+<FONT color="green">138</FONT>            throw new MissingMethodException((String) name, targetClass, new Object[]{attributes, value});<a name="line.138"></a>
+<FONT color="green">139</FONT>        }<a name="line.139"></a>
+<FONT color="green">140</FONT>    <a name="line.140"></a>
+<FONT color="green">141</FONT>        @Override<a name="line.141"></a>
+<FONT color="green">142</FONT>        protected void setParent(Object parent, Object child) {<a name="line.142"></a>
+<FONT color="green">143</FONT>            // do nothing<a name="line.143"></a>
+<FONT color="green">144</FONT>        }<a name="line.144"></a>
+<FONT color="green">145</FONT>    <a name="line.145"></a>
+<FONT color="green">146</FONT>        @Override<a name="line.146"></a>
+<FONT color="green">147</FONT>        protected Object createNode(Object name) {<a name="line.147"></a>
+<FONT color="green">148</FONT>            return createNode(name, Collections.EMPTY_MAP);<a name="line.148"></a>
+<FONT color="green">149</FONT>        }<a name="line.149"></a>
+<FONT color="green">150</FONT>    <a name="line.150"></a>
+<FONT color="green">151</FONT>        @Override<a name="line.151"></a>
+<FONT color="green">152</FONT>        protected Object createNode(Object name, Object value) {<a name="line.152"></a>
+<FONT color="green">153</FONT>            return createNode(name, Collections.EMPTY_MAP, value);<a name="line.153"></a>
+<FONT color="green">154</FONT>        }<a name="line.154"></a>
+<FONT color="green">155</FONT>    <a name="line.155"></a>
+<FONT color="green">156</FONT>        public Map&lt;String, MappedEventMethod&gt; getMappedProperties() {<a name="line.156"></a>
+<FONT color="green">157</FONT>            return mappedProperties;<a name="line.157"></a>
+<FONT color="green">158</FONT>        }<a name="line.158"></a>
+<FONT color="green">159</FONT>    }<a name="line.159"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

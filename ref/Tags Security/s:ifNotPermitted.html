@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Grails Plugin Platform Core 1.0.M1-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass(el) {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/overview.html"><strong>1</strong><span>Overview</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/gettingStarted.html"><strong>2</strong><span>Getting Started</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>3</strong><span>UI Extensions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>4</strong><span>Configuration API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/security.html"><strong>5</strong><span>Security API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>6</strong><span>Events API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>7</strong><span>Injection API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/navigation.html"><strong>8</strong><span>Navigation API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>APIs and Tags for advanced Plugin integration</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="reference corner-all">
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                <h1>s:ifNotPermitted</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Renders the body of the tag only if the user permissions are <strong class="bold">not</strong> met.<p class="paragraph"/>This uses the underlying security provider to test the condition.<p class="paragraph"/><h2>Example</h2><p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;s:ifNotPermitted role=<span class="xml&#45;quote">"ADMIN"</span>&#62;</span>
+   Sorry you can't do this
+<span class="xml&#45;tag">&#60;/s:ifNotPermitted&#62;</span></pre></div><p class="paragraph"/><h2>Attributes</h2><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Name</strong></th><th><strong class="bold">Purpose</strong></th></tr><tr class="table-odd"><td>role</td><td>Required - The role to test for. If the user does not have this role the body will be rendered</td></tr></table><p class="paragraph"/>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Beans</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsConventions.html">grailsConventions</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsEvents.html">grailsEvents</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsInjection.html">grailsInjection</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsNavigation.html">grailsNavigation</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsPluginConfiguration.html">grailsPluginConfiguration</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsSecurity.html">grailsSecurity</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsUiHelper.html">grailsUiHelper</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Controller Methods</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Controller%20Methods/displayFlashMessage.html">displayFlashMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Controller%20Methods/displayMessage.html">displayMessage</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Global Properties</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Global%20Properties/pluginConfig.html">pluginConfig</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Plugin Conventions</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfig.html">doWithConfig</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfigOptions.html">doWithConfigOptions</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithInjection.html">doWithInjection</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Scripts</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/update-header.html">update-header</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Service Methods</h1>
+                        <div class="menu-sub">
+                            
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags Security</h1>
+                        <div class="menu-sub selected">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:createLoginLink.html">s:createLoginLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:createLogoutLink.html">s:createLogoutLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:createSignupLink.html">s:createSignupLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:identity.html">s:identity</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:ifLoggedIn.html">s:ifLoggedIn</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:ifNotLoggedIn.html">s:ifNotLoggedIn</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:ifNotPermitted.html">s:ifNotPermitted</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:ifPermitted.html">s:ifPermitted</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:info.html">s:info</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:loginButton.html">s:loginButton</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:logoutButton.html">s:logoutButton</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Security/s:signupButton.html">s:signupButton</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags System</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20System/g:config.html">g:config</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20System/g:requiresBean.html">g:requiresBean</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags Ui Extension</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:button.html">g:button</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:callTag.html">g:callTag</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:displayMessage.html">g:displayMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:dummyText.html">g:dummyText</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:joinClasses.html">g:joinClasses</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:label.html">g:label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:organization.html">g:organization</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:siteLink.html">g:siteLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:siteName.html">g:siteName</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:siteURL.html">g:siteURL</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:smartLink.html">g:smartLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/g:year.html">g:year</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Utility Classes</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Utility%20Classes/TagLibUtils.html">TagLibUtils</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    &copy; 2012 Marc Palmer & Stéphane Maldini
+    Please contact the authors with any corrections or suggestions
+</div>
+
+
+<script type="text/javascript" src="../../js/docs.js"></script>
+
+</body>
+</html>
