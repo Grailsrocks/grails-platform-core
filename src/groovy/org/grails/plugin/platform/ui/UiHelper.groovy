@@ -1,11 +1,15 @@
 package org.grails.plugin.platform.ui
 
+import org.slf4j.LoggerFactory
+
 import org.springframework.web.context.request.RequestContextHolder as RCH
 
 /**
  * Helper methods for common UI features
  */
 class UiHelper {
+    final log = LoggerFactory.getLogger(UiHelper)
+
     def injectedMethods = {
         def self = this
         

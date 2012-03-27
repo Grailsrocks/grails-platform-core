@@ -99,4 +99,16 @@ class TagLibUtils {
         }
         return [ns, tagName]
     }
+    
+    
+    /**
+     * Generate a request-unique id
+     */
+    static String newUniqueId(request) {
+        def id = request.'plugin.platformCore.request.id.counter' ?: 0
+        request.'plugin.platformCore.request.id.counter' = ++id
+        return id
+    }
+    
+
 }
