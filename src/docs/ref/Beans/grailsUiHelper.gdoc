@@ -1,5 +1,0 @@
-h1. grailsUiHelper
-
-This bean provides the implementations of the [displayMessage|controllerMethods] and [displayFlashMessage|controllerMethods] methods, and access to the values set for the tags to render messages.
-
-See the source code for details.
