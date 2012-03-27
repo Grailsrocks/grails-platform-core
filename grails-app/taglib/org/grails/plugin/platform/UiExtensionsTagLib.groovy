@@ -152,7 +152,7 @@ class UiExtensionsTagLib {
     def dummyText = { attrs -> 
         def n = attrs.size ? attrs.size.toString().toInteger() : 0
         if (!n) {
-            n = 5
+            n = 1
         }
         int i = request['plugin.platformCore.ipsum.counter'] ?: (int)0
         while (n-- > 0) {
@@ -163,7 +163,7 @@ class UiExtensionsTagLib {
                 i = 0
             }
         }
-        request['theme.ipsum.counter'] = i
+        request['plugin.platformCore.ipsum.counter'] = i
     }
 
     @Lazy List DUMMY_TEXT = """

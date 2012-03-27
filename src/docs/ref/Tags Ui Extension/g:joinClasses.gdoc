@@ -1,0 +1,23 @@
+h1. g:joinClasses
+
+h2. Purpose
+
+Joins a list of CSS classes, safely handling null values and ensuring no extra whitespace is produced.
+
+h2. Example
+
+{code:xml}
+<div class="${g.joinClasses(values:[userClass, 'notice', 'alert'])}">
+..
+</div>
+{code}
+
+This would output the class attribute as @class="somevalue notice alert"@ if userClass was set to "somevalue".
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+values | Required - The list of CSS classes
+{table}
+

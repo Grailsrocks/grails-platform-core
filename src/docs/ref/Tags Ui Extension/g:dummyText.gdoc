@@ -1,0 +1,20 @@
+h1. g:dummyText
+
+h2. Purpose
+
+Generates dummy text to use in work-in-progress UIs.
+
+h2. Example
+
+{code:xml}
+<g:dummyText size="3"/>
+{code}
+
+This generates Lorem Ipsum content, for a total of 3 paragraphs.
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+size | Optional - The number of paragraphs to generate.
+{table}
