@@ -4,13 +4,13 @@ plugins' declared configuration values safely.
 
 The DSL takes the form of:
 {code}
-    <pluginName> {
-         <config.path.here> = <value>
-    }
-    // optional if monkeying with legacy grails config
-    application {
-         <config.path.here> = <value>
-    }
+<pluginName> {
+     <config.path.here> = <value>
+}
+// optional if monkeying with legacy grails config
+application {
+     <config.path.here> = <value>
+}
 {code}
 
 So for example:
