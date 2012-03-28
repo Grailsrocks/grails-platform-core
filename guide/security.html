@@ -108,16 +108,16 @@ function addJsClass() {
 
 <h1 id="security">5 Security API</h1>
 The Security API provides common security related functionality so that plugins and in some cases applications no longer need to be tied to a specific security implementation.<p class="paragraph"/>It is deliberately minimal to place few requirements on implementations.<p class="paragraph"/>It is not intended to be a complete security abstraction, but "just enough" for the needs of most applications and plugins that do not require advanced security manipulation - which will likely always require direct knowledge of the underlying provider.<p class="paragraph"/>This API provides the most basic security features to enable this
-interoperatibility, using a bridging interface that security plugins must
-implement to actually provide these services.<p class="paragraph"/>Security plugins must implement the "provider" bean - out of the box there is no security implementation.<p class="paragraph"/><h3>Dynamic methods</h3><p class="paragraph"/>These methods are added to Services, Controllers, TagLibs and Domain Classes:
+interoperability, using a bridging interface that security plugins must
+implement to actually provide these services.<p class="paragraph"/>Security plugins must implement the "provider" bean - out of the box there is no security implementation.<p class="paragraph"/><h3>Dynamic methods</h3><p class="paragraph"/>These methods and properties are added to Services, Controllers, TagLibs and Domain Classes:
 <ul class="star">
-<li>getSecurityIdentity() - The string used to identify the current logged in user. Typically a user id, user name or email address. The nature of this value is dependent on your security implementation</li>
-<li>getSecurityInfo() - The object representing the current logged in user's information.</li>
-<li>userHasAnyRole(roleOrRoles) - test if the current user has any of the roles</li>
-<li>userHasAllRoles(roleOrRoles) - test if the current user has all of the roles</li>
-<li>userIsAllowed(object, action) - test if the current user has a specified permission on an object</li>
-<li>withUser(identity) - run a section of code as another user</li>
-</ul><p class="paragraph"/>See the reference guide for further details on these.<p class="paragraph"/><h3>Tags</h3><p class="paragraph"/>Here's an example of some of the security tags available:<p class="paragraph"/><div class="code"><pre>&#60;s:identity/&#62;
+<li><a href="../ref/Security Properties/securityIdentity.html" class="securityProperties">securityIdentity</a> - The string used to identify the current logged in user. Typically a user id, user name or email address. The nature of this value is dependent on your security implementation</li>
+<li><a href="../ref/Security Properties/securityInfo.html" class="securityProperties">securityInfo</a> - The object representing the current logged in user's information.</li>
+<li><a href="../ref/Security Methods/userHasAnyRole.html" class="securityMethods">userHasAnyRole</a> - test if the current user has any of the roles</li>
+<li><a href="../ref/Security Methods/userHasAllRoles.html" class="securityMethods">userHasAllRoles</a> - test if the current user has all of the roles</li>
+<li><a href="../ref/Security Methods/userIsAllowed.html" class="securityMethods">userIsAllowed</a> - test if the current user has a specified permission on an object</li>
+<li><a href="../ref/Security Methods/withUser.html" class="securityMethods">withUser</a> - run a section of code as another user</li>
+</ul><p class="paragraph"/>See the reference guide for Security Properties and Security Methods for further details on these.<p class="paragraph"/>All of these features and more can be accessed by any code in your application by using the <a href="../ref/Beans/grailsSecurity.html" class="beans">grailsSecurity</a> bean.<p class="paragraph"/><h3>Tags</h3><p class="paragraph"/>Here's an example of some of the security tags available:<p class="paragraph"/><div class="code"><pre>&#60;s:identity/&#62;
 &#60;s:info property=<span class="java&#45;quote">"email"</span>/&#62;
 &#60;s:ifPermitted role=<span class="java&#45;quote">"ROLE_ADMIN"</span>&#62;
     &#8230;
@@ -127,7 +127,7 @@ implement to actually provide these services.<p class="paragraph"/>Security plug
 &#60;/s:ifNotPermitted&#62;
 &#60;a href=<span class="java&#45;quote">"$&#123;s.createLoginLink()&#125;"</span>&#62;Log in&#60;/a&#62;
 &#60;a href=<span class="java&#45;quote">"$&#123;s.createLogoutLink()&#125;"</span>&#62;Log out&#60;/a&#62;
-&#60;a href=<span class="java&#45;quote">"$&#123;s.createSignupLink()&#125;"</span>&#62;Sign up&#60;/a&#62;</pre></div><p class="paragraph"/><h3>grailsSecurity bean</h3><p class="paragraph"/>The Security bean provides access to all the basic security functions. These are passed through to the security bridge implementation.<p class="paragraph"/>This includes methods for applications and plugins to use such as:
+&#60;a href=<span class="java&#45;quote">"$&#123;s.createSignupLink()&#125;"</span>&#62;Sign up&#60;/a&#62;</pre></div><p class="paragraph"/>See the <strong class="bold">Tags Security</strong> reference section for details.<p class="paragraph"/><h3>grailsSecurity bean</h3><p class="paragraph"/>The Security bean provides access to all the basic security functions. These are passed through to the security bridge implementation.<p class="paragraph"/>This includes methods for applications and plugins to use such as:
 <ul class="star">
 <li>String getUserIdentity()</li>
 <li>def getUserInfo()</li>
@@ -220,18 +220,6 @@ To use the Security API, an application must have a Security Bridge bean that im
                             </div>
                     </div>
                     
-                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Controller Methods</h1><div class="menu-sub">
-                        
-                            
-                            <div class="menu-item"><a href="../ref/Controller%20Methods/displayFlashMessage.html">displayFlashMessage</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Controller%20Methods/displayMessage.html">displayMessage</a>
-                            </div>
-                            
-                            </div>
-                    </div>
-                    
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Global Properties</h1><div class="menu-sub">
                         
                             
@@ -265,43 +253,73 @@ To use the Security API, an application must have a Security Bridge bean that im
                             </div>
                     </div>
                     
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Methods</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Security%20Methods/userHasAllRoles.html">userHasAllRoles</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Security%20Methods/userHasAnyRole.html">userHasAnyRole</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Security%20Methods/userIsAllowed.html">userIsAllowed</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Security%20Methods/withUser.html">withUser</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Properties</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Security%20Properties/securityIdentity.html">securityIdentity</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Security%20Properties/securityInfo.html">securityInfo</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Security</h1><div class="menu-sub">
                         
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:createLoginLink.html">s:createLoginLink</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/createLoginLink.html">createLoginLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:createLogoutLink.html">s:createLogoutLink</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/createLogoutLink.html">createLogoutLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:createSignupLink.html">s:createSignupLink</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/createSignupLink.html">createSignupLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:identity.html">s:identity</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/identity.html">identity</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:ifLoggedIn.html">s:ifLoggedIn</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/ifLoggedIn.html">ifLoggedIn</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:ifNotLoggedIn.html">s:ifNotLoggedIn</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/ifNotLoggedIn.html">ifNotLoggedIn</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:ifNotPermitted.html">s:ifNotPermitted</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/ifNotPermitted.html">ifNotPermitted</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:ifPermitted.html">s:ifPermitted</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/ifPermitted.html">ifPermitted</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:info.html">s:info</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/info.html">info</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:loginButton.html">s:loginButton</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/loginButton.html">loginButton</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:logoutButton.html">s:logoutButton</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/logoutButton.html">logoutButton</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/s:signupButton.html">s:signupButton</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Security/signupButton.html">signupButton</a>
                             </div>
                             
                             </div>
@@ -310,10 +328,10 @@ To use the Security API, an application must have a Security Bridge bean that im
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags System</h1><div class="menu-sub">
                         
                             
-                            <div class="menu-item"><a href="../ref/Tags%20System/g:config.html">g:config</a>
+                            <div class="menu-item"><a href="../ref/Tags%20System/config.html">config</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20System/g:requiresBean.html">g:requiresBean</a>
+                            <div class="menu-item"><a href="../ref/Tags%20System/requiresBean.html">requiresBean</a>
                             </div>
                             
                             </div>
@@ -322,40 +340,52 @@ To use the Security API, an application must have a Security Bridge bean that im
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Ui Extension</h1><div class="menu-sub">
                         
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:button.html">g:button</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/button.html">button</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:callTag.html">g:callTag</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/callTag.html">callTag</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:displayMessage.html">g:displayMessage</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/displayMessage.html">displayMessage</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:dummyText.html">g:dummyText</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/dummyText.html">dummyText</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:joinClasses.html">g:joinClasses</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/joinClasses.html">joinClasses</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:label.html">g:label</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/label.html">label</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:organization.html">g:organization</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/organization.html">organization</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:siteLink.html">g:siteLink</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteLink.html">siteLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:siteName.html">g:siteName</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteName.html">siteName</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:siteURL.html">g:siteURL</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteURL.html">siteURL</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:smartLink.html">g:smartLink</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/smartLink.html">smartLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/g:year.html">g:year</a>
+                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/year.html">year</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Methods</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extension%20Methods/displayFlashMessage.html">displayFlashMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extension%20Methods/displayMessage.html">displayMessage</a>
                             </div>
                             
                             </div>
