@@ -80,12 +80,12 @@ function addJsClass(el) {
 configuration values into the applications config, and to configure other
 plugins' declared configuration values safely.<p class="paragraph"/>The DSL takes the form of:
 <div class="code"><pre>&#60;pluginName&#62; &#123;
-         &#60;config.path.here&#62; = &#60;value&#62;
-    &#125;
-    // optional <span class="java&#45;keyword">if</span> monkeying with legacy grails config
-    application &#123;
-         &#60;config.path.here&#62; = &#60;value&#62;
-    &#125;</pre></div><p class="paragraph"/>So for example:<p class="paragraph"/><div class="code"><pre>def doWithConfig = &#123; config &#45;&#62;
+     &#60;config.path.here&#62; = &#60;value&#62;
+&#125;
+// optional <span class="java&#45;keyword">if</span> monkeying with legacy grails config
+application &#123;
+     &#60;config.path.here&#62; = &#60;value&#62;
+&#125;</pre></div><p class="paragraph"/>So for example:<p class="paragraph"/><div class="code"><pre>def doWithConfig = &#123; config &#45;&#62;
     platformUi &#123;
         ui.Bootstrap.button.cssClass = 'btn'
         ui.Bootstrap.tab.cssClass = 'tab&#45;pane'
@@ -158,9 +158,6 @@ The Config API always gives the application developer the final say on the confi
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfigOptions.html">doWithConfigOptions</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithInjection.html">doWithInjection</a>
                             </div>
                             
                         </div>
