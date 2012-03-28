@@ -1,0 +1,24 @@
+h1. securityInfo
+
+_Available in Controllers, Domains, Taglibs and Services_
+
+Returns the internal security object representing the current user.
+
+The implementation of this method is provided by the security provider you
+have installed, and the type of the object is entirely dependent on this.
+
+No guarantees are made about the type or properties of the returned object.
+
+h2. Usage
+
+{code}
+class PurchaseService {
+    def getPurchases() {
+        Purchase.findAllByUser(securityInfo)
+    }
+    ...
+}
+{code}
+
+Here the securityInfo object is assumed to be a domain object that is associated to the Purchase domain as the "user" property.
+

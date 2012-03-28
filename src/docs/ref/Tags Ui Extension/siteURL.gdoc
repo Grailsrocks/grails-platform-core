@@ -4,7 +4,7 @@ h2. Purpose
 
 Renders an absolute URL pointing to the site. This is a shortcut for using g:createLink with absolute="true".
 
-See [g:siteLink|tagsUiExtension] for details of the site link tag that uses this and @g:siteName@.
+See [siteLink|tagsUiExtension] for details of the site link tag that uses this and @g:siteName@.
 
 h2. Example
 

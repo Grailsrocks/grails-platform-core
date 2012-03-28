@@ -5,23 +5,25 @@ It is deliberately minimal to place few requirements on implementations.
 It is not intended to be a complete security abstraction, but "just enough" for the needs of most applications and plugins that do not require advanced security manipulation - which will likely always require direct knowledge of the underlying provider.
 
 This API provides the most basic security features to enable this
-interoperatibility, using a bridging interface that security plugins must
+interoperability, using a bridging interface that security plugins must
 implement to actually provide these services.
 
 Security plugins must implement the "provider" bean - out of the box there is no security implementation.
 
 h3. Dynamic methods
 
-These methods are added to Services, Controllers, TagLibs and Domain Classes:
+These methods and properties are added to Services, Controllers, TagLibs and Domain Classes:
 
-* getSecurityIdentity() - The string used to identify the current logged in user. Typically a user id, user name or email address. The nature of this value is dependent on your security implementation
-* getSecurityInfo() - The object representing the current logged in user's information.
-* userHasAnyRole(roleOrRoles) - test if the current user has any of the roles
-* userHasAllRoles(roleOrRoles) - test if the current user has all of the roles
-* userIsAllowed(object, action) - test if the current user has a specified permission on an object
-* withUser(identity) - run a section of code as another user
+* [securityIdentity|securityProperties] - The string used to identify the current logged in user. Typically a user id, user name or email address. The nature of this value is dependent on your security implementation
+* [securityInfo|securityProperties] - The object representing the current logged in user's information.
+* [userHasAnyRole|securityMethods] - test if the current user has any of the roles
+* [userHasAllRoles|securityMethods] - test if the current user has all of the roles
+* [userIsAllowed|securityMethods] - test if the current user has a specified permission on an object
+* [withUser|securityMethods] - run a section of code as another user
 
-See the reference guide for further details on these.
+See the reference guide for Security Properties and Security Methods for further details on these.
+
+All of these features and more can be accessed by any code in your application by using the [grailsSecurity|beans] bean.
 
 h3. Tags
 
@@ -40,6 +42,8 @@ Here's an example of some of the security tags available:
 <a href="${s.createLogoutLink()}">Log out</a>
 <a href="${s.createSignupLink()}">Sign up</a>
 {code}
+
+See the *Tags Security* reference section for details.
 
 h3. grailsSecurity bean
 

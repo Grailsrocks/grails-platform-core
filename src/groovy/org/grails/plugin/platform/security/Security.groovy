@@ -82,6 +82,11 @@ class Security implements ApplicationContextAware {
         getSecurityBridge()?.userInfo
     }
 
+    /**
+     * Test if the user has any of the listed roles
+     * @param roleOrRoles A list of roles or a single role
+     * @return true if the user has any of the roles
+     */
     boolean userHasAnyRole(roleOrRoles) {
         def roles = roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles]
         roles.any { r ->
@@ -89,6 +94,11 @@ class Security implements ApplicationContextAware {
         }
     }
 
+    /**
+     * Test if the user has all the listed roles
+     * @param roleOrRoles A list of roles or a single role
+     * @return true if the user has all of the roles
+     */
     boolean userHasAllRoles(roleOrRoles) {
         def roles = roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles]
         roles.every { r ->

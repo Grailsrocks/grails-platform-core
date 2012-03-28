@@ -1,0 +1,22 @@
+h1. securityIdentity
+
+_Available in Controllers, Domains, Taglibs and Services_
+
+Returns the identity representing the current user. This is typically a user ID/username or email address.
+
+The implementation of this method is provided by the security provider you
+have installed, and the type of the object is entirely dependent on this.
+
+h2. Usage
+
+{code}
+class PurchaseService {
+    def getPurchases() {
+        Purchase.findAllByEmail(securityIdentity)
+    }
+    ...
+}
+{code}
+
+Here the securityIdentity value is assumed to be an email address that is used to identify Purchases.
+

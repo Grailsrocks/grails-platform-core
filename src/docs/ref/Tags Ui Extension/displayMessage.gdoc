@@ -3,8 +3,7 @@ h1. g:displayMessage
 h2. Purpose
 
 This tag renders a message for the user which has been set using the
-[displayMessage|Controller Methods] or [displayFlashMessage|Controller
-Methods] methods in the controller.
+[displayMessage|uiExtensionMethods] or [displayFlashMessage|uiExtensionMethods] methods in the controller.
 
 It will automatically display the message stored in request or flash scope, or
 both if both are set.

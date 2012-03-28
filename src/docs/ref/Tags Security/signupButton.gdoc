@@ -4,7 +4,7 @@ h2. Purpose
 
 Renders a button for users to click to Sign up using the installed security provider.
 
-Uses the [s:createSignupLink|tagsSecurity] tag to get a URL from the security provider.
+Uses the [createSignupLink|tagsSecurity] tag to get a URL from the security provider.
 
 h2. Example
 
