@@ -32,7 +32,7 @@ class Security implements ApplicationContextAware {
     
     final log = LoggerFactory.getLogger(Security)
 
-    SecurityBridge grailsSecurityBridge 
+    def grailsSecurityBridge 
     ApplicationContext applicationContext
     
     void setApplicationContext(ApplicationContext context) {
