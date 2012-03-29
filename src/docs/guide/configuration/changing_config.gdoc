@@ -18,7 +18,7 @@ def doWithConfig = { config ->
     application {
         // set something based on another config value that has already been
         // by the application
-        grails.x.y = confg.p.q == 'somethign' ? true : false
+        grails.x.y = confg.p.q == 'something' ? true : false
     }
 }
 {code}
