@@ -138,7 +138,7 @@ To change application or plugin configuration from within a plugin you need to d
     &#125;<p class="paragraph"/>    application &#123;
         // set something based on another config value that has already been
         // by the application
-        grails.x.y = confg.p.q == 'somethign' ? <span class="java&#45;keyword">true</span> : <span class="java&#45;keyword">false</span>
+        grails.x.y = confg.p.q == 'something' ? <span class="java&#45;keyword">true</span> : <span class="java&#45;keyword">false</span>
     &#125;
 &#125;</pre></div><p class="paragraph"/>The plugin name scope is the camel case beanNameConventionStyle. So the above is setting config values for the "grails-platform-ui" plugin.<p class="paragraph"/>Any values within a plugin scoped block as in the first block above, are merged into the main Config under <code>plugin.&#60;pluginName&#62;</code>. It is therefore impossible to change global Config values within a plugin config block.<p class="paragraph"/>Values inside the "application" block are merged into the root level of the application Config, so you can set any normal value.
 
