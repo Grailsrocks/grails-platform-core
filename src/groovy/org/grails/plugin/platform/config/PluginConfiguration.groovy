@@ -231,7 +231,6 @@ class PluginConfiguration implements ApplicationContextAware {
                     }
                 }
                 
-                // Merge in any non-namespaced app config
                 // @todo run these in plugin dependency order? If two plugins set something on another plugin, which one wins?
                 builder._pluginConfigs.each { confPluginName, code -> 
                     // @todo add safety check to prevent plugins configuring themselves (creates ordering problems)
