@@ -18,15 +18,13 @@
 package org.grails.plugin.platform.events
 
 import grails.util.GrailsNameUtils
-import java.lang.reflect.Method
 import org.apache.log4j.Logger
+import org.grails.plugin.platform.events.dispatcher.DefaultEventsDispatcher
 import org.grails.plugin.platform.events.publisher.EventsPublisher
 import org.grails.plugin.platform.events.registry.EventsRegistry
-import org.grails.plugin.platform.util.PluginUtils
 import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextAware
-import org.codehaus.groovy.grails.plugins.metadata.GrailsPlugin
-import org.grails.plugin.platform.events.dispatcher.DefaultEventsDispatcher
+
+import java.lang.reflect.Method
 
 class Events {
 
@@ -37,14 +35,14 @@ class Events {
     DefaultEventsDispatcher grailsEventsDispatcher
     private ApplicationContext applicationContext
     def grailsApplication
-    
+
     def injectedMethods = { theContext ->
 
         'controller, domain, service' { Class clazz ->
             String scope = null
             //PluginUtils.getNameOfDefiningPlugin(theContext, clazz)
             def self = theContext.grailsEvents
-            
+
             event {String topic, data = null, Map params = null ->
                 self._event(scope, topic, data, params)
             }
@@ -54,7 +52,7 @@ class Events {
             eventAsync {String topic, data, Closure callback, params = null ->
                 self._eventAsyncClosure(scope, topic, data, callback, params)
             }
-            eventAsync {String topic, Closure callback ,  params = null ->
+            eventAsync {String topic, Closure callback, params = null ->
                 self._eventAsyncClosure(scope, topic, null, callback, params)
             }
             copyFrom(self.grailsEventsPublisher, 'waitFor')
@@ -76,7 +74,7 @@ class Events {
         grailsEventsPublisher.eventAsync(new EventObject(source: scope, event: topic, data: data))
     }
 
-    void _eventAsyncClosure(String scope, String topic, data, Closure callback,  Map params = null) {
+    void _eventAsyncClosure(String scope, String topic, data, Closure callback, Map params = null) {
         if (log.debugEnabled) {
             log.debug "Sending event of scope [$scope] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
         }
@@ -94,20 +92,26 @@ class Events {
         log.info "events removed : $removedListeners"
     }
 
-    void registerListeners(Collection<Class<?>> serviceClasses) {
+    static void eachListener(Collection<Class<?>> serviceClasses, Closure c) {
         for (Class<?> serviceClass in serviceClasses) {
-//            grailsEventsDispatcher.scanClassForMappings(serviceClass)
             for (Method method: serviceClass.declaredMethods) {
                 Listener annotation = method.getAnnotation(Listener)
                 if (annotation) {
-                    log.info "Register event listener $serviceClass.name#$method.name for topic ${annotation.value() ?: method.name}"
-                    grailsEventsRegistry.addListener(
-                            annotation.value() ?: method.name,
-                            applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
-                            method
-                    )
+                    c(annotation.value() ?: method.name, method, serviceClass)
                 }
             }
+        }
+    }
+
+    void registerListeners(Collection<Class<?>> serviceClasses) {
+//            grailsEventsDispatcher.scanClassForMappings(serviceClass)
+        eachListener(serviceClasses) {String listenerId, Method method, Class serviceClass->
+            log.info "Register event listener $serviceClass.name#$method.name for topic $listenerId"
+            grailsEventsRegistry.addListener(
+                    listenerId,
+                    applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
+                    method
+            )
         }
     }
 

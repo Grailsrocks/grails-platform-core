@@ -39,6 +39,7 @@ public class ListenerId implements Serializable {
     private static final String ID_CLASS_SEPARATOR = ":";
     private static final String ID_METHOD_SEPARATOR = "#";
     private static final String ID_HASHCODE_SEPARATOR = "@";
+
     private static final Pattern idRegex = Pattern.compile(
             "([^" + ID_CLASS_SEPARATOR + "]*)?" +
                     "(" + ID_CLASS_SEPARATOR + "([^" + ID_METHOD_SEPARATOR + "]*))?"
@@ -97,11 +98,17 @@ public class ListenerId implements Serializable {
         this.hashCode = hashCode;
     }
 
+    //format : topic:package.Class#method@hashCode
     public String toString() {
-        return (topic != null ? topic : "") + (className != null ? ID_CLASS_SEPARATOR + className : "")
-                + (methodName != null ? ID_METHOD_SEPARATOR + methodName : "")
+        return toStringWithoutHash()
                 + (hashCode != null ? ID_HASHCODE_SEPARATOR + hashCode : "");
     }
+
+    // format : topic:package.Class#method
+    public String toStringWithoutHash() {
+            return (topic != null ? topic : "") + (className != null ? ID_CLASS_SEPARATOR + className : "")
+                    + (methodName != null ? ID_METHOD_SEPARATOR + methodName : "");
+        }
 
     static public ListenerId build(String topic, Object target, Method callback) {
         return new ListenerId(topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
