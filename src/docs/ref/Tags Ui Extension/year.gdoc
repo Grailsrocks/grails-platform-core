@@ -1,4 +1,4 @@
-h1. g:year
+h1. p:year
 
 h2. Purpose
 
@@ -9,7 +9,7 @@ The current year is cached once, so this has a very low overhead.
 h2. Example
 
 {code:xml}
-<g:year/>
+<p:year/>
 {code}
 
 h2. Attributes

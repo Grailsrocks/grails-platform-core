@@ -1,4 +1,4 @@
-h1. g:displayMessage
+h1. p:displayMessage
 
 h2. Purpose
 
@@ -17,7 +17,7 @@ message type.
 h2. Example
 
 {code:xml}
-<g:displayMessage class="msg"/>
+<p:displayMessage class="msg"/>
 {code}
 
 So for example with the above, if your controller has called:

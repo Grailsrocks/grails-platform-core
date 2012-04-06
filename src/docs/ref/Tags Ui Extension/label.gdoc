@@ -1,4 +1,4 @@
-h1. g:label
+h1. p:label
 
 h2. Purpose
 
@@ -7,8 +7,8 @@ Renders a <label> element, with the text optionally loaded from i18n if required
 h2. Example
 
 {code:xml}
-<g:label text="field.user.name"/>
-<g:label text="field.user.name" textArgs="[user.name]"/>
+<p:label text="field.user.name"/>
+<p:label text="field.user.name" textArgs="[user.name]"/>
 {code}
 
 This is really useful for i18n.

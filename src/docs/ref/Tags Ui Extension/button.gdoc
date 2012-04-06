@@ -1,4 +1,4 @@
-h1. g:button
+h1. p:button
 
 h2. Purpose
 
@@ -9,11 +9,11 @@ The text is loaded from i18n if required.
 h2. Example
 
 {code:xml}
-<g:button>OK</g:button>
-<g:button text="button.ok"/>
-<g:button enabled="false">Cancel</g:button>
-<g:button kind="anchor" href="#" text="button.cancel"/>
-<g:button kind="submit" text="button.send.to" textArgs="${recipient.name}"/>
+<p:button>OK</p:button>
+<p:button text="button.ok"/>
+<p:button enabled="false">Cancel</p:button>
+<p:button kind="anchor" href="#" text="button.cancel"/>
+<p:button kind="submit" text="button.send.to" textArgs="${recipient.name}"/>
 {code}
 
 h2. Attributes

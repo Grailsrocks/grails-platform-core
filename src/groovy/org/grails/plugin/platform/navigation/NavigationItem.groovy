@@ -19,9 +19,12 @@ class NavigationItem extends NavigationNode {
     private boolean enabled = true
     private Closure enabledClosure
     
+    private Map data
+
     NavigationItem(Map args) {
         super(args)
-        this.order = args.order ?: 0
+        this.order = args.order
+        this.data = args.data != null ? args.data : Collections.EMPTY_MAP
         this.linkArgs = args.linkArgs
         this.titleMessageCode = args.titleMessageCode
         this.titleDefault = args.titleDefault
@@ -43,6 +46,14 @@ class NavigationItem extends NavigationNode {
     
     boolean inScope(NavigationScope scope) {
         getScope().name == scope.name
+    }
+    
+    /**
+     * Get any application-supplied data that was declared for this item
+     * Used for info like icon-names, alt text and so on - custom rendering usage
+     */
+    Map getData() {
+        this.data
     }
     
     int getOrder() {

@@ -1,4 +1,4 @@
-h1. g:config
+h1. p:config
 
 h2. Purpose
 
@@ -7,7 +7,7 @@ Renders a value from Config.
 h2. Example
 
 {code:xml}
-<g:config name="myapp.upload.url"/>
+<p:config name="myapp.upload.url"/>
 {code}
 
 h2. Attributes

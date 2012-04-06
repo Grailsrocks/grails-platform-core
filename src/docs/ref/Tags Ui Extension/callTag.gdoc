@@ -1,4 +1,4 @@
-h1. g:callTag
+h1. p:callTag
 
 h2. Purpose
 
@@ -7,9 +7,9 @@ Enables you to call another named tag, so that the tag called can be determined 
 h2. Example
 
 {code:xml}
-<g:callTag tag="g:button" text="OK"/>
-<g:callTag tag="g:button" bodyContent="OK"/>
-<g:callTag tag="g:button">OK</g:callTag>
+<p:callTag tag="p:button" text="OK"/>
+<p:callTag tag="p:button" bodyContent="OK"/>
+<p:callTag tag="p:button">OK</p:callTag>
 {code}
 
 All three of the above invocations achieve the same thing. 

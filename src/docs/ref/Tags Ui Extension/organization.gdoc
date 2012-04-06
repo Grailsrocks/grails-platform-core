@@ -1,4 +1,4 @@
-h1. g:organization
+h1. p:organization
 
 h2. Purpose
 
@@ -9,8 +9,8 @@ The Config value is set in "plugin.platformCore.organization.name"
 h2. Example
 
 {code:xml}
-<g:organization/>
-<g:organization encodeAs="JavaScript"/>
+<p:organization/>
+<p:organization encodeAs="JavaScript"/>
 {code}
 
 h2. Attributes

@@ -1,4 +1,4 @@
-h1. g:dummyText
+h1. p:dummyText
 
 h2. Purpose
 
@@ -7,7 +7,7 @@ Generates dummy text to use in work-in-progress UIs.
 h2. Example
 
 {code:xml}
-<g:dummyText size="3"/>
+<p:dummyText size="3"/>
 {code}
 
 This generates Lorem Ipsum content, for a total of 3 paragraphs.

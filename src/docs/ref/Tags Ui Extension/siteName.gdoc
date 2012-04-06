@@ -1,4 +1,4 @@
-h1. g:siteName
+h1. p:siteName
 
 h2. Purpose
 
@@ -7,8 +7,8 @@ Renders the name of the site. This is defined in config @plugin.platformCore.sit
 h2. Example
 
 {code:xml}
-<g:siteName/>
-<g:siteName encodeAs="JavaScript"/>
+<p:siteName/>
+<p:siteName encodeAs="JavaScript"/>
 {code}
 
 h2. Attributes

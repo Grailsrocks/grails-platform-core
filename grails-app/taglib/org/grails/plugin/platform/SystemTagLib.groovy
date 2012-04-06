@@ -18,7 +18,8 @@
 package org.grails.plugin.platform
 
 class SystemTagLib {
-    static namespace = "g"
+    static namespace = "p"
+    
     static returnObjectForTags = ['config']
     
     def grailsApplication

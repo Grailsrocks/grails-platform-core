@@ -1,4 +1,4 @@
-h1. g:requiresBean
+h1. p:requiresBean
 
 h2. Purpose
 
@@ -9,7 +9,7 @@ Use this to avoid having to create empty domain or command objects in your contr
 h2. Example
 
 {code:xml}
-<g:requiresBean name="form" class="MyFormCommand"/>
+<p:requiresBean name="form" class="MyFormCommand"/>
 <input name="title" value="${form.title}"/>
 {code}
 

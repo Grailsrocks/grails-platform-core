@@ -3,7 +3,7 @@ package org.grails.plugin.platform
 import org.grails.plugin.platform.util.TagLibUtils
 
 class UiExtensionsTagLib {
-    static namespace = "g"
+    static namespace = "p"
     
     static returnObjectForTags = ['joinClasses']
     
@@ -132,6 +132,10 @@ class UiExtensionsTagLib {
         return res.toString()
     }
     
+    /**
+     * Allows a GSP to call another tag, passing it attributes at runtime without listing them
+     * in the GSP
+     */
     def callTag = { attrs, body ->
         def name = attrs.remove('tag')
         def bodyAttr = attrs.remove('bodyContent')

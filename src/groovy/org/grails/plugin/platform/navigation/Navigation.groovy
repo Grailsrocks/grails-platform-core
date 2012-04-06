@@ -164,6 +164,7 @@ class Navigation {
         loadDSL()
         loadControllers()
         
+        updateSortOrders()
         updateCaches()
     }
 
@@ -181,6 +182,12 @@ class Navigation {
         rootScopes = [:]
     }
     
+    void updateSortOrder() {
+        for (scope in rootScopes.values()) { 
+            scope.finalizeItems()
+        }
+    }
+
     void updateCaches() {
         for (scope in rootScopes.values()) { 
             for (node in scope.children) {
@@ -251,6 +258,7 @@ class Navigation {
         
         def nodeArgs = [
             name:c.name,
+            order:c.arguments.order,
             titleDefault:c.arguments.titleText ?: GrailsNameUtils.getNaturalName(c.name),
             linkArgs:linkArgs,
             titleMessageCode:c.arguments.title,
@@ -370,13 +378,14 @@ class Navigation {
 //            log.debug "Scope for actions of controller $controllerName is ${controllerScope}"            
             
             actionNames -= defaultAction
-            
+            def n = 0
             for (action in actionNames) {
                 declareControllerNode(
                     parent:controllerNode,
                     name: action,
                     titleDefault: GrailsNameUtils.getNaturalName(action),
                     controller:controllerName, 
+                    order:n++,
                     action:action)
             }
         }
@@ -398,7 +407,7 @@ class Navigation {
     }
 
     NavigationItem addItem(NavigationNode parent, NavigationItem item) {
-        parent?.add(item)
+        parent.add(item)
         if (nodesById.containsKey(item.id)) {
             parent.remove(item)
             throw new IllegalArgumentException("Cannot add navigation node with id [${item.id}] because an item with the same id already exists")

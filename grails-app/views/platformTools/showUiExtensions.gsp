@@ -8,28 +8,28 @@
         
         <h2>Display messages</h2>
         <p>The controller message was:</p>
-        <p:tagDemo tag="g:displayMessage"/>
+        <p:tagDemo tag="p:displayMessage"/>
 
         <h2>Buttons</h2>
-        <p:tagDemo tag="g:button">Click me I'm a button</p:tagDemo>
-        <p:tagDemo tag="g:button" kind="anchor">Click me I'm a link</p:tagDemo>
-        <p:tagDemo tag="g:button" kind="submit">Click me I'm a submit</p:tagDemo>
+        <p:tagDemo tag="p:button">Click me I'm a button</p:tagDemo>
+        <p:tagDemo tag="p:button" kind="anchor">Click me I'm a link</p:tagDemo>
+        <p:tagDemo tag="p:button" kind="submit">Click me I'm a submit</p:tagDemo>
 
         <h2>Labels</h2>
         <g:form>
-            <p:tagDemo tag="g:label" class="form-data" text="this.is.a.field"/>
+            <p:tagDemo tag="p:label" class="form-data" text="this.is.a.field"/>
         </g:form>
 
         <h2>Smart Links</h2>
-        <p:tagDemo tag="g:smartLink" controller="platformTools"/>
-        <p:tagDemo tag="g:smartLink" controller="platformTools" action="showNavigation"/>
-        <p:tagDemo tag="g:smartLink" action="showPluginConfig"/>
+        <p:tagDemo tag="p:smartLink" controller="platformTools"/>
+        <p:tagDemo tag="p:smartLink" controller="platformTools" action="showNavigation"/>
+        <p:tagDemo tag="p:smartLink" action="showPluginConfig"/>
 
         <h2>Branding</h2>
-        <p:tagDemo tag="g:organization"/>
-        <p:tagDemo tag="g:siteName"/>
-        <p:tagDemo tag="g:siteURL"/>
-        <p:tagDemo tag="g:siteLink"/>
-        <p:tagDemo tag="g:year"/>
+        <p:tagDemo tag="p:organization"/>
+        <p:tagDemo tag="p:siteName"/>
+        <p:tagDemo tag="p:siteURL"/>
+        <p:tagDemo tag="p:siteLink"/>
+        <p:tagDemo tag="p:year"/>
     </body>
 </html>

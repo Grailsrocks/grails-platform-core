@@ -64,6 +64,9 @@ class NavigationTagLib {
                         log.debug "Rendering secondary for: ${target?.dump()}"
                     }
                     attrs.scope = pathNodes[0].id
+                    if (attrs.class == null) {
+                        attrs.class = "nav secondary"
+                    }
                     out << nav.menu(attrs)
                 }
             }

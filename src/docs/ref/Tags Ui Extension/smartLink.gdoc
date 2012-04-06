@@ -1,4 +1,4 @@
-h1. g:smartLink
+h1. p:smartLink
 
 h2. Purpose
 
@@ -18,5 +18,5 @@ These will use i18n messages located by convention of the form: @action.*control
 
 h2. Attributes
 
-All attributes are passed through to @g:link@
+All attributes are passed through to @p:link@
 

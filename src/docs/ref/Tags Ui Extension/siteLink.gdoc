@@ -1,4 +1,4 @@
-h1. g:siteLink
+h1. p:siteLink
 
 h2. Purpose
 
@@ -9,10 +9,10 @@ See [siteName|tagsUiExtension] for details of the site name used.
 h2. Example
 
 {code:xml}
-<g:siteLink/>
+<p:siteLink/>
 {code}
 
 h2. Attributes
 
-All attributes are passed through to g:link - the body of the g:link is the result of g:siteName.
+All attributes are passed through to g:link - the body of the g:link is the result of p:siteName.
 

@@ -25,8 +25,22 @@ class NavigationNode {
     String getId() {
         parent ? this.parent.id+NODE_PATH_SEPARATOR+this.name : this.name
     }
+    
+    /**
+     * Called when all loading has been done, to sort all of the node lists
+     */
+    void finalizeItems() {
+        this.children = this.children.sort { a, b -> a.order <=> b.order }
+        for (n in children) {
+            n.finalizeItems()
+        }
+    }
 
     NavigationItem add(NavigationItem node) {
+        if (node.order == null) {
+            int orderValue = children ? children[-1].order : 0 
+            node.order = orderValue
+        }
         node.parent = this
         this.children << node
         return node
