@@ -146,6 +146,10 @@ class PluginConfiguration implements ApplicationContextAware {
         grailsApplication.config.plugin[pluginName]
     }
     
+    void reload() {
+        applyConfig()
+    }
+    
     /**
      * Take app config, merge in config from PluginConfig.groovy and then doWithConfig blocks,
      * and validate the whole lot according to doWithConfigOptions

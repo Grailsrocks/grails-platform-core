@@ -13,7 +13,6 @@ class StandardDSLBuilder {
     List<DSLCommand> build(Closure c) {
         List<DSLCommand> results = []
         def delegateBuilder = new StandardDSLDelegate(results)
-        println "Setting delegate"
         c.delegate = delegateBuilder
         c.resolveStrategy = Closure.DELEGATE_FIRST
         c()

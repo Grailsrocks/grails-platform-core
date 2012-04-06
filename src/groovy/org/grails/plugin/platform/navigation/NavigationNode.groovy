@@ -32,6 +32,12 @@ class NavigationNode {
         return node
     }
     
+    NavigationItem remove(NavigationItem node) {
+        node.parent = null
+        this.children.remove(node)
+        return node
+    }
+    
     NavigationScope getScope() {
         if (!(parent instanceof NavigationScope)) {
             return parent.scope

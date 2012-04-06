@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
  */
 class Navigation {
     
-    static transactional = false
+    static LINK_TAG_ATTRIBUTES = ['controller', 'action', 'mapping', 'uri', 'url', 'view']
     
     final log = LoggerFactory.getLogger(Navigation)
 
@@ -153,7 +153,6 @@ class Navigation {
     }
     
     NavigationNode nodeForControllerAction(String controller, String action) {
-        println "Nodes by controller/action: ${nodesByControllerAction}"
         nodesByControllerAction["$controller:$action"]
     }
     
@@ -234,7 +233,7 @@ class Navigation {
     
     NavigationItem addItemFromArgs(DSLNamedArgsCallCommand c, NavigationNode parent, String definingPlugin) {
         def linkArgs = [:]
-        for (p in ['controller', 'action', 'mapping', 'uri', 'url', 'view']) {
+        for (p in LINK_TAG_ATTRIBUTES) {
             if (c.arguments.containsKey(p)) {
                 linkArgs[p] = c.arguments[p]
             }
@@ -244,6 +243,11 @@ class Navigation {
         if (!linkArgs.controller && linkArgs.action) {
             linkArgs.controller = parent.linkArgs.controller
         } 
+        
+        // Workaround lack of "view" support in g:link
+        if (linkArgs.view) {
+            linkArgs.uri = '/'+linkArgs.remove('view')
+        }
         
         def nodeArgs = [
             name:c.name,
@@ -255,7 +259,7 @@ class Navigation {
         ]
         def item = new NavigationItem(nodeArgs)
         if (log.debugEnabled) {
-            log.debug "Adding item ${item.name} to with parent ${parent?.id} with link args ${item.linkArgs}"
+            log.debug "Adding item ${item.name} with parent ${parent?.id} with link args ${item.linkArgs}"
         }
         addItem(parent, item)
     }
@@ -275,17 +279,21 @@ class Navigation {
                             throw new IllegalArgumentException( "Sorry but the 'overrides' block is not valid except at the scope level")
                         }
                         // Are we creating a top-level scope?
+                        def newParent
                         if (!parent) {
                             if (c.arguments) {
                                 throw new IllegalArgumentException( "You cannot define a root scope and pass it arguments. Arguments are for nodes only")
                             }
-                            parent = getOrCreateScope(c.name)
+                            newParent = getOrCreateScope(c.name)
                         } else {
                             // Add this parent node, before the children
-                            parent = addItemFromArgs(c, parent, definingPlugin)
+                            if (c instanceof DSLBlockCommand) {
+                                throw new IllegalArgumentException( "You cannot define a new navigation block that does not have any link arguments")
+                            }
+                            newParent = addItemFromArgs(c, parent, definingPlugin)
                         }
                         // Now add any children
-                        parseDSL(c.children, parent, definingPlugin)
+                        parseDSL(c.children, newParent, definingPlugin)
                     }
                     break;
                 case DSLSetValueCommand:
@@ -390,10 +398,12 @@ class Navigation {
     }
 
     NavigationItem addItem(NavigationNode parent, NavigationItem item) {
+        parent?.add(item)
         if (nodesById.containsKey(item.id)) {
+            parent.remove(item)
             throw new IllegalArgumentException("Cannot add navigation node with id [${item.id}] because an item with the same id already exists")
         }
-        parent?.add(item)
+        return item
     }
     
     String makePath(List<String> elements, String definingPluginName = null) {

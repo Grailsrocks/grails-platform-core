@@ -3,8 +3,16 @@
     <head>
         <title>Navigation</title>
         <meta name="layout" content="platform/dev"/>
+        <style>
+        .usernav { float: right; }
+        </style>
     </head>
     <body>
+        <div class="usernav">
+            <p>This is our user navigation</p>
+            <nav:menu scope="user"/>
+        </div>
+
         <h1>Navigation</h1>
         
         <p>The current active path is "${nav.activePath().encodeAsHTML()}", which means the active node is ${nav.activeNode()?.id.encodeAsHTML()}</p>
@@ -42,5 +50,9 @@
             </ul>
         </p>
         
+        <footer>
+            <p>This is our footer navigation</p>
+            <nav:menu scope="footer"/>
+        </footer>
     </body>
 </html>

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
  */
 class StandardDSLDelegate {
     
-    final log = LoggerFactory.getLogger(StandardDSLDelegate)
+    final __log = LoggerFactory.getLogger(StandardDSLDelegate)
     
     private List<DSLCommand> __results
     
@@ -18,6 +18,9 @@ class StandardDSLDelegate {
     
     private __newBlock(String name, args, Closure body) {
         DSLCommand cmd
+        if (this.@__log.debugEnabled) {
+            this.@__log.debug "New block name [$name] with args [${args}] (${args?.size()})"
+        }
         if ((args?.size() == 1) && args[0] instanceof Map) {
             cmd = new DSLNamedArgsBlockCommand(name: name, arguments: args[0] ?: [])
         } else {
@@ -58,7 +61,7 @@ class StandardDSLDelegate {
         if (command) {
             this.@__results << command
         } else {
-            throw new IllegalArgumentException('wtf?')
+            throw new IllegalArgumentException('Standard DSL Builder does not understand a call to [$name] with [${args}]')
         }
     }
     

@@ -205,6 +205,10 @@ Grails Plugin Platform Core APIs
     def doWithApplicationContext = { applicationContext ->
     }
 
+    def onConfigChange = { ctx ->
+        ctx.grailsPluginConfiguration.reload()
+    }
+    
     def onChange = { event ->
         def ctx = event.application.mainContext
         def config = event.application.config

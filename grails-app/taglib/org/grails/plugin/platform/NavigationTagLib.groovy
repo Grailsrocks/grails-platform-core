@@ -46,17 +46,24 @@ class NavigationTagLib {
      * @attr scope Optional scope of menu to render. If not specified, uses default scope determined by activation path or "app"
      */
     def secondary = { attrs ->
-        def activeNodes = findActiveNodes(attrs.path)
-        println "Active nodes are: ${activeNodes?.dump()}"
-        if (activeNodes?.size() > 1) {
+        def pathNodes = findNodes(attrs.path)
+        if (log.debugEnabled) {
+            log.debug "Rendering secondary nav, active nodes are: ${pathNodes?.id}"
+        }
+        if (pathNodes?.size()) {
             def currentScope = grailsNavigation.scopeByName(request['plugin.platformCore.navigation.primaryScope'])
-            def target = activeNodes[-1]
-            println "Active node is in currentScope ${currentScope?.name}?: ${target.inScope(currentScope)}"
+            def target = pathNodes[-1]
+            if (log.debugEnabled) {
+                log.debug "Rendering secondary nav, active node is in currentScope ${currentScope?.name}?: ${target.inScope(currentScope)}"
+            }
             // Only render secondary if the user is actively in a sub-menu of a primary nav option
-            if (currentScope && target.inScope(currentScope)) {
-                if (activeNodes[0].children) {
-                    println "Rendering secondary for: ${target?.dump()}"
-                    attrs.scope = activeNodes[0].id
+            // or if they explicitly passed us a nav path to render secondary for
+            if (attrs.path || (currentScope && target.inScope(currentScope))) {
+                if (pathNodes[0].children) {
+                    if (log.debugEnabled) {
+                        log.debug "Rendering secondary for: ${target?.dump()}"
+                    }
+                    attrs.scope = pathNodes[0].id
                     out << nav.menu(attrs)
                 }
             }
@@ -78,7 +85,7 @@ class NavigationTagLib {
             log.debug "Rendering menu for scope [${scope}]"
         }
 
-        def activeNodes = findActiveNodes(attrs.path)
+        def activeNodes = findNodes(attrs.path)
         
         def callbackContext = [grailsApplication:grailsApplication]
         
@@ -135,7 +142,7 @@ class NavigationTagLib {
     }
     
     def firstActiveNode = { attrs ->
-        def r = findActiveNodes(attrs.path)
+        def r = findNodes(attrs.path)
         return r.size() ? r[0] : [id:''] // workaround for grails 2 bug
     }
 
@@ -147,11 +154,11 @@ class NavigationTagLib {
             attrs.path instanceof List ? grailsNavigation.makePath(attrs.path) : attrs.path)
     }
 
-    private List<NavigationNode> findActiveNodes(String activePath) {
+    private List<NavigationNode> findNodes(String activePath) {
         grailsNavigation.nodesForPath(activePath ?: grailsNavigation.getActivePath(request))
     }
     
-    private NavigationNode findActiveNode(String activePath) {
+    private NavigationNode findNode(String activePath) {
         grailsNavigation.nodeForId(activePath ?: grailsNavigation.getActivePath(request))
     }
     
@@ -160,7 +167,7 @@ class NavigationTagLib {
     }
     
     def activeNode = { attrs ->
-        findActiveNode(attrs.path) ?: [id:''] //workaround for 2.0.0 null return value bug
+        findNode(attrs.path) ?: [id:''] //workaround for 2.0.0 null return value bug
     }
     
     def breadcrumb = { attrs ->
