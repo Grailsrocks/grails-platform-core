@@ -38,7 +38,7 @@ class NavigationNode {
 
     NavigationItem add(NavigationItem node) {
         if (node.order == null) {
-            int orderValue = children ? children[-1].order : 0 
+            int orderValue = children ? children[-1].order+1 : 0 
             node.order = orderValue
         }
         node.parent = this

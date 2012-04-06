@@ -6,7 +6,7 @@ package org.grails.plugin.platform.navigation
  * this must be immutable and threadsafe
  */
 class NavigationItem extends NavigationNode {
-    private int order
+    private Integer order
     
     private String titleDefault
     
@@ -56,8 +56,12 @@ class NavigationItem extends NavigationNode {
         this.data
     }
     
-    int getOrder() {
+    Integer getOrder() {
         this.order
+    }
+
+    void setOrder(Integer v) {
+        this.order = v
     }
 
     boolean getLeafNode() {

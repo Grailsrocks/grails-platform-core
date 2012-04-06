@@ -39,11 +39,13 @@
                         <g:if test="${item.id == params.activePath}"><strong>ACTIVE</strong></g:if>
                         <br/>
                         name: ${item.name.encodeAsHTML()}<br/>
+                        order: ${item.order.encodeAsHTML()}<br/>
+                        link: ${item.linkArgs.encodeAsHTML()}<br/>
                         title: ${item.titleMessageCode.encodeAsHTML()} (<g:message code="${item.titleMessageCode}" encodeAs="HTML"/>)<br/>
                         default title: ${item.titleDefault.encodeAsHTML()}<br/>
+                        data: ${item.data.encodeAsHTML()}<br/>
                         visible: ${item.visibleClosure ? 'from Closure' : item.visible}<br/>
                         enabled: ${item.enabledClosure ? 'from Closure' : item.enabled}<br/>
-                        link: ${item.linkArgs.encodeAsHTML()}<br/>
                 </nav:items>
                 </li>
             </g:each>

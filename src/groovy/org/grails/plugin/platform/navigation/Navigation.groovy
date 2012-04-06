@@ -164,7 +164,7 @@ class Navigation {
         loadDSL()
         loadControllers()
         
-        updateSortOrders()
+        updateSortOrder()
         updateCaches()
     }
 
@@ -259,6 +259,7 @@ class Navigation {
         def nodeArgs = [
             name:c.name,
             order:c.arguments.order,
+            data:c.arguments.data,
             titleDefault:c.arguments.titleText ?: GrailsNameUtils.getNaturalName(c.name),
             linkArgs:linkArgs,
             titleMessageCode:c.arguments.title,
