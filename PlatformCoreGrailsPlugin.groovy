@@ -16,17 +16,17 @@
  * limitations under the License.
  */
 
- import org.grails.plugin.platform.events.dispatcher.DefaultEventsDispatcher
- import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
- import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
- import org.grails.plugin.platform.events.publisher.DefaultEventsPublisher
- import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
+import org.grails.plugin.platform.events.dispatcher.DefaultEventsDispatcher
+import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
+import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
+import org.grails.plugin.platform.events.publisher.DefaultEventsPublisher
+import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 import org.springframework.core.io.FileSystemResource
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
     def version = "1.0.M2-SNAPSHOT"
-    
+
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
     // the other plugins this plugin depends on
