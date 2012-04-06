@@ -22,8 +22,6 @@ class PlatformToolsController {
     def grailsSecurity
     def grailsNavigation
     
-    static navigationScope = "platform"
-    
     def index = {
     }
     

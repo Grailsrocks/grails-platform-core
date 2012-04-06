@@ -6,7 +6,7 @@
 </head>
 <body>
     <div id="nav">
-        <nav:primary class="nav nav-primary"/>
+        <nav:primary class="nav nav-primary" scope="dev"/>
         <hr/>
         <nav:secondary class="nav nav-secondary"/>
     </div>

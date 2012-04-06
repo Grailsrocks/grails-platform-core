@@ -6,95 +6,46 @@ package org.grails.plugin.platform.navigation
  * this must be immutable and threadsafe
  */
 class NavigationNode {
-    private NavigationScope scope
-        
-    private String id
-    private int order
+    static NODE_PATH_SEPARATOR = '#'
     
-    private String activationPath
-    private String titleDefault
-    
-    private Map linkArgs
-    private String titleMessageCode
-    
-    private boolean visible = true
-    private Closure visibleClosure
-    
-    private boolean enabled = true
-    private Closure enabledClosure
+    NavigationNode parent
+    private List<NavigationItem> children
+    private String name
 
     NavigationNode(Map args) {
-        this.id = args.id
-        this.scope = args.scope
-        this.order = args.order ?: 0
-        this.activationPath = args.activationPath
-        this.linkArgs = args.linkArgs
-        this.titleMessageCode = args.titleMessageCode
-        this.titleDefault = args.titleDefault
-        if (!titleMessageCode) {
-            titleMessageCode = "nav.${this.id}"
-        }
-        if (args.visible == null) {
-            args.visible = true
-        }
-        this.visible = args.visible instanceof Closure ? false : args.visible
-        this.visibleClosure = args.visible instanceof Closure ? args.visible : null
-        if (args.enabled == null) {
-            args.enabled = true
-        }
-        this.enabled = args.enabled instanceof Closure ? false : args.enabled
-        this.enabledClosure = args.enabled instanceof Closure ? args.enabled : null
+        this.children = args.children == null ? [] : args.children
+        this.name = args.name
+        this.parent = args.parent
+    }
+    
+    List<NavigationItem> getChildren() {
+        this.children
+    }
+    
+    String getId() {
+        parent ? this.parent.id+NODE_PATH_SEPARATOR+this.name : this.name
+    }
+
+    NavigationItem add(NavigationItem node) {
+        node.parent = this
+        this.children << node
+        return node
     }
     
     NavigationScope getScope() {
-        this.scope
-    }
-
-    String getId() {
-        this.id
-    }
-    
-    int getOrder() {
-        this.order
-    }
-
-    boolean getLeafNode() {
-        this.leafNode
-    }
-
-    String getActivationPath() {
-        this.activationPath
-    }
-    
-    String getTitleMessageCode() {
-        this.titleMessageCode
-    }
-    
-    String getTitleDefault() {
-        this.titleDefault
-    }
-    
-    Closure getVisibleClosure() {
-        visibleClosure
-    }
-    
-    Closure getEnabledClosure() {
-        enabledClosure
-    }
-    
-    boolean isVisible(context) {
-        if (this.visibleClosure != null) {
-            return this.visibleClosure(context)
+        if (!(parent instanceof NavigationScope)) {
+            return parent.scope
         } else {
-            return this.visible
+            return parent
         }
     }
     
-    boolean isEnabled(context) {
-        if (this.enabledClosure != null) {
-            return this.enabledClosure(context)
-        } else {
-            return this.enabled
-        }
+    void lockChildren() {
+        this.children = Collections.asImmutableList(this.children)
     }
+
+    String getName() {
+        this.name
+    }
+
 }

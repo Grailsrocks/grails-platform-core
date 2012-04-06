@@ -25,18 +25,41 @@ class NavigationTagLib {
     static returnObjectForTags = ['activePath', 'activeNode', 'scopeForActivationPath', 'firstActiveNode']
     
     def grailsNavigation
+    def grailsApplication
 
+    /**
+     * Render a primary navigation menu
+     * @attr path Optional activation path. If not specified, uses current request's activation path
+     * @attr scope Optional scope of menu to render. If not specified, uses default scope determined by activation path or "app"
+     */
     def primary = { attrs ->
-        def scope = grailsNavigation.getPrimaryScopeFor(attrs.path ?: grailsNavigation.getActivePath(request))
-        attrs.scope = scope
+        if (!attrs.scope) {
+            attrs.scope = 'app'
+        }
+        request['plugin.platformCore.navigation.primaryScope'] = attrs.scope
         out << nav.menu(attrs)
     }
     
+    /**
+     * Render the secondary navigation menu
+     * @attr path Optional activation path. If not specified, uses current request's activation path
+     * @attr scope Optional scope of menu to render. If not specified, uses default scope determined by activation path or "app"
+     */
     def secondary = { attrs ->
-        def scope = grailsNavigation.getSecondaryScopeFor(attrs.path ?: grailsNavigation.getActivePath(request))
-        if (scope) {
-            attrs.scope = scope
-            out << nav.menu(attrs)
+        def activeNodes = findActiveNodes(attrs.path)
+        println "Active nodes are: ${activeNodes?.dump()}"
+        if (activeNodes?.size() > 1) {
+            def currentScope = grailsNavigation.scopeByName(request['plugin.platformCore.navigation.primaryScope'])
+            def target = activeNodes[-1]
+            println "Active node is in currentScope ${currentScope?.name}?: ${target.inScope(currentScope)}"
+            // Only render secondary if the user is actively in a sub-menu of a primary nav option
+            if (currentScope && target.inScope(currentScope)) {
+                if (activeNodes[0].children) {
+                    println "Rendering secondary for: ${target?.dump()}"
+                    attrs.scope = activeNodes[0].id
+                    out << nav.menu(attrs)
+                }
+            }
         }
     }
     
@@ -57,16 +80,18 @@ class NavigationTagLib {
 
         def activeNodes = findActiveNodes(attrs.path)
         
-        def scopeNode = grailsNavigation.scopeByName(scope)
+        def callbackContext = [grailsApplication:grailsApplication]
+        
+        def scopeNode = grailsNavigation.nodeForId(scope)
         if (scopeNode) {
             out << "<ul ${id}class=\"${cssClass}\">"
             for (n in scopeNode.children) {
-                if (n.visible) {
+                if (n.isVisible(callbackContext)) {
                     def liClass 
                     if (activeNodes.contains(n)) {
                         liClass = ' class="active"'
                     }
-                    if (!n.enabled) {
+                    if (!n.isEnabled(callbackContext)) {
                         liClass = ' class="disabled"'
                     }
                     out << "<li${liClass ?: ''}>"
@@ -78,14 +103,40 @@ class NavigationTagLib {
             out << "</ul>"
         }
     }
+    
+    def items = { attrs, body ->
+        def scope = attrs.scope
+        def node = attrs.node
+        if (!scope && !node) {
+            scope = 'app'
+        }
+        if (scope && !(scope instanceof String)) {
+            scope = scope.name
+        }
+        
+        def varName = attrs.var
+        
+        out << "<ul>"
+        NavigationNode parentNode = node ?: grailsNavigation.scopeByName(scope)
+        for (n in parentNode.children) {
+            out << "<li>"
+            out << body( (varName ? [(varName):n] : n) )
+            if (n.children) {
+                out << nav.items([node:n, var:varName], body)
+            }
+            out << "</li>"
+        }
+        out << "</ul>"
+    }
 
     def scopeForActivationPath = { attrs ->
-        attrs.path ? grailsNavigation.getScopeForActivationPath(attrs.path) : grailsNavigation.getScopeForActiveNode(request)
+        out << "NOT IMPLEMENTED - DO WE NEED THIS?"
+//        attrs.path ? grailsNavigation.getScopeForId(attrs.path) : grailsNavigation.getScopeForActiveNode(request)
     }
     
     def firstActiveNode = { attrs ->
-        def r = attrs.path ? grailsNavigation.getFirstNodeOfActivationPath(attrs.path) : grailsNavigation.getFirstActiveNode(request)
-        return r ?: [id:''] // workaround for grails 2 bug
+        def r = findActiveNodes(attrs.path)
+        return r.size() ? r[0] : [id:''] // workaround for grails 2 bug
     }
 
     def setActivePath = { attrs ->
@@ -97,11 +148,11 @@ class NavigationTagLib {
     }
 
     private List<NavigationNode> findActiveNodes(String activePath) {
-        grailsNavigation.nodesForActivationPath(activePath ?: grailsNavigation.getActivePath(request))
+        grailsNavigation.nodesForPath(activePath ?: grailsNavigation.getActivePath(request))
     }
     
     private NavigationNode findActiveNode(String activePath) {
-        grailsNavigation.nodeForActivationPath(activePath ?: grailsNavigation.getActivePath(request))
+        grailsNavigation.nodeForId(activePath ?: grailsNavigation.getActivePath(request))
     }
     
     def activePath = { attrs ->

@@ -36,6 +36,7 @@ class PlatformCoreGrailsPlugin {
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/conf/TestResources.groovy",
+            "grails-app/conf/TestNavigation.groovy",
             "grails-app/i18n/test.properties",
             "grails-app/domain/org/grails/plugin/platform/test/**/*.groovy",
             "grails-app/controllers/org/grails/plugin/platform/test/**/*.groovy",
@@ -47,6 +48,13 @@ class PlatformCoreGrailsPlugin {
     ]
 
     def observe = ['*'] // We observe everything so we can re-apply dynamic methods, conventions etc
+
+    def watchedResources = [
+        "file:./grails-app/conf/*Navigation.groovy",
+        "file:./plugins/*/grails-app/conf/*Navigation.groovy"
+    ]
+
+    def artefacts = [getNavigationArtefactHandler()]
 
     def title = "Plugin Platform Core"
     def author = "Marc Palmer"
@@ -200,15 +208,37 @@ Grails Plugin Platform Core APIs
     def onChange = { event ->
         def ctx = event.application.mainContext
         def config = event.application.config
-        switch (event.source) {
-            case Class:
-                ctx.grailsInjection.applyTo(event.source)
-                // @todo add call to update auto nav for controllers, we badly need "onreload" events for this
 
-                if (application.isServiceClass(event.source)) {
-                    ctx.grailsEvents.reloadListener(event.source)
-                }
-                break
+        def navArtefactType = getNavigationArtefactHandler().TYPE
+        if (application.isArtefactOfType(navArtefactType, event.source)) {
+            ctx.grailsNavigation.reload(event.source)
+        } else if (application.isArtefactOfType('Controller', event.source)) {
+            ctx.grailsNavigation.reload() // conventions on controller may have changed
+        } else {
+            switch (event.source) {
+                case Class:
+                    ctx.grailsInjection.applyTo(event.source)
+                    // @todo add call to update auto nav for controllers, we badly need "onreload" events for this
+
+                    if (application.isServiceClass(event.source)) {
+                        ctx.grailsEvents.reloadListener(event.source)
+                    }
+                    break
+            }
+        }
+    }
+    
+    
+    static getNavigationArtefactHandler() {
+        softLoadClass('org.grails.plugin.platform.navigation.NavigationArtefactHandler')
+    }
+
+    static softLoadClass(String className) {
+        try {
+            getClassLoader().loadClass(className)
+        } catch (ClassNotFoundException e) {
+            println "ERROR: Could not load $className"
+            null
         }
     }
 }

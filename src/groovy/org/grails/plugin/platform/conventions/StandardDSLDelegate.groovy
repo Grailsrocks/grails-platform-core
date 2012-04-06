@@ -17,7 +17,12 @@ class StandardDSLDelegate {
     }
     
     private __newBlock(String name, args, Closure body) {
-        DSLCommand cmd = new DSLBlockCommand(name: name, arguments: args ?: [])
+        DSLCommand cmd
+        if ((args?.size() == 1) && args[0] instanceof Map) {
+            cmd = new DSLNamedArgsBlockCommand(name: name, arguments: args[0] ?: [])
+        } else {
+            cmd = new DSLBlockCommand(name: name, arguments: args ?: [])
+        }
         List<DSLCommand> results = []
         def nestedDelegate = new StandardDSLDelegate(results)
         body.resolveStrategy = Closure.DELEGATE_FIRST
@@ -41,7 +46,7 @@ class StandardDSLDelegate {
                 }
             } else {
                 if (args[-1] instanceof Closure) {
-                    command = __newBlock(name, args[0..args.length()-2], args[-1])
+                    command = __newBlock(name, args[0..args.size()-2], args[-1])
                 } else {
                     command = new DSLCallCommand(name: name, arguments:args)
                 }

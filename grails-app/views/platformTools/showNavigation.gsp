@@ -15,7 +15,6 @@
             <input type="submit"/>
         </g:form>
 
-        <p>Scope for this path is: ${nav.scopeForActivationPath(path:params.activePath)}</p>
         <p>First active node for this path is: ${nav.firstActiveNode(path:params.activePath)?.id}</p>
         <p>Primary navigation for this path:</p>
         <nav:primary path="${params.activePath}"/>
@@ -26,20 +25,19 @@
         <p>The available navigation nodes are:
             <ul>
             <g:each in="${navScopes}" var="scope"> 
-                <li>${scope.name.encodeAsHTML()}</li>
-                <ul>
-                    <g:each in="${scope.children}" var="item">
-                        <li>id: ${item.id.encodeAsHTML()}<br/>
-                            activation path: ${item.activationPath.encodeAsHTML()}
-                            <g:if test="${item.activationPath == params.activePath}"><strong>ACTIVE</strong></g:if>
-                            <br/>
-                            title: ${item.titleMessageCode.encodeAsHTML()} (<g:message code="${item.titleMessageCode}" encodeAs="HTML"/>)<br/>
-                            default title: ${item.titleDefault.encodeAsHTML()}<br/>
-                            visible: ${item.visibleClosure ? 'from Closure' : item.visible}<br/>
-                            enabled: ${item.enabledClosure ? 'from Closure' : item.enabled}<br/>
-                            link: ${item.linkArgs.encodeAsHTML()}</li>
-                    </g:each>
-                </ul>
+                <li>${scope.name.encodeAsHTML()}
+                <nav:items scope="${scope}" var="item">
+                    id: ${item.id.encodeAsHTML()}
+                        <g:if test="${item.id == params.activePath}"><strong>ACTIVE</strong></g:if>
+                        <br/>
+                        name: ${item.name.encodeAsHTML()}<br/>
+                        title: ${item.titleMessageCode.encodeAsHTML()} (<g:message code="${item.titleMessageCode}" encodeAs="HTML"/>)<br/>
+                        default title: ${item.titleDefault.encodeAsHTML()}<br/>
+                        visible: ${item.visibleClosure ? 'from Closure' : item.visible}<br/>
+                        enabled: ${item.enabledClosure ? 'from Closure' : item.enabled}<br/>
+                        link: ${item.linkArgs.encodeAsHTML()}<br/>
+                </nav:items>
+                </li>
             </g:each>
             </ul>
         </p>
