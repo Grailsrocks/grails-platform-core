@@ -23,10 +23,19 @@ navigation = {
         privacy(view:'privacypolicy')
         help(view:'help', data:[icon:'help'])
     }
+    
+    admin {
+        // All your scaffolding in here
+    }
+    
     /*
     overrides {
         // Move all the platformCore plugin items to app#tools
-        move 'plugin.platformCore', 'app#tools'
+        // @todo work out char for path separator
+        // @todo add custom body support just for the item rendering, always wrap with <ul>...</ul> because this is sane
+        move 'plugin.platformCore', 'app#tools'ls -l 
+        
+        move 'plugin.weceem', 'admin#content'
     }
     */
 }

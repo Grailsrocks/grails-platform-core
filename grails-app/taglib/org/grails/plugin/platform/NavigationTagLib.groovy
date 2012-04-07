@@ -42,7 +42,7 @@ class NavigationTagLib {
     
     /**
      * Render the secondary navigation menu
-     * @attr path Optional activation path. If not specified, uses current request's activation path
+     * @attr path Optional activation path. If not specified, uses current request's activation path ONLY IF current activation path is in the same scope used for nav:primary
      * @attr scope Optional scope of menu to render. If not specified, uses default scope determined by activation path or "app"
      */
     def secondary = { attrs ->
@@ -73,6 +73,11 @@ class NavigationTagLib {
         }
     }
     
+    /**
+     * Render a menu for a given scope and path
+     * @attr scope Optional scope to render menu for. Defaults to "app"
+     * @attr path Optional activation path indicating what is currently active.
+     */
     def menu = { attrs ->
         def cssClass = attrs.class != null ? attrs.class : 'nav primary'
         def id = attrs.id ? "id=\"${attrs.id.encodeAsHTML()}\" " : ''

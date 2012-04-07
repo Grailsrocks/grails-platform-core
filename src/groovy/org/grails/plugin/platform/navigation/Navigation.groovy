@@ -359,7 +359,7 @@ class Navigation {
                         scope = "app"
                         break
                     default: 
-                        scope = definingPluginName
+                        scope = "plugin.$definingPluginName"
                 }
             }
             
@@ -374,10 +374,6 @@ class Navigation {
                 controller: controllerName, 
                 action: defaultAction)
 
-//            def controllerScope = makePath([controllerName], definingPluginName)
-
-//            log.debug "Scope for actions of controller $controllerName is ${controllerScope}"            
-            
             actionNames -= defaultAction
             def n = 0
             for (action in actionNames) {

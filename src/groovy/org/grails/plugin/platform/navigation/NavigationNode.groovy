@@ -6,7 +6,7 @@ package org.grails.plugin.platform.navigation
  * this must be immutable and threadsafe
  */
 class NavigationNode {
-    static NODE_PATH_SEPARATOR = '#'
+    static NODE_PATH_SEPARATOR = '/'
     
     NavigationNode parent
     private List<NavigationItem> children
