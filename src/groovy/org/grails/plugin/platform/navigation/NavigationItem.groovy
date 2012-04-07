@@ -1,11 +1,11 @@
 package org.grails.plugin.platform.navigation
 
 /**
- * Immutable encapsulation of a node in the navigation structure
+ * Immutable encapsulation of an item in the navigation structure
  * Instances of this are shared globally and available to requests so 
  * this must be immutable and threadsafe
  */
-class NavigationItem extends NavigationNode {
+class NavigationItem extends NavigationScope {
     private Integer order
     
     private String titleDefault

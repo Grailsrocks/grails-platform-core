@@ -138,6 +138,9 @@ class UiExtensionsTagLib {
      */
     def callTag = { attrs, body ->
         def name = attrs.remove('tag')
+        if (name.indexOf('.') != -1) {
+            throwTagError "The [tag] attribute of [p:callTag] must use the colon namespace form, not period form"
+        }
         def bodyAttr = attrs.remove('bodyContent')
         def (ns, tagName) = TagLibUtils.resolveTagName(name)
         def mergedAttrs

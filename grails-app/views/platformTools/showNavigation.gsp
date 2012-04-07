@@ -25,12 +25,12 @@
 
         <p>First active node for this path is: ${nav.firstActiveNode(path:params.activePath)?.id}</p>
         <p>Primary navigation for this path:</p>
-        <nav:primary path="${params.activePath}"/>
+        <nav:primary scope="${params.activePath}" path="${params.activePath}"/>
 
         <p>Secondary navigation for this path:</p>
         <nav:secondary path="${params.activePath}"/>
 
-        <p>The available navigation nodes are:
+        <p>The available navigation scopes are:
             <ul>
             <g:each in="${navScopes}" var="scope"> 
                 <li>${scope.name.encodeAsHTML()}
@@ -40,7 +40,7 @@
                         <br/>
                         name: ${item.name.encodeAsHTML()}<br/>
                         order: ${item.order.encodeAsHTML()}<br/>
-                        link: ${item.linkArgs.encodeAsHTML()}<br/>
+                        link args: ${item.linkArgs.encodeAsHTML()} (<p:callTag tag="g:link" attrs="${item.linkArgs}">Test</p:callTag>)<br/>
                         title: ${item.titleMessageCode.encodeAsHTML()} (<g:message code="${item.titleMessageCode}" encodeAs="HTML"/>)<br/>
                         default title: ${item.titleDefault.encodeAsHTML()}<br/>
                         data: ${item.data.encodeAsHTML()}<br/>

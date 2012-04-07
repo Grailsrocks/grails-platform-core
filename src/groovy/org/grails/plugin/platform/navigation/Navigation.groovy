@@ -15,8 +15,8 @@ class Navigation {
     final log = LoggerFactory.getLogger(Navigation)
 
     Map<String, NavigationScope> rootScopes
-    Map<String, NavigationNode> nodesById
-    Map<String, NavigationNode> nodesByControllerAction
+    Map<String, NavigationScope> nodesById
+    Map<String, NavigationScope> nodesByControllerAction
     
     def grailsApplication
     def grailsConventions
@@ -85,36 +85,19 @@ class Navigation {
         request['plugin.platformCore.navigation.activePath']
     }
     
-    NavigationNode getActiveNode(request) {
+    NavigationScope getActiveNode(request) {
         request['plugin.platformCore.navigation.activeNode']
     }
-    
-    /**
-     * Reverse-lookup the current active path to find out what the default scope
-     * would be based on the node found for that activation path.
-     * If multiple nodes have same path, only the last one will be found
-     */
-    String getScopeForId(String path) {
-        def n = nodeForId(path)
-        def scope = n?.scope
-        return scope?.name
-    }
-    
-    String getScopeForActiveNode(request) {
-        def n = nodeForId(getActivePath(request))
-        def scope = n?.scope
-        return scope?.name
-    }
 
-    NavigationNode getFirstNodeOfPath(String path) {
+    NavigationScope getFirstNodeOfPath(String path) {
         getFirstAncestor(path)
     }
     
-    NavigationNode getFirstActiveNode(request) {
+    NavigationScope getFirstActiveNode(request) {
         getFirstAncestor(getActiveNode(request)?.id)
     }
     
-    NavigationNode getFirstAncestor(String path) {
+    NavigationScope getFirstAncestor(String path) {
         def parts = splitPath(path)
         if (parts) {
             return nodeForId(parts[0])
@@ -127,11 +110,11 @@ class Navigation {
         return rootScopes[name]
     }
 
-    NavigationNode nodeForId(String path) {
+    NavigationScope nodeForId(String path) {
         nodesById[path]
     }
     
-    List<NavigationNode> nodesForPath(String path) {
+    List<NavigationScope> nodesForPath(String path) {
         if (log.debugEnabled) {
             log.debug "Getting nodesForPath [$path]"
         }
@@ -152,7 +135,7 @@ class Navigation {
         (path ? getFirstNodeOfPath(path) : getFirstActiveNode(request))?.scope
     }
     
-    NavigationNode nodeForControllerAction(String controller, String action) {
+    NavigationScope nodeForControllerAction(String controller, String action) {
         nodesByControllerAction["$controller:$action"]
     }
     
@@ -238,7 +221,7 @@ class Navigation {
         updateCaches()
     }
     
-    NavigationItem addItemFromArgs(DSLNamedArgsCallCommand c, NavigationNode parent, String definingPlugin) {
+    NavigationItem addItemFromArgs(DSLNamedArgsCallCommand c, NavigationScope parent, String definingPlugin) {
         def linkArgs = [:]
         for (p in LINK_TAG_ATTRIBUTES) {
             if (c.arguments.containsKey(p)) {
@@ -273,7 +256,7 @@ class Navigation {
         addItem(parent, item)
     }
 
-    void parseDSL(List<DSLCommand> commands, NavigationNode parent, String definingPlugin) {
+    void parseDSL(List<DSLCommand> commands, NavigationScope parent, String definingPlugin) {
         if (log.debugEnabled) {
             log.debug "Parsing navigation DSL commands: ${commands} in parent ${parent?.name}, defined by plugin ${definingPlugin}"
         }
@@ -403,7 +386,7 @@ class Navigation {
         addItem(args.parent, node)
     }
 
-    NavigationItem addItem(NavigationNode parent, NavigationItem item) {
+    NavigationItem addItem(NavigationScope parent, NavigationItem item) {
         parent.add(item)
         if (nodesById.containsKey(item.id)) {
             parent.remove(item)
@@ -413,12 +396,12 @@ class Navigation {
     }
     
     String makePath(List<String> elements, String definingPluginName = null) {
-        def p = elements.join(NavigationNode.NODE_PATH_SEPARATOR)
+        def p = elements.join(NavigationScope.NODE_PATH_SEPARATOR)
         return definingPluginName ? "plugin.${definingPluginName}." + p : p
     }
     
     def splitPath(String path) {
-        path ? path.split(NavigationNode.NODE_PATH_SEPARATOR) : Collections.EMPTY_LIST
+        path ? path.split(NavigationScope.NODE_PATH_SEPARATOR) : Collections.EMPTY_LIST
     }
     
     NavigationScope getOrCreateScope(String name) {
