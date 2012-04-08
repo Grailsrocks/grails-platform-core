@@ -21,7 +21,6 @@ import org.grails.plugin.platform.navigation.NavigationScope
 import org.grails.plugin.platform.util.TagLibUtils
 
 /**
- * @todo TEST Auto namespace navigationScope convention to include plugin name
  * @todo TEST impl custom on nav:menu/breadcrumb
  */
 class NavigationTagLib {
@@ -231,9 +230,11 @@ class NavigationTagLib {
             }
             out << ">"
             def first = true
-            for (n in nodes) {
+            int l = nodes.size()
+            for (int i = 0; i < l; i++) {
+                def n = nodes[i]
                 if (customBody) {
-                    out << body([item:n, first:first])
+                    out << body([item:n, first:first, last:i == l-1])
                 } else {
                     def text = g.message(code:n.titleMessageCode, default:n.titleDefault)
                     out << "<li>${g.link(n.linkArgs, text)}</li>"

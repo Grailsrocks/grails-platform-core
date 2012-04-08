@@ -32,6 +32,8 @@ class SampleController {
     def sampleService
     def grailsEventsDispatcher
 
+    static navigationScope = "sample"
+    
     def testSave = {
         def user1 =  new Author(name:'Marc').save()
         def user2 =  new Author(name:'Stephane').save()
