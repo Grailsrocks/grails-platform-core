@@ -282,10 +282,12 @@ class Navigation {
                         // Are we creating a top-level scope?
                         def newParent
                         if (!parent) {
-                            if (c.arguments) {
+                            if (c.arguments && 
+                                !((c.arguments.size() == 1) && c.arguments.containsKey('global')) ) {
                                 throw new IllegalArgumentException( "You cannot define a root scope and pass it arguments. Arguments are for nodes only")
                             }
-                            newParent = getOrCreateScope(c.name)
+                            def newScopeName = definingPlugin && !c.arguments.global ? makePath(["plugin.$definingPlugin", c.name]) : c.name
+                            newParent = getOrCreateScope(newScopeName)
                         } else {
                             // Add this parent node, before the children
                             if (c instanceof DSLBlockCommand) {

@@ -21,10 +21,6 @@ import org.grails.plugin.platform.navigation.NavigationScope
 import org.grails.plugin.platform.util.TagLibUtils
 
 /**
- * @todo Remove trailing slashes from paths when resolving to nodes
- * @todo Auto namespace plugin DSLs unless global:true is set
- * @todo Rename any getFirstXXXX 
- * @todo impl > 1 level deep on nav:menu
  * @todo TEST Auto namespace navigationScope convention to include plugin name
  * @todo TEST impl custom on nav:menu/breadcrumb
  */
@@ -96,12 +92,16 @@ class NavigationTagLib {
      * @attr path Optional activation path indicating what is currently active.
      * @attr class Optional
      */
-    def menu = { attrs ->
+    def menu = { attrs, body ->
+        println "MENU: $attrs"
         def cssClass = attrs.class != null ? attrs.class : 'nav'
         def id = attrs.id ? "id=\"${attrs.id.encodeAsHTML()}\" " : ''
         def scope = attrs.scope
+        def depth = attrs.depth != null ? attrs.depth.toInteger() : 1
         if (!scope) {
-            scope = 'app'
+            def requestPath = attrs.path ?: grailsNavigation.getActivePath(request)
+            def pathScope = nav.scopeForActivationPath(path:requestPath)
+            scope = pathScope ?: 'app'
         }
         if (!(scope instanceof String)) {
             scope = scope.name
@@ -124,7 +124,7 @@ class NavigationTagLib {
             for (n in scopeNode.children) {
                 if (n.isVisible(callbackContext)) {
                     if (customBody) {
-                         out << customBody([item:n])        
+                         out << body([item:n])        
                     } else {
                         def liClass 
                         if (activeNodes.contains(n)) {
@@ -138,6 +138,12 @@ class NavigationTagLib {
                         out << g.link(linkArgs, g.message(code:n.titleMessageCode, default:n.titleDefault))
                         out << "</li>"
                     }
+                }
+                if (depth > 1) {
+                    def nestedAttrs = attrs.clone()
+                    nestedAttrs.depth = depth - 1
+                    nestedAttrs.scope = n.id
+                    out << nav.menu(nestedAttrs, body)
                 }
             }
             out << "</ul>"
@@ -227,7 +233,7 @@ class NavigationTagLib {
             def first = true
             for (n in nodes) {
                 if (customBody) {
-                    out << customBody([item:n, first:first])
+                    out << body([item:n, first:first])
                 } else {
                     def text = g.message(code:n.titleMessageCode, default:n.titleDefault)
                     out << "<li>${g.link(n.linkArgs, text)}</li>"

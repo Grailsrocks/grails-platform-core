@@ -1,6 +1,6 @@
 
 navigation = {
-    app {
+    app(global:true) {
         home(controller:'test', action:'home', order:-1000, data:[icon:'house'])
         about(controller:'test', action:'about', order:90, data:[icon:'question'])
         contact(controller:'test', action:'contact', order:100, data:[icon:'mail'])
@@ -11,20 +11,20 @@ navigation = {
         }
     }
     
-    user {
+    user(global:true) {
         login(controller:'auth', action:'login', data:[icon:'user'])
         logout(controller:'auth', action:'logout', data:[icon:'user-out']) // isVisible...
         signup(controller:'auth', action:'signup') // isVisible...
         profile(controller:'auth', action:'profile') // isVisible...
     }
 
-    footer {
+    footer(global:true) {
         terms(view:'terms')
         privacy(view:'privacypolicy')
         help(view:'help', data:[icon:'help'])
     }
     
-    admin {
+    admin(global:false) {
         // All your scaffolding in here
     }
     

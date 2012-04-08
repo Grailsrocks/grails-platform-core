@@ -17,7 +17,7 @@
         
         <p>The current active path is "${nav.activePath().encodeAsHTML()}", which means the active node is ${nav.activeNode()?.id.encodeAsHTML()}</p>
 
-        <p>Show default navigation for the active path:</p>
+        <p>Show navigation for the active path:</p>
         <g:form action="showNavigation">
             <input name="activePath" value="${params.activePath}" size="80"/>
             <input type="submit"/>
@@ -33,6 +33,9 @@
         <p>Breadcrumb for this path:</p>
         <nav:breadcrumb path="${params.activePath}"/>
         
+        <p>Two-deep menu for this path:</p>
+        <nav:menu scope="${params.activePath}" path="${params.activePath}" depth="2"/>
+
         <p>The available navigation scopes are:
             <ul>
             <g:each in="${navScopes}" var="scope"> 
