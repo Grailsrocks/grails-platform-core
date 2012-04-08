@@ -21,14 +21,12 @@ import org.grails.plugin.platform.navigation.NavigationScope
 import org.grails.plugin.platform.util.TagLibUtils
 
 /**
- * @todo reistant default action as first in child list for auto controllers
- * @todo Auto namespace navigationScope convention to include plugin name
+ * @todo Remove trailing slashes from paths when resolving to nodes
  * @todo Auto namespace plugin DSLs unless global:true is set
  * @todo Rename any getFirstXXXX 
- * @todo Remove trailing slashes from paths when resolving to nodes
- * @todo impl breadcrumb
- * @todo impl custom on nav:menu
  * @todo impl > 1 level deep on nav:menu
+ * @todo TEST Auto namespace navigationScope convention to include plugin name
+ * @todo TEST impl custom on nav:menu/breadcrumb
  */
 class NavigationTagLib {
     static namespace = "nav"

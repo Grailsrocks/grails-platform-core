@@ -307,6 +307,18 @@ class Navigation {
         }
     }
 
+    /**
+     * Load the available controller actions and if no declaration exists already, auto-register them
+     * in the navigation system.
+     * 
+     * Supports "navigationScope" static property convention which can contain the scope name to put the controller into
+     * Note however that this will be namespaced to plugin.<pluginName>/<navigationScopeValue> if the artefact comes from
+     * a plugin.
+     *
+     * Controllers are added with the default action as a new scope, with all actions as sub items
+     *
+     * @todo Does not detect actions under Grails 1.3.x yet.
+     */
     void loadControllers() {
         def rootScopesNeeded = []
         
@@ -346,6 +358,11 @@ class Navigation {
                     default: 
                         scope = "plugin.$definingPluginName"
                 }
+            } else {
+                // If convention supplied, namespace it if controller is in a plugin
+                if (definingPluginName) {
+                    scope = makePath(["plugin.$definingPluginName",scope])
+                }
             }
             
             log.debug "Scope for actions of controller $controllerName is ${scope}"
@@ -359,7 +376,6 @@ class Navigation {
                 controller: controllerName, 
                 action: defaultAction)
 
-            actionNames -= defaultAction
             def n = 0
             for (action in actionNames) {
                 declareControllerNode(
