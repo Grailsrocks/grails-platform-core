@@ -112,6 +112,13 @@ class Navigation {
     }
 
     NavigationScope nodeForId(String path) {
+        if (path.endsWith(NavigationScope.NODE_PATH_SEPARATOR)) {
+            if (path.size() > 1) {
+                path = path[0..-2]
+            } else {
+                path = ''
+            }
+        }
         nodesById[path]
     }
     

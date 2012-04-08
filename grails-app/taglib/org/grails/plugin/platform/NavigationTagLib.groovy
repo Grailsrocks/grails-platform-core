@@ -170,7 +170,8 @@ class NavigationTagLib {
     }
 
     def scopeForActivationPath = { attrs ->
-        attrs.path ? grailsNavigation.nodeForId(attrs.path)?.rootScope.name : grailsNavigation.getActiveNode(request)?.rootScope.name
+        def rootScope = attrs.path ? grailsNavigation.nodeForId(attrs.path)?.rootScope : grailsNavigation.getActiveNode(request)?.rootScope
+        return rootScope ? rootScope.name : null
     }
     
     def firstActiveNode = { attrs ->

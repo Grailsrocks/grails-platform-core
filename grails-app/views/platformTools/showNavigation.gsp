@@ -25,7 +25,7 @@
 
         <p>First active node for this path is: ${nav.firstActiveNode(path:params.activePath)?.id}</p>
         <p>Primary navigation for this path:</p>
-        <nav:primary scope="${params.activePath}" path="${params.activePath}"/>
+        <nav:primary scope="${nav.scopeForActivationPath(path:params.activePath)}" path="${params.activePath}"/>
 
         <p>Secondary navigation for this path:</p>
         <nav:secondary path="${params.activePath}"/>
