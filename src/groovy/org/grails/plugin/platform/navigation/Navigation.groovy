@@ -377,6 +377,8 @@ class Navigation {
                 action: defaultAction)
 
             def n = 0
+            
+            // @todo make default action first in list always, sort others alpha!
             for (action in actionNames) {
                 declareControllerNode(
                     parent:controllerNode,
