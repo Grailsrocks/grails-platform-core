@@ -18,7 +18,18 @@
 package org.grails.plugin.platform
 
 import org.grails.plugin.platform.navigation.NavigationScope
+import org.grails.plugin.platform.util.TagLibUtils
 
+/**
+ * @todo reistant default action as first in child list for auto controllers
+ * @todo Auto namespace navigationScope convention to include plugin name
+ * @todo Auto namespace plugin DSLs unless global:true is set
+ * @todo Rename any getFirstXXXX 
+ * @todo Remove trailing slashes from paths when resolving to nodes
+ * @todo impl breadcrumb
+ * @todo impl custom on nav:menu
+ * @todo impl > 1 level deep on nav:menu
+ */
 class NavigationTagLib {
     static namespace = "nav"
 
@@ -102,6 +113,9 @@ class NavigationTagLib {
             log.debug "Rendering menu for scope [${scope}]"
         }
 
+        def custom = attrs.custom
+        def customBody = (custom == 'true') || custom.is(Boolean.TRUE)
+
         def activeNodes = findNodes(attrs.path)
         
         def callbackContext = [grailsApplication:grailsApplication]
@@ -111,17 +125,21 @@ class NavigationTagLib {
             out << "<ul ${id}class=\"${cssClass}\">"
             for (n in scopeNode.children) {
                 if (n.isVisible(callbackContext)) {
-                    def liClass 
-                    if (activeNodes.contains(n)) {
-                        liClass = ' class="active"'
+                    if (customBody) {
+                         out << customBody([item:n])        
+                    } else {
+                        def liClass 
+                        if (activeNodes.contains(n)) {
+                            liClass = ' class="active"'
+                        }
+                        if (!n.isEnabled(callbackContext)) {
+                            liClass = ' class="disabled"'
+                        }
+                        out << "<li${liClass ?: ''}>"
+                        def linkArgs = n.linkArgs.clone() // Clone! naughty g.link changes them otherwise. Naughty g.link!
+                        out << g.link(linkArgs, g.message(code:n.titleMessageCode, default:n.titleDefault))
+                        out << "</li>"
                     }
-                    if (!n.isEnabled(callbackContext)) {
-                        liClass = ' class="disabled"'
-                    }
-                    out << "<li${liClass ?: ''}>"
-                    def linkArgs = n.linkArgs.clone() // Clone! naughty g.link changes them otherwise. Naughty g.link!
-                    out << g.link(linkArgs, g.message(code:n.titleMessageCode, default:n.titleDefault))
-                    out << "</li>"
                 }
             }
             out << "</ul>"
@@ -182,10 +200,42 @@ class NavigationTagLib {
         grailsNavigation.getActivePath(request)
     }
     
+    /**
+     * Return the current active navigation node, or the node specified by the path attribute
+     */
     def activeNode = { attrs ->
-        findNode(attrs.path) ?: [id:''] //workaround for 2.0.0 null return value bug
+        findNode(attrs.path) ?: [id:''] //workaround for 2.0.0 null return value bug, can't return null :(
     }
-    
-    def breadcrumb = { attrs ->
+
+    /**
+     * Render a breadcrumb, with optional custom rendering
+     */
+    def breadcrumb = { attrs, body ->
+        def nodes = findNodes(attrs.path)
+        def cssClass = attrs.class == null ? 'breadcrumb' : attrs.class
+
+        def custom = attrs.custom
+        def customBody = (custom == 'true') || custom.is(Boolean.TRUE)
+
+        if (!nodes) {
+            TagLibUtils.warning('nav:breadcrumb', "No activation path for this request and no path attribute set, or path [${attrs.path}] cannot be resolved")
+        } else {
+            out << "<ul"
+            if (cssClass) {
+                out << " class=\"${cssClass}\""
+            }
+            out << ">"
+            def first = true
+            for (n in nodes) {
+                if (customBody) {
+                    out << customBody([item:n, first:first])
+                } else {
+                    def text = g.message(code:n.titleMessageCode, default:n.titleDefault)
+                    out << "<li>${g.link(n.linkArgs, text)}</li>"
+                }
+                first = false
+            }
+            out << "</ul>"
+        }
     }
 }

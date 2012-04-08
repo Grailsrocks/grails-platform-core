@@ -5,6 +5,7 @@ import org.grails.plugin.platform.conventions.*
 import grails.util.GrailsNameUtils
 
 import org.slf4j.LoggerFactory
+
 /**
  * Bean that encapsulates the navigation structure of the entire application
  */
@@ -120,7 +121,8 @@ class Navigation {
         }
         def node = nodeForId(path)
         def nodes = []
-        while (node && !(node instanceof NavigationScope)) {
+        // We don't return the root scope
+        while (node && node.parent) {
             nodes << node
             node = node.parent
         }

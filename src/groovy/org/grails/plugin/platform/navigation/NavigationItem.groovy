@@ -41,11 +41,11 @@ class NavigationItem extends NavigationScope {
     }
 
     boolean inScope(String scopeName) {
-        getScope().name == scopeName
+        getRootScope().name == scopeName
     }
     
     boolean inScope(NavigationScope scope) {
-        getScope().name == scope.name
+        getRootScope().name == scope.name
     }
     
     /**

@@ -30,6 +30,9 @@
         <p>Secondary navigation for this path:</p>
         <nav:secondary path="${params.activePath}"/>
 
+        <p>Breadcrumb for this path:</p>
+        <nav:breadcrumb path="${params.activePath}"/>
+        
         <p>The available navigation scopes are:
             <ul>
             <g:each in="${navScopes}" var="scope"> 

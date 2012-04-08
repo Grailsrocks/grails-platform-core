@@ -17,7 +17,12 @@
  */
 package org.grails.plugin.platform.util
 
+import grails.util.Environment
+import org.slf4j.LoggerFactory
+
 class TagLibUtils {
+    static final log = LoggerFactory.getLogger(TagLibUtils)
+
     static final String EMPTY = ''
     
     /**
@@ -110,5 +115,10 @@ class TagLibUtils {
         return id
     }
     
+    static void warning(String tagName, String message) {
+        if (Environment.current == Environment.DEVELOPMENT) {
+            log.warn "Tag [$tagName]: $message"
+        }
+    }
 
 }
