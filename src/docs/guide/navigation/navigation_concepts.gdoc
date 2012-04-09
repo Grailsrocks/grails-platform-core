@@ -1,4 +1,3 @@
-
 There are only three concepts to understand in the Navigation API - items, scopes and the activation path.
 
 Out of the box, scopes are created for all your application and plugin controllers automatically by convention. Items are created in these scopes for every action on the controller.

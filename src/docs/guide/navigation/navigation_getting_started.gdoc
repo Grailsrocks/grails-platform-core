@@ -1,6 +1,4 @@
-Getting started
-
 The first thing you need to do is install the platform-core plugin if you haven't already.
 
-If you then run your application and you have some existing controllers you'll find that if you add the nav:primary tag to one of your sitemesh layouts or GSP pages you will see top-level navigation for each of your controllers.
+If you then run your application and you have some existing controllers you'll find that if you add the nav:[primary|navigationTags] tag to one of your sitemesh layouts or GSP pages you will see top-level navigation for each of your controllers.
 

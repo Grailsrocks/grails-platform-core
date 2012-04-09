@@ -8,6 +8,12 @@ import org.slf4j.LoggerFactory
 
 /**
  * Bean that encapsulates the navigation structure of the entire application
+ *
+ * @todo Action declarations by name i.e. index(), list() etc with inherited controller
+ * @todo Auto-set parent title if same action is declared in a child and title specified / vice versa
+ * @todo Support CRUD multi-actions correctly out of the box with xxx(controller:y, scaffold:true) and auto-sense scaffold where possible.
+ * default item is list, sub item Create, actions list, show, edit, update map activate list, create and saave activate Create
+ * @todo Support '*' convention in action list - action:['list', '*'] = list is for linking, all others on controller are for path matching
  */
 class Navigation {
     

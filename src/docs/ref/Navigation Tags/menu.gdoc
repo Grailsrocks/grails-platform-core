@@ -18,12 +18,24 @@ h2. Example
 
 <%-- Custom item rendering -->
 <nav:menu id="nav" custom="true">
-    <li class="${item.data.icon ? 'i_'+item.data.icon : ''}"><p:callTag tag="g:link" attrs="${linkArgs + [class:active ? 'active' : '']}"><span><g:message code="${item.titleMessageCode}" encodeAs="HTML"/></span></p:callTag>
-    <g:if test="${active && item.children}">
-         <nav:menu scope="${item.id}" custom="true" class="visible">
-             <li class="${item.data.icon ? 'i_'+item.data.icon : ''}"><p:callTag tag="g:link" attrs="${linkArgs + [class:active ? 'active' : '']}"><span><g:message code="${item.titleMessageCode}" encodeAs="HTML"/></span></p:callTag>
+    <li class="${item.data.icon ? 'i_'+item.data.icon : ''}">
+        <p:callTag tag="g:link" 
+                   attrs="${linkArgs + [class:active ? 'active' : '']}">
+           <span>
+               <g:message code="${item.titleMessageCode}" encodeAs="HTML"/>
+           </span>
+        </p:callTag>
+        <g:if test="${active && item.children}">
+        <nav:menu scope="${item.id}" custom="true" class="visible">
+             <li class="${item.data.icon ? 'i_'+item.data.icon : ''}">
+                 <p:callTag tag="g:link" 
+                            attrs="${linkArgs + [class:active ? 'active' : '']}">
+                    <span>
+                       <g:message code="${item.titleMessageCode}" encodeAs="HTML"/>
+                    </span>
+                 </p:callTag>
          </nav:menu>
-    </g:if>
+         </g:if>
     </li>
 </nav:menu>
 {code}

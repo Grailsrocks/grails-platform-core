@@ -4,7 +4,6 @@ Navigation artefacts are groovy scripts end in the name "Navigation" in @grails-
 
 Example contents of @grails-app/conf/AppNavigation.groovy@:
 {code}
-
 navigation = {
     app {
         home controller:'test', action:'home', data:[icon:'house']
@@ -50,8 +49,8 @@ This closure represents the DSL and method invocations have a special meaning wi
 The name used in method calls is used to construct the activation path of each item. So a call to "app" that has a call to "messages" which has a closure that calls "inbox" will create:
 
 # A scope called "app"
-# A top-level item in the "app" scope, called "messages", with activation path "app/messages"
-# A nested item under "messages" called "inbox" with activation path "app/messages/inbox"
+# A top-level item in the "app" scope, called "messages", with activation path @app/message@
+# A nested item under "messages" called "inbox" with activation path @app/messages/inbox@
 
 h4. Top level method invocations (root scopes)
 
@@ -64,6 +63,7 @@ navigation = {
     app {
         home controller:'test', action:'home', data:[icon:'house']
     }
+}
 {code}
 
 By default scopes defined by Navigation artefacts within plugins are automatically namespaced to prevent collisions with application namespaces.
@@ -83,7 +83,7 @@ h4. Nested method calls - defining navigation items
 
 The DSL supports the following arguments when defining a navigation items.
 
-h5. Linking arguments
+h4. Linking arguments
 
 These are @controller@, @action@, @uri@, @url@ and @view@. These are passed to @g:link@ to create links. The "view" attribute is handled internally and removed and converted to "uri" for the purpose of calling g:link
 
@@ -93,7 +93,7 @@ There is special handling of controller and action:
 # @action@ need not be specified, it will fall back to the default action of the controller
 # @action@ can be a list. If it is, the first element is the one used to generate a link, the rest are used to support the case where multiple actions should activate the same navigation items - for example the create and save actions of a CRUD controller.
 
-h5. Visibility and Status
+h4. Visibility and Status
 
 You can control per request whether items are visible or enabled, or set this in the navigation structure statically.
 
@@ -111,10 +111,10 @@ def loggedIn = { ->
     grailsApplication.mainContext.springSecurityService.principal instanceof String
 }
 def loggedOut = { -> 
-!(grailsApplication.mainContext.springSecurityService.principal instanceof String)
+    !(grailsApplication.mainContext.springSecurityService.principal instanceof String)
 }
 def isAdmin = { -> 
-    SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')) 
+    SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
 }
 
 navigation = {
@@ -135,17 +135,20 @@ navigation = {
         profile controller:'auth', action:'profile', visible: loggedIn
     }
 }
+{code}
 
 Note how the Closures are "def"'d in the script to make them reusable and reachable within the DSL
 
-h5. Title text
+h4. Title text
+
+The title of an item is the text used to display the navigation item.
 
 Two arguments are used for this:
 
-# @title@ represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path "app/messages/inbox" becomes the i18n code "nav.app.messages.inbox"
+# @title@ represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path @app/messages/inbox@ becomes the i18n code @nav.app.messages.inbox@
 # @titleText@ represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of @title@
 
-h5. Application custom data
+h4. Application custom data
 
 Each item can have arbitrary data associated with it - but note that this data is singleton and should not change at runtime.
 
@@ -161,7 +164,7 @@ navigation = {
 }
 {code}
 
-h5. Ordering of items
+h4. Ordering of items
 
 Items are ordered naturally in the order they are declared in the DSL.
 

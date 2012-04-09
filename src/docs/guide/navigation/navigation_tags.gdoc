@@ -1,4 +1,4 @@
-There are few Navigation tags available, all detailed in the reference section.
+There are a few Navigation tags available, all detailed in the reference section.
 
 The most common tags you will use are explained here.
 
@@ -17,7 +17,11 @@ Use this tag to render the primary user navigation of your site:
 
 <%-- With custom item rendering --%>
 <nav:primary scope="admin" id="nav" class="admin" custom="true">
-   <li><p:callTag tag="g:link" attrs="${linkArgs + [class:'nav button']}"><g:message code="${item.titleMessageCode}"/></p:callTag></li>
+   <li>
+   <p:callTag tag="g:link" attrs="${linkArgs + [class:'nav button']}">
+      <g:message code="${item.titleMessageCode}"/>
+   </p:callTag>
+   </li>
 </nav:primary>
 {code}
 
