@@ -46,7 +46,7 @@
 
         <p>Two-deep menu for this path with custom render:</p>
         <nav:menu scope="${params.activePath}" path="${params.activePath}" custom="true" depth="2">
-            Item: <p:callTag tag="p:smartLink" attrs="${item.linkArgs}"/>
+            Item: <p:callTag tag="p:smartLink" attrs="${linkArgs}"/>
         </nav:menu>
 
         <p>The available navigation scopes are:
@@ -59,7 +59,7 @@
                         <br/>
                         name: ${item.name.encodeAsHTML()}<br/>
                         order: ${item.order.encodeAsHTML()}<br/>
-                        link args: ${item.linkArgs.encodeAsHTML()} (<p:callTag tag="g:link" attrs="${item.linkArgs}">Test</p:callTag>)<br/>
+                        link args: ${item.linkArgs.encodeAsHTML()} (<p:callTag tag="g:link" attrs="${new HashMap(item.linkArgs)}">Test</p:callTag>)<br/>
                         title: ${item.titleMessageCode.encodeAsHTML()} (<g:message code="${item.titleMessageCode}" encodeAs="HTML"/>)<br/>
                         default title: ${item.titleDefault.encodeAsHTML()}<br/>
                         data: ${item.data.encodeAsHTML()}<br/>

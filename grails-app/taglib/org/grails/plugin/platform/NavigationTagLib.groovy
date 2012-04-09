@@ -164,6 +164,32 @@ class NavigationTagLib {
         }
     }
     
+    
+    def items = { attrs, body ->
+        def scope = attrs.scope
+        def node = attrs.node
+        if (!scope && !node) {
+            scope = 'app'
+        }
+        if (scope && !(scope instanceof String)) {
+            scope = scope.name
+        }
+        
+        def varName = attrs.var
+        
+        out << "<ul>"
+        NavigationScope parentNode = node ?: grailsNavigation.scopeByName(scope)
+        for (n in parentNode.children) {
+            out << "<li>"
+            out << body( (varName ? [(varName):n] : n) )
+            if (n.children) {
+                out << nav.items([node:n, var:varName], body)
+            }
+            out << "</li>"
+        }
+        out << "</ul>"
+    }
+    
     private findScopeForActivationPath(path) {
         def rootScope = path ? grailsNavigation.nodeForId(path)?.rootScope : grailsNavigation.getActiveNode(request)?.rootScope
         return rootScope ? rootScope.name : null
@@ -246,11 +272,11 @@ class NavigationTagLib {
             int l = nodes.size()
             for (int i = 0; i < l; i++) {
                 def n = nodes[i]
+                def linkArgsCloned = new HashMap(n.linkArgs)
                 if (customBody) {
                     out << body([item:n, linkArgs:linkArgsCloned, first:first, last:i == l-1])
                 } else {
                     def text = g.message(code:n.titleMessageCode, default:n.titleDefault)
-                    def linkArgsCloned = new HashMap(n.linkArgs)
                     out << "<li>${g.link(linkArgsCloned, text)}</li>"
                 }
                 first = false
