@@ -11,6 +11,7 @@ class NavigationItem extends NavigationScope {
     private String titleDefault
     
     private Map linkArgs
+    private List actionAliases
     private String titleMessageCode
     
     private boolean visible = true
@@ -25,7 +26,8 @@ class NavigationItem extends NavigationScope {
         super(args)
         this.order = args.order
         this.data = args.data != null ? args.data : Collections.EMPTY_MAP
-        this.linkArgs = args.linkArgs
+        this.linkArgs = args.linkArgs.asImmutable()
+        this.actionAliases = args.actionAliases
         this.titleMessageCode = args.titleMessageCode
         this.titleDefault = args.titleDefault
         if (args.visible == null) {
@@ -54,6 +56,10 @@ class NavigationItem extends NavigationScope {
      */
     Map getData() {
         this.data
+    }
+
+    List getActionAliases() {
+        this.actionAliases
     }
     
     Integer getOrder() {
@@ -90,7 +96,7 @@ class NavigationItem extends NavigationScope {
     
     boolean isVisible(context) {
         if (this.visibleClosure != null) {
-            return this.visibleClosure(context)
+            return invokeCallback(this.visibleClosure, context)
         } else {
             return this.visible
         }
@@ -98,9 +104,15 @@ class NavigationItem extends NavigationScope {
     
     boolean isEnabled(context) {
         if (this.enabledClosure != null) {
-            return this.enabledClosure(context)
+            return invokeCallback(this.enabledClosure, context)
         } else {
             return this.enabled
         }
+    }
+    
+    protected invokeCallback(Closure c, delegate) {
+        Closure cloneOfClosure = c.clone()
+        cloneOfClosure.delegate = delegate
+        return cloneOfClosure()
     }
 }

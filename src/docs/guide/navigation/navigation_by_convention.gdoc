@@ -1,0 +1,31 @@
+To get you started quickly, all your controllers will be automatically registered in the "app" scope and each controller has sub-items for each of it actions.
+
+All the tags default to the "app" scope if you don't supply a scope and the current controller/action are within that scope, so it just works out of the box for the simple cases. So add the following to your sitemesh layout or GSP:
+
+{code:xml}
+<nav:primary/>
+<nav:secondary/>
+{code}
+
+This will render one or two <ul> tags for the "app" scope based on the currently active controller/action pair.
+
+By default all your controllers are automatically declared for you inside the "app" scope if they are not explicitly declared in a navigation DSL artefact and the navigationScope property is not set on them.
+
+These controller scopes have a nested item for each action defined on the controller, including the default action (the same as the link for e controller scope itself).
+
+h3. Moving some controllers from the default app navigation scope
+
+You often have some controllers that you don't want to appear in the main navigation of the application. You may want these to appear in an admin interface for example. To do this with convention based navigation you can just add a static navigationScope property to controllers.
+
+{code}
+class BookController {
+    static scaffold = Book
+    
+    static navigationScope = 'admin'
+}
+{code}
+
+This allows you to push controllers into another scope. Note that plugin controllers are automatically namespaced into a scope under "plugin.<pluginName>", in a scope beneath this with the value of the navigationScope property.
+
+You will not need to change your tags to render the admin navigation - if the controller/action the user is viewing resolves to an item inside the admin scope, the nav:primary tag will render the admin scope.
+

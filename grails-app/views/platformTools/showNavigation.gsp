@@ -35,7 +35,7 @@
         
         <p>Breadcrumb for this path with custom render:</p>
         <nav:breadcrumb path="${params.activePath}" custom="true">
-            <p:callTag tag="p:smartLink" attrs="${item.linkArgs}"/>
+            <p:callTag tag="p:smartLink" attrs="${linkArgs}"/>
             <g:if test="${!last}">
                 &raquo;
             </g:if>

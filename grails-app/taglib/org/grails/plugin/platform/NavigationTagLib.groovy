@@ -37,15 +37,18 @@ class NavigationTagLib {
      * @attr scope Optional scope of menu to render. If not specified, uses default scope determined by activation path or "app"
      * @attr class Optional css class for the outer <ul>
      */
-    def primary = { attrs ->
+    def primary = { attrs, body ->
         if (!attrs.scope) {
-            attrs.scope = 'app'
+            attrs.scope = findScopeForActivationPath(attrs.path)
+            if (!attrs.scope) {
+                attrs.scope = 'app'
+            }
         }
         if (!attrs.class) {
             attrs.class = "nav primary"
         }
         request['plugin.platformCore.navigation.primaryScope'] = attrs.scope
-        out << nav.menu(attrs)
+        out << nav.menu(attrs, body)
     }
     
     /**
@@ -54,7 +57,7 @@ class NavigationTagLib {
      * @attr scope Optional scope of menu to render. If not specified, uses default scope determined by activation path or "app"
      * @attr class Optional css class for the outer <ul>
      */
-    def secondary = { attrs ->
+    def secondary = { attrs, body ->
         def pathNodes = findNodes(attrs.path)
         if (log.debugEnabled) {
             log.debug "Rendering secondary nav, active nodes are: ${pathNodes?.id}"
@@ -79,7 +82,7 @@ class NavigationTagLib {
                     if (attrs.class == null) {
                         attrs.class = "nav secondary"
                     }
-                    out << nav.menu(attrs)
+                    out << nav.menu(attrs, body)
                 }
             }
         }
@@ -92,11 +95,12 @@ class NavigationTagLib {
      * @attr class Optional
      */
     def menu = { attrs, body ->
-        println "MENU: $attrs"
+        // @todo remove attributes and pass-through all that are left to <ul>
         def cssClass = attrs.class != null ? attrs.class : 'nav'
-        def id = attrs.id ? "id=\"${attrs.id.encodeAsHTML()}\" " : ''
+        def id = attrs.id ? " id=\"${attrs.id.encodeAsHTML()}\" " : ''
         def scope = attrs.scope
         def depth = attrs.depth != null ? attrs.depth.toInteger() : 1
+        def alwaysRenderChildren = attrs.forceChildren == 'true' || attrs.forceChildren.is(Boolean.TRUE)
         if (!scope) {
             def requestPath = attrs.path ?: grailsNavigation.getActivePath(request)
             def pathScope = nav.scopeForActivationPath(path:requestPath)
@@ -119,71 +123,72 @@ class NavigationTagLib {
         
         def scopeNode = grailsNavigation.nodeForId(scope)
         if (scopeNode) {
-            out << "<ul ${id}class=\"${cssClass}\">"
+            out << "<ul${id}"
+            if (cssClass) {
+                out << " class=\"${cssClass.encodeAsHTML()}\""
+            }
+            out << ">"
             for (n in scopeNode.children) {
                 if (n.isVisible(callbackContext)) {
+                    def active = activeNodes.contains(n)
+                    def enabled = n.isEnabled(callbackContext)
+                    
+                    def linkArgs = new HashMap(n.linkArgs) // Clone! naughty g.link changes them otherwise. Naughty g.link!
                     if (customBody) {
-                         out << body([item:n])        
+                        // Always give custom body a clone of the link args as they can't use the ones from item
+                        // Custom body is responsible for rendering nested items
+                        out << body([item:n, linkArgs:linkArgs, active:active, enabled:enabled])        
                     } else {
                         def liClass 
-                        if (activeNodes.contains(n)) {
+                        if (active) {
                             liClass = ' class="active"'
                         }
-                        if (!n.isEnabled(callbackContext)) {
+                        if (!enabled) {
                             liClass = ' class="disabled"'
                         }
                         out << "<li${liClass ?: ''}>"
-                        def linkArgs = n.linkArgs.clone() // Clone! naughty g.link changes them otherwise. Naughty g.link!
                         out << g.link(linkArgs, g.message(code:n.titleMessageCode, default:n.titleDefault))
+
+                        if ((active || alwaysRenderChildren) && (depth > 1)) {
+                            def nestedAttrs = attrs.clone()
+                            nestedAttrs.depth = depth - 1
+                            nestedAttrs.scope = n.id
+                            out << nav.menu(nestedAttrs, body)
+                        }
+
                         out << "</li>"
                     }
-                }
-                if (depth > 1) {
-                    def nestedAttrs = attrs.clone()
-                    nestedAttrs.depth = depth - 1
-                    nestedAttrs.scope = n.id
-                    out << nav.menu(nestedAttrs, body)
                 }
             }
             out << "</ul>"
         }
     }
     
-    def items = { attrs, body ->
-        def scope = attrs.scope
-        def node = attrs.node
-        if (!scope && !node) {
-            scope = 'app'
-        }
-        if (scope && !(scope instanceof String)) {
-            scope = scope.name
-        }
-        
-        def varName = attrs.var
-        
-        out << "<ul>"
-        NavigationScope parentNode = node ?: grailsNavigation.scopeByName(scope)
-        for (n in parentNode.children) {
-            out << "<li>"
-            out << body( (varName ? [(varName):n] : n) )
-            if (n.children) {
-                out << nav.items([node:n, var:varName], body)
-            }
-            out << "</li>"
-        }
-        out << "</ul>"
-    }
-
-    def scopeForActivationPath = { attrs ->
-        def rootScope = attrs.path ? grailsNavigation.nodeForId(attrs.path)?.rootScope : grailsNavigation.getActiveNode(request)?.rootScope
+    private findScopeForActivationPath(path) {
+        def rootScope = path ? grailsNavigation.nodeForId(path)?.rootScope : grailsNavigation.getActiveNode(request)?.rootScope
         return rootScope ? rootScope.name : null
     }
+
+    /**
+     * Return the name of the root scope of the supplied or default activation path
+     * @attr path Optional activation path
+     */
+    def scopeForActivationPath = { attrs ->
+        return findScopeForActivationPath(attrs.path)
+    }
     
+    /**
+     * Return the first node in the activation path specified, or based on current activation path
+     * @attr path Optional activation path
+     */
     def firstActiveNode = { attrs ->
         def r = findNodes(attrs.path)
         return r.size() ? r[0] : [id:''] // workaround for grails 2 bug
     }
 
+    /**
+     * Set the current active path for this request
+     */
     def setActivePath = { attrs ->
         if (attrs.path == null) {
             throwTagError('The [path] attribute is required')
@@ -200,6 +205,9 @@ class NavigationTagLib {
         grailsNavigation.nodeForId(activePath ?: grailsNavigation.getActivePath(request))
     }
     
+    /**
+     * Return the current active path
+     */
     def activePath = { attrs ->
         grailsNavigation.getActivePath(request)
     }
@@ -215,8 +223,11 @@ class NavigationTagLib {
      * Render a breadcrumb, with optional custom rendering
      */
     def breadcrumb = { attrs, body ->
+        // @todo remove attributes and pass-through all that are left to <ul>
+
         def nodes = findNodes(attrs.path)
         def cssClass = attrs.class == null ? 'breadcrumb' : attrs.class
+        def id = attrs.id ? " id=\"${attrs.id.encodeAsHTML()}\" " : ''
 
         def custom = attrs.custom
         def customBody = (custom == 'true') || custom.is(Boolean.TRUE)
@@ -224,24 +235,29 @@ class NavigationTagLib {
         if (!nodes) {
             TagLibUtils.warning('nav:breadcrumb', "No activation path for this request and no path attribute set, or path [${attrs.path}] cannot be resolved")
         } else {
-            out << "<ul"
-            if (cssClass) {
-                out << " class=\"${cssClass}\""
+            if (!customBody) {
+                out << "<ul${id}"
+                if (cssClass) {
+                    out << " class=\"${cssClass.encodeAsHTML()}\""
+                }
+                out << ">"
             }
-            out << ">"
             def first = true
             int l = nodes.size()
             for (int i = 0; i < l; i++) {
                 def n = nodes[i]
                 if (customBody) {
-                    out << body([item:n, first:first, last:i == l-1])
+                    out << body([item:n, linkArgs:linkArgsCloned, first:first, last:i == l-1])
                 } else {
                     def text = g.message(code:n.titleMessageCode, default:n.titleDefault)
-                    out << "<li>${g.link(n.linkArgs, text)}</li>"
+                    def linkArgsCloned = new HashMap(n.linkArgs)
+                    out << "<li>${g.link(linkArgsCloned, text)}</li>"
                 }
                 first = false
             }
-            out << "</ul>"
+            if (!customBody) {
+                out << "</ul>"
+            }
         }
     }
 }

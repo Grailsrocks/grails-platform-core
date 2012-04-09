@@ -1,0 +1,89 @@
+There are few Navigation tags available, all detailed in the reference section.
+
+The most common tags you will use are explained here.
+
+It is important to understand that all the tags work by default using the current scope and activation path as determined by the request - but you can override scope and path on all of these tags to render anything you like.
+
+Navigation is rendered by default as an HTML @<ul>@ tag with an @<li>@ containing a single link for each of the items. Nested items are rendered as nested @<ul>@.
+
+All navigation rendering tags support attributes for CSS class, id and custom rendering of items if required. These are still always rendered within @<ul>@.
+
+h3. nav:primary
+
+Use this tag to render the primary user navigation of your site:
+
+{code}
+<nav:primary scope="admin" id="nav" class="admin"/>
+
+<%-- With custom item rendering --%>
+<nav:primary scope="admin" id="nav" class="admin" custom="true">
+   <li><p:callTag tag="g:link" attrs="${linkArgs + [class:'nav button']}"><g:message code="${item.titleMessageCode}"/></p:callTag></li>
+</nav:primary>
+{code}
+
+See the [primary|navigationTags] tag reference for full details.
+
+h3. nav:secondary
+
+Use this tag to render the second-level navigation based on the selected item within the current primary navigation. The scope resolved by @nav:primary@ is stored in the request so that this tag knows which scope to use:
+
+{code}
+<nav:secondary id="secondary-nav" class="admin"/>
+{code}
+
+See the [secondary|navigationTags] tag reference for full details.
+
+h3. nav:menu
+
+The menu tag is used internally by the primary/secondary tags and can be called directly to render any part of the navigation structure, with any activation path.
+
+{code}
+<nav:menu id="main-nav"/>
+
+<%-- Render the admin nav 3-deep, including all nested descendents whether active or not --%>
+<nav:menu scope="admin" depth="3" forceChildren="true"/>
+{code}
+
+See the [menu|navigationTags] tag reference for full details.
+
+h3. nav:breadcrumb
+
+Breadcrumbs are often used to render a list of links to the "ancestors" of the current navigation location. This tag will render these as a @<ul>@ list by traversing the "activation path" for the current request or that passed in as the "path" attribute.
+
+{code}
+<nav:breadcrumb/>
+
+<%-- Custom rendering without ul wrapper --%>
+<div class="breadcrumb">
+    <nav:breadcrumb custom="true">
+        <p:callTag tag="p:smartLink" attrs="${linkArgs}"/>
+        <g:if test="${!last}">
+            &raquo;
+        </g:if>
+    </nav:breadcrumb>
+</div>
+{code}
+
+See the [breadcrumb|navigationTags] tag reference for full details.
+
+h3. nav:setActivePath
+
+You can call this tag from inside a controller or GSP if you need to "fudge" the current request's activation path. This is only necessary if there is no controller/action available on the current request, or if you need to simulate navigation while ignoring the real current activation path.
+
+You may need to do this inside an error.gsp for example.
+
+{code}
+<html>
+<body>
+    <!-- pretend we are in messages/inbox even though we are in a GSP with no controller -->
+    <nav:setActivePath path="app/messages/inbox"/>
+
+    <nav:primary/>
+    <nav:secondary/>
+
+    <p>Something went wrong!</p>
+</body>
+</html>
+{code}
+
+See the [setActivePath|navigationTags] tag reference for full details.

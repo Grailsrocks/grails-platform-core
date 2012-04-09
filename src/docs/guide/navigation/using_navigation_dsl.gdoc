@@ -1,0 +1,184 @@
+To declare navigation items you use navigation DSL artefacts to determine the items in each scope. Scopes are named and can be nested to provide a hierarchy.
+
+Navigation artefacts are groovy scripts end in the name "Navigation" in @grails-app/conf@.
+
+Example contents of @grails-app/conf/AppNavigation.groovy@:
+{code}
+
+navigation = {
+    app {
+        home controller:'test', action:'home', data:[icon:'house']
+        about controller:'test', action:'about', data:[icon:'question']
+        contact controller:'test', action:'contact', data:[icon:'mail']
+        messages(controller:'test', data:[icon:'inbox']) {
+            inbox action:'inbox'
+            archive action:'archive'
+            trash action:'trash'
+        }
+    }
+    
+    user {
+        login controller:'auth', action:'login', data:[icon:'user']
+        logout controller:'auth', action:'logout', data:[icon:'user-out']
+        signup controller:'auth', action:'signup'
+        profile controller:'auth', action:'profile'
+    }
+
+    footer {
+        terms view:'terms'
+        privacy view:'privacypolicy'
+        help view:'help', data:[icon:'help']
+    }
+    
+    admin {
+        // Add your back end admin controllers in here
+    }
+}
+{code}
+
+You can also use overrides in the navigation DSL to move items from one scope to another for example to move items declared by a plugin into your primary application navigation.
+{note}This part is not implemented in 1.0.M2-SNAPSHOT - code sample to be written{note}
+
+Using tags such as the [primary|navigationTags] and [secondary|navigationTags] navigation tags you can render all the page elements you need. 
+
+h3. The Navigation DSL Definition
+
+The script must return a Closure in the @navigation@ variable in the binding.
+
+This closure represents the DSL and method invocations have a special meaning within the DSL.
+
+The name used in method calls is used to construct the activation path of each item. So a call to "app" that has a call to "messages" which has a closure that calls "inbox" will create:
+
+# A scope called "app"
+# A top-level item in the "app" scope, called "messages", with activation path "app/messages"
+# A nested item under "messages" called "inbox" with activation path "app/messages/inbox"
+
+h4. Top level method invocations (root scopes)
+
+The top-level method calls that pass a Closure define root scopes in the navigation structure.
+
+The "app" scope is a prime example of this:
+
+{code}
+navigation = {
+    app {
+        home controller:'test', action:'home', data:[icon:'house']
+    }
+{code}
+
+By default scopes defined by Navigation artefacts within plugins are automatically namespaced to prevent collisions with application namespaces.
+
+Thus the scope "app" in a plugin called "SpringSecurityCore" would become the scope "plugin.springSecurityCore.app". If a plugin defines the scope with the @global:true@ argument, this will not happen:
+
+{code}
+// Example of a plugin exposing a root scope without namespacing
+navigation = {
+    app(global:true) {
+        contact controller:'test', action:'contact', data:[icon:'mail']
+    }
+}
+{code}
+
+h4. Nested method calls - defining navigation items
+
+The DSL supports the following arguments when defining a navigation items.
+
+h5. Linking arguments
+
+These are @controller@, @action@, @uri@, @url@ and @view@. These are passed to @g:link@ to create links. The "view" attribute is handled internally and removed and converted to "uri" for the purpose of calling g:link
+
+There is special handling of controller and action:
+
+# @controller@  need not be specified on sub-items - it will be inherited from the parent
+# @action@ need not be specified, it will fall back to the default action of the controller
+# @action@ can be a list. If it is, the first element is the one used to generate a link, the rest are used to support the case where multiple actions should activate the same navigation items - for example the create and save actions of a CRUD controller.
+
+h5. Visibility and Status
+
+You can control per request whether items are visible or enabled, or set this in the navigation structure statically.
+
+The arguments:
+
+# visible - determines if the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.
+# enabled - determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.
+
+Typically you will want to hide items if the user is not permitted to see them. An example of doing this with Spring Security Core:
+
+{code}
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+
+def loggedIn = { -> 
+    grailsApplication.mainContext.springSecurityService.principal instanceof String
+}
+def loggedOut = { -> 
+!(grailsApplication.mainContext.springSecurityService.principal instanceof String)
+}
+def isAdmin = { -> 
+    SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')) 
+}
+
+navigation = {
+    app {
+        home controller:'test', action:'home', data:[icon:'house']
+        ...
+    }
+    
+    admin {
+        superUserStuff controller:'admin', visible: isAdmin
+        ...
+    }
+
+    user {
+        login controller:'auth', action:'login', visible: notLoggedIn
+        logout controller:'auth', action:'logout', visible: loggedIn
+        signup controller:'auth', action:'signup', visible: notLoggedIn
+        profile controller:'auth', action:'profile', visible: loggedIn
+    }
+}
+
+Note how the Closures are "def"'d in the script to make them reusable and reachable within the DSL
+
+h5. Title text
+
+Two arguments are used for this:
+
+# @title@ represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path "app/messages/inbox" becomes the i18n code "nav.app.messages.inbox"
+# @titleText@ represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of @title@
+
+h5. Application custom data
+
+Each item can have arbitrary data associated with it - but note that this data is singleton and should not change at runtime.
+
+Typically you would use this to associate some extra data such as an icon name, which you then use in custom menu rendering code.
+
+Just put the values into the "data" Map:
+
+{code}
+navigation = {
+    app {
+        home controller:'test', action:'home', data:[icon:'house']
+    }
+}
+{code}
+
+h5. Ordering of items
+
+Items are ordered naturally in the order they are declared in the DSL.
+
+However you may wish to manually order items, for example so that plugins (or the application) can inject items into certain positions in your navigation.
+
+Just pass the integer value in the order argument:
+
+{code}
+navigation = {
+    app {
+        home controller:'test', action:'home', order:-1000
+        about controller:'test', action:'about', order:100
+        contact controller:'test', action:'contact', order:500 data:[icon:'mail']
+        messages(controller:'test', data:[icon:'inbox'], order:10) {
+            inbox action:'inbox'
+            archive action:'archive'
+            trash action:'trash', order:99999999 // always last
+        }
+    }
+{code}

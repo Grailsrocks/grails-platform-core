@@ -1,0 +1,43 @@
+
+There are only three concepts to understand in the Navigation API - items, scopes and the activation path.
+
+Out of the box, scopes are created for all your application and plugin controllers automatically by convention. Items are created in these scopes for every action on the controller.
+
+You will typically move from this to using the navigation DSL artefact for more control over the navigation structure.
+
+h3. What is a navigation item?
+
+An item is a place the user can reach in your navigation structure. Every item results in a menu item and link, and whether it is visible or enabled can be determined at runtime.
+
+Items are always inside one scope.
+
+Items can have child items.
+
+Items must be resolvable from a controller/action pair, so the navigation API can always tell where the user is in the structure if the current controller/action is known and you have an item declared for them.
+
+h3. What is a Scope?
+
+A scope is a name that identifies one or more navigation items. Top-level scopes are called root scopes and represent your main groupings of navigation items. For example you may have your application navigation for regular users and an admin root scope for backend administration.
+
+Example of scope names:
+{code}
+app                     // typically your default app navigation root scope
+app/messages            // the "messages" item in the "app" root scope
+admin/scaffolding/book  // the "book" item under "scaffolding" item in the "admin" scope
+plugin.cms/admin        // the "admin" item supplied by the "CMS" plugin
+plugin.socialFeed/feeds // the "feeds" item supplied by the "social-feed" plugin
+{code}
+
+Root scopes do not generate any menu links themselves, they are merely containers for your top level navigation items. They enable you to have multiple sets of navigation for different contexts.
+
+The items that scopes refer to can be nested arbitrarily. It is however generally recommended that you use at most 2 levels of navigation, sometimes three if really necessary. This is purely because of the user experience issues with deep navigation.
+
+Usually you should factor out deep navigation into separate root scopes. For example most applications would have the "app" scope, a "footer" scope for footer links like Terms of Use, Support etc., and a "user" scope for log in/out and so on.
+
+h3. What is an Activation Path?
+
+An activation path is a string that represents the currently active navigation item. This may be a few levels down in your navigation structure and represents the breadcrumb trail the user would see to get to the location they are currently viewing.
+
+The activation path is set on the current request and indicates which node is currently active. By default navigation API attempts to identify the correct activation path in your structure using the current controller and action, much like reverse URL mapping.
+
+However you can explicitly set the activation path using a tag or some code, for cases where you need to "fudge" it - for example if your action performs some odd redirection, or the endpoint is simply a GSP view which cannot be reversed to a location in the structure.

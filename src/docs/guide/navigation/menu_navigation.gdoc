@@ -1,0 +1,31 @@
+You can render any part of your navigation structure as a menu as many times as you like anywhere in your pages, using the [menu|navigationTags] tag.
+
+h3. Rendering multiple navigation scopes on the same page
+
+A typical contemporary application will have something like three separate menus used on most pages; main, user and footer.
+
+The main menu would use [primary|navigationTags] & [secondary|navigationTags] tags.
+
+You would then render the user and footer navigation using the menu tag, and passing the user and footer scopes:
+
+{code}
+<html>
+<body>
+    <nav:primary/>
+    <nav:secondary/>
+
+    <div id="user-nav">
+        <nav:menu scope="user"/>
+    </div>    
+
+    <g:layoutBody/>
+
+    <div id="footer-nav">
+        <nav:menu scope="footer"/>
+    </div>    
+</body>
+</html>
+{code}
+
+This results in a page where there are actually for navigation renderings, showing different scopes.
+

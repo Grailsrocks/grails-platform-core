@@ -1,0 +1,32 @@
+h1. nav:secondary
+
+h2. Purpose
+
+Renders a @<ul>@ menu structure for the secondary scope within your [navigation|guide:navigation] structure.
+
+The scope is automatically detected if not specified, and stored in the request so that the [secondary|navigationTags] tag automatically works with the same resolved scope.
+
+The [menu|navigationTags] tag is used internally to render the menu, see that documentation for full details.
+
+The secondary menu is never rendered if there is no active second-level navigation item relative to the current active path's primary item.
+
+Note the the @scope@ is by default inherited from that resolved by the preceding call to the [primary|navigationTags] tag.
+
+h2. Example
+
+{code:xml}
+<nav:secondary/>
+
+<nav:secondary id="secondary-nav"/>
+{code}
+
+Note that all the features of the [menu|navigationTags] tag are available but are not demonstrated here.
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+class | Optional CSS class to apply to the outer @<ul>@ tag. Defaults to "nav secondary" 
+{table}
+
+See the attributes of the [menu|navigationTags] tag for the rest.

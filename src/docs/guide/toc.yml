@@ -22,5 +22,13 @@ injection:
   title: Injection API
 navigation:
   title: Navigation API
+  navigation_concepts: Concepts
+  navigation_getting_started: Getting Started
+  navigation_by_convention: Navigation by convention
+  primary_navigation: What is primary and secondary navigation?  
+  menu_navigation: Rendering other menus
+  using_navigation_dsl: Using the Navigation DSL
+  navigation_tags: The Navigation Tags
+  navigation_recipes: Navigation Recipes - getting things done
 convention:
   title: Convention API

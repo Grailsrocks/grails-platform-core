@@ -1,0 +1,31 @@
+h1. nav:setActivePath
+
+h2. Purpose
+
+You can call this tag from inside a controller or GSP if you need to "fudge" the current request's activation path. This is only necessary if there is no controller/action available on the current request, or if you need to simulate navigation while ignoring the real current activation path.
+
+You may need to do this inside an error.gsp for example.
+
+h2. Example
+
+{code:xml}
+<html>
+<body>
+    <!-- pretend we are in support/error even though we are in a GSP with no controller -->
+    <nav:setActivePath path="app/support/error"/>
+
+    <nav:primary/>
+    <nav:secondary/>
+
+    <p>Something went wrong!</p>
+</body>
+</html>
+{code}
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+path | Required - activation path to use
+{table}
+

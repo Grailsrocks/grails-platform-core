@@ -1,1 +1,4 @@
-Pending
+The Navigation API provides a standard way to expose information about the menus available in your application and plugins.
+
+Aside from application navigation, plugins can expose their controllers and actions so that application can reuse them in their own navigation structure. Applications can also add items to the navigation structure of plugins, to merge items into the UI of plugins.
+

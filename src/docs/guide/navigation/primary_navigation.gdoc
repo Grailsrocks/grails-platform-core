@@ -1,0 +1,8 @@
+The primary navigation is the top level application the user sees, and the secondary is the context-sensitive sub items of the currently active primary item.
+
+Contemporary site styles typically separate out the primary and secondary navigation.
+
+The primary and secondary tags are geared up for this and automatically lookup up the scope and activation path to work out what to render.
+
+Normally you will only use these once in a page.
+

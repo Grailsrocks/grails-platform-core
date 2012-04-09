@@ -112,14 +112,18 @@ class Navigation {
     }
 
     NavigationScope nodeForId(String path) {
-        if (path.endsWith(NavigationScope.NODE_PATH_SEPARATOR)) {
-            if (path.size() > 1) {
-                path = path[0..-2]
-            } else {
-                path = ''
+        if (path) {
+            if (path?.endsWith(NavigationScope.NODE_PATH_SEPARATOR)) {
+                if (path.size() > 1) {
+                    path = path[0..-2]
+                } else {
+                    path = ''
+                }
             }
+            return nodesById[path]
+        } else {
+            return null
         }
-        nodesById[path]
     }
     
     List<NavigationScope> nodesForPath(String path) {
@@ -191,7 +195,14 @@ class Navigation {
     void updateCachesForItem(NavigationItem node) {
         nodesById[node.id] = node
         if (node.linkArgs.controller) {
+            assert node.linkArgs.action // We must also have pre-populated with an action
             nodesByControllerAction["${node.linkArgs.controller}:${node.linkArgs.action}"] = node
+            // Handle alias
+            if (node.actionAliases) {
+                for (action in node.actionAliases) {
+                    nodesByControllerAction["${node.linkArgs.controller}:${action}"] = node
+                }
+            }
         }
         for (child in node.children) {
             updateCachesForItem(child)
@@ -216,7 +227,7 @@ class Navigation {
         
         for (artefact in grailsApplication.navigationClasses) {
             if (log.debugEnabled) {
-                log.debug "Loading navigation artefact [${artefact.clazz}]"
+                log.debug "Loading navigation artefact [${artefact.clazz}] (instance hash: ${System.identityHashCode(artefact)})"
             }
             loadDSL(artefact.clazz)
         }
@@ -243,15 +254,31 @@ class Navigation {
             linkArgs.controller = parent.linkArgs.controller
         } 
         
+        // We always have to set the action, just to be safe and make sure we have all the info we need
+        if (!linkArgs.action) {
+            linkArgs.action = getDefaultControllerAction(linkArgs.controller)
+        }
+        
         // Workaround lack of "view" support in g:link
         if (linkArgs.view) {
             linkArgs.uri = '/'+linkArgs.remove('view')
         }
-        
+
+        // Do we have a list of action + aliases? If so we need to split these out
+        def actionAliases
+        if (linkArgs.action instanceof List) {
+            if (linkArgs.action.size() > 1) {
+                actionAliases = linkArgs.action[1..-1]
+            }
+            linkArgs.action = linkArgs.action[0]
+        }
+
+        // @todo In future, cache the generated URL for the given linkArgs, using linkGenerator!
         def nodeArgs = [
             name:c.name,
             order:c.arguments.order,
             data:c.arguments.data,
+            actionAliases:actionAliases,
             titleDefault:c.arguments.titleText ?: GrailsNameUtils.getNaturalName(c.name),
             linkArgs:linkArgs,
             titleMessageCode:c.arguments.title,
@@ -260,7 +287,7 @@ class Navigation {
         ]
         def item = new NavigationItem(nodeArgs)
         if (log.debugEnabled) {
-            log.debug "Adding item ${item.name} with parent ${parent?.id} with link args ${item.linkArgs}"
+            log.debug "Adding item ${item.name} with parent ${parent?.id} with args $nodeArgs"
         }
         addItem(parent, item)
     }
@@ -286,7 +313,7 @@ class Navigation {
                                 !((c.arguments.size() == 1) && c.arguments.containsKey('global')) ) {
                                 throw new IllegalArgumentException( "You cannot define a root scope and pass it arguments. Arguments are for nodes only")
                             }
-                            def newScopeName = definingPlugin && !c.arguments.global ? makePath(["plugin.$definingPlugin", c.name]) : c.name
+                            def newScopeName = definingPlugin && !c.arguments.global ? "plugin.$definingPlugin.${c.name}" : c.name
                             newParent = getOrCreateScope(newScopeName)
                         } else {
                             // Add this parent node, before the children
@@ -410,7 +437,7 @@ class Navigation {
         ]
         NavigationItem node = new NavigationItem(nodeArgs)
         if (log.debugEnabled) {
-            log.debug "Adding node ${node.id} to parent ${args.parent?.id}"
+            log.debug "Adding convention item ${node.id} to parent ${args.parent?.id}"
         }
         addItem(args.parent, node)
     }
