@@ -217,6 +217,8 @@ class Navigation {
     
     void loadDSL(Class dslClass) {
         def dslInstance = dslClass.newInstance()
+        //println "Loading DSL from $dslClass (class instance hash: ${System.identityHashCode(dslClass)})"
+        //println "DSL instance: $dslInstance"
         dslInstance.run()
         def dsl = dslInstance.binding.getVariable('navigation')
         if (dsl) {
@@ -233,7 +235,7 @@ class Navigation {
         
         for (artefact in grailsApplication.navigationClasses) {
             if (log.debugEnabled) {
-                log.debug "Loading navigation artefact [${artefact.clazz}] (instance hash: ${System.identityHashCode(artefact)})"
+                log.debug "Loading navigation artefact [${artefact.clazz}] (class instance hash: ${System.identityHashCode(artefact.clazz)})"
             }
             loadDSL(artefact.clazz)
         }
