@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
  */
 public interface EventsRegistry {
     
-    public final String GRAILS_TOPIC_PREFIX = "grailsTopic";
+    public final String GRAILS_TOPIC_PREFIX = "g-";
 
     public String addListener(String topic, Object bean, Method callbackMethod);
     public String addListener(String topic, Object bean, String callbackMethodName);
