@@ -24,7 +24,7 @@ class PlatformTagLib {
         } else {
             markup += "/>"
         }
-        def b = g.callTag(attrs, body)
+        def b = p.callTag(attrs, body)
         out << "<div class=\"tag-demo\">"
         out << "<div class=\"tag-source\"><strong>GSP code:</strong><pre>\n"+markup.encodeAsHTML()+"</pre></div>"
         out << "<div class=\"tag-result\"><strong>Result:</strong> ${b}</div>"
