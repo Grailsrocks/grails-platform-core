@@ -131,13 +131,13 @@ Grails Plugin Platform Core APIs
         }
 
         // Navigation API
-        grailsNavigation(org.grails.plugin.platform.navigation.Navigation) {
+        grailsNavigation(org.grails.plugin.platform.navigation.NavigationImpl) {
             grailsApplication = ref('grailsApplication')
             grailsConventions = ref('grailsConventions')
         }
 
         // Navigation API
-        grailsConventions(org.grails.plugin.platform.conventions.Conventions) {
+        grailsConventions(org.grails.plugin.platform.conventions.ConventionsImpl) {
             grailsApplication = ref('grailsApplication')
         }
 

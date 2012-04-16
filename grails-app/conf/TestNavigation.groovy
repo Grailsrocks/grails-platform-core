@@ -4,11 +4,27 @@ navigation = {
         home(controller:'test', action:'home', order:-1000, data:[icon:'house'])
         about(controller:'test', action:'about', order:90, data:[icon:'question'])
         contact(controller:'test', action:'contact', order:100, data:[icon:'mail'])
-        messages(controller:'test', action:'messages', order:0, data:[icon:'inbox']) {
-            inbox action:'inbox'
-            archive action:'archive'
-            trash action:'trash'
+        messages(controller:'test', order:0, data:[icon:'inbox']) {
+            inbox()
+            archive()
+            trash()
         }
+        extranet {
+            support()
+            account()
+        }
+        
+        test(action:'*')
+        testTwo(action:['list', '*'])
+        testThree()
+        testFour {
+            list()
+            create()
+        }
+
+        something(controller:'test')
+        somethingTwo(controller:'test', action:'*')
+        somethingThree(controller:'test', action:['list', '*'])
     }
     
     user(global:true) {

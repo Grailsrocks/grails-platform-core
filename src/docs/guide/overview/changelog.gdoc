@@ -1,3 +1,7 @@
+h3. 1.0.M2-SNAPSHOT
+
+Refined and documented Navigation API.
+
 h3. 1.0.M1
 
 First public release with Config and Security APIs and some UI Extensions. Work-in-progress APIs for Events, Injection, Conventions and Navigation.
