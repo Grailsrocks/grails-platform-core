@@ -155,7 +155,7 @@ class NavigationImpl implements Navigation {
     }
     
     NavigationScope nodeForControllerAction(String controller, String action) {
-        nodesByControllerAction["$controller:$action"]
+        nodesByControllerAction["$controller:$action".toString()]
     }
     
     void reloadAll() {
@@ -171,6 +171,8 @@ class NavigationImpl implements Navigation {
     }
 
     void reload(Class navigationClass) {
+        log.info "Reloading navigation structure due to change in ${navigationClass}"
+
         // Can't work out how/if we can optimize this at the moment due to overrides etc
         reloadAll()
     }
@@ -202,11 +204,11 @@ class NavigationImpl implements Navigation {
         nodesById[node.id] = node
         if (node.linkArgs.controller) {
             assert node.linkArgs.action // We must also have pre-populated with an action
-            nodesByControllerAction["${node.linkArgs.controller}:${node.linkArgs.action}"] = node
+            nodesByControllerAction["${node.linkArgs.controller}:${node.linkArgs.action}".toString()] = node
             // Handle alias
             if (node.actionAliases) {
                 for (action in node.actionAliases) {
-                    nodesByControllerAction["${node.linkArgs.controller}:${action}"] = node
+                    nodesByControllerAction["${node.linkArgs.controller}:${action}".toString()] = node
                 }
             }
         }
@@ -217,8 +219,6 @@ class NavigationImpl implements Navigation {
     
     void loadDSL(Class dslClass) {
         def dslInstance = dslClass.newInstance()
-        //println "Loading DSL from $dslClass (class instance hash: ${System.identityHashCode(dslClass)})"
-        //println "DSL instance: $dslInstance"
         dslInstance.run()
         def dsl = dslInstance.binding.getVariable('navigation')
         if (dsl) {
@@ -252,6 +252,7 @@ class NavigationImpl implements Navigation {
     boolean hasNonControllerLinkArgs(Map args) {
         args.containsKey('uri') || 
         args.containsKey('url') || 
+        args.containsKey('view') || 
         args.containsKey('mapping')
     }
     
@@ -260,16 +261,14 @@ class NavigationImpl implements Navigation {
         
         // Inherit controller from parent
         if (isControllerLinking && !linkArgs.controller) {
-            if (linkArgs.action) {
-                // inherit controller
-                if (parent instanceof NavigationItem) {
-                    linkArgs.controller = parent.linkArgs.controller
-                } else {
-                    // item name becomes controller name
-                    linkArgs.controller = itemName
-                }
+            // inherit controller
+            if (parent instanceof NavigationItem) {
+                linkArgs.controller = parent.linkArgs.controller
+            } else {
+                // item name becomes controller name
+                linkArgs.controller = itemName
             }
-        } 
+        }  
         
         // We always have to set the action, just to be safe and make sure we have all the info we need
         if (isControllerLinking && !linkArgs.action) {
@@ -279,14 +278,6 @@ class NavigationImpl implements Navigation {
         // Workaround lack of "view" support in g:link
         if (!isControllerLinking && linkArgs.view) {
             linkArgs.uri = '/'+linkArgs.remove('view')
-        }
-
-        // Do we have a list of action + aliases? If so we need to split these out
-        if (linkArgs.action instanceof List) {
-            if (linkArgs.action.size() > 1) {
-                linkArgs.actionAliases = linkArgs.action[1..-1]
-            }
-            linkArgs.action = linkArgs.action[0]
         }
     }
     
@@ -305,7 +296,7 @@ class NavigationImpl implements Navigation {
             name:name,
             order:arguments.order,
             data:arguments.data,
-            actionAliases:linkArgs.actionAliases,
+            actionAliases:arguments.actionAliases,
             titleDefault:arguments.titleText ?: GrailsNameUtils.getNaturalName(name),
             linkArgs:linkArgs,
             titleMessageCode:arguments.title,
@@ -317,6 +308,19 @@ class NavigationImpl implements Navigation {
             log.debug "Adding item ${item.name} with parent ${parent?.id} with args $nodeArgs"
         }
         addItem(parent, item)
+    }
+    
+    /**
+     * Return true if we are to automatically apply actions.
+     * True if:
+     * - controller and action are not set and no other link args set
+     * or
+     * - action is '*' or a list with '*' in
+     */
+    boolean isAutoControllerDeclaration(args) {
+        boolean doAutoActions = (args.action == '*') || 
+            ((args.action instanceof List) && args.action.find({ it == '*' })) ||
+            (!args.controller && !args.action && !hasNonControllerLinkArgs(args))
     }
     
     /**
@@ -357,12 +361,18 @@ class NavigationImpl implements Navigation {
                                 args = [controller:c.name]
                             } else {
                                 args = c.arguments
-                                // If controller but no action, use name as action name
-                                if (args.controller && !args.action) {
-                                    args.action = c.name
-                                }
                             }
-                            newParent = addItemFromArgs(c.name, args, parent, definingPlugin)
+                            
+                            // If it is an action wild-card auto generated one...
+                            if (isAutoControllerDeclaration(args)) {
+                                if (!args.controller) {
+                                    args.controller = c.name
+                                }
+                                newParent = registerControllerActions(args.controller, null, args, parent.id)
+                            } else {
+                                // Nope its a normal item
+                                newParent = addItemFromArgs(c.name, args, parent, definingPlugin)
+                            }
                         }
                         // Now add any children
                         parseDSL(c.children, newParent, definingPlugin)
@@ -378,17 +388,32 @@ class NavigationImpl implements Navigation {
                             // name is controller, use default action
                             args.controller = c.name
                         } else {
-                            // inherit controller
-                            args.action = c.name
+                            // inherit controller if parent is a node
+                            if (parent instanceof NavigationItem) {
+                                args.controller = parent.linkArgs.controller
+                                // parent may not link with a controller, in which case we use node name as controller
+                                if (!args.controller) {
+                                    args.controller = c.name
+                                } else {
+                                    // but if parent had a controller we use action
+                                    args.action = c.name
+                                }
+                            }
                         }
                         addItemFromArgs(c.name, args, parent, definingPlugin)
+                    } else {
+                        throw new IllegalArgumentException( "We don't support method calls with positional arguments in this DSL. Your DSL tried to call [${c.name}] with ${c.arguments}")
                     }
                     break;
                 case DSLNamedArgsCallCommand:
                     if (!parent) {
                         throw new IllegalArgumentException( "We don't support named argument method calls unless you are in a scope. Your DSL tried to call [$c.name]($c.arguments)")
                     } 
-                    addItemFromArgs(c.name, c.arguments, parent, definingPlugin)
+                    if (isAutoControllerDeclaration(c.arguments)) {
+                        registerControllerActions(c.arguments.controller, null, c.arguments, parent.id)
+                    } else {
+                        addItemFromArgs(c.name, c.arguments, parent, definingPlugin)
+                    }
                     break;
                 default:
                     throw new IllegalArgumentException( "We don't support command type ${c.getClass()}")
@@ -447,14 +472,30 @@ class NavigationImpl implements Navigation {
             
             log.debug "Scope for actions of controller $controllerName is ${scope}"
 
-            registerControllerActions(controllerName, controllerClass, '*', scope)
+            registerControllerActions(controllerName, controllerClass, [action:'*'], scope)
         }
     }
 
-    void registerControllerActions(String controllerName, Class controllerClass, actionOrActions, String scope) {
-        boolean actionsIsList = actionOrActions instanceof List
-        boolean includeAutoActions = (actionsIsList && actionList.contains('*')) || (actionOrActions == '*')
-        List actionsToAdd = actionsIsList ? actionList.find { it != '*' } : []
+    /**
+     * Auto-register controller actions, returning the parent (default/primary) item
+     */
+    NavigationItem registerControllerActions(String controllerName, Class controllerClass, Map args, String scope) {
+        if (log.debugEnabled) {
+            log.debug "Registering controller actions for [$controllerName] (class: ${controllerClass ?: 'unknown'}), args: ${args} in scope ${scope}"
+        }
+        if (!controllerClass) {
+            def artef = grailsConventions.findArtefactBySimpleClassName(
+                    GrailsNameUtils.getClassNameRepresentation(controllerName)+'Controller', 'Controller')
+            controllerClass = artef?.clazz            
+            if (!controllerClass) {
+                log.error "Cannot register navigation for controller [$controllerName], no controller artefact exists with this name"
+                return
+            }
+        }
+        
+        boolean actionsIsList = args.action instanceof List
+        boolean includeAutoActions = (actionsIsList && args.action.contains('*')) || (args.action == '*')
+        List actionsToAdd = actionsIsList ? args.action.find { it != '*' } : []
 
         String defaultAction
         // If no explicit name, add default action as the main action
@@ -463,8 +504,6 @@ class NavigationImpl implements Navigation {
         } else {
             defaultAction = actionsToAdd[0]
         }
-        // Make sure child list has default at index zero
-        actionsToAdd.add(0, defaultAction)
 
         if (log.debugEnabled) {
             log.debug "Found explicit actions $actionsToAdd for controller $controllerName"
@@ -486,12 +525,15 @@ class NavigationImpl implements Navigation {
         
         log.debug "Registering actions $actionsToAdd for controller $controllerName"
 
-        def controllerNode = declareControllerNode(
-            parent: getOrCreateScope(scope),
-            name: controllerName,
-            titleDefault: GrailsNameUtils.getNaturalName(controllerName),
-            controller: controllerName, 
-            action: defaultAction)
+        def controllerArgs = args.clone()
+        controllerArgs.parent = getOrCreateScope(scope)
+        controllerArgs.name = controllerName
+        if (!controllerArgs.titleDefault) {
+            controllerArgs.titleDefault = args.titleDefault ?: GrailsNameUtils.getNaturalName(controllerName)
+        }
+        controllerArgs.controller = controllerName
+        controllerArgs.action = defaultAction
+        def controllerNode = declareControllerNode(controllerArgs)
 
         def n = 0
         
@@ -502,19 +544,26 @@ class NavigationImpl implements Navigation {
                 name: action,
                 titleDefault: GrailsNameUtils.getNaturalName(action),
                 controller:controllerName, 
-                order:n++,
+                order: action == defaultAction ? Integer.MIN_VALUE : n++,
                 action:action)
         }
+        
+        return controllerNode
     }
     
     NavigationItem declareControllerNode(Map args) {
+        if (log.debugEnabled) {
+            log.debug "Declaring controller nav item: $args"
+        }
         def path = args.path
         
-        def nodeArgs = [
-            name:args.name,
-            titleDefault:args.titleDefault,
-            linkArgs:[controller:args.controller,action:args.action]
-        ]
+        def nodeArgs = args.clone()
+        nodeArgs.titleMessageCode = nodeArgs.remove('title')
+        nodeArgs.linkArgs = [controller:args.controller,action:args.action]
+        for (a in LINK_TAG_ATTRIBUTES) {
+            nodeArgs.remove(a)
+        }
+        
         NavigationItem node = new NavigationItem(nodeArgs)
         if (log.debugEnabled) {
             log.debug "Adding convention item ${node.id} to parent ${args.parent?.id}"
@@ -525,9 +574,11 @@ class NavigationImpl implements Navigation {
     NavigationItem addItem(NavigationScope parent, NavigationItem item) {
         parent.add(item)
         if (nodesById.containsKey(item.id)) {
+            def itemWas = item.id
             parent.remove(item)
-            throw new IllegalArgumentException("Cannot add navigation node with id [${item.id}] because an item with the same id already exists")
+            throw new IllegalArgumentException("Cannot add navigation node with id [${itemWas}] because an item with the same id already exists")
         }
+        updateCachesForItem(item)
         return item
     }
     

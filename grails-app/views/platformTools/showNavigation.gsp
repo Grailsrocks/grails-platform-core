@@ -60,6 +60,7 @@
                         name: ${item.name.encodeAsHTML()}<br/>
                         order: ${item.order.encodeAsHTML()}<br/>
                         link args: ${item.linkArgs.encodeAsHTML()} (<p:callTag tag="g:link" attrs="${new HashMap(item.linkArgs)}">Test</p:callTag>)<br/>
+                        action aliases: ${item.actionAliases?.encodeAsHTML()}<br/>
                         title: ${item.titleMessageCode.encodeAsHTML()} (<g:message code="${item.titleMessageCode}" encodeAs="HTML"/>)<br/>
                         default title: ${item.titleDefault.encodeAsHTML()}<br/>
                         data: ${item.data.encodeAsHTML()}<br/>

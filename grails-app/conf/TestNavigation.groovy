@@ -9,29 +9,47 @@ navigation = {
             archive()
             trash()
         }
+        
+        // Add "extranet" controller and specific actions
         extranet {
             support()
             account()
         }
         
+        // Add controller:'test' and all its actions
         test(action:'*')
+
+        // Add controller:'testTwo' and all its actions, with "list" as the default item
         testTwo(action:['list', '*'])
+        
+        // Add controller:'testThree' using default action, no children
         testThree()
+        
+        // Add controller:'testFour' using default action, explicit children
         testFour {
             list()
             create()
         }
 
+        // Add controller:'testFive' using default action, no children
+        testFive(controller:'testFive')
+
+        // Test declaration of existing controllers
+        sample()
+
         something(controller:'test')
         somethingTwo(controller:'test', action:'*')
         somethingThree(controller:'test', action:['list', '*'])
+        
+        // Add "create" option with aliases that also activate it
+        somethingFourWithAliases(controller:'test', action:'create', actionAliases:['save', 'update', 'edit'])
     }
     
     user(global:true) {
-        login(controller:'auth', action:'login', data:[icon:'user'])
-        logout(controller:'auth', action:'logout', data:[icon:'user-out']) // isVisible...
-        signup(controller:'auth', action:'signup') // isVisible...
-        profile(controller:'auth', action:'profile') // isVisible...
+        login controller:'auth', data:[icon:'user']
+        logout controller:'auth', data:[icon:'user-out'] // isVisible...
+        signup controller:'auth' // isVisible...
+        profile controller:'auth' // isVisible...
     }
 
     footer(global:true) {
