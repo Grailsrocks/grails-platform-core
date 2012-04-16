@@ -103,13 +103,17 @@ class UiExtensionsTagLib {
     }
     
     def siteLink = { attrs ->
-        out << g.link(absolute:'true', uri:'/') { 
+        out << g.link(url:p.siteURL(attrs)) { 
             out << g.siteName()
         }
     }
     
     def siteURL = { attrs ->
-        out << g.createLink(absolute:'true', uri:'/')
+        def linkArgs = pluginConfig.site.url ? 
+            [url:pluginConfig.site.url] : 
+            [absolute:true, uri:'/']
+
+        out << g.createLink(linkArgs)
     }
     
     def year = { attrs ->

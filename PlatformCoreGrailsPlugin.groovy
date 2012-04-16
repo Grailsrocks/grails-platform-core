@@ -186,6 +186,7 @@ Grails Plugin Platform Core APIs
     def doWithConfigOptions = {
         'organization.name'(type: String, defaultValue: 'My Corp (set plugin.platformCore.organization.name)')
         'site.name'(type: String, defaultValue: 'Our App (set plugin.platformCore.site.name)')
+        'site.url'(type: String, defaultValue: null)
 
         'show.startup.info'(type: Boolean, defaultValue: true)
     }
@@ -215,14 +216,19 @@ Grails Plugin Platform Core APIs
 
         def navArtefactType = getNavigationArtefactHandler().TYPE
         if (application.isArtefactOfType(navArtefactType, event.source)) {
+
+            // Update the app with the new class
+            event.application.addArtefact(navArtefactType, event.source)
             ctx.grailsNavigation.reload(event.source)
+
         } else if (application.isArtefactOfType('Controller', event.source)) {
+
             ctx.grailsNavigation.reload() // conventions on controller may have changed
+
         } else {
             switch (event.source) {
                 case Class:
                     ctx.grailsInjection.applyTo(event.source)
-                    // @todo add call to update auto nav for controllers, we badly need "onreload" events for this
 
                     if (application.isServiceClass(event.source)) {
                         ctx.grailsEvents.reloadListener(event.source)

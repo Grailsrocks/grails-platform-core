@@ -4,7 +4,7 @@ h2. Purpose
 
 Renders an absolute link to site, using the site name as the text.
 
-See [siteName|tagsUiExtension] for details of the site name used.
+See [siteName|tagsUiExtension] for details of how to specify the site name.
 
 h2. Example
 

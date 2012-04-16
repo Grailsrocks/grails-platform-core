@@ -2,7 +2,13 @@ h1. p:siteURL
 
 h2. Purpose
 
-Renders an absolute URL pointing to the site. This is a shortcut for using g:createLink with absolute="true".
+Renders an absolute URL pointing to the site. The default behaviour calls g:createLink with absolute="true" and a uri of "/" - therefore creating a link using the value of @grails.serverURL@.
+
+You can have a site marketing URL different from your app's @grails.serverURL@ value by specifying the following configuration value:
+
+{code}
+plugin.platformCore.site.url = 'http://marketing.oursite.com'
+{code}
 
 See [siteLink|tagsUiExtension] for details of the site link tag that uses this and @p:siteName@.
 
