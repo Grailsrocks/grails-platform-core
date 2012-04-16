@@ -3,6 +3,7 @@ package org.grails.plugin.platform.conventions
 import java.lang.reflect.Modifier
 
 import grails.util.GrailsNameUtils
+import org.codehaus.groovy.grails.commons.GrailsClass
 
 import org.slf4j.LoggerFactory
 
@@ -57,4 +58,14 @@ class ConventionsImpl implements Conventions {
         }
         return namedCodeBlocks
     }
+    
+    GrailsClass findArtefactBySimpleClassName(String classNameNoPackage, String artefactType) {
+        for (art in grailsApplication.getArtefacts(artefactType)) {
+            if (art.clazz.simpleName == classNameNoPackage) {
+                return art
+            }
+        }
+        return null
+    }
+    
 }
