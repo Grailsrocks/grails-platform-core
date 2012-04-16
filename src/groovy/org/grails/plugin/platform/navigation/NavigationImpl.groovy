@@ -559,6 +559,7 @@ class NavigationImpl implements Navigation {
         
         def nodeArgs = args.clone()
         nodeArgs.titleMessageCode = nodeArgs.remove('title')
+        nodeArgs.titleDefault = nodeArgs.remove('titleText')
         nodeArgs.linkArgs = [controller:args.controller,action:args.action]
         for (a in LINK_TAG_ATTRIBUTES) {
             nodeArgs.remove(a)

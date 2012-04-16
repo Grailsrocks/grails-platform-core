@@ -2,35 +2,49 @@ To declare navigation items you use navigation DSL artefacts to determine the it
 
 Navigation artefacts are groovy scripts end in the name "Navigation" in @grails-app/conf@.
 
+Here's an example for the various ways to use the DSL to declare scopes and items:
+
 Example contents of @grails-app/conf/AppNavigation.groovy@:
 {code}
 navigation = {
+    // Declare the "app" scope, used by default in tags
     app {
-        home controller:'test', action:'home', data:[icon:'house']
-        about controller:'test', action:'about', data:[icon:'question']
-        contact controller:'test', action:'contact', data:[icon:'mail']
-        messages(controller:'test', data:[icon:'inbox']) {
-            inbox action:'inbox'
-            archive action:'archive'
-            trash action:'trash'
+    
+        // A nav item pointing to HomeController, using the default action
+        home()
+
+        // Items pointing to ContentController, using the specific action
+        about(controller:'content')
+        contact(controller:'content')
+        help(controller:'content')
+        
+        // Some user interface actions in second-level nav
+        // All in BooksController
+        books {
+            // "list" action in "books" controller
+            list()
+            // "create" action in "books" controller
+            create()
+        }
+        
+        // More convoluted stuff split across controllers/locations
+        support(controller:'content', action:'support') {
+            faq(url:'http://faqs.mysite.com') // point to CMS
+            makeRequest(controller:'supportRequest', action:'create')
         }
     }
     
-    user {
-        login controller:'auth', action:'login', data:[icon:'user']
-        logout controller:'auth', action:'logout', data:[icon:'user-out']
-        signup controller:'auth', action:'signup'
-        profile controller:'auth', action:'profile'
-    }
-
-    footer {
-        terms view:'terms'
-        privacy view:'privacypolicy'
-        help view:'help', data:[icon:'help']
-    }
-    
+    // Some back-end admin scaffolding stuff in a separate scope
     admin {
-        // Add your back end admin controllers in here
+        // Automatic entries for all actions of BookAdminController
+        // Use "list" action as default item, even if its not default action
+        books(controller:'bookAdmin', action:['list', '*'])
+        
+        // User admin, with default screen using "search" action
+        users(controller:'userAdmin', action:'search') {
+            // Declare action alias so "create" is active for both "create" and "update" actions
+            create(action:'create', actionAliases:'update')
+        }
     }
 }
 {code}
@@ -89,9 +103,10 @@ These are @controller@, @action@, @uri@, @url@ and @view@. These are passed to @
 
 There is special handling of controller and action:
 
-# @controller@  need not be specified on sub-items - it will be inherited from the parent
-# @action@ need not be specified, it will fall back to the default action of the controller
-# @action@ can be a list. If it is, the first element is the one used to generate a link, the rest are used to support the case where multiple actions should activate the same navigation items - for example the create and save actions of a CRUD controller.
+# @controller@  need not be specified - it will be inherited from the parent node if the parent uses @controller@ to create its link, or failing that it will use the name of the DSL method call 
+# @action@ need not be specified, it will fall back to the name of the method call if the controller is specified or inherited.
+# @action@ can be a list. If it is, the first element is the one used to generate the item link, and if the next element is '*' all the other controller actions will have sub-items created for them, in alphabetical order.
+# @actionAliases@ is an optional list of actions that will also *activate* this navigation item. The link is always to the @action@ defined for the item in the DSL, but if the current controller/action resolves to an action in this alias list, the navigation item will appear to be active. Used for those situations where you have multiple actions presenting the same user view i.e. create/save, edit/update
 
 h4. Visibility and Status
 
@@ -119,7 +134,7 @@ def isAdmin = { ->
 
 navigation = {
     app {
-        home controller:'test', action:'home', data:[icon:'house']
+        home controller:'test', data:[icon:'house']
         ...
     }
     
@@ -147,6 +162,8 @@ Two arguments are used for this:
 
 # @title@ represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path @app/messages/inbox@ becomes the i18n code @nav.app.messages.inbox@
 # @titleText@ represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of @title@
+
+For automatically created action navigation items, the titleText defaults to the "human friendly" form of the action name. i.e. "index" becomes "Index", "showItems" becomes "Show Items".
 
 h4. Application custom data
 
