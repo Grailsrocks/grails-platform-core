@@ -104,7 +104,7 @@ class UiExtensionsTagLib {
     
     def siteLink = { attrs ->
         out << g.link(url:p.siteURL(attrs)) { 
-            out << g.siteName()
+            out << p.siteName()
         }
     }
     
