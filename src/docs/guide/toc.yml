@@ -29,6 +29,5 @@ navigation:
   menu_navigation: Rendering other menus
   using_navigation_dsl: Using the Navigation DSL
   navigation_tags: The Navigation Tags
-  navigation_recipes: Navigation Recipes - getting things done
 convention:
   title: Convention API

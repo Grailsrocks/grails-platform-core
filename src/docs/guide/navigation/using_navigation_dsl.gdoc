@@ -105,10 +105,12 @@ These values are passed through to the navigation tags for link rendering just a
 
 There are some special behaviours however:
 
-# @controller@ need not be specified - it will be inherited from the parent node if the parent uses @controller@ to create its link, or failing that it will use the name of the DSL method call 
-# @action@ need not be specified, it will fall back to the name of the method call if the controller is specified or inherited. If the controller was not specified either (and hence "uses up" the method call name), this will use the default action of the controller or "index" if none is set.
-# @action@ can be a List or comma-delimited string. If it is, the first element is the action used to generate the item's link, and any other actions listed will have sub-items created for them, in alphabetical order.
-# @actionAliases@ is an optional list of actions that will also *activate* this navigation item. The link is always to the @action@ defined for the item in the DSL, but if the current controller/action resolves to an action in this alias list, the navigation item will appear to be active. Used for those situations where you have multiple actions presenting the same user view i.e. create/save, edit/update
+{table}
+*Argument* | *Usage*
+@controller@ | Optional - it will be inherited from the parent node if the parent uses @controller@ to create its link, or failing that it will use the name of the DSL method call 
+@action@ | Optional - it will fall back to the name of the method call if the controller is specified or inherited. If the controller was not specified either (and hence "uses up" the method call name), this will use the default action of the controller or "index" if none is set. The @action@ value can be a List or comma-delimited string. If it is, the first element is the action used to generate the item's link, and any other actions listed will have sub-items created for them, in alphabetical order.
+@actionAliases@ | Optional - list of actions that will also *activate* this navigation item. The link is always to the @action@ defined for the item in the DSL, but if the current controller/action resolves to an action in this alias list, the navigation item will appear to be active. Used for those situations where you have multiple actions presenting the same user view i.e. create/save, edit/update
+{table}
 
 h4. Visibility and Status
 
@@ -116,8 +118,11 @@ You can control per request whether items are visible or enabled, or set this in
 
 The arguments:
 
-# visible - determines if the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.
-# enabled - determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.
+{table}
+*Argument* | *Usage*
+@visible@ | Determines whether the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.
+@enabled@ | Determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.
+{table}
 
 Typically you will want to hide items if the user is not permitted to see them. An example of doing this with Spring Security Core:
 
@@ -162,8 +167,11 @@ The title of an item is the text used to display the navigation item.
 
 Two arguments are used for this:
 
-# @title@ represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path @app/messages/inbox@ becomes the i18n code @nav.app.messages.inbox@
-# @titleText@ represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of @title@
+{table}
+*Argument* | *Usage*
+@title@ | Optional. Represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path @app/messages/inbox@ becomes the i18n code @nav.app.messages.inbox@
+@titleText@ | Optional. represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of @title@
+{table}
 
 For automatically created action navigation items, the titleText defaults to the "human friendly" form of the action name. i.e. "index" becomes "Index", "showItems" becomes "Show Items".
 
@@ -189,7 +197,7 @@ Items are ordered naturally in the order they are declared in the DSL.
 
 However you may wish to manually order items, for example so that plugins (or the application) can inject items into certain positions in your navigation.
 
-Just pass the integer value in the order argument:
+Just pass the integer value in the @order@ argument:
 
 {code}
 navigation = {

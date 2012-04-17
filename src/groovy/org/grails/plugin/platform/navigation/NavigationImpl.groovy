@@ -527,6 +527,7 @@ class NavigationImpl implements Navigation {
         if (log.debugEnabled) {
             log.debug "Found auto actions $actionNames for controller $controllerName"
         }
+        // @todo ONLY ADD THOSE WITH "GET" ALLOWED METHOD
         actionsToAdd.addAll(actionNames.sort())
         
         log.debug "Registering actions $actionsToAdd for controller $controllerName"
@@ -541,7 +542,6 @@ class NavigationImpl implements Navigation {
 
         def n = 0
         
-        // @todo make default action first in list always, sort others alpha!
         for (action in actionsToAdd) {
             declareControllerNode(
                 parent:controllerNode,

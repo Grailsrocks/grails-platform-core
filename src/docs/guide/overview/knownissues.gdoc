@@ -1,6 +1,6 @@
 h3. 1.0.M2-SNAPSHOT
 
-* Navigation artefacts do not reload
+* Automatic convention controller navigation includes all actions, not just those with GET allowedMethod
 
 h3. 1.0.M1
 
