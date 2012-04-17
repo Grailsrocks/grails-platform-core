@@ -17,10 +17,10 @@ navigation = {
         }
         
         // Add controller:'test' and all its actions
-        test(action:'*')
+        test(action:'a, b, c')
 
         // Add controller:'testTwo' and all its actions, with "list" as the default item
-        testTwo(action:['list', '*'])
+        testTwo(action:['list', 'create'])
         
         // Add controller:'testThree' using default action, no children
         testThree()
@@ -38,8 +38,16 @@ navigation = {
         sample()
 
         something(controller:'test')
-        somethingTwo(controller:'test', action:'*')
-        somethingThree(controller:'test', action:['list', '*'])
+        somethingTwo(controller:'test') {
+            a()
+            b()
+            c()
+        }
+        somethingThree(controller:'test', action:'list') {
+            d()
+            e()
+            f()
+        }
         
         // Add "create" option with aliases that also activate it
         somethingFourWithAliases(controller:'test', action:'create', actionAliases:['save', 'update', 'edit'])

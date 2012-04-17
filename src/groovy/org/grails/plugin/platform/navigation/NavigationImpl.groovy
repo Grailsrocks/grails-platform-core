@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory
 /**
  * Bean that encapsulates the navigation structure of the entire application
  *
- * @todo Action declarations by name i.e. index(), list() etc with inherited controller
  * @todo Auto-set parent title if same action is declared in a child and title specified / vice versa
  * @todo Support CRUD multi-actions correctly out of the box with xxx(controller:y, scaffold:true) and auto-sense scaffold where possible.
  * default item is list, sub item Create, actions list, show, edit, update map activate list, create and saave activate Create
- * @todo Support '*' convention in action list - action:['list', '*'] = list is for linking, all others on controller are for path matching
  */
 class NavigationImpl implements Navigation {
     
@@ -258,6 +256,7 @@ class NavigationImpl implements Navigation {
     
     void realizeLinkArguments(String itemName, Map linkArgs, NavigationScope parent) {
         boolean isControllerLinking = !hasNonControllerLinkArgs(linkArgs)
+        boolean itemNameUsed = false
         
         // Inherit controller from parent
         if (isControllerLinking && !linkArgs.controller) {
@@ -267,12 +266,17 @@ class NavigationImpl implements Navigation {
             } else {
                 // item name becomes controller name
                 linkArgs.controller = itemName
+                itemNameUsed = true
             }
         }  
         
-        // We always have to set the action, just to be safe and make sure we have all the info we need
         if (isControllerLinking && !linkArgs.action) {
-            linkArgs.action = getDefaultControllerAction(linkArgs.controller)
+            if (!itemNameUsed) {
+                linkArgs.action = itemName // Use node name as action if we have controller
+                itemNameUsed = true
+            } else {
+                linkArgs.action = getDefaultControllerAction(linkArgs.controller)
+            }
         }
         
         // Workaround lack of "view" support in g:link
@@ -282,6 +286,24 @@ class NavigationImpl implements Navigation {
     }
     
     NavigationItem addItemFromArgs(String name, Map arguments, NavigationScope parent, String definingPlugin) {
+        def actionList
+
+        // See if we have a list of actions to register - first is parent, subsequent are children
+        if (arguments.action) {
+            if (arguments.action instanceof List) {
+                actionList = arguments.action
+            } else {
+                actionList = arguments.action.split(',')*.trim()
+            }
+        }
+        
+        def childActionList
+        if (actionList) {
+            childActionList = actionList
+            arguments.action = actionList[0]
+        }
+
+        // Now we know we have just a single action at most, resolve args
         def linkArgs = [:]
         for (p in LINK_TAG_ATTRIBUTES) {
             if (arguments.containsKey(p)) {
@@ -291,7 +313,7 @@ class NavigationImpl implements Navigation {
         
         realizeLinkArguments(name, linkArgs, parent)
 
-        // @todo In future, cache the generated URL for the given linkArgs, using linkGenerator!
+        // @todo In future, cache the generated URL for the given linkArgs, using linkGenerator (? reload problems)
         def nodeArgs = [
             name:name,
             order:arguments.order,
@@ -307,22 +329,28 @@ class NavigationImpl implements Navigation {
         if (log.debugEnabled) {
             log.debug "Adding item ${item.name} with parent ${parent?.id} with args $nodeArgs"
         }
-        addItem(parent, item)
+        
+        // Create the node
+        def primaryNode = addItem(parent, item)
+        
+        // Now if it has any auto-children do those
+        if (childActionList?.size() > 1) {
+            int n = 0
+            for (action in childActionList) {
+                def actionArgs = [:]
+                actionArgs.action = action
+                actionArgs.parent = primaryNode
+                actionArgs.name = action
+                actionArgs.titleDefault = GrailsNameUtils.getNaturalName(action)
+                actionArgs.controller = primaryNode.linkArgs.controller
+                actionArgs.order = action == primaryNode.linkArgs.action ? Integer.MIN_VALUE : n++
+
+                declareControllerNode(actionArgs)
+            }
+        }
+        return primaryNode
     }
-    
-    /**
-     * Return true if we are to automatically apply actions.
-     * True if:
-     * - controller and action are not set and no other link args set
-     * or
-     * - action is '*' or a list with '*' in
-     */
-    boolean isAutoControllerDeclaration(args) {
-        boolean doAutoActions = (args.action == '*') || 
-            ((args.action instanceof List) && args.action.find({ it == '*' })) ||
-            (!args.controller && !args.action && !hasNonControllerLinkArgs(args))
-    }
-    
+
     /**
      * Receives a graph of DSL commend objects and creates the necessary scopes and items
      *
@@ -363,16 +391,12 @@ class NavigationImpl implements Navigation {
                                 args = c.arguments
                             }
                             
-                            // If it is an action wild-card auto generated one...
-                            if (isAutoControllerDeclaration(args)) {
-                                if (!args.controller) {
-                                    args.controller = c.name
-                                }
-                                newParent = registerControllerActions(args.controller, null, args, parent.id)
-                            } else {
-                                // Nope its a normal item
-                                newParent = addItemFromArgs(c.name, args, parent, definingPlugin)
+                            // We do not support '*' publicly
+                            if (args.action == '*') {
+                                args.remove('action')
                             }
+                            
+                            newParent = addItemFromArgs(c.name, args, parent, definingPlugin)
                         }
                         // Now add any children
                         parseDSL(c.children, newParent, definingPlugin)
@@ -409,11 +433,8 @@ class NavigationImpl implements Navigation {
                     if (!parent) {
                         throw new IllegalArgumentException( "We don't support named argument method calls unless you are in a scope. Your DSL tried to call [$c.name]($c.arguments)")
                     } 
-                    if (isAutoControllerDeclaration(c.arguments)) {
-                        registerControllerActions(c.arguments.controller, null, c.arguments, parent.id)
-                    } else {
-                        addItemFromArgs(c.name, c.arguments, parent, definingPlugin)
-                    }
+                    
+                    addItemFromArgs(c.name, c.arguments, parent, definingPlugin)
                     break;
                 default:
                     throw new IllegalArgumentException( "We don't support command type ${c.getClass()}")
@@ -472,16 +493,16 @@ class NavigationImpl implements Navigation {
             
             log.debug "Scope for actions of controller $controllerName is ${scope}"
 
-            registerControllerActions(controllerName, controllerClass, [action:'*'], scope)
+            registerControllerActions(controllerName, controllerClass, scope)
         }
     }
 
     /**
      * Auto-register controller actions, returning the parent (default/primary) item
      */
-    NavigationItem registerControllerActions(String controllerName, Class controllerClass, Map args, String scope) {
+    NavigationItem registerControllerActions(String controllerName, Class controllerClass, String scope) {
         if (log.debugEnabled) {
-            log.debug "Registering controller actions for [$controllerName] (class: ${controllerClass ?: 'unknown'}), args: ${args} in scope ${scope}"
+            log.debug "Registering controller actions for [$controllerName] (class: ${controllerClass ?: 'unknown'}) in scope ${scope}"
         }
         if (!controllerClass) {
             def artef = grailsConventions.findArtefactBySimpleClassName(
@@ -493,44 +514,27 @@ class NavigationImpl implements Navigation {
             }
         }
         
-        boolean actionsIsList = args.action instanceof List
-        boolean includeAutoActions = (actionsIsList && args.action.contains('*')) || (args.action == '*')
-        List actionsToAdd = actionsIsList ? args.action.find { it != '*' } : []
+        List actionsToAdd = []
+        String defaultAction = getDefaultControllerAction(controllerClass.name)
 
-        String defaultAction
-        // If no explicit name, add default action as the main action
-        if (!actionsToAdd) {
-            defaultAction = getDefaultControllerAction(controllerClass.name)
-        } else {
-            defaultAction = actionsToAdd[0]
+        Class grails2ActionAnnotation
+        try {
+            grails2ActionAnnotation = grailsApplication.classLoader.loadClass('grails.web.Action')
+        } catch (Throwable t) {
         }
 
+        def actionNames = grailsConventions.discoverCodeBlockConventions(controllerClass, grails2ActionAnnotation)
         if (log.debugEnabled) {
-            log.debug "Found explicit actions $actionsToAdd for controller $controllerName"
+            log.debug "Found auto actions $actionNames for controller $controllerName"
         }
-
-        if (includeAutoActions) {
-            Class grails2ActionAnnotation
-            try {
-                grails2ActionAnnotation = grailsApplication.classLoader.loadClass('grails.web.Action')
-            } catch (Throwable t) {
-            }
-
-            def actionNames = grailsConventions.discoverCodeBlockConventions(controllerClass, grails2ActionAnnotation)
-            if (log.debugEnabled) {
-                log.debug "Found auto actions $actionNames for controller $controllerName"
-            }
-            actionsToAdd.addAll(actionNames.sort())
-        }
+        actionsToAdd.addAll(actionNames.sort())
         
         log.debug "Registering actions $actionsToAdd for controller $controllerName"
 
-        def controllerArgs = args.clone()
+        def controllerArgs = [:]
         controllerArgs.parent = getOrCreateScope(scope)
         controllerArgs.name = controllerName
-        if (!controllerArgs.titleDefault) {
-            controllerArgs.titleDefault = args.titleDefault ?: GrailsNameUtils.getNaturalName(controllerName)
-        }
+        controllerArgs.titleText = GrailsNameUtils.getNaturalName(controllerName)
         controllerArgs.controller = controllerName
         controllerArgs.action = defaultAction
         def controllerNode = declareControllerNode(controllerArgs)
@@ -542,7 +546,7 @@ class NavigationImpl implements Navigation {
             declareControllerNode(
                 parent:controllerNode,
                 name: action,
-                titleDefault: GrailsNameUtils.getNaturalName(action),
+                titleText: GrailsNameUtils.getNaturalName(action),
                 controller:controllerName, 
                 order: action == defaultAction ? Integer.MIN_VALUE : n++,
                 action:action)
