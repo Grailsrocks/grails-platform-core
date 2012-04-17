@@ -124,8 +124,6 @@ function addJsClass(el) {
                             
                             <div class="toc-item" style="margin-left:10px"><a href="#navigation_tags"><strong>8.7</strong><span>The Navigation Tags</span></a></div>
                             
-                            <div class="toc-item" style="margin-left:10px"><a href="#navigation_recipes"><strong>8.8</strong><span>Navigation Recipes - getting things done</span></a></div>
-                            
                             <div class="toc-item" style="margin-left:0px"><a href="#convention"><strong>9</strong><span>Convention API</span></a></div>
                             
                             <div style="clear:both" ></div>
@@ -148,14 +146,21 @@ The features include in this release include:
 
 
 <h2 id="changelog">1.2 Change log</h2>
-<h3>1.0.M2-SNAPSHOT</h3><p class="paragraph"/>Refined and documented Navigation API.<p class="paragraph"/><h3>1.0.M1</h3><p class="paragraph"/>First public release with Config and Security APIs and some UI Extensions. Work-in-progress APIs for Events, Injection, Conventions and Navigation.
+<h3>1.0.M2-SNAPSHOT</h3>
+<ul class="star">
+<li>Refined and documented Navigation API</li>
+<li>There are no longer any "g" namespaced tags. All <code>g:</code> tags have move to <code>p:</code> namespace</li>
+<li>Added "site.url" Config setting for <a href="../ref/Tags Ui Extension/siteLink.html" class="tagsUiExtension">siteLink</a> tag to use instead of grails.serverURL if the two differ for your use case</li>
+<li>Refactored Injection, Conventions and Navigation implementations into public interface + implementation classes</li>
+</ul><p class="paragraph"/> 
+<h3>1.0.M1</h3><p class="paragraph"/>First public release with Config and Security APIs and some UI Extensions. Work-in-progress APIs for Events, Injection, Conventions and Navigation.
 
 
 
 <h2 id="knownissues">1.3 Known Issues</h2>
 <h3>1.0.M2-SNAPSHOT</h3>
 <ul class="star">
-<li>Navigation artefacts do not reload</li>
+<li>Automatic convention controller navigation includes all actions, not just those with GET allowedMethod</li>
 </ul><p class="paragraph"/><h3>1.0.M1</h3>
 <ul class="star">
 <li>Config API - false validation errors with platform-ui due to no x.y.'*' support yet</li>
@@ -419,18 +424,7 @@ navigation = &#123;
     app(global:<span class="java&#45;keyword">true</span>) &#123;
         contact controller:'test', data:&#91;icon:'mail'&#93;
     &#125;
-&#125;</pre></div><p class="paragraph"/><h4>Nested method calls - defining navigation items</h4><p class="paragraph"/>The DSL supports the following arguments when defining a navigation items.<p class="paragraph"/><h4>Linking arguments</h4><p class="paragraph"/>These are <code>controller</code>, <code>action</code>, <code>uri</code>, <code>url</code> and <code>view</code>. These are passed to <code>g:link</code> to create links. The "view" attribute is handled internally and removed and converted to "uri" for the purpose of calling g:link<p class="paragraph"/>These values are passed through to the navigation tags for link rendering just as you would expect when calling <code>g:link</code>.<p class="paragraph"/>There are some special behaviours however:
-<ol>
-<li><code>controller</code> need not be specified - it will be inherited from the parent node if the parent uses <code>controller</code> to create its link, or failing that it will use the name of the DSL method call</li>
-<li><code>action</code> need not be specified, it will fall back to the name of the method call if the controller is specified or inherited. If the controller was not specified either (and hence "uses up" the method call name), this will use the default action of the controller or "index" if none is set.</li>
-</ol><p class="paragraph"/># <code>action</code> can be a List or comma-delimited string. If it is, the first element is the action used to generate the item's link, and any other actions listed will have sub-items created for them, in alphabetical order.
-<ol>
-<li><code>actionAliases</code> is an optional list of actions that will also <strong class="bold">activate</strong> this navigation item. The link is always to the <code>action</code> defined for the item in the DSL, but if the current controller/action resolves to an action in this alias list, the navigation item will appear to be active. Used for those situations where you have multiple actions presenting the same user view i.e. create/save, edit/update</li>
-</ol><p class="paragraph"/><h4>Visibility and Status</h4><p class="paragraph"/>You can control per request whether items are visible or enabled, or set this in the navigation structure statically.<p class="paragraph"/>The arguments:
-<ol>
-<li>visible - determines if the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.</li>
-<li>enabled - determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.</li>
-</ol><p class="paragraph"/>Typically you will want to hide items if the user is not permitted to see them. An example of doing this with Spring Security Core:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils<p class="paragraph"/>def loggedIn = &#123; &#45;&#62; 
+&#125;</pre></div><p class="paragraph"/><h4>Nested method calls - defining navigation items</h4><p class="paragraph"/>The DSL supports the following arguments when defining a navigation items.<p class="paragraph"/><h4>Linking arguments</h4><p class="paragraph"/>These are <code>controller</code>, <code>action</code>, <code>uri</code>, <code>url</code> and <code>view</code>. These are passed to <code>g:link</code> to create links. The "view" attribute is handled internally and removed and converted to "uri" for the purpose of calling g:link<p class="paragraph"/>These values are passed through to the navigation tags for link rendering just as you would expect when calling <code>g:link</code>.<p class="paragraph"/>There are some special behaviours however:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>controller</code></td><td>Optional - it will be inherited from the parent node if the parent uses <code>controller</code> to create its link, or failing that it will use the name of the DSL method call</td></tr><tr class="table-even"><td><code>action</code></td><td>Optional - it will fall back to the name of the method call if the controller is specified or inherited. If the controller was not specified either (and hence "uses up" the method call name), this will use the default action of the controller or "index" if none is set. The <code>action</code> value can be a List or comma-delimited string. If it is, the first element is the action used to generate the item's link, and any other actions listed will have sub-items created for them, in alphabetical order.</td></tr><tr class="table-odd"><td><code>actionAliases</code></td><td>Optional - list of actions that will also <strong class="bold">activate</strong> this navigation item. The link is always to the <code>action</code> defined for the item in the DSL, but if the current controller/action resolves to an action in this alias list, the navigation item will appear to be active. Used for those situations where you have multiple actions presenting the same user view i.e. create/save, edit/update</td></tr></table><p class="paragraph"/><h4>Visibility and Status</h4><p class="paragraph"/>You can control per request whether items are visible or enabled, or set this in the navigation structure statically.<p class="paragraph"/>The arguments:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>visible</code></td><td>Determines whether the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.</td></tr><tr class="table-even"><td><code>enabled</code></td><td>Determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.</td></tr></table><p class="paragraph"/>Typically you will want to hide items if the user is not permitted to see them. An example of doing this with Spring Security Core:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils<p class="paragraph"/>def loggedIn = &#123; &#45;&#62; 
     grailsApplication.mainContext.springSecurityService.principal <span class="java&#45;keyword">instanceof</span> <span class="java&#45;object">String</span>
 &#125;
 def loggedOut = &#123; &#45;&#62; 
@@ -451,15 +445,11 @@ def isAdmin = &#123; &#45;&#62;
         signup controller:'auth', action:'signup', visible: notLoggedIn
         profile controller:'auth', action:'profile', visible: loggedIn
     &#125;
-&#125;</pre></div><p class="paragraph"/>Note how the Closures are "def"'d in the script to make them reusable and reachable within the DSL<p class="paragraph"/><h4>Title text</h4><p class="paragraph"/>The title of an item is the text used to display the navigation item.<p class="paragraph"/>Two arguments are used for this:
-<ol>
-<li><code>title</code> represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path <code>app/messages/inbox</code> becomes the i18n code <code>nav.app.messages.inbox</code></li>
-<li><code>titleText</code> represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of <code>title</code></li>
-</ol><p class="paragraph"/>For automatically created action navigation items, the titleText defaults to the "human friendly" form of the action name. i.e. "index" becomes "Index", "showItems" becomes "Show Items".<p class="paragraph"/><h4>Application custom data</h4><p class="paragraph"/>Each item can have arbitrary data associated with it - but note that this data is singleton and should not change at runtime.<p class="paragraph"/>Typically you would use this to associate some extra data such as an icon name, which you then use in custom menu rendering code.<p class="paragraph"/>Just put the values into the "data" Map:<p class="paragraph"/><div class="code"><pre>navigation = &#123;
+&#125;</pre></div><p class="paragraph"/>Note how the Closures are "def"'d in the script to make them reusable and reachable within the DSL<p class="paragraph"/><h4>Title text</h4><p class="paragraph"/>The title of an item is the text used to display the navigation item.<p class="paragraph"/>Two arguments are used for this:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>title</code></td><td>Optional. Represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path <code>app/messages/inbox</code> becomes the i18n code <code>nav.app.messages.inbox</code></td></tr><tr class="table-even"><td><code>titleText</code></td><td>Optional. represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of <code>title</code></td></tr></table><p class="paragraph"/>For automatically created action navigation items, the titleText defaults to the "human friendly" form of the action name. i.e. "index" becomes "Index", "showItems" becomes "Show Items".<p class="paragraph"/><h4>Application custom data</h4><p class="paragraph"/>Each item can have arbitrary data associated with it - but note that this data is singleton and should not change at runtime.<p class="paragraph"/>Typically you would use this to associate some extra data such as an icon name, which you then use in custom menu rendering code.<p class="paragraph"/>Just put the values into the "data" Map:<p class="paragraph"/><div class="code"><pre>navigation = &#123;
     app &#123;
         home controller:'test', action:'home', data:&#91;icon:'house'&#93;
     &#125;
-&#125;</pre></div><p class="paragraph"/><h4>Ordering of items</h4><p class="paragraph"/>Items are ordered naturally in the order they are declared in the DSL.<p class="paragraph"/>However you may wish to manually order items, for example so that plugins (or the application) can inject items into certain positions in your navigation.<p class="paragraph"/>Just pass the integer value in the order argument:<p class="paragraph"/><div class="code"><pre>navigation = &#123;
+&#125;</pre></div><p class="paragraph"/><h4>Ordering of items</h4><p class="paragraph"/>Items are ordered naturally in the order they are declared in the DSL.<p class="paragraph"/>However you may wish to manually order items, for example so that plugins (or the application) can inject items into certain positions in your navigation.<p class="paragraph"/>Just pass the integer value in the <code>order</code> argument:<p class="paragraph"/><div class="code"><pre>navigation = &#123;
     app &#123;
         home controller:'test', action:'home', order:&#45;1000
         about controller:'test', action:'about', order:100
@@ -497,11 +487,6 @@ There are a few Navigation tags available, all detailed in the reference section
     &#60;nav:secondary/&#62;<p class="paragraph"/>    &#60;p&#62;Something went wrong!&#60;/p&#62;
 &#60;/body&#62;
 &#60;/html&#62;</pre></div><p class="paragraph"/>See the <a href="../ref/Navigation Tags/setActivePath.html" class="navigationTags">setActivePath</a> tag reference for full details.
-
-
-
-<h2 id="navigation_recipes">8.8 Navigation Recipes - getting things done</h2>
-<h3>Declaring a controller and all of its actions</h3><p class="paragraph"/><h3>Declaring a controller and some of its actions</h3><p class="paragraph"/><h3>Handling multiple actions that should activate the same item</h3><p class="paragraph"/><h3>Associate extra data with items, for example to render icons</h3><p class="paragraph"/><h3>Controlling visibility</h3><p class="paragraph"/><h3>Controlling enabled status</h3><p class="paragraph"/><h3>Declaring a scope in a plugin, bypassing automatic name spacing</h3><p class="paragraph"/><h3>Merging application navigation items into a plugin's navigation scopes</h3>
 
 
 
