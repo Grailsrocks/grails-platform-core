@@ -126,7 +126,7 @@ Grails Plugin Platform Core APIs
         grailsSecurity(org.grails.plugin.platform.security.Security)
 
         // Injection API
-        grailsInjection(org.grails.plugin.platform.injection.Injection) {
+        grailsInjection(org.grails.plugin.platform.injection.InjectionImpl) {
             grailsApplication = ref('grailsApplication')
         }
 
