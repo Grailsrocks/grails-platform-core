@@ -71,14 +71,14 @@ class SecurityTagLib {
     }
 
     def logoutButton = { attrs, body ->
-        out << g.button([kind:'anchor']+grailsSecurity.createLink('logout'))
+        out << p.button([kind:'anchor']+grailsSecurity.createLink('logout'))
     }
 
     def loginButton = { attrs, body ->
-        out << g.button([kind:'anchor']+grailsSecurity.createLink('login'))
+        out << p.button([kind:'anchor']+grailsSecurity.createLink('login'))
     }
 
     def signupButton = { attrs, body ->
-        out << g.button([kind:'anchor']+grailsSecurity.createLink('signup'))
+        out << p.button([kind:'anchor']+grailsSecurity.createLink('signup'))
     }
 }
