@@ -215,25 +215,22 @@ Grails Plugin Platform Core APIs
         def config = event.application.config
 
         def navArtefactType = getNavigationArtefactHandler().TYPE
-        if (application.isArtefactOfType(navArtefactType, event.source)) {
+        if (event.source instanceof Class) {
+            if (application.isArtefactOfType(navArtefactType, event.source)) {
 
-            // Update the app with the new class
-            event.application.addArtefact(navArtefactType, event.source)
-            ctx.grailsNavigation.reload(event.source)
+                // Update the app with the new class
+                event.application.addArtefact(navArtefactType, event.source)
+                ctx.grailsNavigation.reload(event.source)
 
-        } else if (application.isArtefactOfType('Controller', event.source)) {
+            } else if (application.isArtefactOfType('Controller', event.source)) {
+                ctx.grailsNavigation.reload() // conventions on controller may have changed
+            }
+            
+            // Always do this stuff
+            ctx.grailsInjection.applyTo(event.source)
 
-            ctx.grailsNavigation.reload() // conventions on controller may have changed
-
-        } else {
-            switch (event.source) {
-                case Class:
-                    ctx.grailsInjection.applyTo(event.source)
-
-                    if (application.isServiceClass(event.source)) {
-                        ctx.grailsEvents.reloadListener(event.source)
-                    }
-                    break
+            if (application.isServiceClass(event.source)) {
+                ctx.grailsEvents.reloadListener(event.source)
             }
         }
     }
