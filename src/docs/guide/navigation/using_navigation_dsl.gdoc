@@ -36,9 +36,9 @@ navigation = {
     
     // Some back-end admin scaffolding stuff in a separate scope
     admin {
-        // Automatic entries for all actions of BookAdminController
         // Use "list" action as default item, even if its not default action
-        books(controller:'bookAdmin', action:['list', '*'])
+        // and create automatic sub-items for the other actions
+        books(controller:'bookAdmin', action:'list, create, search')
         
         // User admin, with default screen using "search" action
         users(controller:'userAdmin', action:'search') {
@@ -75,7 +75,7 @@ The "app" scope is a prime example of this:
 {code}
 navigation = {
     app {
-        home controller:'test', action:'home', data:[icon:'house']
+        home controller:'test', data:[icon:'house']
     }
 }
 {code}
@@ -88,7 +88,7 @@ Thus the scope "app" in a plugin called "SpringSecurityCore" would become the sc
 // Example of a plugin exposing a root scope without namespacing
 navigation = {
     app(global:true) {
-        contact controller:'test', action:'contact', data:[icon:'mail']
+        contact controller:'test', data:[icon:'mail']
     }
 }
 {code}
@@ -101,11 +101,13 @@ h4. Linking arguments
 
 These are @controller@, @action@, @uri@, @url@ and @view@. These are passed to @g:link@ to create links. The "view" attribute is handled internally and removed and converted to "uri" for the purpose of calling g:link
 
-There is special handling of controller and action:
+These values are passed through to the navigation tags for link rendering just as you would expect when calling @g:link@.
 
-# @controller@  need not be specified - it will be inherited from the parent node if the parent uses @controller@ to create its link, or failing that it will use the name of the DSL method call 
-# @action@ need not be specified, it will fall back to the name of the method call if the controller is specified or inherited.
-# @action@ can be a list. If it is, the first element is the one used to generate the item link, and if the next element is '*' all the other controller actions will have sub-items created for them, in alphabetical order.
+There are some special behaviours however:
+
+# @controller@ need not be specified - it will be inherited from the parent node if the parent uses @controller@ to create its link, or failing that it will use the name of the DSL method call 
+# @action@ need not be specified, it will fall back to the name of the method call if the controller is specified or inherited. If the controller was not specified either (and hence "uses up" the method call name), this will use the default action of the controller or "index" if none is set.
+# @action@ can be a List or comma-delimited string. If it is, the first element is the action used to generate the item's link, and any other actions listed will have sub-items created for them, in alphabetical order.
 # @actionAliases@ is an optional list of actions that will also *activate* this navigation item. The link is always to the @action@ defined for the item in the DSL, but if the current controller/action resolves to an action in this alias list, the navigation item will appear to be active. Used for those situations where you have multiple actions presenting the same user view i.e. create/save, edit/update
 
 h4. Visibility and Status
