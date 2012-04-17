@@ -1,0 +1,6 @@
+org.grails.plugin.platform.events
+org.grails.plugin.platform.events.dispatcher
+org.grails.plugin.platform.events.dispatcher.builder
+org.grails.plugin.platform.events.publisher
+org.grails.plugin.platform.events.registry
+org.grails.plugin.platform.navigation

@@ -1,0 +1,366 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>8.1 Concepts 1.0.M2-SNAPSHOT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/overview.html"><strong>1</strong><span>Overview</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/gettingStarted.html"><strong>2</strong><span>Getting Started</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>3</strong><span>UI Extensions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>4</strong><span>Configuration API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/security.html"><strong>5</strong><span>Security API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>6</strong><span>Events API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>7</strong><span>Injection API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/navigation.html"><strong>8</strong><span>Navigation API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>APIs and Tags for advanced Plugin integration</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/injection.html">&lt;&lt; <strong>7</strong><span>Injection API</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>8.1 Concepts - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (stephane.maldini@gmail.com)</p>
+
+                    <p><strong>Version:</strong> 1.0.M2-SNAPSHOT</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="navigation_concepts">8.1 Concepts</h2>
+There are only three concepts to understand in the Navigation API - items, scopes and the activation path.<p class="paragraph"/>Out of the box, scopes are created for all your application and plugin controllers automatically by convention. Items are created in these scopes for every action on the controller.<p class="paragraph"/>You will typically move from this to using the navigation DSL artefact for more control over the navigation structure.<p class="paragraph"/><h3>What is a navigation item?</h3><p class="paragraph"/>An item is a place the user can reach in your navigation structure. Every item results in a menu item and link, and whether it is visible or enabled can be determined at runtime.<p class="paragraph"/>Items are always inside one scope.<p class="paragraph"/>Items can have child items.<p class="paragraph"/>Items must be resolvable from a controller/action pair, so the navigation API can always tell where the user is in the structure if the current controller/action is known and you have an item declared for them.<p class="paragraph"/><h3>What is a Scope?</h3><p class="paragraph"/>A scope is a name that identifies one or more navigation items. Top-level scopes are called root scopes and represent your main groupings of navigation items. For example you may have your application navigation for regular users and an admin root scope for backend administration.<p class="paragraph"/>Example of scope names:
+<div class="code"><pre>app                     // typically your <span class="java&#45;keyword">default</span> app navigation root scope
+app/messages            // the <span class="java&#45;quote">"messages"</span> item in the <span class="java&#45;quote">"app"</span> root scope
+admin/scaffolding/book  // the <span class="java&#45;quote">"book"</span> item under <span class="java&#45;quote">"scaffolding"</span> item in the <span class="java&#45;quote">"admin"</span> scope
+plugin.cms/admin        // the <span class="java&#45;quote">"admin"</span> item supplied by the <span class="java&#45;quote">"CMS"</span> plugin
+plugin.socialFeed/feeds // the <span class="java&#45;quote">"feeds"</span> item supplied by the <span class="java&#45;quote">"social&#45;feed"</span> plugin</pre></div><p class="paragraph"/>Root scopes do not generate any menu links themselves, they are merely containers for your top level navigation items. They enable you to have multiple sets of navigation for different contexts.<p class="paragraph"/>The items that scopes refer to can be nested arbitrarily. It is however generally recommended that you use at most 2 levels of navigation, sometimes three if really necessary. This is purely because of the user experience issues with deep navigation.<p class="paragraph"/>Usually you should factor out deep navigation into separate root scopes. For example most applications would have the "app" scope, a "footer" scope for footer links like Terms of Use, Support etc., and a "user" scope for log in/out and so on.<p class="paragraph"/><h3>What is an Activation Path?</h3><p class="paragraph"/>An activation path is a string that represents the currently active navigation item. This may be a few levels down in your navigation structure and represents the breadcrumb trail the user would see to get to the location they are currently viewing.<p class="paragraph"/>The activation path is set on the current request and indicates which node is currently active. By default navigation API attempts to identify the correct activation path in your structure using the current controller and action, much like reverse URL mapping.<p class="paragraph"/>However you can explicitly set the activation path using a tag or some code, for cases where you need to "fudge" it - for example if your action performs some odd redirection, or the endpoint is simply a GSP view which cannot be reversed to a location in the structure.
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/injection.html">&lt;&lt; <strong>7</strong><span>Injection API</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Beans</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsConventions.html">grailsConventions</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsEvents.html">grailsEvents</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsInjection.html">grailsInjection</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsNavigation.html">grailsNavigation</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsPluginConfiguration.html">grailsPluginConfiguration</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsSecurity.html">grailsSecurity</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Beans/grailsUiHelper.html">grailsUiHelper</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Global Properties</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Global%20Properties/pluginConfig.html">pluginConfig</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Navigation Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/breadcrumb.html">breadcrumb</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/menu.html">menu</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/primary.html">primary</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/secondary.html">secondary</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/setActivePath.html">setActivePath</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Plugin Conventions</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfig.html">doWithConfig</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfigOptions.html">doWithConfigOptions</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/update-header.html">update-header</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Methods</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Methods/userHasAllRoles.html">userHasAllRoles</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Methods/userHasAnyRole.html">userHasAnyRole</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Methods/userIsAllowed.html">userIsAllowed</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Methods/withUser.html">withUser</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Properties</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Properties/securityIdentity.html">securityIdentity</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Properties/securityInfo.html">securityInfo</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/createLoginLink.html">createLoginLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/createLogoutLink.html">createLogoutLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/createSignupLink.html">createSignupLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/identity.html">identity</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/ifLoggedIn.html">ifLoggedIn</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/ifNotLoggedIn.html">ifNotLoggedIn</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/ifNotPermitted.html">ifNotPermitted</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/ifPermitted.html">ifPermitted</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/info.html">info</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/loginButton.html">loginButton</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/logoutButton.html">logoutButton</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/signupButton.html">signupButton</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags System</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20System/config.html">config</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20System/requiresBean.html">requiresBean</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Ui Extension</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/button.html">button</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/callTag.html">callTag</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/displayMessage.html">displayMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/dummyText.html">dummyText</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/joinClasses.html">joinClasses</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/organization.html">organization</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteLink.html">siteLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteName.html">siteName</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteURL.html">siteURL</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/smartLink.html">smartLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/year.html">year</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Methods</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Methods/displayFlashMessage.html">displayFlashMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Methods/displayMessage.html">displayMessage</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Utility Classes</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Utility%20Classes/TagLibUtils.html">TagLibUtils</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    &copy; 2012 Marc Palmer & Stéphane Maldini
+    Please contact the authors with any corrections or suggestions
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
