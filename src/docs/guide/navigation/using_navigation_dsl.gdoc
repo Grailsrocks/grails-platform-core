@@ -120,8 +120,8 @@ The arguments:
 
 {table}
 *Argument* | *Usage*
-@visible@ | Determines whether the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.
-@enabled@ | Determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a "grailsApplication" property that can be used to reach beans in the main context and will be called every time the item needs to be rendered.
+@visible@ | Determines whether the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a delegate that supplies request and application properties (see below)
+@enabled@ | Determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a delegate that supplies request and application properties (see below)
 {table}
 
 Typically you will want to hide items if the user is not permitted to see them. An example of doing this with Spring Security Core:
@@ -130,10 +130,10 @@ Typically you will want to hide items if the user is not permitted to see them. 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 def loggedIn = { -> 
-    grailsApplication.mainContext.springSecurityService.principal instanceof String
+    springSecurityService.principal instanceof String
 }
 def loggedOut = { -> 
-    !(grailsApplication.mainContext.springSecurityService.principal instanceof String)
+    !(springSecurityService.principal instanceof String)
 }
 def isAdmin = { -> 
     SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
@@ -160,6 +160,19 @@ navigation = {
 {code}
 
 Note how the Closures are "def"'d in the script to make them reusable and reachable within the DSL
+
+The closures receive a delegate which resolves the following standard Grails properties:
+
+* grailsApplication
+* pageScope
+* session
+* request
+* controllerName
+* actionName
+* flash
+* params
+
+Any unresolved properties will resolve to the model (pageScope) and failing that, to the application's bean context, so you can resolve service beans etc by just accessing them by name.
 
 h4. Title text
 
