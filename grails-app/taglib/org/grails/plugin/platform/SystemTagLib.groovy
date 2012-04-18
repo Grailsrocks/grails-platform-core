@@ -39,7 +39,7 @@ class SystemTagLib {
         def name = attrs.name
         def clazz = attrs['class']
         if (pageScope.variables[name] == null) {
-            pageScope.variables[name] = grailsApplication.classLoader.loadClass	(clazz).newInstance()
+            pageScope.variables[name] = grailsApplication.classLoader.loadClass(clazz).newInstance()
         }
     }
 }

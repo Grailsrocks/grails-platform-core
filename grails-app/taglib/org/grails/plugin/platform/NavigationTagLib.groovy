@@ -119,7 +119,16 @@ class NavigationTagLib {
 
         def activeNodes = findNodes(attrs.path)
         
-        def callbackContext = [grailsApplication:grailsApplication]
+        def callbackContext = [
+            grailsApplication:grailsApplication,
+            pageScope:pageScope,
+            session:session,
+            request:request,
+            controllerName:controllerName,
+            actionName:actionName,
+            flash:flash,
+            params:params
+        ]
         
         def scopeNode = grailsNavigation.nodeForId(scope)
         if (scopeNode) {
