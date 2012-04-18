@@ -123,7 +123,7 @@ Grails Plugin Platform Core APIs
         def grailsVersion = application.metadata['app.grails.version']
 
         // Security API
-        grailsSecurity(org.grails.plugin.platform.security.Security)
+        grailsSecurity(org.grails.plugin.platform.security.SecurityImpl)
 
         // Injection API
         grailsInjection(org.grails.plugin.platform.injection.InjectionImpl) {
