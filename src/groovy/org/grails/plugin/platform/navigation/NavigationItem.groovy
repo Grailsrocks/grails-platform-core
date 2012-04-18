@@ -1,5 +1,7 @@
 package org.grails.plugin.platform.navigation
 
+import org.grails.plugin.platform.util.ViewCallbackDelegate
+
 /**
  * Immutable encapsulation of an item in the navigation structure
  * Instances of this are shared globally and available to requests so 
@@ -110,7 +112,9 @@ class NavigationItem extends NavigationScope {
         }
     }
     
-    protected invokeCallback(Closure c, delegate) {
+    protected invokeCallback(Closure c, context) {
+        def delegate = new ViewCallbackDelegate(context.grailsApplication, context.pageScope, context)
+        
         Closure cloneOfClosure = c.clone()
         cloneOfClosure.delegate = delegate
         return cloneOfClosure()

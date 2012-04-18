@@ -56,7 +56,7 @@ class Events {
                 self._eventAsyncClosure(scope, topic, null, callback, params)
             }
             copyFrom(self.grailsEventsPublisher, 'waitFor')
-            copyFrom(self.grailsEventsRegistry, 'addListener', 'removeListeners', 'countListeners')
+            copyFrom(self.grailsEventsRegistry, ['addListener', 'removeListeners', 'countListeners'])
         }
     }
 
