@@ -48,7 +48,11 @@ class InjectionBuilderMethodDelegate {
         return results
     }
     
-    void copyFrom(bean, String[] methodNames, Map meta = null) {
+    void copyFrom(bean, String methodName, Map meta = null) {
+        copyFrom(bean, [methodName], meta)
+    }
+    
+    void copyFrom(bean, List methodNames, Map meta = null) {
         for (n in methodNames) {
             def pluginName = PluginUtils.getNameOfDefiningPlugin(appContext, bean.getClass())
             addMethod(n, new MethodClosure(bean, n), pluginName, meta)

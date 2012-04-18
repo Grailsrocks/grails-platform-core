@@ -45,18 +45,19 @@ class Security implements ApplicationContextAware {
     def injectedMethods = { 
         def self = this
         'controller, service, domain, tagLib' { Class clazz, artefact ->
-            getSecurityIdentity(staticMethod:artefact instanceof GrailsDomainClass) { ->
+            boolean isDomain = artefact instanceof GrailsDomainClass
+            getSecurityIdentity(staticMethod:isDomain) { ->
                 self.getUserIdentity()
             }
-            getSecurityInfo(staticMethod:artefact instanceof GrailsDomainClass) {  ->
+            getSecurityInfo(staticMethod:isDomain) {  ->
                 self.getUserInfo()
             }
-            copyFrom(self, 'withUser', 'userHasAnyRole', 'userHasAllRoles', 'userIsAllowed')
+            copyFrom(self, ['withUser', 'userHasAnyRole', 'userHasAllRoles', 'userIsAllowed'], [staticMethod:isDomain])
         }
     }
 
     boolean hasProvider() {
-        getSecurityBridge() != null
+        grailsSecurityBridge != null
     }
     
     /**
