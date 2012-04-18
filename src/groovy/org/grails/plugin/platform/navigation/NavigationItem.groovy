@@ -117,6 +117,7 @@ class NavigationItem extends NavigationScope {
         
         Closure cloneOfClosure = c.clone()
         cloneOfClosure.delegate = delegate
+        cloneOfClosure.resolveStrategy = Closure.DELEGATE_FIRST
         return cloneOfClosure()
     }
 }

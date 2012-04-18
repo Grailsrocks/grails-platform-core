@@ -1,4 +1,11 @@
 
+def loggedIn = {
+    params.loggedIn == 'y'
+}
+def loggedOut = {
+    params.loggedIn != 'y'
+}
+
 navigation = {
     app(global:true) {
         home(controller:'test', action:'home', order:-1000, data:[icon:'house'])
@@ -54,10 +61,10 @@ navigation = {
     }
     
     user(global:true) {
-        login controller:'auth', data:[icon:'user']
-        logout controller:'auth', data:[icon:'user-out'] // isVisible...
-        signup controller:'auth' // isVisible...
-        profile controller:'auth' // isVisible...
+        login controller:'auth', data:[icon:'user'], visible: loggedOut
+        logout controller:'auth', data:[icon:'user-out'], visible: loggedIn
+        signup controller:'auth', visible: loggedOut
+        profile controller:'auth', visible: loggedIn
     }
 
     footer(global:true) {
