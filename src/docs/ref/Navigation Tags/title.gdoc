@@ -1,0 +1,26 @@
+h1. nav:title
+
+h2. Purpose
+
+Renders the i18n title message for a given navigation item.
+
+Use this in custom menu bodies for correct and easy i18n message resolution.
+
+h2. Example
+
+{code:xml}
+<nav:menu id="nav" custom="true">
+    <li>
+       <nav:title item="$\{item\}"/>
+    </li>
+</nav:menu>
+{code}
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+item | Required - the NavigationItem instance for which you wish to render the title
+codec | Optional - Codec to apply to the title. Defaults to HTML. To specify "none" pass an empty string
+{table}
+

@@ -22,7 +22,7 @@ h2. Example
         <p:callTag tag="g:link" 
                    attrs="${linkArgs + [class:active ? 'active' : '']}">
            <span>
-               <g:message code="${item.titleMessageCode}" encodeAs="HTML"/>
+               <nav:title item="${item}"/>
            </span>
         </p:callTag>
         <g:if test="${active && item.children}">
@@ -31,7 +31,7 @@ h2. Example
                  <p:callTag tag="g:link" 
                             attrs="${linkArgs + [class:active ? 'active' : '']}">
                     <span>
-                       <g:message code="${item.titleMessageCode}" encodeAs="HTML"/>
+                        <nav:title item="${item}"/>
                     </span>
                  </p:callTag>
          </nav:menu>

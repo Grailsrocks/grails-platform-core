@@ -19,11 +19,13 @@ Use this tag to render the primary user navigation of your site:
 <nav:primary scope="admin" id="nav" class="admin" custom="true">
    <li>
    <p:callTag tag="g:link" attrs="${linkArgs + [class:'nav button']}">
-      <g:message code="${item.titleMessageCode}"/>
+      <nav:title item="${item}"/>
    </p:callTag>
    </li>
 </nav:primary>
 {code}
+
+This supports custom rendering in the same way as the [menu|navigationTags] tag.
 
 See the [primary|navigationTags] tag reference for full details.
 
@@ -34,6 +36,8 @@ Use this tag to render the second-level navigation based on the selected item wi
 {code}
 <nav:secondary id="secondary-nav" class="admin"/>
 {code}
+
+This supports custom rendering in the same way as the [menu|navigationTags] tag.
 
 See the [secondary|navigationTags] tag reference for full details.
 
@@ -46,6 +50,27 @@ The menu tag is used internally by the primary/secondary tags and can be called 
 
 <%-- Render the admin nav 3-deep, including all nested descendents whether active or not --%>
 <nav:menu scope="admin" depth="3" forceChildren="true"/>
+
+<%-- With custom item rendering --%>
+<nav:menu scope="admin" id="nav" class="admin" custom="true">
+   <li>
+   <p:callTag tag="g:link" attrs="${linkArgs + [class:'nav button']}">
+      <nav:title item="${item}"/>
+   </p:callTag>
+   </li>
+</nav:menu>
+{code}
+
+See the [menu|navigationTags] tag reference for full details.
+
+h3. nav:title
+
+This renders the i18n title of a specific navigation item passed to it; for use in custom menu rendering.
+
+{code}
+<nav:primary scope="admin" id="nav" class="admin" custom="true">
+   <li><nav:title item="${item}"/></li>
+</nav:primary>
 {code}
 
 See the [menu|navigationTags] tag reference for full details.
@@ -61,7 +86,7 @@ Breadcrumbs are often used to render a list of links to the "ancestors" of the c
 <div class="breadcrumb">
     <nav:breadcrumb custom="true">
         <p:callTag tag="p:smartLink" attrs="${linkArgs}"/>
-        <g:if test="${!last}">
+        <g:if test="${\!last}">
             &raquo;
         </g:if>
     </nav:breadcrumb>

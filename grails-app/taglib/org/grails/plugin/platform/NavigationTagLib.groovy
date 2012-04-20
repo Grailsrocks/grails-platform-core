@@ -156,7 +156,7 @@ class NavigationTagLib {
                             liClass = ' class="disabled"'
                         }
                         out << "<li${liClass ?: ''}>"
-                        out << g.link(linkArgs, g.message(code:n.titleMessageCode, default:n.titleDefault))
+                        out << g.link(linkArgs, nav.title(item:n, codec:''))
 
                         if ((active || alwaysRenderChildren) && (depth > 1)) {
                             def nestedAttrs = attrs.clone()
@@ -294,5 +294,16 @@ class NavigationTagLib {
                 out << "</ul>"
             }
         }
+    }
+    
+    /**
+     * Render the i18n title of a navigation item
+     * @attr item The navigation item (instance of NavigationItem)
+     * @attr codec Optional codec to apply. If none specified defaults to HTML
+     */
+    def title = { attrs ->
+        def item = attrs.item
+        def codec = attrs.codec == null ? 'HTML' : attrs.codec
+        out << g.message(code:item.titleMessageCode, default:item.titleDefault, encodeAs:codec ?: null)
     }
 }
