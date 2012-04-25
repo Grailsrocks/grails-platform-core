@@ -1,8 +1,8 @@
 To make use of the plugin configuration features and make life easier for developers, your plugin must define the configuration options it accepts.
 
-This allows the platform to warn users when they mistype a config name or supply and invalid value - and to formalize definition of default values rather than a plugin merging in default values.
+This allows the platform to warn users when they mistype a config name or supply and invalid value - and to formalise definition of default values rather than a plugin merging in default values.
 
-Do declare the options your plugin supports, add the @doWithConfigOptions@  closure to your plugin descriptor:
+Do declare the options your plugin supports, add the @doWithConfigOptions@ closure to your plugin descriptor:
 
 {code}
 def doWithConfigOptions = {
@@ -24,3 +24,7 @@ def doWithConfigOptions = {
 
 Behaving just like constraint validators, your validator returns null for "ok" or an i18n message string for the error.
 
+When implementing this config in your plugins, you may want to use the @legacyPrefix@ value so that applications that use
+your existing Config settings will continue to work, and users will be warned to update their Config.
+
+See [doWithConfigOptions|pluginConventions] for more details.

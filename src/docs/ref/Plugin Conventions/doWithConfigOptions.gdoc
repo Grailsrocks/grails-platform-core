@@ -24,4 +24,25 @@ def doWithConfigOptions = {
 
 Behaving just like constraint validators, your validator returns null for "ok" or an i18n message string for the error.
 
+h2. Method Calls
+
+Any method calls are assumed to be dot-separated Config key paths relative to the plugin's namespace.
+
+The arguments are a Map that supports the following values:
+
+{table}
+*Name* | *Usage*
+type | An optional Class. If specified, the value of this Config item (after apply the default) must be compatible with this type
+defaultValue | An optional default value. If no value is explicitly supplied by the application or any plugin, this value will be merged into the Config
+validator | An optional Closure to validate the supplied value. If validation fails, a warning will be logged and the defaultValue used
+{table}
+
+h2. Properties
+
+The following property is supported in the DSL:
+
+{table}
+*Name* | *Usage*
+legacyPrefix | Optional string value that will be used to copy legacy configuration values for you. Values declared in your @doWithConfigOptions@ that exist in this legacy namespace will automatically be copied into your namespaced @pluginConfig@ so you do no longer need to check your old values
+{table}
 

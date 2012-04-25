@@ -1,3 +1,5 @@
+h1. doWithConfig
+
 The doWithConfig closure in your plugin descriptor allows you to merge
 configuration values into the applications config, and to configure other
 plugins' declared configuration values safely.
