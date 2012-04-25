@@ -184,6 +184,8 @@ Grails Plugin Platform Core APIs
     }
 
     def doWithConfigOptions = {
+        legacyPrefix = 'grails.plugin.platform'
+        
         'organization.name'(type: String, defaultValue: 'My Corp (set plugin.platformCore.organization.name)')
         'site.name'(type: String, defaultValue: 'Our App (set plugin.platformCore.site.name)')
         'site.url'(type: String, defaultValue: null)
@@ -192,6 +194,9 @@ Grails Plugin Platform Core APIs
     }
 
     def doWithConfig = {
+        application {
+            grails.plugin.platform.organization.name = 'TEST'
+        }
     }
 
     def doWithInjection = { ctx ->

@@ -58,6 +58,9 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
     def pluginManager
     ApplicationContext applicationContext
 
+    protected List<PluginConfigurationEntry> pluginConfigurationEntries = []
+    protected Map<String, PluginConfigurationEntry> legacyPluginConfigurationEntries = [:]
+
     def injectedMethods = {
         def self = this
 
@@ -88,8 +91,6 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
         }
     }
     
-    protected List<PluginConfigurationEntry> pluginConfigurationEntries = []
-
     protected ConfigObject loadPluginConfig() {
         // @todo how to load these from plugins, and to make sure they are included in WAR?
         GroovyClassLoader classLoader = new GroovyClassLoader(PluginConfiguration.classLoader)
@@ -106,7 +107,7 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
     /**
      * Set an app config value using a full string path key
      */
-    protected void setConfigValueByPath(String fullPath, value) {
+    protected void setConfigValueByPath(String fullPath, value, boolean overwriteExisting = true) {
         def config = grailsApplication.config
         
         def parentConfObj
@@ -135,7 +136,9 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
             }
         }
 
-        config.putAll([(valueName):value])
+        if (overwriteExisting || (config instanceof ConfigObject)) {
+            config.putAll([(valueName):value])
+        }
     }
     
     /**
@@ -146,7 +149,13 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
         grailsApplication.config.plugin[pluginName]
     }
     
+    void clearCaches() {
+        legacyPluginConfigurationEntries.clear()
+        pluginConfigurationEntries.clear()
+    }
+
     void reload() {
+        clearCaches()
         applyConfig()
     }
     
@@ -163,11 +172,16 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
         // Load up user-supplied plugin configs
         applyAppPluginConfiguration(loadPluginConfig())
 
+        // Copy legacy app config values into plugin namespace
+        migrateLegacyConfigValues(true)
+
         // Let plugins merge in their configs if no explicit setting given by user
         mergeDoWithConfig()
         
-        // Copy legacy config values into plugin namespace
-        migrateLegacyConfigValues()
+        // Copy legacy plugin config values into plugin namespace, if no existing value
+        // this is to cover for plugins that use legacy prefixes for plugins that are migrated
+        // after the plugin that sets the value is released
+        migrateLegacyConfigValues(false)
         
         // Now validate plugin config
         applyPluginConfigurationDefaultValuesAndConstraints()
@@ -187,6 +201,7 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
             if (k.startsWith('plugin.')) {
                 if (!registeredKeys.contains(k)) {
                     // @todo should we fail fast here?
+                    // @todo support wildcard configoptions
                     log.warn "Your configuration contains a value for [${k}] which is not declared by any plugin"
                 }
             }
@@ -198,20 +213,25 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
      * and copy them into the correct plugin namespace so that plugins only need to check 
      * the new location
      */
-    void migrateLegacyConfigValues() {
-        /*
-        def registeredKeys = pluginConfigurationEntries*.fullConfigKey as Set
+    void migrateLegacyConfigValues(boolean overwriteExisting) {
+        def registeredKeys = legacyPluginConfigurationEntries
         def flatAppConf = grailsApplication.config.flatten()
-        // @todo we falsely report Map values as invalid config currently as flatten() flattens these too
-        flatAppConf.each { k, v ->
-            if (k.startsWith('plugin.')) {
-                if (!registeredKeys.contains(k)) {
-                    // @todo should we fail fast here?
-                    log.warn "Your configuration contains a value for [${k}] which is not declared by any plugin"
+        // Find all configs that are legacy and copy them to the correct plugin scoped config
+        flatAppConf.keySet().each { k ->
+            def legacyEntry = legacyPluginConfigurationEntries[k]
+            if (legacyEntry) {
+                def newKey = legacyEntry.fullConfigKey
+                def v = flatAppConf.getAt(k)
+                // @todo We have to get a new config here as it may have changed during processing
+                // Otherwise we get a CME
+                def latestConf = grailsApplication.config.flatten()
+                def currentValue = latestConf.getAt(newKey)
+                if (currentValue != v) {
+                    setConfigValueByPath(newKey, v, overwriteExisting)
+                    log.warn "Your configuration contains a legacy config value for [${k}]. You should move this to [${newKey}] but it will work for now"
                 }
             }
-        }*/
-        
+        }
     }
     
     /**
@@ -386,14 +406,19 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
                 log.debug "Getting plugin configuration metadata for plugin ${p.name}"
                 def builder = new ConfigOptionsBuilder(
                     pluginName:GrailsNameUtils.getLogicalPropertyName(p.pluginClass.name, 'GrailsPlugin'))
+    
                 def code = inst.doWithConfigOptions.clone()
                 code.delegate = builder
                 code()
                 
                 log.debug "Plugin configuration metadata for plugin ${p.name} yielded entries: ${builder.entries*.fullConfigKey}"
                 pluginConfigurationEntries.addAll(builder.entries)
-                
-                // Load the DSL and add plugin config entries
+
+                for (entry in builder.entries) {
+                    if (entry.legacyPrefix) {
+                        legacyPluginConfigurationEntries[entry.legacyConfigKey] = entry
+                    }
+                }
             }
         }
     }

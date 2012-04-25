@@ -16,6 +16,8 @@ class ConfigOptionsBuilder {
 
     String pluginName
     
+    String legacyPrefix
+    
     def methodMissing(String name, args) {
         def e = new PluginConfigurationEntry()
         assert args.size() <= 1
@@ -25,6 +27,7 @@ class ConfigOptionsBuilder {
             def params = args[0]
             e.defaultValue = params.defaultValue
             e.type = params.type
+            e.legacyPrefix = legacyPrefix
             if (params.validator instanceof Closure) {
                 e.validator = params.validator
             }

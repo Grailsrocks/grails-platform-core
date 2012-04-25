@@ -23,6 +23,8 @@ package org.grails.plugin.platform.config
 class PluginConfigurationEntry {
     String plugin
     String key
+    
+    String legacyPrefix // Pre-platform config prefix if any
 
     Class type
     
@@ -32,5 +34,9 @@ class PluginConfigurationEntry {
     
     String getFullConfigKey() {
         "plugin.${plugin}.${key}"
+    }
+
+    String getLegacyConfigKey() {
+        "${legacyPrefix}.${key}"
     }
 }
