@@ -155,6 +155,7 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
     }
 
     void reload() {
+        log.debug "Reloading platform configuration..."
         clearCaches()
         applyConfig()
     }
