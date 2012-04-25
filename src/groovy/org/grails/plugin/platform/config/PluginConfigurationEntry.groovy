@@ -22,7 +22,6 @@ package org.grails.plugin.platform.config
  */
 class PluginConfigurationEntry {
     String plugin
-    String prefix
     String key
 
     Class type
@@ -32,6 +31,6 @@ class PluginConfigurationEntry {
     Closure validator    // optional
     
     String getFullConfigKey() {
-        prefix ? "${prefix}.${key}" : "plugin.${plugin}.${key}"
+        "plugin.${plugin}.${key}"
     }
 }

@@ -18,10 +18,12 @@
 package org.grails.plugin.platform.config
 
 /**
- * This is really ugly hack to allow us to init before spring context is done
+ * This is really ugly hack to allow us to init before spring context is done.
+ * We have to be able to init before Spring so that merged config is available
+ * everywhere it should be.
  */
 class PluginConfigurationFactory {
-    static private PluginConfiguration instance = new PluginConfiguration()
+    static private PluginConfiguration instance = new PluginConfigurationImpl()
     
     static PluginConfiguration getInstance() {
         instance

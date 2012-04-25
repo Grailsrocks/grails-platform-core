@@ -29,7 +29,7 @@ class PluginConfigurationSpec extends UnitSpec {
     @Unroll("Expected #resultPath set to #resultValue from a closure")
     def "closure config loads into a ConfigObject"() {
         given:
-        def pc = new PluginConfiguration()
+        def pc = new PluginConfigurationImpl()
         def mockConfig = new ConfigObject()
         def mockApp = [
             config: mockConfig
@@ -56,7 +56,7 @@ class PluginConfigurationSpec extends UnitSpec {
     @Unroll("Expected #resultPath set to #resultValue from a closure")
     def "external plugin config file loads and merges correctly"() {
         given:
-        def pc = new PluginConfiguration()
+        def pc = new PluginConfigurationImpl()
         def mockConfig = new ConfigObject()
         def mockApp = [
             config: mockConfig

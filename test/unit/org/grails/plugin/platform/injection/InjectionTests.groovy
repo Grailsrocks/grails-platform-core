@@ -4,7 +4,7 @@ class InjectionTests extends GroovyTestCase {
     void testApplyMethodsTo() {
         def magicMethods = [
             [name:'testMe', code: { -> 'testMe called'}],
-            [name:'testMeStatic', code: { -> 'testMe static called'}]
+            [name:'testMeStatic', staticMethod:true, code: { -> 'testMe static called'}]
         ]
       
         def obj = new DummyClassForMonkeying()
@@ -15,7 +15,7 @@ class InjectionTests extends GroovyTestCase {
             obj.getClass().testMeStatic()
         }
         
-        def injections = new Injection()
+        def injections = new InjectionImpl()
         injections.grailsApplication = [
             mainContext:[
                 pluginManager:[ 

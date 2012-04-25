@@ -19,7 +19,7 @@ package org.grails.plugin.platform.config
 
 class PluginConfigurationTests extends GroovyTestCase {
     void testSettingConfigPathsNoExistingConf() {
-        def pc = new PluginConfiguration()
+        def pc = new PluginConfigurationImpl()
         
         def config = new ConfigObject()
         def mockApp = [
@@ -39,7 +39,7 @@ class PluginConfigurationTests extends GroovyTestCase {
     }
 
     void testSettingConfigPathsPartiallyExistingConf() {
-        def pc = new PluginConfiguration()
+        def pc = new PluginConfigurationImpl()
         
         def config = new ConfigObject()
         config.a = new ConfigObject()
@@ -68,25 +68,16 @@ class PluginConfigurationTests extends GroovyTestCase {
 
         def input = [
             [ plugins:[ [ name:'x', opts: { 'a.b'() }] ], 
-                entries:[[plugin:'x', prefix:'plugin.x', key:'a.b', defaultValue:null, validator: null]] ],
+                entries:[[plugin:'x', key:'a.b', defaultValue:null, validator: null]] ],
             [ plugins:[ [name:'x', opts: { 'a.b'(defaultValue:'boo') }] ],
-                entries:[[plugin:'x', prefix:'plugin.x', key:'a.b', defaultValue:'boo', validator: null]] ],
+                entries:[[plugin:'x', key:'a.b', defaultValue:'boo', validator: null]] ],
             [plugins:[ [name:'x', opts: { 'a.b'(validator: val1) }] ], 
-                entries:[[plugin:'x', prefix:'plugin.x', key:'a.b', defaultValue:null, validator: val1]] ],
+                entries:[[plugin:'x', key:'a.b', defaultValue:null, validator: val1]] ],
             [plugins:[ [name:'x', opts: { 'a.b'(defaultValue:'x'); 'p.q'(defaultValue:'y');  }]  ],
-                entries: [  [plugin:'x', prefix:'plugin.x', key:'a.b', defaultValue:'x', validator: null], 
-                            [plugin:'x', prefix:'plugin.x', key:'p.q', defaultValue:'y', validator: null]] ]
+                entries: [  [plugin:'x', key:'a.b', defaultValue:'x', validator: null], 
+                            [plugin:'x', key:'p.q', defaultValue:'y', validator: null]] ]
         ]
         
-        assertDoWithConfigEntries(input)
-    }
-
-    def testDoWithConfigOptionsClosuresLoadWithPrefix() {
-        def input = [
-            [ plugins:[ [ name:'x', opts: { prefix = 'grails.something'; 'a.b'() }] ], 
-                entries:[[plugin:'x', prefix:'grails.something', key:'a.b', defaultValue:null, validator: null]] ],
-        ]
- 
         assertDoWithConfigEntries(input)
     }
     
@@ -100,7 +91,7 @@ class PluginConfigurationTests extends GroovyTestCase {
                ] }) 
            ] 
 
-           def pc = new PluginConfiguration()
+           def pc = new PluginConfigurationImpl()
 
            pc.pluginManager = mockPluginManager
            pc.loadConfigurationOptions()
@@ -108,7 +99,7 @@ class PluginConfigurationTests extends GroovyTestCase {
            inp.entries.each { e ->
                assertTrue "${e} was not found", null != pc.pluginConfigurationEntries.find { ce -> 
                    (ce.plugin == e.plugin) && 
-                   (ce.fullConfigKey == e.prefix+'.'+e.key) && 
+                   (ce.fullConfigKey == "plugin.${e.plugin}.${e.key}".toString()) && 
                    (ce.key == e.key) && 
                    (ce.defaultValue == e.defaultValue) && 
                    (ce.validator == e.validator)

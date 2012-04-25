@@ -17,12 +17,16 @@ class StandardDSLBuilder {
     
     final log = LoggerFactory.getLogger(StandardDSLBuilder)
 
-    List<DSLCommand> build(Closure c) {
+    List<DSLCommand> build(Closure c, args = null) {
         List<DSLCommand> results = []
         def delegateBuilder = new StandardDSLDelegate(results)
         c.delegate = delegateBuilder
         c.resolveStrategy = Closure.DELEGATE_FIRST
-        c()
+        if (args) {
+            c(*args)
+        } else {
+            c(args)
+        }
         return results
     }
 }
