@@ -63,13 +63,14 @@ class UiExtensionsTagLib {
 
     def displayMessage = { attrs ->
         def classes = attrs.class ?: ''
+        def classPrefix = attrs.cssPrefix ?: ''
         for (scope in [request, flash]) {
             def msgParams = grailsUiHelper.getDisplayMessage(scope)
             if (msgParams) {
                 if (attrs.type) {
-                    classes = joinClasses(values:[classes, attrs.type])
+                    classes = joinClasses(values:[classes, classPrefix+attrs.type])
                 } else if (msgParams.type){
-                    classes = joinClasses(values:[classes, msgParams.type])
+                    classes = joinClasses(values:[classes, classPrefix+msgParams.type])
                 }
                 attrs.code = msgParams.text
                 attrs.args = msgParams.args

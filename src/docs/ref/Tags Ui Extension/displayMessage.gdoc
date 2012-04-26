@@ -38,7 +38,9 @@ h2. Attributes
 
 {table}
 *Name* | *Purpose*
-class | CSS classes to apply to the div. The value of the message "type" will be appended to the class list
+class | Optional CSS classes to apply to the div. The value of the message "type" will be appended to the class list
+cssPrefix | Optional string to prepend to the message type for use as a CSS class on the div. i.e. Specifying "alert-" would result in CSS classes like "alert-warning"
+type | Optional override of the type of the message. If the controller did not set a type or you wish to override it you can e.g. set this to "error"
 {table}
 
 Any other attributes specified are passed through to g:message to create the text.

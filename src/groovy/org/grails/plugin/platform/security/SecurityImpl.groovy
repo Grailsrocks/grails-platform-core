@@ -150,6 +150,8 @@ class SecurityImpl implements Security, ApplicationContextAware {
 An attempt was made to use the grailsSecurity bean, but there is no security bridge \
 implementation defined. You must install a security plugin and/or provide \
 a grailsSecurityBridge bean."""
+// Debugs where access to the security properties is happening
+//            try { throw new RuntimeException("Tracer") } catch (Throwable t) { t.printStackTrace() }
             if (throwIfNone) {
                 throw new IllegalArgumentException(msg)
             } else if (log.warnEnabled) {

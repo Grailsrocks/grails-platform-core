@@ -194,9 +194,6 @@ Grails Plugin Platform Core APIs
     }
 
     def doWithConfig = {
-        application {
-            grails.plugin.platform.organization.name = 'TEST'
-        }
     }
 
     def doWithInjection = { ctx ->

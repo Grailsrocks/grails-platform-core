@@ -38,6 +38,14 @@ class NavigationImpl implements Navigation {
         request['plugin.platformCore.navigation.activeNode'] = nodeForId(path)
     }
 
+    void setDefaultScope(request, String scope) {
+        request['plugin.platformCore.navigation.defaultScope'] = scope
+    }
+
+    String getDefaultScope(request, defaultValue = 'app') {
+        request['plugin.platformCore.navigation.defaultScope'] ?: defaultValue
+    }
+
     String getDefaultControllerAction(String controllerName) {
         def artef = grailsApplication.getArtefact('Controller', controllerName)
         if (log.debugEnabled) {

@@ -32,6 +32,15 @@ class NavigationTagLib {
     def grailsApplication
 
     /**
+     * Set the current request's default scope. Use to make menu/primary default to something other than "app"
+     * or the current active path's scope
+     * @attr scope The scope to default to
+     */
+    def scope = { attrs ->
+        grailsNavigation.setDefaultScope(request, attrs.scope) 
+    }
+    
+    /**
      * Render a primary navigation menu
      * @attr path Optional activation path. If not specified, uses current request's activation path
      * @attr scope Optional scope of menu to render. If not specified, uses default scope determined by activation path or "app"
@@ -39,15 +48,15 @@ class NavigationTagLib {
      */
     def primary = { attrs, body ->
         if (!attrs.scope) {
-            attrs.scope = findScopeForActivationPath(attrs.path)
+            attrs.scope = grailsNavigation.getDefaultScope(request, null)
             if (!attrs.scope) {
-                attrs.scope = 'app'
+                attrs.scope = findScopeForActivationPath(attrs.path)
+                grailsNavigation.setDefaultScope(request, attrs.scope) 
             }
         }
         if (!attrs.class) {
             attrs.class = "nav primary"
         }
-        request['plugin.platformCore.navigation.primaryScope'] = attrs.scope
         out << nav.menu(attrs, body)
     }
     
@@ -65,7 +74,7 @@ class NavigationTagLib {
         
         // There's only a secondary if something is active
         if (pathNodes?.size()) {
-            def currentScope = grailsNavigation.scopeByName(request['plugin.platformCore.navigation.primaryScope'])
+            def currentScope = grailsNavigation.scopeByName(grailsNavigation.getDefaultScope(request))
             def target = pathNodes[-1]
             if (log.debugEnabled) {
                 log.debug "Rendering secondary nav, active node is in currentScope ${currentScope?.name}?: ${target.inScope(currentScope)}"
@@ -104,7 +113,7 @@ class NavigationTagLib {
         if (!scope) {
             def requestPath = attrs.path ?: grailsNavigation.getActivePath(request)
             def pathScope = nav.scopeForActivationPath(path:requestPath)
-            scope = pathScope ?: 'app'
+            scope = pathScope ?: grailsNavigation.getDefaultScope(request)
         }
         if (!(scope instanceof String)) {
             scope = scope.name
@@ -178,7 +187,7 @@ class NavigationTagLib {
         def scope = attrs.scope
         def node = attrs.node
         if (!scope && !node) {
-            scope = 'app'
+            scope = grailsNavigation.getDefaultScope(request)
         }
         if (scope && !(scope instanceof String)) {
             scope = scope.name
