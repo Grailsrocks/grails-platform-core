@@ -32,15 +32,6 @@ class NavigationTagLib {
     def grailsApplication
 
     /**
-     * Set the current request's default scope. Use to make menu/primary default to something other than "app"
-     * or the current active path's scope
-     * @attr scope The scope to default to
-     */
-    def setScope = { attrs ->
-        grailsNavigation.setDefaultScope(request, attrs.scope) 
-    }
-    
-    /**
      * Render a primary navigation menu
      * @attr path Optional activation path. If not specified, uses current request's activation path
      * @attr scope Optional scope of menu to render. If not specified, uses default scope determined by activation path or "app"
@@ -231,14 +222,19 @@ class NavigationTagLib {
     }
 
     /**
-     * Set the current active path for this request
+     * Set a value on the current request. You can set the default scope to make menu/primary default to something other than "app"
+     * or the current active path's scope, and you can set the active path for this request.
+     * @attr scope Optional - scope to default to
+     * @attr path Optional - active path to use
      */
-    def setActivePath = { attrs ->
-        if (attrs.path == null) {
-            throwTagError('The [path] attribute is required')
+    def set = { attrs ->
+        if (attrs.path) {
+            grailsNavigation.setActivePath(request, 
+                attrs.path instanceof List ? grailsNavigation.makePath(attrs.path) : attrs.path)
         }
-        grailsNavigation.setActivePath(request, 
-            attrs.path instanceof List ? grailsNavigation.makePath(attrs.path) : attrs.path)
+        if (attrs.scope) {
+            grailsNavigation.setDefaultScope(request, attrs.scope) 
+        }
     }
 
     private List<NavigationScope> findNodes(String activePath) {

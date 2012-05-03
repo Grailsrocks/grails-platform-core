@@ -95,18 +95,25 @@ Breadcrumbs are often used to render a list of links to the "ancestors" of the c
 
 See the [breadcrumb|navigationTags] tag reference for full details.
 
-h3. nav:setActivePath
+h3. nav:set
 
-You can call this tag from inside a controller or GSP if you need to "fudge" the current request's activation path. This is only necessary if there is no controller/action available on the current request, or if you need to simulate navigation while ignoring the real current activation path.
+You can call this tag from inside a controller or GSP if you need to define request-specific parameters.
 
-You may need to do this inside an error.gsp for example.
+You can "fudge" the current request's activation path or set the default scope to be used by navigation tags.
+
+You may need to do this inside an error.gsp for example, or inside admin pages to reuse a generic theme that renders navigation using @nav:primary@.
 
 {code}
 <html>
 <body>
     <!-- pretend we are in messages/inbox even though we are in a GSP with no controller -->
-    <nav:setActivePath path="app/messages/inbox"/>
+    <nav:set path="app/messages/inbox"/>
+    <nav:set scope="admin"/>
 
+    <!-- or set those together -->
+    <nav:set path="app/messages/inbox" scope="admin"/>
+
+    <!-- these will use whatever the current active path and scope are -->
     <nav:primary/>
     <nav:secondary/>
 
@@ -115,4 +122,4 @@ You may need to do this inside an error.gsp for example.
 </html>
 {code}
 
-See the [setActivePath|navigationTags] tag reference for full details.
+See the [set|navigationTags] tag reference for full details.

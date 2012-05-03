@@ -2,9 +2,15 @@ h1. nav:set
 
 h2. Purpose
 
-You can call this tag from inside a controller or GSP if you need to "fudge" the current request's activation path. This is only necessary if there is no controller/action available on the current request, or if you need to simulate navigation while ignoring the real current activation path.
+You can call this tag from inside a controller or GSP if you need to set any navigation values.
+
+You can use this to "fudge" the current request's activation path. This is only necessary if there is no
+controller/action available on the current request, or if you need to simulate navigation while ignoring the real current activation path.
 
 You may need to do this inside an error.gsp for example.
+
+You can also set the current navigation scope, for example to use a generic layout that calls @nav:primary@ to display your "admin"
+menu instead of the default "app" menu.
 
 h2. Example
 
@@ -12,7 +18,8 @@ h2. Example
 <html>
 <body>
     <!-- pretend we are in support/error even though we are in a GSP with no controller -->
-    <nav:setActivePath path="app/support/error"/>
+    <nav:set path="admin/support/error"/>
+    <nav:set scope="admin"/>
 
     <nav:primary/>
     <nav:secondary/>
@@ -26,6 +33,7 @@ h2. Attributes
 
 {table}
 *Name* | *Purpose* 
-path | Required - activation path to use
+path | Optional - activation path to use
+scope | Optional - default scope to use
 {table}
 
