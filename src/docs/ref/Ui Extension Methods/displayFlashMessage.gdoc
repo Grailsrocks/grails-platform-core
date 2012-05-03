@@ -2,7 +2,7 @@ h1. displayFlashMessage
 
 Call this method in controllers to set the display message for next request using flash scope.
 
-The view can render this message using the [displayMessage|tagsUiExtension] tag.
+The view can render this message using the [displayMessage|uiExtensionTags] tag.
 
 There are two forms of the method:
 

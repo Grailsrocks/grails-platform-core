@@ -1,7 +1,7 @@
 
 h3. Linking tags
 
-The [smartLink|tagsUiExtension] tag renders links for controllers and actions, automatically working out the text of the link using i18n.
+The [smartLink|uiExtensionTags] tag renders links for controllers and actions, automatically working out the text of the link using i18n.
 
 {code:xml}
 <%-- Link to default action of BooksController --%>
@@ -21,7 +21,7 @@ The label tag will render a <label> with the text optionally loaded from i18n:
 <p:label text="field.user.name"/>
 {code}
 
-See [label|tagsUiExtension] for full details of the attributes, which include passing arguments to the i18n message.
+See [label|uiExtensionTags] for full details of the attributes, which include passing arguments to the i18n message.
 
 h3. Button tag
 
@@ -31,7 +31,7 @@ The button tag will render a text-based button using either a <button>, <input t
 <p:button text="button.save"/>
 {code}
 
-See [button|tagsUiExtension] for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.
+See [button|uiExtensionTags] for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.
 
 h3. Display message tag
 
@@ -41,7 +41,7 @@ The displayMessage tag works with the @displayMessage@ and @displayFlashMessage@
 <p:displayMessage/>
 {code}
 
-See [displayMessage|tagsUiExtension] for full details of the attributes and the [displayMessage|uiExtensionMethods] and [displayFlashMessage|uiExtensionMethods] controller methods.
+See [displayMessage|uiExtensionTags] for full details of the attributes and the [displayMessage|uiExtensionMethods] and [displayFlashMessage|uiExtensionMethods] controller methods.
 
 The tag will render both request and flash messages, and wraps them in a div with CSS classes according to the type of message.
 
@@ -49,9 +49,9 @@ h3. Branding tags
 
 There are several simple but useful site branding tags included. Commonly to be used in site footers and emails templates.
 
-* [organization|tagsUiExtension] - Renders the name of the business, taken from Config var @plugin.platformCore.organization.name@
-* [siteName|tagsUiExtension] - Renders the name of the site/product, taken from Config var @plugin.platformCore.site.name@
-* [siteURL|tagsUiExtension] - Renders an absolute URL for the root of the site
-* [siteLink|tagsUiExtension] - Renders an absolute link to the site, with the site name as the link text
-* [year|tagsUiExtension] - Renders the current year, for use in copyright footers
+* [organization|uiExtensionTags] - Renders the name of the business, taken from Config var @plugin.platformCore.organization.name@
+* [siteName|uiExtensionTags] - Renders the name of the site/product, taken from Config var @plugin.platformCore.site.name@
+* [siteURL|uiExtensionTags] - Renders an absolute URL for the root of the site
+* [siteLink|uiExtensionTags] - Renders an absolute link to the site, with the site name as the link text
+* [year|uiExtensionTags] - Renders the current year, for use in copyright footers
 

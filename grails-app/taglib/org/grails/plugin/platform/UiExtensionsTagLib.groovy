@@ -26,9 +26,13 @@ class UiExtensionsTagLib {
     def button = { attrs, body ->
         def kind = attrs.remove('kind') ?: 'button'
         def text = getMessageOrBody(attrs, body)
+        def dis = attrs.remove('disabled')?.toBoolean()
         switch (kind) {
             case 'button':
                 out << "<button"
+                if (dis) {
+                    attrs.disabled = "disabled"
+                }
                 if (attrs) {
                     out << TagLibUtils.attrsToString(attrs)
                 }
@@ -38,11 +42,17 @@ class UiExtensionsTagLib {
                 if (!attrs.'class') {
                     attrs.'class' = "button"
                 }
+                if (dis) {
+                    attrs.'class' = p.joinClasses(values:["disabled", attrs.'class'])
+                }
                 out << g.link(attrs, text)
                 break;
             case 'submit':
                 if (!attrs.value) {
                     attrs.value = text
+                }
+                if (dis) {
+                    attrs.disabled = "disabled"
                 }
                 out << g.actionSubmit(attrs)
                 break;
@@ -160,6 +170,17 @@ class UiExtensionsTagLib {
         def taglib = this[ns]
         out << taglib."${tagName}"(mergedAttrs, bodyAttr ?: body)
     }    
+    
+    /**
+     * Write out an attribute and value only if the value is non-null
+     * @attr value Value of the attribute
+     * @attr name Name of the attribute i.e. "width"
+     */
+    def attrIfSet = { attrs ->
+        if (attrs.value != null) {
+            out << "${attrs.name}=\"${attrs.value.encodeAsHTML()}\""
+        }
+    }
     
     def dummyText = { attrs -> 
         def n = attrs.size ? attrs.size.toString().toInteger() : 0

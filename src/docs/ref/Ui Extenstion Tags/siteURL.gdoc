@@ -10,7 +10,7 @@ You can have a site marketing URL different from your app's @grails.serverURL@ v
 plugin.platformCore.site.url = 'http://marketing.oursite.com'
 {code}
 
-See [siteLink|tagsUiExtension] for details of the site link tag that uses this and @p:siteName@.
+See [siteLink|uiExtensionTags] for details of the site link tag that uses this and @p:siteName@.
 
 h2. Example
 

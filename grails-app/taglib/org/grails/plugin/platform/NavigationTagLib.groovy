@@ -36,7 +36,7 @@ class NavigationTagLib {
      * or the current active path's scope
      * @attr scope The scope to default to
      */
-    def scope = { attrs ->
+    def setScope = { attrs ->
         grailsNavigation.setDefaultScope(request, attrs.scope) 
     }
     

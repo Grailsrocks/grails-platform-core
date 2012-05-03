@@ -2,10 +2,11 @@ h3. 1.0.M2-SNAPSHOT
 
 * Refined and documented Navigation API
 * There are no longer any "g" namespaced tags. All @g:@ tags have move to @p:@ namespace
-* Added "site.url" Config setting for [siteLink|tagsUiExtension] tag to use instead of grails.serverURL if the two differ for your use case
+* Added "site.url" Config setting for [siteLink|uiExtensionTags] tag to use instead of grails.serverURL if the two differ for your use case
 * Refactored Injection, Conventions and Navigation implementations into public interface + implementation classes
 * Config reloading supported now - all plugin configs and constraints etc. are re-applied
 * legacyPrefix support in doWithConfigOptions - automatically copies over old Config values to your new plugin namespaced config
+* Added cssPrefix attribute to [displayMessage|uiExtensionTags]
 
 h3. 1.0.M1
 

@@ -1,0 +1,23 @@
+h1. p:attrIfSet
+
+h2. Purpose
+
+Writes out an HTML attribute only if the value for it is non-null.
+
+Useful for keeping HTML output clean when some model or other attribute may be null and hence the attribute should not be written out at all.
+
+h2. Example
+
+{code:xml}
+<img src="..." ${p.attrIfSet(value:imgW, name:'width')} 
+    ${p.attrIfSet(value:imgH, name:'height')} 
+    ${p.attrIfSet(value:altText, name:'alt')}/>
+{code}
+
+h2. Attributes
+
+{table}
+*Name* | *Purpose* 
+name | Required - The name of the attribute
+value | Required - The value of the attribute. Null values will mean nothing is written.
+{table}
