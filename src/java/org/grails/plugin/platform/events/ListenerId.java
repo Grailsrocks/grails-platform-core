@@ -199,6 +199,7 @@ public class ListenerId implements Serializable {
         ListenerId listener = (ListenerId) o;
 
         return !(className != null ? !className.equals(listener.className) : listener.className != null) &&
+                 !(scope != null ? !scope.equals(listener.scope) : listener.scope != null) &&
                 !(hashCode != null ? !hashCode.equals(listener.hashCode) : listener.hashCode != null) &&
                 !(methodName != null ? !methodName.equals(listener.methodName) : listener.methodName != null) &&
                 !(topic != null ? !topic.equals(listener.topic) : listener.topic != null);
@@ -211,6 +212,7 @@ public class ListenerId implements Serializable {
         result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
         result = 31 * result + (hashCode != null ? hashCode.hashCode() : 0);
         result = 31 * result + (topic != null ? topic.hashCode() : 0);
+        result = 31 * result + (scope != null ? scope.hashCode() : 0);
         return result;
     }
 }

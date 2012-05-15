@@ -20,6 +20,6 @@ package org.grails.plugin.platform.events
      int score = 0
 
      int compareTo(EventDefinition t) {
-         score <=> t.score
+         t.score <=> score
      }
  }

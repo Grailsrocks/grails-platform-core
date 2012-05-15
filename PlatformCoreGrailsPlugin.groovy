@@ -34,8 +34,7 @@ class PlatformCoreGrailsPlugin {
     ]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
-            "grails-app/conf/TestResources.groovy",
-            "grails-app/conf/TestNavigation.groovy",
+            "grails-app/conf/Test*.groovy",
             "grails-app/i18n/test.properties",
             "grails-app/domain/org/grails/plugin/platform/test/**/*.groovy",
             "grails-app/controllers/org/grails/plugin/platform/test/**/*.groovy",

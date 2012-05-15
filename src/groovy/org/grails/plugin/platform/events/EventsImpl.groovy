@@ -120,8 +120,8 @@ class EventsImpl {
 
     EventDefinition matchesDefinition(String scope, String topic, Method method, Class serviceClass) {
         ListenerId targetId = ListenerId.build(scope, topic, serviceClass, method)
-        for(definition in eventDefinitions){
-            if(definition.listenerId.matches(targetId)){
+        for (definition in eventDefinitions) {
+            if (targetId.matches(definition.listenerId)) {
                 log.info "Applying Event definition [$definition.listenerId] from [$definition.definingPlugin]"
                 return definition
             }
@@ -153,7 +153,7 @@ class EventsImpl {
     }
 
     void clearEventDefinitions() {
-        eventDefinitions = [] as SortedSet<EventDefinition>
+        eventDefinitions = new TreeSet<EventDefinition>()
     }
 
     void reloadListeners() {
@@ -224,15 +224,12 @@ class EventsImpl {
         definition.definingPlugin = definingPlugin
         definition.listenerId = ListenerId.parse(listenerPattern)
 
-        def score = 0
-        definition.listenerId.with {
-            if(scope) score++
-            if(topic) score++
-            if(className) score++
-            if(methodName) score++
-            if(hashCode) score++
-        }
-
+        int score = 0
+        if (definition.listenerId.scope) score += 1
+        if (definition.listenerId.topic) score += 1
+        if (definition.listenerId.className) score += 1
+        if (definition.listenerId.methodName) score += 1
+        if (definition.listenerId.hashCode) score += 1
         definition.score = score
 
         eventDefinitions << definition
