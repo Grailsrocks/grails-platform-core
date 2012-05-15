@@ -21,13 +21,15 @@ import groovy.lang.Closure;
 import org.apache.log4j.Logger;
 import org.grails.plugin.platform.events.EventObject;
 import org.grails.plugin.platform.events.ListenerId;
-import org.grails.plugin.platform.events.dispatcher.builder.MappedEventMethod;
 import org.springframework.aop.framework.Advised;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Stephane Maldini <smaldini@doc4web.com>
@@ -48,16 +50,16 @@ public class DefaultEventsRegistry implements EventsRegistry {
         API
      */
 
-    public String addListener(String topic, Closure callback) {
-        return registerHandler(callback, topic);
+    public String addListener(String scope, String topic, Closure callback) {
+        return registerHandler(callback, scope, topic);
     }
 
-    public String addListener(String topic, Object bean, String callbackName) {
-        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), topic);
+    public String addListener(String scope, String topic, Object bean, String callbackName) {
+        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), scope, topic);
     }
 
-    public String addListener(String topic, Object bean, Method callback) {
-        return registerHandler(bean, callback, topic);
+    public String addListener(String scope, String topic, Object bean, Method callback) {
+        return registerHandler(bean, callback, scope, topic);
     }
 
     public int removeListeners(String callbackId) {
@@ -84,12 +86,12 @@ public class DefaultEventsRegistry implements EventsRegistry {
        INTERNAL
     */
 
-    private String registerHandler(Closure callback, String topic) {
+    private String registerHandler(Closure callback, String scope, String topic) {
         if (log.isDebugEnabled()) {
-            log.debug("Registering event handler ["+callback.getClass()+ "] for topic ["+topic+"]");
+            log.debug("Registering event handler [" + callback.getClass() + "] for topic [" + topic + "]");
         }
 
-        ListenerId listener = ListenerId.build(topic, callback);
+        ListenerId listener = ListenerId.build(scope, topic, callback);
         ListenerHandler handler = new ListenerHandler(callback, ReflectionUtils.findMethod(
                 callback.getClass(),
                 "call",
@@ -101,9 +103,9 @@ public class DefaultEventsRegistry implements EventsRegistry {
         return listener.toString();
     }
 
-    private String registerHandler(Object bean, Method callback, String topic) {
+    private String registerHandler(Object bean, Method callback, String scope, String topic) {
         if (log.isDebugEnabled()) {
-            log.debug("Registering event handler on bean ["+bean+"] method ["+callback+"] for topic ["+topic+"]");
+            log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");
         }
 
         Object target = bean;
@@ -115,7 +117,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
                 log.error("failed to retrieve bean origin from proxy", e);
             }
         }
-        ListenerId listener = ListenerId.build(topic, target, callback);
+        ListenerId listener = ListenerId.build(scope, topic, target, callback);
 
         ListenerHandler handler = new ListenerHandler(target, callback, listener);
 
@@ -126,7 +128,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
 
     private Set<ListenerHandler> findAll(ListenerId listener) {
         if (log.isDebugEnabled()) {
-            log.debug("Finding listeners matching listener id ["+listener.toString()+"]");
+            log.debug("Finding listeners matching listener id [" + listener.toString() + "]");
         }
         Set<ListenerHandler> listeners =
                 new HashSet<ListenerHandler>();
@@ -142,19 +144,19 @@ public class DefaultEventsRegistry implements EventsRegistry {
 
     public InvokeResult invokeListeners(EventObject evt) {
         if (log.isDebugEnabled()) {
-            log.debug("Invoking listeners for event ["+evt.getEvent()+"] with data ["+evt.getData()+"]");
+            log.debug("Invoking listeners for event [" + evt.getEvent() + "] scoped on [" + evt.getScope() + "] with data [" + evt.getData() + "]");
         }
-        ListenerId listener = new ListenerId(evt.getEvent());
+        ListenerId listener = new ListenerId(evt.getScope(), evt.getEvent());
         Set<ListenerHandler> listeners = findAll(listener);
 
         if (log.isDebugEnabled()) {
-            log.debug("Found "+listeners.size()+" listeners for event ["+evt.getEvent()+"] with data ["+evt.getData()+"]");
+            log.debug("Found " + listeners.size() + " listeners for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");
         }
         List<Object> results = new ArrayList<Object>();
         Object result;
         for (ListenerHandler _listener : listeners) {
             if (log.isDebugEnabled()) {
-                log.debug("Invoking listener ["+_listener.bean+'.'+_listener.method.getName()+"(arg)] for event ["+evt.getEvent()+"] with data ["+evt.getData()+"]");
+                log.debug("Invoking listener [" + _listener.bean + '.' + _listener.method.getName() + "(arg)] for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");
             }
             result = _listener.invoke(evt.getData());
             if (result != null) results.add(result);
@@ -168,7 +170,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
             } else {
                 resultValues = results.get(0);
             }
-        } 
+        }
         return new InvokeResult(results.size(), resultValues);
     }
 
@@ -190,7 +192,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         }
     }
 
-    private static class ListenerHandler implements EventHandler{
+    private static class ListenerHandler implements EventHandler {
         private Object bean;
         private Method method;
         private ListenerId listenerId;
@@ -211,16 +213,16 @@ public class DefaultEventsRegistry implements EventsRegistry {
                     argTypes.append(e.toString());
                     argTypes.append(',');
                 }
-                log.debug("About to invoke listener method "+bean+"."+method.getName()+" with arg types "+argTypes+
-                    " with args "+args.toString());
+                log.debug("About to invoke listener method " + bean + "." + method.getName() + " with arg types " + argTypes +
+                        " with args " + args.toString());
             }
             try {
                 res = method.invoke(bean, args);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Ignoring call to "+bean+"."+method.getName()+" with args "+args.toString()+" - illegal arg execption: "+e.toString());
+                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + args.toString() + " - illegal arg execption: " + e.toString());
                 }
-            }catch (IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
                 e.printStackTrace();

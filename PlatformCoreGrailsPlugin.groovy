@@ -16,16 +16,15 @@
  * limitations under the License.
  */
 
-import org.grails.plugin.platform.events.dispatcher.DefaultEventsDispatcher
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
 import org.grails.plugin.platform.events.publisher.DefaultEventsPublisher
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
-import org.springframework.core.io.FileSystemResource
+import org.grails.plugin.platform.events.EventsImpl
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
-    def version = "1.0.M2-SNAPSHOT"
+    def version = "1.0.M2b-SNAPSHOT"
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
@@ -50,11 +49,11 @@ class PlatformCoreGrailsPlugin {
     def observe = ['*'] // We observe everything so we can re-apply dynamic methods, conventions etc
 
     def watchedResources = [
-        "file:./grails-app/conf/*Navigation.groovy",
-        "file:./plugins/*/grails-app/conf/*Navigation.groovy"
+            "file:./grails-app/conf/*Navigation.groovy",
+            "file:./plugins/*/grails-app/conf/*Navigation.groovy"
     ]
 
-    def artefacts = [getNavigationArtefactHandler()]
+    def artefacts = [getNavigationArtefactHandler(), getEventsArtefactHandler()]
 
     def title = "Plugin Platform Core"
     def author = "Marc Palmer"
@@ -78,7 +77,7 @@ Grails Plugin Platform Core APIs
             [name: "Stéphane Maldini", email: "stephane.maldini@gmail.com"]
     ]
 
-    def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPPLATFORMCORE" ]
+    def issueManagement = [system: "JIRA", url: "http://jira.grails.org/browse/GPPLATFORMCORE"]
 
     def scm = [url: "https://github.com/Grailsrocks/grails-platform-core"]
 
@@ -108,7 +107,7 @@ Grails Plugin Platform Core APIs
     /**
      * This happens all the time, but dWWD may not have run if we're in a WAR
      */
-    def doWithSpring = {        
+    def doWithSpring = {
         xmlns task: "http://www.springframework.org/schema/task"
 
         initPlatform(application)
@@ -145,8 +144,8 @@ Grails Plugin Platform Core APIs
         task.executor(id: "grailsTopicExecutor", 'pool-size': 10)//todo config
 
         // UI Helper API
-        grailsUiHelper(org.grails.plugin.platform.ui.UiHelper) 
-        
+        grailsUiHelper(org.grails.plugin.platform.ui.UiHelper)
+
         //init api bean
         if (grailsVersion.startsWith('1')) {
             gormTopicSupport(GormTopicSupport1X)
@@ -168,24 +167,22 @@ Grails Plugin Platform Core APIs
             persistenceInterceptor = ref("persistenceInterceptor")
             gormTopicSupport = ref("gormTopicSupport")
         }
-        grailsEventsDispatcher(DefaultEventsDispatcher)
 
-        grailsEvents(org.grails.plugin.platform.events.Events) {
+        grailsEvents(EventsImpl) {
             grailsApplication = ref('grailsApplication')
             grailsEventsRegistry = ref('grailsEventsRegistry')
             grailsEventsPublisher = ref('grailsEventsPublisher')
-            grailsEventsDispatcher = ref('grailsEventsDispatcher')
         }
     }
 
     def doWithDynamicMethods = { ctx ->
         ctx.grailsInjection.initInjections()
-        ctx.grailsEvents.initListeners()
+        ctx.grailsEvents.reloadListeners()
     }
 
     def doWithConfigOptions = {
         legacyPrefix = 'grails.plugin.platform'
-        
+
         'organization.name'(type: String, defaultValue: 'My Corp (set plugin.platformCore.organization.name)')
         'site.name'(type: String, defaultValue: 'Our App (set plugin.platformCore.site.name)')
         'site.url'(type: String, defaultValue: null)
@@ -211,7 +208,7 @@ Grails Plugin Platform Core APIs
     def onConfigChange = { event ->
         event.application.mainContext.grailsPluginConfiguration.reload()
     }
-    
+
     def onChange = { event ->
         def ctx = event.application.mainContext
         def config = event.application.config
@@ -227,7 +224,7 @@ Grails Plugin Platform Core APIs
             } else if (application.isArtefactOfType('Controller', event.source)) {
                 ctx.grailsNavigation.reload() // conventions on controller may have changed
             }
-            
+
             // Always do this stuff
             ctx.grailsInjection.applyTo(event.source)
 
@@ -236,10 +233,14 @@ Grails Plugin Platform Core APIs
             }
         }
     }
-    
-    
+
+
     static getNavigationArtefactHandler() {
         softLoadClass('org.grails.plugin.platform.navigation.NavigationArtefactHandler')
+    }
+
+    static getEventsArtefactHandler() {
+        softLoadClass('org.grails.plugin.platform.events.EventsArtefactHandler')
     }
 
     static softLoadClass(String className) {

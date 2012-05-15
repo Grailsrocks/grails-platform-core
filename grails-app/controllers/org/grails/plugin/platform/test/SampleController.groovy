@@ -60,8 +60,8 @@ class SampleController {
 
     def index = {
         response.outputStream << "There are ${countListeners('sampleHello')} listeners for topic 'sampleHello' \n"
-        response.outputStream << "There are ${countListeners(':' + SampleService.name)} listeners for class '$SampleService.name' \n"
-        response.outputStream << "There are ${countListeners(':' + SampleService.name + '#testEvent')} listeners for method '$SampleService.name#testEvent' \n"
+        response.outputStream << "There are ${countListeners("platformCore://sampleHello:$SampleService.name")} listeners for class '$SampleService.name' \n"
+        response.outputStream << "There are ${countListeners("app://sampleHello:$SampleService.name#testEvent")} listeners for method '$SampleService.name#testEvent' \n"
         response.outputStream << "sync event with replies values : " + event('sampleHello', 'world')?.values + " \n\n"
         def async1 = eventAsync('sampleHello', "world 2A")
         def async2 = eventAsync('sampleHello', "world 2B")

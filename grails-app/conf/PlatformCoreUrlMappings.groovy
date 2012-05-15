@@ -26,8 +26,6 @@ class PlatformCoreUrlMappings {
             "/platform/plugin-config/$id?"(controller:'platformTools', action:'showPluginConfig')
             //"/platform/js"(controller:'platformTools', action:'jsmodel')
             "/platform/navigation"(controller:'platformTools', action:'showNavigation')
-
-            "/platform/event/$action?"(controller:'sample')
     	}
     	
 	}

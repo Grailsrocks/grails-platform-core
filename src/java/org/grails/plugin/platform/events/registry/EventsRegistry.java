@@ -31,12 +31,14 @@ import java.lang.reflect.Method;
  * [Does stuff]
  */
 public interface EventsRegistry {
-    
-    public final String GRAILS_TOPIC_PREFIX = "g-";
 
-    public String addListener(String topic, Object bean, Method callbackMethod);
-    public String addListener(String topic, Object bean, String callbackMethodName);
-    public String addListener(String topic, Closure callback);
+    public String addListener(String scope, String topic, Object bean, Method callbackMethod);
+
+    public String addListener(String scope, String topic, Object bean, String callbackMethodName);
+
+    public String addListener(String scope, String topic, Closure callback);
+
     public int removeListeners(String callbackId);
+
     public int countListeners(String callbackId);
 }

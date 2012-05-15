@@ -32,15 +32,9 @@ class SampleService {
 
     static transactional = true
 
-    static events = {
-        testEvent when: {
-            it.source == 'plugin-platform'
-        }
-    }
-
     @Listener('sampleHello')
     void testEvent(test) {
-        println "Hello $test"
+        println "-> $test"
     }
 
     @Listener

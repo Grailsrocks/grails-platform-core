@@ -109,7 +109,7 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationListe
                     ReflectionUtils.invokeMethod(
                             ReflectionUtils.findMethod(applicationEvent.getClass(),"getEntityObject"),
                             applicationEvent
-                    ), GormTopicSupport.GORM_SOURCE));
+                    ), GormTopicSupport.GORM_SOURCE, false));
             try {
                 gormTopicSupport.processCancel(applicationEvent, reply.getValues());
             } catch (Exception e) {
@@ -129,14 +129,14 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationListe
         }
 
         public DefaultEventsRegistry.InvokeResult call() {
-            boolean nonGormEvent = event.getSource() == null || !event.getSource().equals(GormTopicSupport.GORM_SOURCE);
-            if (nonGormEvent) {
+            boolean gormSession = event.isGormSession();
+            if (gormSession) {
                 persistenceInterceptor.init();
             }
 
             DefaultEventsRegistry.InvokeResult invokeResult = grailsEventsRegistry.invokeListeners(event);
 
-            if (!nonGormEvent) {
+            if (gormSession) {
                 try {
                     persistenceInterceptor.flush();
                 } catch (RuntimeException re) {

@@ -18,12 +18,7 @@
 package org.grails.plugin.platform.events.dispatcher;
 
 //import org.grails.datastore.mapping.engine.event.AbstractPersistenceEvent;
-import org.grails.plugin.platform.events.registry.EventsRegistry;
-import org.springframework.context.ApplicationEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Stephane Maldini <smaldini@doc4web.com>
@@ -59,10 +54,10 @@ class GormTopicSupport2X implements GormTopicSupport {
         
         for(Map.Entry<String,String> entry in translateTable){
             if(entry.getKey().equalsIgnoreCase(evt.getClass().simpleName)){
-                return EventsRegistry.GRAILS_TOPIC_PREFIX+entry.value
+                return entry.value
             }
         }
         
-        return EventsRegistry.GRAILS_TOPIC_PREFIX+evt.getClass().simpleName
+        return evt.getClass().simpleName
     }
 }

@@ -18,12 +18,9 @@
 package org.grails.plugin.platform.events;
 
 import groovy.lang.Closure;
-import org.grails.plugin.platform.events.registry.EventsRegistry;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Stephane Maldini <smaldini@doc4web.com>
@@ -32,37 +29,44 @@ import java.util.regex.Pattern;
  * @date 09/01/12
  * @section DESCRIPTION
  * <p/>
- * [Does stuff]
+ * format : scope://topic:package.Class#method@hashCode
  */
 public class ListenerId implements Serializable {
     private static final String CLOSURE_METHOD_NAME = "call";
+    private static final String ID_SCOPE_SEPARATOR = "://";
     private static final String ID_CLASS_SEPARATOR = ":";
     private static final String ID_METHOD_SEPARATOR = "#";
     private static final String ID_HASHCODE_SEPARATOR = "@";
+    private static final String SCOPE_WILDCARD = "*";
 
-    private static final Pattern idRegex = Pattern.compile(
-            "([^" + ID_CLASS_SEPARATOR + "]*)?" +
+    /*private static final Pattern idRegex = Pattern.compile(
+            "([^" + ID_SCOPE_SEPARATOR + "]*)?" +
+                    "("+ID_SCOPE_SEPARATOR +")?"+
+                    "([^" + ID_CLASS_SEPARATOR + "]*)?" +
                     "(" + ID_CLASS_SEPARATOR + "([^" + ID_METHOD_SEPARATOR + "]*))?"
                     + "(" + ID_METHOD_SEPARATOR + "([^" + ID_HASHCODE_SEPARATOR + "]*))?"
                     + "(" + ID_HASHCODE_SEPARATOR + "(-?\\d*))?");
-
+*/
     private String className;
     private String methodName;
     private String hashCode;
     private String topic;
 
-    public ListenerId(String topic) {
-        this(topic, null, null, null);
+    private String scope;
+
+    public ListenerId(String scope, String topic) {
+        this(scope, topic, null, null, null);
     }
 
-    public ListenerId(String topic, String className, String methodName, String hashCode) {
+    public ListenerId(String scope, String topic, String className, String methodName, String hashCode) {
         this.className = className;
+        System.out.println("scope "+scope);
+        System.out.println("topic "+topic);
         this.methodName = methodName;
         this.hashCode = hashCode;
+        this.scope = scope;
         if (topic != null && !topic.isEmpty()) {
-            this.topic = topic.startsWith(EventsRegistry.GRAILS_TOPIC_PREFIX) ?
-                    topic :
-                    EventsRegistry.GRAILS_TOPIC_PREFIX + topic;
+            this.topic = topic;
         }
     }
 
@@ -72,6 +76,14 @@ public class ListenerId implements Serializable {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
     public String getClassName() {
@@ -98,38 +110,67 @@ public class ListenerId implements Serializable {
         this.hashCode = hashCode;
     }
 
-    //format : topic:package.Class#method@hashCode
+    //format : scope://topic:package.Class#method@hashCode
     public String toString() {
         return toStringWithoutHash()
                 + (hashCode != null ? ID_HASHCODE_SEPARATOR + hashCode : "");
     }
 
-    // format : topic:package.Class#method
+    // format : scope://topic:package.Class#method
     public String toStringWithoutHash() {
-            return (topic != null ? topic : "") + (className != null ? ID_CLASS_SEPARATOR + className : "")
-                    + (methodName != null ? ID_METHOD_SEPARATOR + methodName : "");
-        }
-
-    static public ListenerId build(String topic, Object target, Method callback) {
-        return new ListenerId(topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
+        return (scope != null ? scope + ID_SCOPE_SEPARATOR : "") + (topic != null ? topic : "") + (className != null ? ID_CLASS_SEPARATOR + className : "")
+                + (methodName != null ? ID_METHOD_SEPARATOR + methodName : "");
     }
 
-    static public ListenerId build(String topic, Closure target) {
-        return new ListenerId(topic, target.getClass().getName(), CLOSURE_METHOD_NAME, Integer.toString(target.hashCode()));
+    static public ListenerId build(String scope, String topic, Object target, Method callback) {
+        return new ListenerId(scope, topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
+    }
+
+    static public ListenerId build(String scope, String topic, Closure target) {
+        return new ListenerId(scope, topic, target.getClass().getName(), CLOSURE_METHOD_NAME, Integer.toString(target.hashCode()));
     }
 
     static public ListenerId parse(String id) {
-        Matcher parsed = idRegex.matcher(id);
-        if (parsed.matches())
-            return new ListenerId(parsed.group(1), parsed.group(3), parsed.group(5), parsed.group(7));
-        else
-            return null;
+        //Matcher parsed = idRegex.matcher(id);
+        if (id != null) {
+            int scopeIndex = id.indexOf(ID_SCOPE_SEPARATOR);
+            String _scope = scopeIndex != -1 ? id.substring(0,scopeIndex) : null;
+            id = scopeIndex != -1 ? id.substring(scopeIndex+3, id.length()) : id;
+
+            int classIndex = id.indexOf(ID_CLASS_SEPARATOR);
+            String _topic = id.substring(0, classIndex != -1 ? classIndex : id.length());
+            id = classIndex != -1 ? id.substring(classIndex+1, id.length()) : id;
+
+            int methodIndex = id.indexOf(ID_METHOD_SEPARATOR);
+            String _class = classIndex != -1 ? id.substring(0, methodIndex != -1 ? methodIndex : id.length()) : null;
+            id = methodIndex != -1 ? id.substring(methodIndex+1, id.length()) : id;
+
+            int hashcodeIndex = id.indexOf(ID_HASHCODE_SEPARATOR);
+            String _method = methodIndex != -1 ? id.substring(0, hashcodeIndex != -1 ? hashcodeIndex : id.length()) : null;
+            String _hashcode = hashcodeIndex != -1 ? id.substring(hashcodeIndex + 1,  id.length()) : null;
+
+            return new ListenerId(
+                    _scope,
+                    _topic,
+                    _class,
+                    _method,
+                    _hashcode
+            );
+        }
+
+        return null;
     }
 
     public boolean matches(ListenerId listener) {
         Boolean result = null;
+
+        if (this.scope != null && listener.getScope() != null) {
+            result = listener.getScope().equals(SCOPE_WILDCARD) || this.scope.equalsIgnoreCase(listener.getScope());
+        }
+
         if (this.topic != null) {
-            result = this.topic.equals(listener.getTopic());
+            result = result == null || result;
+            result &= this.topic.equals(listener.getTopic());
         }
         if (this.className != null) {
             result = result == null || result;

@@ -17,6 +17,8 @@
  */
 package org.grails.plugin.platform.events;
 
+import org.grails.plugin.platform.events.dispatcher.GormTopicSupport;
+
 import java.io.Serializable;
 
 /**
@@ -29,23 +31,27 @@ import java.io.Serializable;
  * [Does stuff]
  */
 public class EventObject implements Serializable {
-    private String source = null;
+    private String scope = null;
     private String event = null;
     private Object data = null;
     private long timeout = -1;
-
-    public EventObject() {
-    }
+    private boolean gormSession = true;
 
     public EventObject(String event, Object data) {
         this(event, data, null);
     }
 
-    public EventObject(String event, Object data, String source) {
+    public EventObject(String event, Object data, String scope) {
+        this(event, data, scope, scope == null || !scope.equals(GormTopicSupport.GORM_SOURCE));
+    }
+
+    public EventObject(String event, Object data, String scope, boolean gormSession) {
         this.event = event;
         this.data = data;
-        this.source = source;
+        this.scope = scope;
+        this.gormSession = gormSession;
     }
+
 
     public long getTimeout() {
         return timeout;
@@ -63,12 +69,12 @@ public class EventObject implements Serializable {
         this.data = data;
     }
 
-    public String getSource() {
-        return source;
+    public String getScope() {
+        return scope;
     }
 
-    public void setSource(String plugin) {
-        this.source = plugin;
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
     public String getEvent() {
@@ -77,5 +83,13 @@ public class EventObject implements Serializable {
 
     public void setEvent(String event) {
         this.event = event;
+    }
+
+    public boolean isGormSession() {
+        return gormSession;
+    }
+
+    public void setGormSession(boolean gormSession) {
+        this.gormSession = gormSession;
     }
 }

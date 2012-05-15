@@ -3,7 +3,7 @@ import grails.util.Environment
 class PlatformCoreBootStrap {
     def grailsNavigation
     def grailsApplication
-    
+
     def init = {
         applicationStartupInfo()
 
