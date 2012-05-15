@@ -121,7 +121,11 @@ public class ListenerId implements Serializable {
     }
 
     static public ListenerId build(String scope, String topic, Object target, Method callback) {
-        return new ListenerId(scope, topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
+            return new ListenerId(scope, topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
+        }
+
+    static public ListenerId build(String scope, String topic, Class target, Method callback) {
+        return new ListenerId(scope, topic, target.getName(), callback.getName(), null);
     }
 
     static public ListenerId build(String scope, String topic, Closure target) {

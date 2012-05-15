@@ -118,10 +118,10 @@ class EventsImpl {
         }
     }
 
-    EventDefinition matchesDefinition(String scope, String topic, Method method, Class serviceClass) {
-        ListenerId targetId = ListenerId.build(scope, topic, serviceClass, method)
+    EventDefinition matchesDefinition( String topic, Method method, Class serviceClass) {
+        ListenerId targetId = ListenerId.build(null, topic, serviceClass, method)
         for (definition in eventDefinitions) {
-            if (targetId.matches(definition.listenerId)) {
+            if (definition.listenerId.matches(targetId)) {
                 log.info "Applying Event definition [$definition.listenerId] from [$definition.definingPlugin]"
                 return definition
             }
@@ -133,7 +133,7 @@ class EventsImpl {
 //            grailsEventsDispatcher.scanClassForMappings(serviceClass)
         eachListener(serviceClasses) {String scope, String topic, Method method, Class serviceClass ->
 
-            def definition = matchesDefinition(scope, topic, method, serviceClass)
+            def definition = matchesDefinition(topic, method, serviceClass)
             scope = definition?.scope ?: scope
             if (!definition?.disabled) {
                 log.info "Register event listener $serviceClass.name#$method.name for topic $topic and scope $scope"
