@@ -10,5 +10,16 @@ package org.grails.plugin.platform.events
  *
  * [Does stuff]
  */
- class EventDefinition {
-}
+ class EventDefinition implements Comparable<EventDefinition>{
+     ListenerId listenerId
+     String scope = 'app'
+     boolean requiresReply = false
+     boolean disabled = false
+     String definingPlugin
+
+     int score = 0
+
+     int compareTo(EventDefinition t) {
+         score <=> t.score
+     }
+ }

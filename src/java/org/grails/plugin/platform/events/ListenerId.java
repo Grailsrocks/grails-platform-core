@@ -60,8 +60,6 @@ public class ListenerId implements Serializable {
 
     public ListenerId(String scope, String topic, String className, String methodName, String hashCode) {
         this.className = className;
-        System.out.println("scope "+scope);
-        System.out.println("topic "+topic);
         this.methodName = methodName;
         this.hashCode = hashCode;
         this.scope = scope;
@@ -165,7 +163,9 @@ public class ListenerId implements Serializable {
         Boolean result = null;
 
         if (this.scope != null && listener.getScope() != null) {
-            result = listener.getScope().equals(SCOPE_WILDCARD) || this.scope.equalsIgnoreCase(listener.getScope());
+            result = this.scope.equals(SCOPE_WILDCARD) ||
+                    listener.getScope().equals(SCOPE_WILDCARD) ||
+                    this.scope.equalsIgnoreCase(listener.getScope());
         }
 
         if (this.topic != null) {

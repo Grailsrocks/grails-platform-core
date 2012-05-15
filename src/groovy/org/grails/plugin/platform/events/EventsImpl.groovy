@@ -41,7 +41,7 @@ class EventsImpl {
     private ApplicationContext applicationContext
     GrailsApplication grailsApplication
 
-    Map<String, EventDefinition> nodesByEventTopic
+    SortedSet<EventDefinition> eventDefinitions
 
     def injectedMethods = { theContext ->
 
@@ -118,16 +118,32 @@ class EventsImpl {
         }
     }
 
+    EventDefinition matchesDefinition(String scope, String topic, Method method, Class serviceClass) {
+        ListenerId targetId = ListenerId.build(scope, topic, serviceClass, method)
+        for(definition in eventDefinitions){
+            if(definition.listenerId.matches(targetId)){
+                log.info "Applying Event definition [$definition.listenerId] from [$definition.definingPlugin]"
+                return definition
+            }
+        }
+        null
+    }
+
     void registerListeners(Collection<Class<?>> serviceClasses) {
 //            grailsEventsDispatcher.scanClassForMappings(serviceClass)
         eachListener(serviceClasses) {String scope, String topic, Method method, Class serviceClass ->
-            log.info "Register event listener $serviceClass.name#$method.name for topic $topic"
-            grailsEventsRegistry.addListener(
-                    scope,
-                    topic,
-                    applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
-                    method
-            )
+
+            def definition = matchesDefinition(scope, topic, method, serviceClass)
+            scope = definition?.scope ?: scope
+            if (!definition?.disabled) {
+                log.info "Register event listener $serviceClass.name#$method.name for topic $topic and scope $scope"
+                grailsEventsRegistry.addListener(
+                        scope,
+                        topic,
+                        applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
+                        method
+                )
+            }
         }
     }
 
@@ -136,9 +152,14 @@ class EventsImpl {
         this.applicationContext = grailsApplication.mainContext
     }
 
+    void clearEventDefinitions() {
+        eventDefinitions = [] as SortedSet<EventDefinition>
+    }
+
     void reloadListeners() {
         log.info "Reloading events listeners"
 
+        clearEventDefinitions()
         loadDSL()
         registerListeners(grailsApplication.serviceClasses*.clazz)
 
@@ -198,8 +219,22 @@ class EventsImpl {
     }
 
     private addItemFromArgs(String listenerPattern, Map arguments, String definingPlugin) {
-        ListenerId listenerId = ListenerId.parse(listenerPattern)
         EventDefinition definition = new EventDefinition(arguments)
-        nodesByEventTopic[listenerId]
+
+        definition.definingPlugin = definingPlugin
+        definition.listenerId = ListenerId.parse(listenerPattern)
+
+        def score = 0
+        definition.listenerId.with {
+            if(scope) score++
+            if(topic) score++
+            if(className) score++
+            if(methodName) score++
+            if(hashCode) score++
+        }
+
+        definition.score = score
+
+        eventDefinitions << definition
     }
 }

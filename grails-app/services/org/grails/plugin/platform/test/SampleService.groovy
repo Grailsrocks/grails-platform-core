@@ -34,7 +34,7 @@ class SampleService {
 
     @Listener('sampleHello')
     void testEvent(test) {
-        println "-> $test"
+        println """--> $test"""
     }
 
     @Listener
