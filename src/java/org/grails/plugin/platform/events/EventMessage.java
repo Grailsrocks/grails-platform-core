@@ -30,22 +30,22 @@ import java.io.Serializable;
  * <p/>
  * [Does stuff]
  */
-public class EventObject implements Serializable {
+public class EventMessage implements Serializable {
     private String scope = null;
     private String event = null;
     private Object data = null;
     private long timeout = -1;
     private boolean gormSession = true;
 
-    public EventObject(String event, Object data) {
+    public EventMessage(String event, Object data) {
         this(event, data, null);
     }
 
-    public EventObject(String event, Object data, String scope) {
+    public EventMessage(String event, Object data, String scope) {
         this(event, data, scope, scope == null || !scope.equals(GormTopicSupport.GORM_SOURCE));
     }
 
-    public EventObject(String event, Object data, String scope, boolean gormSession) {
+    public EventMessage(String event, Object data, String scope, boolean gormSession) {
         this.event = event;
         this.data = data;
         this.scope = scope;

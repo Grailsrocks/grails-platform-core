@@ -19,7 +19,7 @@ package org.grails.plugin.platform.events.publisher;
 
 import groovy.lang.Closure;
 import org.codehaus.groovy.grails.support.PersistenceContextInterceptor;
-import org.grails.plugin.platform.events.EventObject;
+import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport;
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry;
@@ -73,19 +73,19 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationListe
 
     //API
 
-    public EventReply event(EventObject event) {
+    public EventReply event(EventMessage event) {
         DefaultEventsRegistry.InvokeResult invokeResult = grailsEventsRegistry.invokeListeners(event);
         return new EventReply(invokeResult.getResult(), invokeResult.getInvoked());
     }
 
-    public EventReply eventAsync(final EventObject event) {
+    public EventReply eventAsync(final EventMessage event) {
         Future<DefaultEventsRegistry.InvokeResult> invokeResult =
                 taskExecutor.submit(new Callback(event));
 
         return new WrappedFuture(invokeResult, -1);
     }
 
-    public void eventAsync(final EventObject event, final Closure onComplete) {
+    public void eventAsync(final EventMessage event, final Closure onComplete) {
         taskExecutor.execute(new Runnable() {
             public void run() {
                 DefaultEventsRegistry.InvokeResult invokeResult = new Callback(event).call();
@@ -105,7 +105,7 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationListe
         //fixme horrible hack to support grails 1.3.x
         if (applicationEvent.getClass().getName().startsWith(GORM_EVENT_PACKAGE)) {
             String topic = gormTopicSupport.convertTopic(applicationEvent);
-            EventReply reply = event(new EventObject(topic,
+            EventReply reply = event(new EventMessage(topic,
                     ReflectionUtils.invokeMethod(
                             ReflectionUtils.findMethod(applicationEvent.getClass(),"getEntityObject"),
                             applicationEvent
@@ -122,9 +122,9 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationListe
 
     private class Callback implements Callable<DefaultEventsRegistry.InvokeResult> {
 
-        private EventObject event;
+        private EventMessage event;
 
-        public Callback(EventObject event) {
+        public Callback(EventMessage event) {
             this.event = event;
         }
 

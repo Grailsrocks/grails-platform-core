@@ -88,11 +88,11 @@ class EventsImpl {
         grailsEventsPublisher.eventAsync buildEvent(scope, topic, data, params), callback
     }
 
-    EventObject buildEvent(String scope, String topic, data, Map params) {
+    EventMessage buildEvent(String scope, String topic, data, Map params) {
         boolean gormSession = params?.containsKey('gormSession') ? params.gormSession : true
         String _scope = params?.scope ?: scope
 
-        new EventObject(topic, data, _scope, gormSession)
+        new EventMessage(topic, data, _scope, gormSession)
     }
 
     void reloadListener(Class serviceClass) {

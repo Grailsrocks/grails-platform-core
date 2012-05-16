@@ -19,7 +19,7 @@ package org.grails.plugin.platform.events.registry;
 
 import groovy.lang.Closure;
 import org.apache.log4j.Logger;
-import org.grails.plugin.platform.events.EventObject;
+import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.ListenerId;
 import org.springframework.aop.framework.Advised;
 import org.springframework.util.ReflectionUtils;
@@ -142,7 +142,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         return listeners;
     }
 
-    public InvokeResult invokeListeners(EventObject evt) {
+    public InvokeResult invokeListeners(EventMessage evt) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking listeners for event [" + evt.getEvent() + "] scoped on [" + evt.getScope() + "] with data [" + evt.getData() + "]");
         }
