@@ -33,8 +33,9 @@ class SampleService {
     static transactional = true
 
     @Listener('sampleHello')
-    void testEvent(test) {
+    def testEvent(test) {
         println """--> $test"""
+        "hello !!!!"
     }
 
     @Listener
@@ -50,6 +51,5 @@ class SampleService {
     @Listener('sampleHello')
     def testEvent3(test) {
         println "Hello (bis) - $test"
-        true
     }
 }
