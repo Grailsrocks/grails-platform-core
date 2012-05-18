@@ -158,7 +158,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
             if (log.isDebugEnabled()) {
                 log.debug("Invoking listener [" + _listener.bean + '.' + _listener.method.getName() + "(arg)] for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");
             }
-            result = _listener.invoke(evt.getData());
+            result = _listener.invoke(_listener.isUseEventMessage() ? evt : evt.getData());
             if (result != null) results.add(result);
         }
 
@@ -196,11 +196,16 @@ public class DefaultEventsRegistry implements EventsRegistry {
         private Object bean;
         private Method method;
         private ListenerId listenerId;
+        private boolean useEventMessage = false;
         //private MappedEventMethod mapping;
 
         public ListenerHandler(Object bean, Method m, ListenerId listenerId/*, MappedEventMethod mapping*/) {
             this.listenerId = listenerId;
             this.method = m;
+            if(m.getParameterTypes().length > 0){
+                Class<?> type = m.getParameterTypes()[0];
+                useEventMessage = type.getClass().isAssignableFrom(EventMessage.class);
+            }
             this.bean = bean;
             //this.mapping = mapping;
         }
@@ -233,6 +238,10 @@ public class DefaultEventsRegistry implements EventsRegistry {
 
         public ListenerId getListenerId() {
             return listenerId;
+        }
+
+        public boolean isUseEventMessage() {
+            return useEventMessage;
         }
     }
 

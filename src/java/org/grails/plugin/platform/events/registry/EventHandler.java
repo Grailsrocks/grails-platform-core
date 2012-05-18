@@ -14,4 +14,5 @@ import org.grails.plugin.platform.events.ListenerId;
 public interface EventHandler {
 
     public ListenerId getListenerId();
+    public boolean isUseEventMessage();
 }

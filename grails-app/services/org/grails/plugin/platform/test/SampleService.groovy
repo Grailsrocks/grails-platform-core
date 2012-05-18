@@ -17,7 +17,9 @@
  */
 package org.grails.plugin.platform.test
 
+import org.grails.plugin.platform.events.EventMessage
 import org.grails.plugin.platform.events.Listener
+
 /**
  * @file
  * @author Stephane Maldini <smaldini@doc4web.com>
@@ -33,7 +35,7 @@ class SampleService {
     static transactional = true
 
     @Listener('sampleHello')
-    def testEvent(test) {
+    def testEvent(EventMessage test) {
         println """--> $test"""
         "hello !!!!"
     }
