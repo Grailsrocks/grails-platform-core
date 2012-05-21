@@ -17,8 +17,7 @@
  */
 package org.grails.plugin.platform.test
 
-import org.grails.plugin.platform.events.EventMessage
-import org.grails.plugin.platform.events.Listener
+import grails.events.Listener
 
 /**
  * @file
@@ -34,12 +33,6 @@ class SampleService {
 
     static transactional = true
 
-    @Listener('sampleHello')
-    def testEvent(EventMessage test) {
-        println """--> $test"""
-        "hello !!!!"
-    }
-
     @Listener
     void beforeInsert(Book book) {
         println "will insert $book.title"
@@ -51,7 +44,7 @@ class SampleService {
     }
 
     @Listener('sampleHello')
-    def testEvent3(test) {
+    def testEvent(test) {
         println "Hello (bis) - $test"
     }
 }

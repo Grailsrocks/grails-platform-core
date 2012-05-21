@@ -202,9 +202,12 @@ public class DefaultEventsRegistry implements EventsRegistry {
         public ListenerHandler(Object bean, Method m, ListenerId listenerId/*, MappedEventMethod mapping*/) {
             this.listenerId = listenerId;
             this.method = m;
-            if(m.getParameterTypes().length > 0){
+            if (m.getParameterTypes().length > 0) {
                 Class<?> type = m.getParameterTypes()[0];
-                useEventMessage = type.getClass().isAssignableFrom(EventMessage.class);
+                useEventMessage = EventMessage.class.isAssignableFrom(type);
+                if (useEventMessage && log.isDebugEnabled()) {
+                    log.debug("Listener " + bean + "." + method.getName() + " will receive EventMessage enveloppe");
+                }
             }
             this.bean = bean;
             //this.mapping = mapping;
@@ -225,7 +228,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
                 res = method.invoke(bean, args);
             } catch (IllegalArgumentException e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + args.toString() + " - illegal arg execption: " + e.toString());
+                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + args.toString() + " - illegal arg exception: " + e.toString());
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();

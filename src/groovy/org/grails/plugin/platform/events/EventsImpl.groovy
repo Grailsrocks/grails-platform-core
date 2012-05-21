@@ -31,6 +31,7 @@ import org.grails.plugin.platform.util.PluginUtils
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
+import grails.events.Listener
 
 class EventsImpl {
 
@@ -41,7 +42,7 @@ class EventsImpl {
     private ApplicationContext applicationContext
     GrailsApplication grailsApplication
 
-    SortedSet<EventDefinition> eventDefinitions
+    List<EventDefinition> eventDefinitions
 
     def injectedMethods = { theContext ->
 
@@ -153,7 +154,7 @@ class EventsImpl {
     }
 
     void clearEventDefinitions() {
-        eventDefinitions = new TreeSet<EventDefinition>()
+        eventDefinitions = []
     }
 
     void reloadListeners() {
@@ -193,6 +194,8 @@ class EventsImpl {
             }
             loadDSL(artefact.clazz)
         }
+
+        eventDefinitions.sort()
     }
 
     /**
@@ -219,7 +222,12 @@ class EventsImpl {
     }
 
     private addItemFromArgs(String listenerPattern, Map arguments, String definingPlugin) {
-        EventDefinition definition = new EventDefinition(arguments)
+        def definition = new EventDefinition()
+        definition.scope = arguments?.remove('scope') ?: definition.scope
+        definition.requiresReply = arguments?.remove('requiresReply') ?: definition.requiresReply
+        definition.disabled = arguments?.remove('disabled') ?: definition.disabled
+
+        definition.othersAttributes = arguments
 
         definition.definingPlugin = definingPlugin
         definition.listenerId = ListenerId.parse(listenerPattern)
@@ -231,6 +239,9 @@ class EventsImpl {
         if (definition.listenerId.methodName) score += 1
         if (definition.listenerId.hashCode) score += 1
         definition.score = score
+
+        def overridenDefinition = eventDefinitions.find{it.listenerId.toString() == listenerPattern}
+        eventDefinitions.remove(overridenDefinition)
 
         eventDefinitions << definition
     }
