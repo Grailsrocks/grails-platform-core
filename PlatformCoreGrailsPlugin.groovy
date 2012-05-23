@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import org.grails.plugin.platform.events.EventsImpl
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
 import org.grails.plugin.platform.events.publisher.DefaultEventsPublisher
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
-import org.grails.plugin.platform.events.EventsImpl
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
@@ -209,17 +210,20 @@ Grails Plugin Platform Core APIs
 
     def onChange = { event ->
         def ctx = event.application.mainContext
-        def config = event.application.config
 
         def navArtefactType = getNavigationArtefactHandler().TYPE
+        def eventArtefactType = getEventsArtefactHandler().TYPE
         if (event.source instanceof Class) {
             if (application.isArtefactOfType(navArtefactType, event.source)) {
-
                 // Update the app with the new class
                 event.application.addArtefact(navArtefactType, event.source)
                 ctx.grailsNavigation.reload(event.source)
 
-            } else if (application.isArtefactOfType('Controller', event.source)) {
+            } else if (application.isArtefactOfType(eventArtefactType, event.source)) {
+                event.application.addArtefact(eventArtefactType, event.source)
+                ctx.grailsEvents.reloadEventsDefinition(event.source)
+            }
+            else if (application.isArtefactOfType('Controller', event.source)) {
                 ctx.grailsNavigation.reload() // conventions on controller may have changed
             }
 

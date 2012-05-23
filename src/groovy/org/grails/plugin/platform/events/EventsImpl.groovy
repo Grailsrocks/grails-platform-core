@@ -198,6 +198,11 @@ class EventsImpl {
         eventDefinitions.sort()
     }
 
+    void reloadEventsDefinition(Class eventDefinition){
+
+        eventDefinitions.sort()
+    }
+
     /**
      * Receives a graph of DSL commend objects and creates the necessary scopes and items
      *
@@ -223,7 +228,7 @@ class EventsImpl {
 
     private addItemFromArgs(String listenerPattern, Map arguments, String definingPlugin) {
         def definition = new EventDefinition()
-        definition.scope = arguments?.remove('scope') ?: definition.scope
+        definition.scope = arguments?.remove('scope')
         definition.requiresReply = arguments?.remove('requiresReply') ?: definition.requiresReply
         definition.disabled = arguments?.remove('disabled') ?: definition.disabled
 
