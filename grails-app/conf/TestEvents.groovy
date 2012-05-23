@@ -24,7 +24,7 @@ events = {
         sending events to such topics requires the following call form : event('testTopic', data, [scope:'blah'])
         default scope is : 'app' for app events, 'pluginName' for plugins events
      */
-    "sampleHello" scope:'blah'
+    "sampleHello" scope:'lal'
 
     /*
         all listeners for 'testTopic2' in SampleService class defined in method testEvent3 will have scope 'global' (*)
@@ -32,7 +32,7 @@ events = {
         events sent with any specified scope will trigger this listener : event('testTopic2, data, [scope:'blah']) will
         work as well.
      */
-    "sampleHello:$SampleService.name#testEvent3" scope:'*'
+    //"sampleHello:$SampleService.name#testEvent3" scope:'*'
 
 
     /*

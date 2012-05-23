@@ -49,7 +49,9 @@ class PlatformCoreGrailsPlugin {
 
     def watchedResources = [
             "file:./grails-app/conf/*Navigation.groovy",
-            "file:./plugins/*/grails-app/conf/*Navigation.groovy"
+            "file:./grails-app/conf/*Events.groovy",
+            "file:./plugins/*/grails-app/conf/*Navigation.groovy",
+            "file:./plugins/*/grails-app/conf/*Events.groovy"
     ]
 
     def artefacts = [getNavigationArtefactHandler(), getEventsArtefactHandler()]
@@ -213,6 +215,7 @@ Grails Plugin Platform Core APIs
 
         def navArtefactType = getNavigationArtefactHandler().TYPE
         def eventArtefactType = getEventsArtefactHandler().TYPE
+        println event.source
         if (event.source instanceof Class) {
             if (application.isArtefactOfType(navArtefactType, event.source)) {
                 // Update the app with the new class
@@ -221,18 +224,17 @@ Grails Plugin Platform Core APIs
 
             } else if (application.isArtefactOfType(eventArtefactType, event.source)) {
                 event.application.addArtefact(eventArtefactType, event.source)
-                ctx.grailsEvents.reloadEventsDefinition(event.source)
+                ctx.grailsEvents.reloadListeners()
             }
             else if (application.isArtefactOfType('Controller', event.source)) {
                 ctx.grailsNavigation.reload() // conventions on controller may have changed
+            } else if (application.isServiceClass(event.source)) {
+                ctx.grailsEvents.reloadListener(event.source)
             }
 
             // Always do this stuff
             ctx.grailsInjection.applyTo(event.source)
 
-            if (application.isServiceClass(event.source)) {
-                ctx.grailsEvents.reloadListener(event.source)
-            }
         }
     }
 

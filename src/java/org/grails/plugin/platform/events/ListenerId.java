@@ -174,7 +174,8 @@ public class ListenerId implements Serializable {
 
         if (this.topic != null) {
             result = result == null || result;
-            result &= this.topic.equals(listener.getTopic());
+            result &= listener.getTopic().equals(SCOPE_WILDCARD) ||
+                    this.topic.equals(SCOPE_WILDCARD) || this.topic.equals(listener.getTopic());
         }
         if (this.className != null) {
             result = result == null || result;

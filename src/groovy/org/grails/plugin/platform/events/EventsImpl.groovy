@@ -160,6 +160,7 @@ class EventsImpl {
     void reloadListeners() {
         log.info "Reloading events listeners"
 
+        grailsEventsRegistry.removeListeners('*')
         clearEventDefinitions()
         loadDSL()
         registerListeners(grailsApplication.serviceClasses*.clazz)
@@ -194,11 +195,6 @@ class EventsImpl {
             }
             loadDSL(artefact.clazz)
         }
-
-        eventDefinitions.sort()
-    }
-
-    void reloadEventsDefinition(Class eventDefinition){
 
         eventDefinitions.sort()
     }
@@ -243,6 +239,7 @@ class EventsImpl {
         if (definition.listenerId.className) score += 1
         if (definition.listenerId.methodName) score += 1
         if (definition.listenerId.hashCode) score += 1
+        if (!definingPlugin) score += 1
         definition.score = score
 
         def overridenDefinition = eventDefinitions.find{it.listenerId.toString() == listenerPattern}
