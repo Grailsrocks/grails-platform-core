@@ -215,7 +215,7 @@ Grails Plugin Platform Core APIs
 
         def navArtefactType = getNavigationArtefactHandler().TYPE
         def eventArtefactType = getEventsArtefactHandler().TYPE
-        println event.source
+
         if (event.source instanceof Class) {
             if (application.isArtefactOfType(navArtefactType, event.source)) {
                 // Update the app with the new class
