@@ -49,7 +49,7 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationListe
     static final private String GORM_EVENT_PACKAGE = "org.grails.datastore.mapping.engine.event";
 
     private DefaultEventsRegistry grailsEventsRegistry;
-    private AsyncTaskExecutor taskExecutor;
+    protected AsyncTaskExecutor taskExecutor;
     private PersistenceContextInterceptor persistenceInterceptor;
     private GormTopicSupport gormTopicSupport;
     private boolean catchFlushExceptions = false;
