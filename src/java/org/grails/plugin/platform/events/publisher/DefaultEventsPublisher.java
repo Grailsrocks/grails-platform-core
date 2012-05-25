@@ -18,6 +18,7 @@
 package org.grails.plugin.platform.events.publisher;
 
 import groovy.lang.Closure;
+import org.apache.log4j.Logger;
 import org.codehaus.groovy.grails.support.PersistenceContextInterceptor;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
@@ -42,6 +43,8 @@ import java.util.concurrent.Future;
  * [Does stuff]
  */
 public class DefaultEventsPublisher implements EventsPublisher, ApplicationListener {
+
+    private final static Logger log = Logger.getLogger(DefaultEventsPublisher.class);
 
     static final private String GORM_EVENT_PACKAGE = "org.grails.datastore.mapping.engine.event";
 
@@ -105,6 +108,7 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationListe
         //fixme horrible hack to support grails 1.3.x
         if (applicationEvent.getClass().getName().startsWith(GORM_EVENT_PACKAGE)) {
             String topic = gormTopicSupport.convertTopic(applicationEvent);
+            log.debug("sending "+applicationEvent+" to topic "+ topic);
             EventReply reply = event(new EventMessage(topic,
                     ReflectionUtils.invokeMethod(
                             ReflectionUtils.findMethod(applicationEvent.getClass(),"getEntityObject"),

@@ -34,7 +34,7 @@ class GormTopicSupport2X implements GormTopicSupport {
     Map<String, String> translateTable
 
     void processCancel(Object evt, returnValue){
-        if(returnValue != null){
+        if(evt != null & returnValue != null){
             if(returnValue.getClass().equals(ArrayList)){
                 for(Object val in returnValue){
                     if(!val){

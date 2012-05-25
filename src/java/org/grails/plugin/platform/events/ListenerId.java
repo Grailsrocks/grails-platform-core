@@ -37,7 +37,7 @@ public class ListenerId implements Serializable {
     private static final String ID_CLASS_SEPARATOR = ":";
     private static final String ID_METHOD_SEPARATOR = "#";
     private static final String ID_HASHCODE_SEPARATOR = "@";
-    private static final String SCOPE_WILDCARD = "*";
+    public static final String SCOPE_WILDCARD = "*";
 
     /*private static final Pattern idRegex = Pattern.compile(
             "([^" + ID_SCOPE_SEPARATOR + "]*)?" +
