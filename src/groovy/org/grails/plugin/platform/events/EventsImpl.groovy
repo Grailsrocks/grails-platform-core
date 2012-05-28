@@ -142,7 +142,8 @@ class EventsImpl {
                         scope,
                         topic,
                         applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
-                        method
+                        method,
+                        definition?.filter
                 )
             }
         }
@@ -227,6 +228,7 @@ class EventsImpl {
         definition.scope = arguments?.remove('scope')
         definition.requiresReply = arguments?.remove('requiresReply') ?: definition.requiresReply
         definition.disabled = arguments?.remove('disabled') ?: definition.disabled
+        definition.filter = arguments?.remove('filter')
 
         definition.othersAttributes = arguments
 

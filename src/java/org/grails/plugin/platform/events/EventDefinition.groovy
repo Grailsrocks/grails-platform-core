@@ -30,6 +30,9 @@ package org.grails.plugin.platform.events
  class EventDefinition implements Comparable<EventDefinition>{
      ListenerId listenerId
      String scope = 'app'
+
+     def filter
+
      boolean requiresReply = false
      boolean disabled = false
      String definingPlugin

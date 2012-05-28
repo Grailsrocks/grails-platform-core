@@ -50,16 +50,28 @@ public class DefaultEventsRegistry implements EventsRegistry {
         API
      */
 
+    public String addListener(String scope, String topic, Closure callback, Object filter) {
+        return registerHandler(callback, scope, topic, filter);
+    }
+
+    public String addListener(String scope, String topic, Object bean, String callbackName, Object filter) {
+        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), scope, topic, filter);
+    }
+
+    public String addListener(String scope, String topic, Object bean, Method callback, Object filter) {
+        return registerHandler(bean, callback, scope, topic, filter);
+    }
+
     public String addListener(String scope, String topic, Closure callback) {
-        return registerHandler(callback, scope, topic);
+        return registerHandler(callback, scope, topic, null);
     }
 
     public String addListener(String scope, String topic, Object bean, String callbackName) {
-        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), scope, topic);
+        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), scope, topic, null);
     }
 
     public String addListener(String scope, String topic, Object bean, Method callback) {
-        return registerHandler(bean, callback, scope, topic);
+        return registerHandler(bean, callback, scope, topic, null);
     }
 
     public int removeListeners(String callbackId) {
@@ -86,7 +98,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
        INTERNAL
     */
 
-    private String registerHandler(Closure callback, String scope, String topic) {
+    private String registerHandler(Closure callback, String scope, String topic, Object filter) {
         if (log.isDebugEnabled()) {
             log.debug("Registering event handler [" + callback.getClass() + "] for topic [" + topic + "]");
         }
@@ -96,14 +108,14 @@ public class DefaultEventsRegistry implements EventsRegistry {
                 callback.getClass(),
                 "call",
                 Object.class
-        ), listener);
+        ), listener, filter);
 
         listeners.add(handler);
 
         return listener.toString();
     }
 
-    private String registerHandler(Object bean, Method callback, String scope, String topic) {
+    private String registerHandler(Object bean, Method callback, String scope, String topic, Object filter) {
         if (log.isDebugEnabled()) {
             log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");
         }
@@ -119,7 +131,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         }
         ListenerId listener = ListenerId.build(scope, topic, target, callback);
 
-        ListenerHandler handler = new ListenerHandler(target, callback, listener);
+        ListenerHandler handler = new ListenerHandler(target, callback, listener, filter);
 
         listeners.add(handler);
 
@@ -158,7 +170,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
             if (log.isDebugEnabled()) {
                 log.debug("Invoking listener [" + _listener.bean + '.' + _listener.method.getName() + "(arg)] for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");
             }
-            result = _listener.invoke(_listener.isUseEventMessage() ? evt : evt.getData());
+            result = _listener.invoke(evt);
             if (result != null) results.add(result);
         }
 
@@ -197,11 +209,21 @@ public class DefaultEventsRegistry implements EventsRegistry {
         private Method method;
         private ListenerId listenerId;
         private boolean useEventMessage = false;
+        private Class<?> filterClass = null;
+        private Closure<?> filterClosure = null;
         //private MappedEventMethod mapping;
 
-        public ListenerHandler(Object bean, Method m, ListenerId listenerId/*, MappedEventMethod mapping*/) {
+        public ListenerHandler(Object bean, Method m, ListenerId listenerId, Object filter) {
             this.listenerId = listenerId;
             this.method = m;
+
+            if (filter != null && Closure.class.isAssignableFrom(filter.getClass())) {
+                filterClosure = (Closure<?>) filter;
+            }
+            if (filter != null && Class.class.isAssignableFrom(filter.getClass())) {
+                filterClass = (Class<?>) filter;
+            }
+
             if (m.getParameterTypes().length > 0) {
                 Class<?> type = m.getParameterTypes()[0];
                 useEventMessage = EventMessage.class.isAssignableFrom(type);
@@ -213,22 +235,31 @@ public class DefaultEventsRegistry implements EventsRegistry {
             //this.mapping = mapping;
         }
 
-        public Object invoke(Object... args) {
+        public Object invoke(EventMessage _arg) {
             Object res = null;
+
+            Object arg = this.isUseEventMessage() ? _arg : _arg.getData();
+
             if (log.isDebugEnabled()) {
                 StringBuilder argTypes = new StringBuilder();
                 for (Object e : method.getParameterTypes()) {
                     argTypes.append(e.toString());
                     argTypes.append(',');
                 }
-                log.debug("About to invoke listener method " + bean + "." + method.getName() + " with arg types " + argTypes +
-                        " with args " + args.toString());
+                log.debug("About to invoke listener method " + bean + "." + method.getName() + " with arg type " + argTypes +
+                        " with arg " + arg.toString());
             }
             try {
-                res = method.invoke(bean, args);
+                if ((filterClass == null && filterClosure == null) ||
+                        (arg != null && (filterClass != null && filterClass.isAssignableFrom(arg.getClass())) ||
+                                filterClosure != null && (Boolean) ((Closure<?>) filterClosure.clone()).call(arg))) {
+                    res = method.invoke(bean, arg);
+                } else if (log.isDebugEnabled()) {
+                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - filtered");
+                }
             } catch (IllegalArgumentException e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + args.toString() + " - illegal arg exception: " + e.toString());
+                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - illegal arg exception: " + e.toString());
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();

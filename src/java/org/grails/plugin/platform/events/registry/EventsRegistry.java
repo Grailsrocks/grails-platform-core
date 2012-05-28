@@ -34,9 +34,15 @@ public interface EventsRegistry {
 
     public String addListener(String scope, String topic, Object bean, Method callbackMethod);
 
+    public String addListener(String scope, String topic, Object bean, Method callbackMethod, Object filter);
+
     public String addListener(String scope, String topic, Object bean, String callbackMethodName);
 
+    public String addListener(String scope, String topic, Object bean, String callbackMethodName, Object filter);
+
     public String addListener(String scope, String topic, Closure callback);
+
+    public String addListener(String scope, String topic, Closure callback, Object filter);
 
     public int removeListeners(String callbackId);
 

@@ -31,11 +31,10 @@ import java.io.Serializable;
  * [Does stuff]
  */
 public class EventMessage implements Serializable {
-    private String scope = null;
-    private String event = null;
-    private Object data = null;
-    private long timeout = -1;
-    private boolean gormSession = true;
+    final private String scope;
+    final private String event;
+    final private Object data ;
+    final private Boolean gormSession;
 
     public EventMessage(String event, Object data) {
         this(event, data, null);
@@ -52,44 +51,23 @@ public class EventMessage implements Serializable {
         this.gormSession = gormSession;
     }
 
-
-    public long getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(long timeout) {
-        this.timeout = timeout;
-    }
-
     public Object getData() {
         return data;
     }
 
-    public void setData(Object data) {
-        this.data = data;
-    }
 
     public String getScope() {
         return scope;
     }
 
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
 
     public String getEvent() {
         return event;
     }
 
-    public void setEvent(String event) {
-        this.event = event;
-    }
 
     public boolean isGormSession() {
         return gormSession;
     }
 
-    public void setGormSession(boolean gormSession) {
-        this.gormSession = gormSession;
-    }
 }
