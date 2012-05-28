@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.grails.plugin.platform.test.SampleService
+import org.grails.plugin.platform.test.Book
 
 events = {
     /*
@@ -40,5 +40,9 @@ events = {
         "testTopic3"(). This is certainly useful for plugins which want to let its listeners to observe app events.
          Otherwise the plugins listeners will observe its owns events ( scope : 'pluginName' ).
      */
-    //"sampleHello" scope:'app'
+    //"sampleHello scope:'app'
+
+
+
+    "beforeInsert" scope: 'gorm', filter:Book
 }
