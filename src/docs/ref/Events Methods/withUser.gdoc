@@ -1,0 +1,34 @@
+h1. withUser(identity, Closure code)
+
+_Available in Controllers, Domains, Taglibs and Services_
+
+This method executes a block of code masquerading as another user. Used mainly
+to create fixtures or perform background tasks.
+
+The implementation of this method is provided by the security provider you
+have installed.
+
+h2. Usage
+
+{code}
+class PurchaseService {
+    void updatePurchasesForUser(String userName) {
+        withUser(userName) {
+            Purchase.findAllByUser(securityInfo).each { p ->
+                p.updateStatus()
+            }
+        }
+    }
+    ...
+}
+{code}
+
+In this example you can see that the [securityInfo|securityProperties] is set according to the identity of the user passed to withUser.
+
+h2. Arguments
+
+{table}
+*Name* | *Description*
+identity | The user identity - usually a username or email address, but it depends on your security provider
+code | The Closure of code to run "as" the user
+{table}

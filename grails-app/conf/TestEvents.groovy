@@ -44,5 +44,6 @@ events = {
 
 
 
-    "beforeInsert" scope: 'gorm', filter:Book
+    "beforeInsert" scope: 'gorm'
+    "afterLoad" scope: 'gorm'
 }

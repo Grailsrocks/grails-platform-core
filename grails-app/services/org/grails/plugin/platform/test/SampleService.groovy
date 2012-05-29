@@ -33,14 +33,19 @@ class SampleService {
 
     static transactional = true
 
-    @Listener
-    void beforeInsert(Book book) {
-        println "will insert $book.title"
+    @Listener('beforeInsert')
+    void beforeInsertBook(Book book) {
+        println "will insert book - $book.title"
+    }
+
+    @Listener('beforeInsert')
+    void beforeInsertAuthor(Author author) {
+        println "will insert author - $author.name"
     }
 
     @Listener
     void afterLoad(Author author) {
-        println "will load $author.name"
+        println "will load author -  $author.name"
     }
 
     @Listener('sampleHello')
