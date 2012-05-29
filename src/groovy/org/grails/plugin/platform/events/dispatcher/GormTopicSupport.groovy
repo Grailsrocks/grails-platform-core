@@ -20,8 +20,6 @@ package org.grails.plugin.platform.events.dispatcher;
 //import org.grails.datastore.mapping.engine.event.AbstractPersistenceEvent;
 
 
-import org.springframework.context.ApplicationEvent
-
 /**
  * @author Stephane Maldini <smaldini@doc4web.com>
  * @version 1.0
@@ -33,7 +31,7 @@ import org.springframework.context.ApplicationEvent
  */
 interface GormTopicSupport {
 
-    static final String GORM_SOURCE = "gormEvent"
+    static final String GORM_SOURCE = "gorm"
 
     void processCancel(Object evt, Object returnValue)
     String convertTopic(Object evt)
