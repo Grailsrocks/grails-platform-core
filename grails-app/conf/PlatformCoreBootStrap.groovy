@@ -25,7 +25,7 @@ class PlatformCoreBootStrap {
         applicationStartupInfo()
 
         if(pluginConfig.navigation.enable)
-            grailsNavigation.reloadAll()
+            ggrailsNavigation.reloadAll()
     }
     
     def destroy = {
