@@ -20,6 +20,7 @@ import org.grails.plugin.platform.events.EventsImpl
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
 import org.grails.plugin.platform.events.publisher.DefaultEventsPublisher
+import org.grails.plugin.platform.events.publisher.GormBridgePublisher
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 
 class PlatformCoreGrailsPlugin {
@@ -112,6 +113,7 @@ Grails Plugin Platform Core APIs
         xmlns task: "http://www.springframework.org/schema/task"
 
         initPlatform(application)
+        def config = application.config.plugin.platformCore
 
         // Config API
         grailsPluginConfiguration(org.grails.plugin.platform.config.PluginConfigurationFactory) { bean ->
@@ -123,7 +125,8 @@ Grails Plugin Platform Core APIs
         def grailsVersion = application.metadata['app.grails.version']
 
         // Security API
-        grailsSecurity(org.grails.plugin.platform.security.SecurityImpl)
+        if (config.security.enable)
+            grailsSecurity(org.grails.plugin.platform.security.SecurityImpl)
 
         // Injection API
         grailsInjection(org.grails.plugin.platform.injection.InjectionImpl) {
@@ -131,54 +134,68 @@ Grails Plugin Platform Core APIs
         }
 
         // Navigation API
-        grailsNavigation(org.grails.plugin.platform.navigation.NavigationImpl) {
-            grailsApplication = ref('grailsApplication')
-            grailsConventions = ref('grailsConventions')
-        }
+        if (config.navigation.enable)
+            grailsNavigation(org.grails.plugin.platform.navigation.NavigationImpl) {
+                grailsApplication = ref('grailsApplication')
+                grailsConventions = ref('grailsConventions')
+            }
 
-        // Navigation API
+        // Convention API
         grailsConventions(org.grails.plugin.platform.conventions.ConventionsImpl) {
             grailsApplication = ref('grailsApplication')
         }
 
-        // Events API
-        task.executor(id: "grailsTopicExecutor", 'pool-size': 10)//todo config
-
         // UI Helper API
-        grailsUiHelper(org.grails.plugin.platform.ui.UiHelper)
+        if (config.ui.enable)
+            grailsUiHelper(org.grails.plugin.platform.ui.UiHelper)
 
-        //init api bean
-        if (grailsVersion.startsWith('1')) {
-            gormTopicSupport(GormTopicSupport1X)
-        } else {
-            gormTopicSupport(GormTopicSupport2X) {
-                translateTable = [
-                        'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate', 'PreLoadEvent': 'beforeLoad',
-                        'PreDeleteEvent': 'beforeDelete', 'ValidationEvent': 'beforeValidate', 'PostInsertEvent': 'afterInsert',
-                        'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete', 'PostLoadEvent': 'afterLoad',
-                        'SaveOrUpdateEvent': 'onSaveOrUpdate'
-                ]
+        // Events API
+        if (config.events.enable) {
+            task.executor(id: "grailsTopicExecutor", 'pool-size': config.events.poolSize)
+
+            //init api bean
+            grailsEventsRegistry(DefaultEventsRegistry)
+            grailsEventsPublisher(DefaultEventsPublisher) {
+                grailsEventsRegistry = ref('grailsEventsRegistry')
+                taskExecutor = ref('grailsTopicExecutor')
+                persistenceInterceptor = ref("persistenceInterceptor")
+                catchFlushExceptions = config.events.catchFlushExceptions
             }
-        }
 
-        grailsEventsRegistry(DefaultEventsRegistry)
-        grailsEventsPublisher(DefaultEventsPublisher) {
-            grailsEventsRegistry = ref('grailsEventsRegistry')
-            taskExecutor = ref('grailsTopicExecutor')
-            persistenceInterceptor = ref("persistenceInterceptor")
-            gormTopicSupport = ref("gormTopicSupport")
-        }
+            grailsEvents(EventsImpl) {
+                grailsApplication = ref('grailsApplication')
+                grailsEventsRegistry = ref('grailsEventsRegistry')
+                grailsEventsPublisher = ref('grailsEventsPublisher')
+            }
 
-        grailsEvents(EventsImpl) {
-            grailsApplication = ref('grailsApplication')
-            grailsEventsRegistry = ref('grailsEventsRegistry')
-            grailsEventsPublisher = ref('grailsEventsPublisher')
+            if (config.events.gorm.enable) {
+                if (grailsVersion.startsWith('1')) {
+                    gormTopicSupport(GormTopicSupport1X)
+                } else {
+                    gormTopicSupport(GormTopicSupport2X) {
+                        translateTable = [
+                                'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate', 'PreLoadEvent': 'beforeLoad',
+                                'PreDeleteEvent': 'beforeDelete', 'ValidationEvent': 'beforeValidate', 'PostInsertEvent': 'afterInsert',
+                                'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete', 'PostLoadEvent': 'afterLoad',
+                                'SaveOrUpdateEvent': 'onSaveOrUpdate'
+                        ]
+                    }
+                }
+                grailsEventsGormBridge(GormBridgePublisher) {
+                    gormTopicSupport = ref("gormTopicSupport")
+                    grailsEventsPublisher = ref("grailsEventsPublisher")
+                }
+
+            }
         }
     }
 
     def doWithDynamicMethods = { ctx ->
+        def config = ctx.grailsApplication.config.plugin.platformCore
         ctx.grailsInjection.initInjections()
-        ctx.grailsEvents.reloadListeners()
+
+        if (config.events.enable)
+            ctx.grailsEvents.reloadListeners()
     }
 
     def doWithConfigOptions = {
@@ -189,18 +206,35 @@ Grails Plugin Platform Core APIs
         'site.url'(type: String, defaultValue: null)
 
         'show.startup.info'(type: Boolean, defaultValue: true)
+
+        'navigation.enable'(type: Boolean, defaultValue: true)
+
+        'events.enable'(type: Boolean, defaultValue: true)
+        'events.poolSize'(type: Integer, defaultValue: 10)
+        'events.catchFlushExceptions'(type: Boolean, defaultValue: true)
+        'events.gorm.enable'(type: Boolean, defaultValue: true)
+
+        'security.enable'(type: Boolean, defaultValue: true)
+
+        'config.enable'(type: Boolean, defaultValue: true)
+
+        'ui.enable'(type: Boolean, defaultValue: true)
     }
 
     def doWithConfig = {
     }
 
     def doWithInjection = { ctx ->
-        def config = ctx.grailsApplication.config
+        def config = ctx.grailsApplication.config.plugin.platformCore
 
-        register ctx.grailsPluginConfiguration.injectedMethods
-        register ctx.grailsSecurity.injectedMethods
-        register ctx.grailsEvents.injectedMethods
-        register ctx.grailsUiHelper.injectedMethods
+        if (config.security.enable)
+            register ctx.grailsSecurity.injectedMethods
+        if (config.config.enable)
+            register ctx.grailsPluginConfiguration.injectedMethods
+        if (config.events.enable)
+            register ctx.grailsEvents.injectedMethods
+        if (config.ui.enable)
+            register ctx.grailsUiHelper.injectedMethods
     }
 
     def doWithApplicationContext = { applicationContext ->
@@ -212,23 +246,24 @@ Grails Plugin Platform Core APIs
 
     def onChange = { event ->
         def ctx = event.application.mainContext
+        def config = event.application.config.plugin.platformCore
 
         def navArtefactType = getNavigationArtefactHandler().TYPE
         def eventArtefactType = getEventsArtefactHandler().TYPE
 
         if (event.source instanceof Class) {
-            if (application.isArtefactOfType(navArtefactType, event.source)) {
+            if (config.navigation.enable && application.isArtefactOfType(navArtefactType, event.source)) {
                 // Update the app with the new class
                 event.application.addArtefact(navArtefactType, event.source)
                 ctx.grailsNavigation.reload(event.source)
 
-            } else if (application.isArtefactOfType(eventArtefactType, event.source)) {
+            } else if (config.events.enable && application.isArtefactOfType(eventArtefactType, event.source)) {
                 event.application.addArtefact(eventArtefactType, event.source)
                 ctx.grailsEvents.reloadListeners()
             }
-            else if (application.isArtefactOfType('Controller', event.source)) {
+            else if (config.navigation.enable && application.isArtefactOfType('Controller', event.source)) {
                 ctx.grailsNavigation.reload() // conventions on controller may have changed
-            } else if (application.isServiceClass(event.source)) {
+            } else if (config.events.enable && application.isServiceClass(event.source)) {
                 ctx.grailsEvents.reloadListener(event.source)
             }
 

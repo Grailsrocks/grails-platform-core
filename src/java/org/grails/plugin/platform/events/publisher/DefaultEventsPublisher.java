@@ -22,12 +22,8 @@ import org.apache.log4j.Logger;
 import org.codehaus.groovy.grails.support.PersistenceContextInterceptor;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
-import org.grails.plugin.platform.events.dispatcher.GormTopicSupport;
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.util.ReflectionUtils;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -42,24 +38,17 @@ import java.util.concurrent.Future;
  * <p/>
  * [Does stuff]
  */
-public class DefaultEventsPublisher implements EventsPublisher, ApplicationListener {
+public class DefaultEventsPublisher implements EventsPublisher {
 
     private final static Logger log = Logger.getLogger(DefaultEventsPublisher.class);
-
-    static final private String GORM_EVENT_PACKAGE = "org.grails.datastore.mapping.engine.event";
 
     private DefaultEventsRegistry grailsEventsRegistry;
     protected AsyncTaskExecutor taskExecutor;
     private PersistenceContextInterceptor persistenceInterceptor;
-    private GormTopicSupport gormTopicSupport;
     private boolean catchFlushExceptions = false;
 
     public void setCatchFlushExceptions(boolean catchFlushExceptions) {
         this.catchFlushExceptions = catchFlushExceptions;
-    }
-
-    public void setGormTopicSupport(GormTopicSupport gormTopicSupport) {
-        this.gormTopicSupport = gormTopicSupport;
     }
 
     public void setTaskExecutor(AsyncTaskExecutor taskExecutor) {
@@ -102,24 +91,6 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationListe
             if (reply != null) reply.get();
         }
         return replies;
-    }
-
-    public void onApplicationEvent(ApplicationEvent applicationEvent) {
-        //fixme horrible hack to support grails 1.3.x
-        if (applicationEvent.getClass().getName().startsWith(GORM_EVENT_PACKAGE)) {
-            String topic = gormTopicSupport.convertTopic(applicationEvent);
-            log.debug("sending "+applicationEvent+" to topic "+ topic);
-            EventReply reply = event(new EventMessage(topic,
-                    ReflectionUtils.invokeMethod(
-                            ReflectionUtils.findMethod(applicationEvent.getClass(),"getEntityObject"),
-                            applicationEvent
-                    ), GormTopicSupport.GORM_SOURCE, false));
-            try {
-                gormTopicSupport.processCancel(applicationEvent, reply.getValues());
-            } catch (Exception e) {
-                throw new RuntimeException(e);//shouldn't happen as its sync event
-            }
-        }
     }
 
     //INTERNAL
