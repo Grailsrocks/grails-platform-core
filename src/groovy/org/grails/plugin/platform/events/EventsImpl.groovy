@@ -17,7 +17,7 @@
  */
 package org.grails.plugin.platform.events
 
-
+import grails.events.Listener
 import grails.util.GrailsNameUtils
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.GrailsApplication
@@ -31,7 +31,6 @@ import org.grails.plugin.platform.util.PluginUtils
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
-import grails.events.Listener
 
 class EventsImpl {
 
@@ -50,9 +49,16 @@ class EventsImpl {
             String scope = PluginUtils.getNameOfDefiningPlugin(theContext, clazz) ?: 'app'
 
             def self = theContext.grailsEvents
+            def config = theContext.grailsApplication.config.plugin.platformCore
 
-            event {String topic, data = null, Map params = null ->
-                self._event(scope, topic, data, params)
+            if (config.event.async) {
+                event {String topic, data = null, Map params = null ->
+                    self._eventAsync(scope, topic, data, params)
+                }
+            } else {
+                event {String topic, data = null, Map params = null ->
+                    self._event(scope, topic, data, params)
+                }
             }
             eventAsync {String topic, data = null, Map params = null ->
                 self._eventAsync(scope, topic, data, params)
@@ -119,7 +125,7 @@ class EventsImpl {
         }
     }
 
-    EventDefinition matchesDefinition( String topic, Method method, Class serviceClass) {
+    EventDefinition matchesDefinition(String topic, Method method, Class serviceClass) {
         ListenerId targetId = ListenerId.build(null, topic, serviceClass, method)
         for (definition in eventDefinitions) {
             if (definition.listenerId.matches(targetId)) {
@@ -244,7 +250,7 @@ class EventsImpl {
         if (!definingPlugin) score += 1
         definition.score = score
 
-        def overridenDefinition = eventDefinitions.find{it.listenerId.toString() == listenerPattern}
+        def overridenDefinition = eventDefinitions.find {it.listenerId.toString() == listenerPattern}
         eventDefinitions.remove(overridenDefinition)
 
         eventDefinitions << definition

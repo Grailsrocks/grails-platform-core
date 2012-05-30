@@ -211,6 +211,7 @@ Grails Plugin Platform Core APIs
 
         'events.enable'(type: Boolean, defaultValue: true)
         'events.poolSize'(type: Integer, defaultValue: 10)
+        'events.async'(type: Boolean, defaultValue: false)
         'events.catchFlushExceptions'(type: Boolean, defaultValue: true)
         'events.gorm.enable'(type: Boolean, defaultValue: true)
 
