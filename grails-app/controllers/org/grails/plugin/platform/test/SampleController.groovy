@@ -61,11 +61,11 @@ class SampleController {
     def index = {
         response.outputStream << "There are ${countListeners('sampleHello')} listeners for topic 'sampleHello' \n"
         response.outputStream << "There are ${countListeners("lal://sampleHello:$SampleService.name")} listeners for class '$SampleService.name' \n"
-        response.outputStream << "sync event with replies values : " + event('sampleHello', '{"message":"world"}')?.values + " \n\n"
-        def async1 = eventAsync('sampleHello',  '{"message":"world A"}')
-        def async2 = eventAsync('sampleHello', '{"message":"world B"}', [scope:'lol'])
+        response.outputStream << "sync event with replies values : " + event('sampleHello', '{"message":"world"}', [scope:'lal'])?.values + " \n\n"
+        def async1 = eventAsync('sampleHello',  '{"message":"world A"}', [scope:'lal'])
+        def async2 = eventAsync('sampleHello', '{"message":"world B"}', [scope:'lal'])
         response.outputStream << "async events replies $async1 $async2 \n\n"
-        response.outputStream << "async event reply value " + eventAsync('sampleHello', '{"message":"world2"}')?.value + " \n\n"
+        response.outputStream << "async event reply value " + eventAsync('sampleHello', '{"message":"world2"}', [scope:'lal'])?.value + " \n\n"
         response.outputStream << "async wait \n\n"
         def values = waitFor(async1, async2)
         response.outputStream << "waited results : $values \n"

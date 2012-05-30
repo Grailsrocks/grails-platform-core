@@ -20,6 +20,7 @@ package org.grails.plugin.platform.events;
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author Stephane Maldini <smaldini@doc4web.com>
@@ -33,8 +34,9 @@ import java.io.Serializable;
 public class EventMessage implements Serializable {
     final private String scope;
     final private String event;
-    final private Object data ;
+    final private Object data;
     final private Boolean gormSession;
+    final private Map<String, Serializable> headers;
 
     public EventMessage(String event, Object data) {
         this(event, data, null);
@@ -45,10 +47,15 @@ public class EventMessage implements Serializable {
     }
 
     public EventMessage(String event, Object data, String scope, boolean gormSession) {
+        this(event, data, scope, gormSession, null);
+    }
+
+    public EventMessage(String event, Object data, String scope, boolean gormSession, Map<String,Serializable> headers) {
         this.event = event;
         this.data = data;
         this.scope = scope;
         this.gormSession = gormSession;
+        this.headers = headers;
     }
 
     public Object getData() {
@@ -70,4 +77,7 @@ public class EventMessage implements Serializable {
         return gormSession;
     }
 
+    public Map<String, Serializable> getHeaders() {
+        return headers;
+    }
 }

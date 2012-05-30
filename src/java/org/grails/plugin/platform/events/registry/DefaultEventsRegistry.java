@@ -19,6 +19,7 @@ package org.grails.plugin.platform.events.registry;
 
 import groovy.lang.Closure;
 import org.apache.log4j.Logger;
+import org.grails.plugin.platform.events.EventDefinition;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.ListenerId;
 import org.springframework.aop.framework.Advised;
@@ -50,16 +51,16 @@ public class DefaultEventsRegistry implements EventsRegistry {
         API
      */
 
-    public String addListener(String scope, String topic, Closure callback, Object filter) {
-        return registerHandler(callback, scope, topic, filter);
+    public String addListener(String scope, String topic, Closure callback, EventDefinition definition) {
+        return registerHandler(callback, scope, topic, definition);
     }
 
-    public String addListener(String scope, String topic, Object bean, String callbackName, Object filter) {
-        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), scope, topic, filter);
+    public String addListener(String scope, String topic, Object bean, String callbackName, EventDefinition definition) {
+        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), scope, topic, definition);
     }
 
-    public String addListener(String scope, String topic, Object bean, Method callback, Object filter) {
-        return registerHandler(bean, callback, scope, topic, filter);
+    public String addListener(String scope, String topic, Object bean, Method callback, EventDefinition definition) {
+        return registerHandler(bean, callback, scope, topic, definition);
     }
 
     public String addListener(String scope, String topic, Closure callback) {
@@ -78,9 +79,11 @@ public class DefaultEventsRegistry implements EventsRegistry {
         ListenerId listener = ListenerId.parse(callbackId);
         if (listener == null)
             return 0;
-        Set<ListenerHandler> listeners = findAll(listener);
-        for (ListenerHandler _listener : listeners) {
-            this.listeners.remove(_listener);
+        synchronized (listeners) {
+            Set<ListenerHandler> listeners = findAll(listener);
+            for (ListenerHandler _listener : listeners) {
+                this.listeners.remove(_listener);
+            }
         }
 
         return listeners.size();
@@ -98,7 +101,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
        INTERNAL
     */
 
-    private String registerHandler(Closure callback, String scope, String topic, Object filter) {
+    private String registerHandler(Closure callback, String scope, String topic, EventDefinition definition) {
         if (log.isDebugEnabled()) {
             log.debug("Registering event handler [" + callback.getClass() + "] for topic [" + topic + "]");
         }
@@ -108,14 +111,16 @@ public class DefaultEventsRegistry implements EventsRegistry {
                 callback.getClass(),
                 "call",
                 Object.class
-        ), listener, filter);
+        ), listener, definition);
 
-        listeners.add(handler);
+        synchronized (listeners) {
+            listeners.add(handler);
+        }
 
         return listener.toString();
     }
 
-    private String registerHandler(Object bean, Method callback, String scope, String topic, Object filter) {
+    private String registerHandler(Object bean, Method callback, String scope, String topic, EventDefinition definition) {
         if (log.isDebugEnabled()) {
             log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");
         }
@@ -131,9 +136,11 @@ public class DefaultEventsRegistry implements EventsRegistry {
         }
         ListenerId listener = ListenerId.build(scope, topic, target, callback);
 
-        ListenerHandler handler = new ListenerHandler(target, callback, listener, filter);
+        ListenerHandler handler = new ListenerHandler(target, callback, listener, definition);
 
-        listeners.add(handler);
+        synchronized (listeners) {
+            listeners.add(handler);
+        }
 
         return listener.toString();
     }
@@ -209,20 +216,12 @@ public class DefaultEventsRegistry implements EventsRegistry {
         private Method method;
         private ListenerId listenerId;
         private boolean useEventMessage = false;
-        private Class<?> filterClass = null;
-        private Closure<?> filterClosure = null;
-        //private MappedEventMethod mapping;
+        private EventDefinition definition;
 
-        public ListenerHandler(Object bean, Method m, ListenerId listenerId, Object filter) {
+        public ListenerHandler(Object bean, Method m, ListenerId listenerId, EventDefinition definition) {
             this.listenerId = listenerId;
             this.method = m;
-
-            if (filter != null && Closure.class.isAssignableFrom(filter.getClass())) {
-                filterClosure = (Closure<?>) filter;
-            }
-            if (filter != null && Class.class.isAssignableFrom(filter.getClass())) {
-                filterClass = (Class<?>) filter;
-            }
+            this.definition = definition;
 
             if (m.getParameterTypes().length > 0) {
                 Class<?> type = m.getParameterTypes()[0];
@@ -250,10 +249,12 @@ public class DefaultEventsRegistry implements EventsRegistry {
                         " with arg " + arg.toString());
             }
             try {
-                if ((filterClass == null && filterClosure == null) ||
-                        (arg != null && (filterClass != null && filterClass.isAssignableFrom(arg.getClass())) ||
-                                filterClosure != null && (Boolean) ((Closure<?>) filterClosure.clone()).call(arg))) {
+                if (definition == null || (definition.getFilterClass() == null && definition.getFilterClosure() == null) ||
+                        (arg != null && (definition.getFilterClass() != null && definition.getFilterClass().isAssignableFrom(arg.getClass())) ||
+                                definition.getFilterClosure() != null && (Boolean) ((Closure<?>) definition.getFilterClosure().clone()).call(arg))) {
+
                     res = method.invoke(bean, arg);
+
                 } else if (log.isDebugEnabled()) {
                     log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - filtered");
                 }

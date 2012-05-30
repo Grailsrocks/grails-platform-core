@@ -96,10 +96,10 @@ class EventsImpl {
     }
 
     EventMessage buildEvent(String scope, String topic, data, Map params) {
-        boolean gormSession = params?.containsKey('gormSession') ? params.gormSession : true
-        String _scope = params?.scope ?: scope
+        boolean gormSession = params?.containsKey('gormSession') ? params.remove('gormSession') : true
+        String _scope = params?.remove('scope') ?: scope
 
-        new EventMessage(topic, data, _scope, gormSession)
+        new EventMessage(topic, data, _scope, gormSession, params)
     }
 
     void reloadListener(Class serviceClass) {
@@ -149,7 +149,7 @@ class EventsImpl {
                         topic,
                         applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
                         method,
-                        definition?.filter
+                        definition
                 )
             }
         }
@@ -234,7 +234,17 @@ class EventsImpl {
         definition.scope = arguments?.remove('scope')
         definition.requiresReply = arguments?.remove('requiresReply') ?: definition.requiresReply
         definition.disabled = arguments?.remove('disabled') ?: definition.disabled
-        definition.filter = arguments?.remove('filter')
+        definition.secured = arguments?.remove('secured') ?: definition.secured
+        def filter = arguments?.remove('filter')
+
+        if (filter) {
+            if (Closure.isAssignableFrom(filter.getClass())) {
+                definition.filterClosure = filter
+            }
+            if (Class.isAssignableFrom(filter.getClass())) {
+                definition.filterClass = filter
+            }
+        }
 
         definition.othersAttributes = arguments
 

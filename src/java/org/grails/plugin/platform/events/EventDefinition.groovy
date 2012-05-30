@@ -19,28 +19,31 @@ package org.grails.plugin.platform.events
 
 /**
  * @file
- * @author  Stephane Maldini <smaldini@doc4web.com>
+ * @author Stephane Maldini <smaldini@doc4web.com>
  * @version 1.0
  * @date 14/05/12
- 
+
  * @section DESCRIPTION
  *
  * [Does stuff]
  */
- class EventDefinition implements Comparable<EventDefinition>{
-     ListenerId listenerId
-     String scope = 'app'
 
-     def filter
+class EventDefinition implements Comparable<EventDefinition> {
+    ListenerId listenerId
+    String scope = 'app'
 
-     boolean requiresReply = false
-     boolean disabled = false
-     String definingPlugin
-     Map othersAttributes
+    Class<?> filterClass = null;
+    Closure<?> filterClosure = null;
 
-     int score = 0
+    boolean requiresReply = false
+    public boolean disabled = false
+    boolean secured = false
+    String definingPlugin
+    Map othersAttributes
 
-     int compareTo(EventDefinition t) {
-         t.score <=> score
-     }
- }
+    int score = 0
+
+    int compareTo(EventDefinition t) {
+        t.score <=> score
+    }
+}

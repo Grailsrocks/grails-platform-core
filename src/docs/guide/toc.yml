@@ -4,10 +4,6 @@ overview:
   changelog: Change log
   knownissues: Known Issues
 gettingStarted: Getting Started
-uiextension:
-  title: UI Extensions
-  uix_tags: Tags
-  uix_code: Beans and utilities
 configuration:
   title: Configuration API
   changing_config: Changing Application and Plugin Config Values
@@ -17,7 +13,7 @@ security:
   title: Security API
   security_implementing_bridge: Implementing a Security Bridge
 events:
-  title: Events API
+  title: Events Bus API
 injection:
   title: Injection API
 navigation:
@@ -29,5 +25,10 @@ navigation:
   menu_navigation: Rendering other menus
   using_navigation_dsl: Using the Navigation DSL
   navigation_tags: The Navigation Tags
+uiextension:
+  title: UI Extensions
+  uix_tags: Tags
+  uix_code: Beans and utilities
 convention:
   title: Convention API
+
