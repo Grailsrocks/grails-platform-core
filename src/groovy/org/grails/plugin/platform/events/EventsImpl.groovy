@@ -51,7 +51,7 @@ class EventsImpl {
             def self = theContext.grailsEvents
             def config = theContext.grailsApplication.config.plugin.platformCore
 
-            if (config.event.async) {
+            if (config.events.async) {
                 event {String topic, data = null, Map params = null ->
                     self._eventAsync(scope, topic, data, params)
                 }
