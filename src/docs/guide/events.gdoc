@@ -1,1 +1,23 @@
-Events
+Eventing... Eventing is a practice coming from our ancestors :
+
+# "Half naked human 1" : _"Hey dudes, I'm actually 'killing' some 'fools'"_ *send event on topic 'killing' with data 'fools'*
+# "Half naked human 2" : _"Oh cool you are 'killing' some 'fools' shall I help you hammering their heads ?_ -> *receive event on topic 'killing' and process 'fools'*
+# "Half naked human 3" : _"Same here, and I would want to reply 'lol'"_ -> *receive event on topic 'killing', process 'fools', reply 'lol'*
+
+With Platform-Core plugin we have implemented a couple of features and artifacts to let you simply manage your event bus
+and get maximum flexibility when required :
+* Sending *Events methods* injected in your *Domains*, *Controllers* and *Services*
+* *@Listener* annotations for your *Services* methods.
+* Events mapping *DSL artifact* to select and control events topics
+* *Spring beans* with access to underlying API
+* *More cool stuff* with [Events Spring Integration|https://github.com/smaldini/grails-events-si] and [Events Push|https://github.com/smaldini/grails-events-push]
+* Simple *config keys*
+
+ {code:groovy}
+
+ {code}
+
+ You can run your code now and browse to @http://localhost:8080/<appname>/platform/@, a special page available only in the development environment. From there you can explore some of the plugin platform features in the debug interface.
+
+ There is no default security implementation for the Security API, this will need to come from the security plugin you use, or your application. See [implementing a security bridge|guide:security_implementing_bridge]
+
