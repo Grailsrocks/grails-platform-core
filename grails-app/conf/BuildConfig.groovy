@@ -32,7 +32,7 @@ grails.project.dependency.resolution = {
 
     plugins {
         build(":tomcat:$grailsVersion",
-                ":release:2.0.1") {
+                ":release:2.0.2") {
             export = false
         }
 
@@ -40,7 +40,9 @@ grails.project.dependency.resolution = {
             export = false
         }
 
-        runtime(':resources:1.1.6')
+        // Removed for now, made dev UI conditional on resources being installed
+        // so will still run, if ugly.
+        // runtime(':resources:1.1.6')
 
         compile(':spock:0.6') {
             export = false

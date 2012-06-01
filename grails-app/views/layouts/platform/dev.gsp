@@ -1,8 +1,10 @@
 <html>
 <head>
     <g:layoutHead/>
-    <r:require module="plugin.platformCore.tools"/>
-    <r:layoutResources/>
+    <plugin:isAvailable name="resources">
+        <r:require module="plugin.platformCore.tools"/>
+        <r:layoutResources/>
+    </plugin:isAvailable>
 </head>
 <body>
     <div id="nav">
@@ -11,6 +13,9 @@
         <nav:secondary class="nav nav-secondary"/>
     </div>
     <g:layoutBody/>
-    <r:layoutResources/>
+
+    <plugin:isAvailable name="resources">
+        <r:layoutResources/>
+    </plugin:isAvailable>
 </body>
 </html>
