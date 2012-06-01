@@ -251,7 +251,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
             try {
                 if (definition == null || (definition.getFilterClass() == null && definition.getFilterClosure() == null) ||
                         (arg != null && (definition.getFilterClass() != null && definition.getFilterClass().isAssignableFrom(arg.getClass())) ||
-                                definition.getFilterClosure() != null && (Boolean) ((Closure<?>) definition.getFilterClosure().clone()).call(arg))) {
+                                definition.getFilterClosure() != null && (Boolean) ((Closure) definition.getFilterClosure().clone()).call(arg))) {
 
                     res = method.invoke(bean, arg);
 

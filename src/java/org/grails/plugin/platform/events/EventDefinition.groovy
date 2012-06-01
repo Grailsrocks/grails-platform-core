@@ -32,8 +32,8 @@ class EventDefinition implements Comparable<EventDefinition> {
     ListenerId listenerId
     String scope = 'app'
 
-    Class<?> filterClass = null;
-    Closure<?> filterClosure = null;
+    Class filterClass = null;
+    Closure filterClosure = null;
 
     boolean requiresReply = false
     public boolean disabled = false
