@@ -224,7 +224,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
             this.definition = definition;
 
             if (m.getParameterTypes().length > 0) {
-                Class<?> type = m.getParameterTypes()[0];
+                Class type = m.getParameterTypes()[0];
                 useEventMessage = EventMessage.class.isAssignableFrom(type);
                 if (useEventMessage && log.isDebugEnabled()) {
                     log.debug("Listener " + bean + "." + method.getName() + " will receive EventMessage enveloppe");

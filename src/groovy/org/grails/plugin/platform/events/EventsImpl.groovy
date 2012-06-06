@@ -151,6 +151,8 @@ class EventsImpl {
                         method,
                         definition
                 )
+            } else {
+                log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and scope $scope but no such event is declared"
             }
         }
     }

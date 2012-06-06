@@ -25,7 +25,7 @@ import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
-    def version = "1.0.M2e-SNAPSHOT"
+    def version = "1.0.M2f-SNAPSHOT"
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
