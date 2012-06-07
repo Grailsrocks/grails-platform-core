@@ -82,7 +82,7 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
      * Get pluginConfig for any object, determined by the plugin in which is was defined
      */
     ConfigObject getPluginConfigFor(objectInstance) {
-        def pluginName = PluginUtils.getNameOfDefiningPlugin(applicationContext, objectInstance.getClass())
+        def pluginName = PluginUtils.getNameOfDefiningPlugin(applicationContext, objectInstance)
 
         if (pluginName) {
             return getPluginConfig(pluginName)

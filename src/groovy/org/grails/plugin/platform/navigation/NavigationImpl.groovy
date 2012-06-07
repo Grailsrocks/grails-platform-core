@@ -267,7 +267,7 @@ class NavigationImpl implements Navigation {
     void registerNavigation(Closure dsl) {
         clearCaches() // this may hose other stuff
         List<DSLCommand> commands = new DSLEvaluator().evaluate(dsl)
-        String definingPlugin = PluginUtils.getNameOfDefiningPlugin(grailsApplication.mainContext, dsl.owner.getClass())
+        String definingPlugin = PluginUtils.getNameOfDefiningPlugin(grailsApplication.mainContext, dsl)
         parseDSL(commands, null, definingPlugin)
         updateCaches()
     }

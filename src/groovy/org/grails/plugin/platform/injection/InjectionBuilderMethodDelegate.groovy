@@ -54,7 +54,7 @@ class InjectionBuilderMethodDelegate {
     
     void copyFrom(bean, List methodNames, Map meta = null) {
         for (n in methodNames) {
-            def pluginName = PluginUtils.getNameOfDefiningPlugin(appContext, bean.getClass())
+            def pluginName = PluginUtils.getNameOfDefiningPlugin(appContext, bean)
             addMethod(n, new MethodClosure(bean, n), pluginName, meta)
         }
     }
@@ -84,7 +84,7 @@ class InjectionBuilderMethodDelegate {
                 "The injection builder expects method calls like someMethodName(Closure code) or someMethodName(Map args, Closure code)")
         }
 
-        def pluginName = PluginUtils.getNameOfDefiningPlugin(appContext, code.owner.getClass())
+        def pluginName = PluginUtils.getNameOfDefiningPlugin(appContext, code)
 
         addMethod(name, code, pluginName, meta)
     }

@@ -21,6 +21,7 @@ class PlatformToolsController {
     
     def grailsSecurity
     def grailsNavigation
+    def grailsEvents
     
     def index = {
     }
@@ -35,6 +36,10 @@ class PlatformToolsController {
 
     def showNavigation = {
         [navScopes:grailsNavigation.scopes]
+    }
+
+    def showEvents = {
+        [events:grailsEvents.eventDefinitions]
     }
 
     def showUiExtensions = {

@@ -113,8 +113,8 @@ class EventsImpl {
         log.info "events removed : $removedListeners"
     }
 
-    void eachListener(Collection<Class<?>> serviceClasses, Closure c) {
-        for (Class<?> serviceClass in serviceClasses) {
+    void eachListener(Collection<Class> serviceClasses, Closure c) {
+        for (Class serviceClass in serviceClasses) {
             for (Method method : serviceClass.declaredMethods) {
                 Listener annotation = method.getAnnotation(Listener)
                 if (annotation) {
@@ -142,8 +142,14 @@ class EventsImpl {
 
             def definition = matchesDefinition(topic, method, serviceClass)
             scope = definition?.scope ?: scope
-            if (!definition?.disabled) {
+            // If there is no match with a known event, or there is a declared event and it is not disabled,
+            // add the listener
+            if (!definition || !definition.disabled) {
                 log.info "Register event listener $serviceClass.name#$method.name for topic $topic and scope $scope"
+                if (!definition) {
+                    log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and scope $scope but no such event is declared, you may never receive it"
+                }
+
                 grailsEventsRegistry.addListener(
                         scope,
                         topic,
@@ -151,8 +157,6 @@ class EventsImpl {
                         method,
                         definition
                 )
-            } else {
-                log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and scope $scope but no such event is declared"
             }
         }
     }
@@ -178,7 +182,7 @@ class EventsImpl {
 
     void registerEvents(Closure dsl) {
         List<DSLCommand> commands = new DSLEvaluator().evaluate(dsl)
-        String definingPlugin = PluginUtils.getNameOfDefiningPlugin(grailsApplication.mainContext, dsl.owner.getClass())
+        String definingPlugin = PluginUtils.getNameOfDefiningPlugin(grailsApplication.mainContext, dsl)
         parseDSL(commands, definingPlugin)
     }
 
@@ -232,8 +236,14 @@ class EventsImpl {
     }
 
     private addItemFromArgs(String listenerPattern, Map arguments, String definingPlugin) {
+        if (log.debugEnabled) {
+            log.debug "Adding event declared in DSL - listenerPattern: ${listenerPattern}, arguments: ${arguments}, defined by plugin ${definingPlugin}"
+        }
         def definition = new EventDefinition()
-        definition.scope = arguments?.remove('scope')
+        definition.scope = arguments?.remove('scope') 
+        if (!definition.scope) {
+            definition.scope = definingPlugin
+        }
         definition.requiresReply = arguments?.remove('requiresReply') ?: definition.requiresReply
         definition.disabled = arguments?.remove('disabled') ?: definition.disabled
         definition.secured = arguments?.remove('secured') ?: definition.secured
@@ -253,6 +263,9 @@ class EventsImpl {
         definition.definingPlugin = definingPlugin
         definition.listenerId = ListenerId.parse(listenerPattern)
 
+        if (log.debugEnabled) {
+            log.debug "Scoring event declared in DSL - definition: ${definition.dump()}"
+        }
         int score = 0
         if (definition.listenerId.scope) score += 1
         if (definition.listenerId.topic) score += 1

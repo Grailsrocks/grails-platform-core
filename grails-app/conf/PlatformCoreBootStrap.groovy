@@ -33,7 +33,7 @@ class PlatformCoreBootStrap {
     }
     
     void applicationStartupInfo() {
-        if (pluginConfig.show.startup.info) {
+        if (pluginConfig?.show.startup.info) {
             def w = 70
             println '='*w
             def name = grailsApplication.metadata.'app.name'
