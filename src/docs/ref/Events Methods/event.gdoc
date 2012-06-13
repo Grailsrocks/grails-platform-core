@@ -1,0 +1,12 @@
+h1. event(Map args), event(topic, data, params)
+
+_Available in Controllers, Domains, Taglibs and Services_
+
+
+h2. Usage
+
+{code}
+{code}
+
+h2. Arguments
+
