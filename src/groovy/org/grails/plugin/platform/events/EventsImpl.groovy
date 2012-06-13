@@ -32,7 +32,7 @@ import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
 
-class EventsImpl {
+class EventsImpl implements Events {
 
     static final private log = Logger.getLogger(EventsImpl.class)
 
@@ -51,44 +51,84 @@ class EventsImpl {
             def self = theContext.grailsEvents
             def config = theContext.grailsApplication.config.plugin.platformCore
 
-            if (config.events.async) {
-                event {String topic, data = null, Map params = null ->
-                    self._eventAsync(scope, topic, data, params)
-                }
-            } else {
-                event {String topic, data = null, Map params = null ->
-                    self._event(scope, topic, data, params)
-                }
+            event { String topic, data = null, Map params = null ->
+                self.event(scope, topic, data, params)
             }
-            eventAsync {String topic, data = null, Map params = null ->
-                self._eventAsync(scope, topic, data, params)
+            event { Map args ->
+                self.event(args.scopeOverride ?: scope, args.topic, args.data, args.params)
             }
-            eventAsync {String topic, data, Closure callback, params = null ->
-                self._eventAsyncClosure(scope, topic, data, callback, params)
+            eventAsync { Map args ->
+                self.eventAsync(args.scopeOverride ?: scope, args.topic, args.data, args.params)
             }
-            eventAsync {String topic, Closure callback, params = null ->
-                self._eventAsyncClosure(scope, topic, null, callback, params)
+            eventAsync { String topic, data = null, Map params = null ->
+                self.eventAsync(scope, topic, data, params)
+            }
+            eventAsync { String topic, data, Closure callback, params = null ->
+                self.eventAsyncWithCallback(scope, topic, data, callback, params)
+            }
+            eventAsync { String topic, Closure callback, params = null ->
+                self.eventAsyncWithCallback(scope, topic, null, callback, params)
             }
             copyFrom(self.grailsEventsPublisher, 'waitFor')
             copyFrom(self.grailsEventsRegistry, ['addListener', 'removeListeners', 'countListeners'])
         }
     }
 
-    EventReply _event(String scope, String topic, data = null, Map params = null) {
+    public Object[] waitFor(EventReply... replies) {
+        grailsEventsPublisher.waitFor(replies)
+    }
+
+    public String addListener(String scope, String topic, Closure callback) {
+        grailsEventsRegistry.addListener(scope, topic, callback)
+    }
+
+    public int removeListeners(String callbackId) {
+        grailsEventsRegistry.removeListeners(callbackId)
+    }
+
+    public int countListeners(String callbackId) {
+        grailsEventsRegistry.countListeners(callbackId)
+    }
+
+    EventReply event(String scope, String topic) {
+        event(scope, topic, null, null)
+    }
+    
+    EventReply event(String scope, String topic, data) {
+        event(scope, topic, data, null)
+    }
+    
+    EventReply event(String scope, String topic, data, Map params) {
         if (log.debugEnabled) {
             log.debug "Sending event of scope [$scope] and topic [$topic] with data [${data}] and params [${params}]"
         }
         grailsEventsPublisher.event buildEvent(scope, topic, data, params)
     }
 
-    EventReply _eventAsync(String scope, String topic, data = null, Map params = null) {
+    EventReply eventAsync(String scope, String topic) {
+        eventAsync(scope, topic, null, null)
+    }
+
+    EventReply eventAsync(String scope, String topic, data) {
+        eventAsync(scope, topic, data, null)
+    }
+
+    EventReply eventAsync(String scope, String topic, data, Map params) {
         if (log.debugEnabled) {
             log.debug "Sending async event of scope [$scope] and topic [$topic] with data [${data}] and params [${params}]"
         }
         grailsEventsPublisher.eventAsync buildEvent(scope, topic, data, params)
     }
 
-    void _eventAsyncClosure(String scope, String topic, data, Closure callback, Map params = null) {
+    void eventAsyncWithCallback(String scope, String topic, Closure callback) {
+        eventAsyncWithCallback(scope, topic, null, callback, null)
+    }
+    
+    void eventAsyncWithCallback(String scope, String topic, data, Closure callback) {
+        eventAsyncWithCallback(scope, topic, data, callback, null)
+    }
+    
+    void eventAsyncWithCallback(String scope, String topic, data, Closure callback, Map params) {
         if (log.debugEnabled) {
             log.debug "Sending event of scope [$scope] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
         }
