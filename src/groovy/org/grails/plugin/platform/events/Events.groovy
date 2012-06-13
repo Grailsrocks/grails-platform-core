@@ -30,7 +30,7 @@ interface Events {
     void eventAsyncWithCallback(String scope, String topic, data, Closure callback) 
     void eventAsyncWithCallback(String scope, String topic, data, Closure callback, Map params)
     
-    Object[] waitFor(EventReply... replies)
+    Object[] waitFor(EventReply[] replies)
     
     // ***** Not sure about these *****
     String addListener(String scope, String topic, Closure callback)

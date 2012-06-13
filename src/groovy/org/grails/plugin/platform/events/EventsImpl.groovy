@@ -74,19 +74,19 @@ class EventsImpl implements Events {
         }
     }
 
-    public Object[] waitFor(EventReply... replies) {
+    Object[] waitFor(EventReply[] replies) {
         grailsEventsPublisher.waitFor(replies)
     }
 
-    public String addListener(String scope, String topic, Closure callback) {
+    String addListener(String scope, String topic, Closure callback) {
         grailsEventsRegistry.addListener(scope, topic, callback)
     }
 
-    public int removeListeners(String callbackId) {
+    int removeListeners(String callbackId) {
         grailsEventsRegistry.removeListeners(callbackId)
     }
 
-    public int countListeners(String callbackId) {
+    int countListeners(String callbackId) {
         grailsEventsRegistry.countListeners(callbackId)
     }
 
