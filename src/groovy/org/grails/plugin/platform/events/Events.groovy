@@ -30,10 +30,12 @@ interface Events {
     void eventAsyncWithCallback(String scope, String topic, data, Closure callback) 
     void eventAsyncWithCallback(String scope, String topic, data, Closure callback, Map params)
     
-    Object[] waitFor(EventReply[] replies)
-    
     // ***** Not sure about these *****
     String addListener(String scope, String topic, Closure callback)
     int removeListeners(String callbackId)
     int countListeners(String callbackId)
+
+    // We have to use a list here as [] and ... were failing to compile for some WTF reason - MP
+    Object[] waitFor(List<EventReply> replies)
+    
 }

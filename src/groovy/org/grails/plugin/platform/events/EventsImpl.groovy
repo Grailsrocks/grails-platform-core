@@ -74,7 +74,8 @@ class EventsImpl implements Events {
         }
     }
 
-    Object[] waitFor(EventReply[] replies) {
+    // We have to use a list here as [] and ... were failing to compile for some WTF reason - MP
+    Object[] waitFor(List<EventReply> replies) {
         grailsEventsPublisher.waitFor(replies)
     }
 
