@@ -167,7 +167,7 @@ a grailsSecurityBridge bean."""
      * @return Must return a Map of arguments to pass to g:link to create the link
      */
     Map createLink(String action) {
-        getSecurityBridge().createLink(action)
+        getSecurityBridge(true).createLink(action)
     }
     
 }

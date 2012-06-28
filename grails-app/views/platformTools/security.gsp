@@ -28,5 +28,13 @@
                 <s:info/>
             </pre>
         </p>
+        
+        <g:if test="${grailsApplication.mainContext.grailsSecurityBridge}">
+            <p>Log in button: <s:loginButton/>, log out button <s:logoutButton/> and sign up button <s:signupButton/>
+            </p>
+        </g:if>
+        <g:else>
+            <p>If you had a security provider installed, you would see the default log in/out/signup buttons here.</p>
+        </g:else>
     </body>
 </html>
