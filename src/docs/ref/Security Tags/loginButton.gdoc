@@ -2,7 +2,7 @@ h1. s:loginButton
 
 h2. Purpose
 
-Renders a button for users to click to Sign up using the installed security provider.
+Renders a button for users to click to Log in using the installed security provider.
 
 Uses the [createLoginLink|securityTags] tag to get a URL from the security provider.
 
