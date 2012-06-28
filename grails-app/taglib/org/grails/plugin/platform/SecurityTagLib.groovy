@@ -25,7 +25,9 @@ class SecurityTagLib {
     Security grailsSecurity
     
     def identity = { attrs ->
-        out << securityIdentity
+        if (securityIdentity) {
+            out << securityIdentity
+        }
     }
 
     def info = { attrs ->
