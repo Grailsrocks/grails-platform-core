@@ -6,7 +6,7 @@ Returns information about the currently logged-in user.
 
 This uses the underlying security provider to access the provider-specific user object. The properties available are not defined by the Security API, see your security provider documentation.
 
-Typically this will provide access to the user principal.
+Typically this will provide access to the user principal, but the type of the object and its properties are undefined.
 
 h2. Example
 
@@ -18,7 +18,7 @@ h2. Attributes
 
 {table}
 *Name* | *Purpose* 
-property | Required - The property of the user object to return
+property | Optional - The property of the user object to return. If not supplied, the securityInfo object will be returned.
 {table}
 
 

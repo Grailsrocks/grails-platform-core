@@ -21,6 +21,7 @@ import org.grails.plugin.platform.security.Security
 
 class SecurityTagLib {
     static namespace = "s" // Or...?
+    static returnObjectForTags = ['info']
     
     Security grailsSecurity
     
@@ -31,7 +32,11 @@ class SecurityTagLib {
     }
 
     def info = { attrs ->
-        out << grailsSecurity.userInfo?.getAt(attrs.property)
+        if (attrs.property) {
+            out << grailsSecurity.userInfo?.getAt(attrs.property)
+        } else {
+            out << grailsSecurity.userInfo
+        }
     }
 
     def ifLoggedIn = { attrs, body ->
@@ -76,6 +81,9 @@ class SecurityTagLib {
         if (!attrs.kind) {
             attrs.kind = 'anchor'
         }
+        if (!attrs.text) {
+            attrs.text = 'security.log.out.button'
+        }
         attrs.putAll(grailsSecurity.createLink('logout'))
         out << p.button(attrs, body)
     }
@@ -84,6 +92,9 @@ class SecurityTagLib {
         if (!attrs.kind) {
             attrs.kind = 'anchor'
         }
+        if (!attrs.text) {
+            attrs.text = 'security.log.in.button'
+        }
         attrs.putAll(grailsSecurity.createLink('login'))
         out << p.button(attrs, body)
     }
@@ -91,6 +102,9 @@ class SecurityTagLib {
     def signupButton = { attrs, body ->
         if (!attrs.kind) {
             attrs.kind = 'anchor'
+        }
+        if (!attrs.text) {
+            attrs.text = 'security.sign.up.button'
         }
         attrs.putAll(grailsSecurity.createLink('signup'))
         out << p.button(attrs, body)
