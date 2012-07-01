@@ -43,10 +43,12 @@ class EventsImpl implements Events {
 
     List<EventDefinition> eventDefinitions
 
+    static final String APP_NAMESPACE = 'app'
+
     def injectedMethods = { theContext ->
 
         'controller, domain, service' { Class clazz ->
-            //String defaultNamespace = PluginUtils.getNameOfDefiningPlugin(theContext, clazz) ?: 'app'
+            //String defaultNamespace = PluginUtils.getNameOfDefiningPlugin(theContext, clazz) ?: APP_NAMESPACE'
 
             def self = theContext.grailsEvents
             //def config = theContext.grailsApplication.config.plugin.platformCore
@@ -160,9 +162,9 @@ class EventsImpl implements Events {
                 Listener annotation = method.getAnnotation(Listener)
                 if (annotation) {
                     String namespace = /*PluginUtils.getNameOfDefiningPlugin(applicationContext, serviceClass) ?:*/
-                       annotation?.namespace() ?: 'app'
+                       annotation?.namespace() ?: APP_NAMESPACE
                     String topic = annotation?.topic() ?: method.name
-                    c(namespace, topic, method, serviceClass)
+                    c(namespace, annotation?.namespace() as boolean, topic, method, serviceClass)
                 }
             }
         }
@@ -181,10 +183,12 @@ class EventsImpl implements Events {
 
     void registerListeners(Collection<Class<?>> serviceClasses) {
 //            grailsEventsDispatcher.scanClassForMappings(serviceClass)
-        eachListener(serviceClasses) {String namespace, String topic, Method method, Class serviceClass ->
+        eachListener(serviceClasses) {String namespace, boolean hasInlineNamespace, String topic, Method method, Class serviceClass ->
 
             def definition = matchesDefinition(topic, method, serviceClass)
-            namespace = definition?.namespace ?: namespace
+            if(!hasInlineNamespace || !definition?.definingPlugin){
+                namespace = definition?.namespace ?: namespace
+            }
             // If there is no match with a known event, or there is a declared event and it is not disabled,
             // add the listener
             if (!definition || !definition.disabled) {
