@@ -52,7 +52,7 @@ class SampleController {
     }
 
     def testInlineListener = {
-        def listener = addListener("afterInsert") {Book book ->
+        def listener = on("afterInsert") {Book book ->
             println "test $book"
         }
         render "$listener registered"

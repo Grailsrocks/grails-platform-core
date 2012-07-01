@@ -62,17 +62,28 @@ class EventsImpl implements Events {
             eventAsync { Map args ->
                 self.eventAsync(args.for ?: null, args.topic, args.data, args.params)
             }
+
+            eventAsync { Map args, Closure callback ->
+                self.eventAsyncWithCallback(args.for ?: null, args.topic, args.data, callback, args.params)
+            }
+
             eventAsync { String topic, data = null, Map params = null ->
                 self.eventAsync(null, topic, data, params)
             }
-            eventAsync { String topic, data, Closure callback, params = null ->
+            eventAsync { String topic, data, params, Closure callback ->
                 self.eventAsyncWithCallback(null, topic, data, callback, params)
             }
-            eventAsync { String topic, Closure callback, params = null ->
-                self.eventAsyncWithCallback(null, topic, null, callback, params)
+            eventAsync { String topic, data, Closure callback ->
+                self.eventAsyncWithCallback(null, topic, data, callback, params)
+            }
+            eventAsync { String topic, Closure callback ->
+                self.eventAsyncWithCallback(null, topic, null, callback, null)
+            }
+            on { String topic, Closure callback ->
+                self.grailsEventsRegistry.on(APP_NAMESPACE, topic, callback)
             }
             copyFrom(self.grailsEventsPublisher, 'waitFor')
-            copyFrom(self.grailsEventsRegistry, ['addListener', 'removeListeners', 'countListeners'])
+            copyFrom(self.grailsEventsRegistry, ['on', 'removeListeners', 'countListeners'])
         }
     }
 
@@ -81,8 +92,8 @@ class EventsImpl implements Events {
         grailsEventsPublisher.waitFor(replies)
     }
 
-    String addListener(String namespace, String topic, Closure callback) {
-        grailsEventsRegistry.addListener(namespace, topic, callback)
+    String on(String topic, Closure callback) {
+        grailsEventsRegistry.on(namespace, topic, callback)
     }
 
     int removeListeners(String callbackId) {
@@ -96,11 +107,11 @@ class EventsImpl implements Events {
     EventReply event(String namespace, String topic) {
         event(namespace, topic, null, null)
     }
-    
+
     EventReply event(String namespace, String topic, data) {
         event(namespace, topic, data, null)
     }
-    
+
     EventReply event(String namespace, String topic, data, Map params) {
         if (log.debugEnabled) {
             log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
@@ -126,11 +137,11 @@ class EventsImpl implements Events {
     void eventAsyncWithCallback(String namespace, String topic, Closure callback) {
         eventAsyncWithCallback(namespace, topic, null, callback, null)
     }
-    
+
     void eventAsyncWithCallback(String namespace, String topic, data, Closure callback) {
         eventAsyncWithCallback(namespace, topic, data, callback, null)
     }
-    
+
     void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params) {
         if (log.debugEnabled) {
             log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
@@ -162,7 +173,7 @@ class EventsImpl implements Events {
                 Listener annotation = method.getAnnotation(Listener)
                 if (annotation) {
                     String namespace = /*PluginUtils.getNameOfDefiningPlugin(applicationContext, serviceClass) ?:*/
-                       annotation?.namespace() ?: APP_NAMESPACE
+                        annotation?.namespace() ?: APP_NAMESPACE
                     String topic = annotation?.topic() ?: method.name
                     c(namespace, annotation?.namespace() as boolean, topic, method, serviceClass)
                 }
@@ -186,7 +197,7 @@ class EventsImpl implements Events {
         eachListener(serviceClasses) {String namespace, boolean hasInlineNamespace, String topic, Method method, Class serviceClass ->
 
             def definition = matchesDefinition(topic, method, serviceClass)
-            if(!hasInlineNamespace || !definition?.definingPlugin){
+            if (!hasInlineNamespace || !definition?.definingPlugin) {
                 namespace = definition?.namespace ?: namespace
             }
             // If there is no match with a known event, or there is a declared event and it is not disabled,

@@ -28,8 +28,6 @@ interface Events {
     void eventAsyncWithCallback(String namespace, String topic, data, Closure callback) 
     void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params)
     
-    // ***** Not sure about these *****
-    String addListener(String namespace, String topic, Closure callback)
     int removeListeners(String callbackId)
     int countListeners(String callbackId)
 

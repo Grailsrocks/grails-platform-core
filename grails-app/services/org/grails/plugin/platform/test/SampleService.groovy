@@ -57,6 +57,6 @@ class SampleService {
     @Listener(namespace = 'lal')
     def sampleHello(test) {
         println "Hello (bis) - $test"
-        'worked 2'
+
     }
 }

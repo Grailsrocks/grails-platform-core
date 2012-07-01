@@ -23,6 +23,9 @@ class UserController{
             //non-blocking call, will trigger application listeners for this topic
             eventAsync('mailRegistration', user)
 
+            //can also be written like that
+            //eventAsync topic:'mailRegistration', data:user
+
             render(view:'sendingRegistrationMail')
          }else{
             render(view:'errorRegistration')
@@ -37,6 +40,7 @@ class UserService{
 
    //use method name 'mailRegistration' as topic name
    @grails.events.Listener
+   //can also use custom topic name using topic arg: @Listener(topic='test')
    def mailRegistration(User user){
          sendMail{
             to user.mail

@@ -1,25 +1,73 @@
 Listening for events simply requires registering the method that should receive the event notifications.
 
-There are a few ways to register events.
+There are few ways to register events.
 
 h3. Defining listeners at compile time
 
-Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:
+Within Grails services you can use the *@Listener* annotation. This takes a *topic* string, but if you omit this string it will use the method name as the topic to listen for:
 
 {code}
 class SomeService{
-   @grails.events.Listener('userLogged')
+   @grails.events.Listener(topic = 'userLogged')
    def myMethod(User user){
-      //do something with user
    }
 
-   @grails.events.Listener
-   def mailSent(User user){ //use 'mailSent' as topic name
-         //do something with user
+   @grails.events.Listener //use 'mailSent' as topic name
+   def mailSent(User user){
   }
 }
 {code}
 
 Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.
 
+h3. Namespacing
 
+Your declared events belongs to the 'app' namespace, unless you tune it using the *namespace* argument or the Events DSL we will introduce later.
+
+
+{code}
+class SomeService{
+   @grails.events.Listener(topic = 'userLogged', namespace = 'security')
+   def myMethod(User user){
+   }
+
+   @grails.events.Listener(namespace = 'gorm') //will assign this method to topic 'afterInsert' on namespace 'gorm'
+   def afterInsert(User user){
+  }
+}
+{code}
+
+Remember that you will need to specify the scope when triggering events if you customize it with a different value than *app* :
+
+{code}
+class SomeController{
+   def myAction(){
+        event for:'security', topic:'userLogged', data:session.user
+   }
+}
+{code}
+
+h3. Dynamic listeners
+
+Some edge cases need runtime registration. If you meet this use case, use the injected [on|Events Methods] method :
+
+{code}
+class SomeController{
+
+ def testInlineListener = {
+        //register with 'logout' topic on 'app' default namespace
+        def listener = on("logout") {User user ->
+            println "test $user"
+        }
+        render "$listener registered"
+ }
+
+ def testInlineListener2 = {
+          //register a 'gorm' namespaced handler on 'afterInsert' topic.
+          def listener = on("gorm", "afterInsert") {Book book ->
+              println "test $book"
+          }
+          render "$listener registered"
+ }
+}
+{code}

@@ -51,27 +51,27 @@ public class DefaultEventsRegistry implements EventsRegistry {
         API
      */
 
-    public String addListener(String namespace, String topic, Closure callback, EventDefinition definition) {
+    public String on(String namespace, String topic, EventDefinition definition, Closure callback) {
         return registerHandler(callback, namespace, topic, definition);
     }
 
-    public String addListener(String namespace, String topic, Object bean, String callbackName, EventDefinition definition) {
+    public String on(String namespace, String topic, Object bean, String callbackName, EventDefinition definition) {
         return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic, definition);
     }
 
-    public String addListener(String namespace, String topic, Object bean, Method callback, EventDefinition definition) {
+    public String on(String namespace, String topic, Object bean, Method callback, EventDefinition definition) {
         return registerHandler(bean, callback, namespace, topic, definition);
     }
 
-    public String addListener(String namespace, String topic, Closure callback) {
+    public String on(String namespace, String topic, Closure callback) {
         return registerHandler(callback, namespace, topic, null);
     }
 
-    public String addListener(String namespace, String topic, Object bean, String callbackName) {
+    public String on(String namespace, String topic, Object bean, String callbackName) {
         return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic, null);
     }
 
-    public String addListener(String namespace, String topic, Object bean, Method callback) {
+    public String on(String namespace, String topic, Object bean, Method callback) {
         return registerHandler(bean, callback, namespace, topic, null);
     }
 

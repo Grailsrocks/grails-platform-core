@@ -2,13 +2,17 @@ Sending an event is simple. We've defined 3 different methods :
 * *event*(topic, \[data, params\]) : Synchronous event
 * *eventAsync*(topic, \[data, params\]) : Asynchronous event
 * *eventAsync*(topic, \[data, params,\] callbackClosure) : Asynchronous event with a closure completion callback
+In addition we support the map notation :
+event\[Async\](Map args \[callbackClosure\])
 
-These 3 methods share a common signature :
+Let's dig into the methods signatures details :
 * Topic argument is a *String* which represents channel subscribed by listeners.
 * _optionnal_ Data argument is an *Object* -_preferrably Serializable for IO facilities_- which represents the subject of your event such as a domain class.
 * _optionnal_ Params argument is a *Map* which represents sending behaviors including *namespace*.
-** *String* namespace - default *"app"* when method is triggered from a grails app, *"pluginName"* in the case of a grails plugin. We will details further the scoping consequences in the Listeners documentation.
+** *String* namespace - default *"app"* when method is triggered from a grails app. We will details further the namespacing consequences in the Listeners documentation.
 ** *Boolean* gormSession - default *true* : When used asynchronously, it may be useful to enable/disable GORM session context. We automatically take care of creating, maintaining, flushing and destroying a GORM session.
+* callbackClosure is a *Closure* triggered after an async event completion.
+* The map notation supports the following arguments : *topic*, *for* (shortcut for 'namespace') and *data*.
 * Returns an *EventReply* object.
 
 *EventReply* implements Future<Object> and provides 3 usefuls methods :
@@ -43,4 +47,20 @@ class SomeController{
       render reply.value //block the thread until event response and display value
    }
 }
+{code}
+
+h3. Assign a namespace
+All the listeners get a property called namespace which prevents topic naming collisions and undesired events. By default, they are all assigned to 'app'.
+ This is the same default used when you send an event, but what can you do if you want to reach others namespaced listeners, like 'browser' ones you will
+ get if you use Events-Push plugin ? Simply use *namespace* argument within params or use 'for' if you stick with Map notation.
+
+{code}
+ class SomeController{
+
+    def logout(){
+    //In this example we use the Map form, pay attention to the namespace argument identified by the 'for' key
+       eventAsync for:'browser', topic:'logout', data:session.user
+       ....
+    }
+ }
 {code}
