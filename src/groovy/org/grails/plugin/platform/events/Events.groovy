@@ -17,6 +17,10 @@
  */
 package org.grails.plugin.platform.events
 
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeoutException
+
 interface Events {
     EventReply event(String namespace, String topic)
     EventReply event(String namespace, String topic, data)
@@ -27,11 +31,9 @@ interface Events {
     void eventAsyncWithCallback(String namespace, String topic, Closure callback) 
     void eventAsyncWithCallback(String namespace, String topic, data, Closure callback) 
     void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params)
-    
-    int removeListeners(String callbackId)
-    int countListeners(String callbackId)
 
     // We have to use a list here as [] and ... were failing to compile for some WTF reason - MP
-    Object[] waitFor(List<EventReply> replies)
-    
+    Object[] waitFor(EventReply[] replies) throws ExecutionException, InterruptedException, TimeoutException
+    Object[] waitFor(long l, TimeUnit timeUnit, EventReply[] replies) throws ExecutionException, InterruptedException, TimeoutException
+
 }

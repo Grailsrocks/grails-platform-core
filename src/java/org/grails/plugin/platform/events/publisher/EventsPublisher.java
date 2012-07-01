@@ -21,8 +21,6 @@ import groovy.lang.Closure;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * @author Stephane Maldini <smaldini@doc4web.com>
  * @version 1.0
@@ -34,10 +32,7 @@ import java.util.concurrent.ExecutionException;
  */
 public interface EventsPublisher {
 
-    public final static String GORM_EVENT_SOURCE = "gorm";
-
     public EventReply event(final EventMessage event);
     public EventReply eventAsync(final EventMessage event);
     public void eventAsync(final EventMessage event, Closure onComplete);
-    public Object[] waitFor(EventReply... replies) throws ExecutionException, InterruptedException;
 }

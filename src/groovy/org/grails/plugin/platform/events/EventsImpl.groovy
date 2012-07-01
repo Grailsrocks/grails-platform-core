@@ -31,6 +31,9 @@ import org.grails.plugin.platform.util.PluginUtils
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class EventsImpl implements Events {
 
@@ -82,34 +85,29 @@ class EventsImpl implements Events {
             on { String topic, Closure callback ->
                 self.grailsEventsRegistry.on(APP_NAMESPACE, topic, callback)
             }
-            copyFrom(self.grailsEventsPublisher, 'waitFor')
+            copyFrom(self, 'waitFor')
             copyFrom(self.grailsEventsRegistry, ['on', 'removeListeners', 'countListeners'])
         }
     }
 
-    // We have to use a list here as [] and ... were failing to compile for some WTF reason - MP
-    Object[] waitFor(List<EventReply> replies) {
-        grailsEventsPublisher.waitFor(replies)
+    Object[] waitFor(long l, TimeUnit timeUnit, EventReply... replies) throws ExecutionException, InterruptedException, TimeoutException {
+        for (reply in replies) {
+            reply?.get(l, timeUnit)
+        }
+        replies
     }
 
-    String on(String topic, Closure callback) {
-        grailsEventsRegistry.on(namespace, topic, callback)
-    }
-
-    int removeListeners(String callbackId) {
-        grailsEventsRegistry.removeListeners(callbackId)
-    }
-
-    int countListeners(String callbackId) {
-        grailsEventsRegistry.countListeners(callbackId)
-    }
-
-    EventReply event(String namespace, String topic) {
-        event(namespace, topic, null, null)
+    Object[] waitFor(EventReply... replies) throws ExecutionException, InterruptedException, TimeoutException {
+        waitFor(-1l, TimeUnit.NANOSECONDS, replies)
     }
 
     EventReply event(String namespace, String topic, data) {
         event(namespace, topic, data, null)
+    }
+
+
+    EventReply event(String namespace, String topic) {
+        event(namespace, topic, null, null)
     }
 
     EventReply event(String namespace, String topic, data, Map params) {

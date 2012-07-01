@@ -1,111 +1,15 @@
-### Events API : Spring Integration
+Usually, an event is _fired and forgot_. In some cases, you may expect an answer to transform your messaging architecture
+into a controlled flow. For instance, a negative reply can be used in GORM events to cancel database writing for the current subjet.
+Another usual example is the aggregation of multiple workers products.
 
-Plugin platforms brings an event API to allow decoupled communication within your application and beyond.
-If you want to use more features like routing mechanisms or external message brokers, you could also rely on specifics plugins which implement
-the platform events API such as Spring Integration (si-events, this plugin).
+h3. Simple reply
 
-It configures routes, channel, and gateway for you. It allows grails dev to integrate their events with external systems through Spring Integration adapters.
+Replying is a simple matter of returning an object from the listener method :
 
-#### Declaring an event listener
-A listener is an handler attached to a topic name, ie 'userLogged' or 'bookArchived'.
-This handler can receive and return values as we will see in the 'Sending Events' paragraph.
-
-There are 3 ways to declare listeners :
-
-##### Services artefacts :
-
-You can surround candidate methods with @Listener(String topic. If you don't define explicitly any topic, then the method name will be used :
-
-```groovy
+{code}
 class SomeService{
-   @grails.events.Listener('userLogged')
-   def myMethod(User user){
-      //do something with user
-   }
-
-   @grails.events.Listener
-   def mailSent(User user){ //use 'mailSent' as topic name
-         //do something with user
-  }
-}
-```
-
-##### Inline closures :
-
-Inside services, domains and controllers artefacts, you can call "String addListener(String topic, Closure closure)".
-This method returns a listener Id which is under the following format "topic:ClassName#method@hashCode":
-
-```groovy
-class SomeController{
-
-   def auth(){
-      String listenerId = addListener('userLogged'){User user->
-       //do something with user
-      }
-   }
-}
-```
-
-
-##### Custom objects :
-
-You can also declare runtime listeners with any object and method using "String addListener(String topic, Object bean, Method/* or String */ method)".
-As previously mentionned, this method returns a listener Id which is under the following format "topic:ClassName#method@hashCode":
-
-```groovy
-class SomeController{
-
-   def someService
-
-   def auth(){
-      addListener('userLogged', someService, 'myMethod')
-   }
-}
-```
-
-#### Sending events
-
-You have 2 ways of sending events : asynchronously or syncronously. Both methods returns an EventReply object.
-EventReply implements Future<Object> and provides 3 usefuls methods :
-* List<Object> getValues()
-Return as many values as listeners has replied.
-* Object getValue()
-Return the first element of getValues().
-* int size()
-Return the replies count.
-
-
-##### Sync events
-Syncronous events can be sent from domains, services and controllers artefacts by using "EventReply event(String topic, Object data)" :
-
-```groovy
-class SomeService{
-    @Listener('logout')
-    def method(User user){
-       Date disconnectDate = new Date()
-
-       //do something very long with user
-
-       return disconnectDate
-    }
-}
-
-class SomeController{
-
-   def logout(){
-      def reply = syncEvent('logout', session.user)
-      render reply.value  //display disconnectDate
-   }
-}
-```
-
-##### Async events
-Asyncronous events can be sent from domains, services and controllers artefacts by using "EventReply eventAsync(String topic, Object data)" :
-
-```groovy
-class SomeService{
-    @Listener('logout')
-    def method(User user){
+    @Listener
+    def logout(User user){
        Date disconnectDate = new Date()
 
        //do something with user
@@ -113,34 +17,50 @@ class SomeService{
        return disconnectDate
     }
 }
+{code}
 
+Whenever a listener return non null object, the caller can access it through the EventReply enveloppe returned immediatly
+after calling event/eventAsync. Getting the value is a blocking operation called *value* :
+
+{code}
 class SomeController{
 
    def logout(){
-      def reply = eventAsync('logout', session.user)
-      render reply.value //block the thread until event response and display disconnectDate
+       def reply = eventAsync topic:"logout", data:session.user
+
+       render reply.value //wait and display value
+
+       def reply2 = eventAsync topic:"logout", data:session.user
+
+       render reply.get(30, TimeUnit.SECONDS) //EventReply object is a Future implementation, hence providing the same facilities such as timeout
    }
 }
-```
+{code}
 
-##### Waiting replies
+h3. Multiple replies
+
+Multiple listeners can return values for the same topic/namespace. In this case, EventReply will wait for all handlers before returning any value.
+Remember that a valid result is a non null value, hence why even if 3 handlers have reacted but only 2 did return something, then you will only
+see 2 values in the *EventReply.values*.
+
+{code}
+class SomeController{
+
+   def logout(){
+       def reply = event topic:"sendMails", data:session.user
+
+       render reply.value //wait for all listeners and then display the first value from the aggregated results
+       render reply.values //display all results as List
+   }
+}
+{code}
+
+h3. Waiting replies
 
 In domains, services and controllers artefacts you can wait for events using "EventReply[] waitFor(EventReply... eventReplies)".
-This method is rather useless in a sync scenario. It accepts as many events replies you want and returns the same array
-for functiunal programming style. :
+It accepts as many events replies you want and returns the same array for functiunal programming style. This method is rather useless in a sync scenario.
 
-```groovy
-class SomeService{
-    @Listener('logout')
-    def method(User user){
-       Date disconnectDate = new Date()
-
-       //do something with user
-
-       return disconnectDate
-    }
-}
-
+{code}
 class SomeController{
 
    def logout(){
@@ -151,55 +71,11 @@ class SomeController{
       waitFor(reply,reply2,reply3).each{EventReply reply->
         render reply.value +'</br>'
       }
+
+      //same with 20 seconds timeout on each reply
+      waitFor(20, TimeUnit.SECONDS, reply,reply2,reply3).each{EventReply reply->
+              render reply.value +'</br>'
+      }
    }
 }
-```
-
-
-#### GORM events (Grails 2 only)
-
-You can listen all the grails 2 gorm events using the same topic name than domain method handler described in grails documentation.
-The listener argument has to be typed to specify the domain that the handler listens for. If the gorm event can be cancelled like with beforeInsert or beforeValidation,
-the handler can return a false boolean to discard the event :
-
-```groovy
-class SomeService{
-   @Listener('beforeInsert')
-   def myMethod(User user){
-      //do something with user
-      false //cancel the current insert
-   }
-}
-```
-
-#### Removing listeners
-
-To remove listeners, just use "int removeListeners(String listenerIdPattern)". The argument allows you to filter listeners by using the listener id pattern.
-For instance you can use both "topic" and "topic:ClassName#method".
-The method returns the number of deleted listeners :
-
-```groovy
-class SomeController{
-
-   def logout(){
-      println removeListeners('userLogged') //remove all listeners for topic 'userLogged'
-      println removeListeners('statistics:org.sample.StatisticsService') // remove all listeners for topic 'statistics' and class 'StatisticsService'
-   }
-}
-```
-
-#### Counting listeners
-
-To count listeners, just use "int countListeners(String listenerIdPattern)". The argument allows you to filter listeners by using the listener id pattern.
-For instance you can use both "topic" and "topic:ClassName#method".
-The method returns the number of listeners :
-
-
-```groovy
-class SomeController{
-
-   def logout(){
-      println countListeners('userLogged') //count all listeners for topic 'userLogged'
-      println countListeners('statistics:org.sample.StatisticsService') // count all listeners for topic 'statistics' and class 'StatisticsService'
-   }
-}
+{code}
