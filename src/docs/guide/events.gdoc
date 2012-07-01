@@ -1,10 +1,9 @@
-Eventing... Eventing is a practice coming from our ancestors :
+An event is often as simple as a "callback" with no parameters, but usually there is some extra state passed as an event object.
+An event can be sent to multiple listeners, and any result returned from any listeners is passed back to the original sender of the event.
+An event belongs to a "topic" and often has a "subject". The topic is like a channel that identifies the kind of events. The optional subject is the object that the event "happened to".
+So for example a simple "app started" notification has no subject but may have topic "grails", but a "user logged in" even may have topic "security" and subject set to the user principal supplied by the security plugin you are using.
 
-# "Half naked human 1" : _"Hey dudes, I'm actually 'killing' some 'fools'"_ *send event on topic 'killing' with data 'fools'*
-# "Half naked human 2" : _"Oh cool you are 'killing' some 'fools' shall I help you hammering their heads ?_ -> *receive event on topic 'killing' and process 'fools'*
-# "Half naked human 3" : _"Same here, and I would want to reply 'lol'"_ -> *receive event on topic 'killing', process 'fools', reply 'lol'*
-
-With Platform-Core plugin we have implemented a couple of features and artifacts to let you simply manage your event bus
+With Platform-Core plugin we have implemented a couple of features and artifacts to let you simply manage an _event bus_
 and get maximum flexibility when required :
 * Sending *Events methods* injected in your *Domains*, *Controllers* and *Services*
 * *@Listener* annotations for your *Services* methods.
@@ -13,11 +12,37 @@ and get maximum flexibility when required :
 * *More cool stuff* with [Events Spring Integration|https://github.com/smaldini/grails-events-si] and [Events Push|https://github.com/smaldini/grails-events-push]
 * Simple *config keys*
 
- {code:groovy}
+In a nutshell, you will :
+* send events :
+{code}
+class UserController{
 
- {code}
+   def registration(){
+         def user = new User(params).save()
+         if(user){
+            //non-blocking call, will trigger application listeners for this topic
+            eventAsync('mailRegistration', user)
 
- You can run your code now and browse to @http://localhost:8080/<appname>/platform/@, a special page available only in the development environment. From there you can explore some of the plugin platform features in the debug interface.
+            render(view:'sendingRegistrationMail')
+         }else{
+            render(view:'errorRegistration')
+         }
+  }
+}
+{code}
 
- There is no default security implementation for the Security API, this will need to come from the security plugin you use, or your application. See [implementing a security bridge|guide:security_implementing_bridge]
+* write a listener (or event handler, or event reactor or whatever you call it):
+{code}
+class UserService{
 
+   //use method name 'mailRegistration' as topic name
+   @grails.events.Listener
+   def mailRegistration(User user){
+         sendMail{
+            to user.mail
+            subject "Confirmation"
+            html g.render(template:"userMailConfirmation")
+        }
+  }
+}
+{code}

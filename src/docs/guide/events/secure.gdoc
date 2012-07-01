@@ -22,4 +22,6 @@ class SomeService{
 
 Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.
 
+h3. Defining listeners at run time
+
 

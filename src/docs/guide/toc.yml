@@ -14,6 +14,15 @@ security:
   security_implementing_bridge: Implementing a Security Bridge
 events:
   title: Events Bus API
+  sending: Sending Events
+  listening: Listening Events
+  replying: Replying from Listeners
+  artifact: Listeners configuration -- The XxxEvents Artifact
+  gorm: Listening GORM events
+  beans: Spring Beans
+  secure: Securing events
+  extensions: Extensions
+  config: Configuration properties
 injection:
   title: Injection API
 navigation:

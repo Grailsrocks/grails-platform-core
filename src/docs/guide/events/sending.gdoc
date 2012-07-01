@@ -1,0 +1,46 @@
+Sending an event is simple. We've defined 3 different methods :
+* *event*(topic, \[data, params\]) : Synchronous event
+* *eventAsync*(topic, \[data, params\]) : Asynchronous event
+* *eventAsync*(topic, \[data, params,\] callbackClosure) : Asynchronous event with a closure completion callback
+
+These 3 methods share a common signature :
+* Topic argument is a *String* which represents channel subscribed by listeners.
+* _optionnal_ Data argument is an *Object* -_preferrably Serializable for IO facilities_- which represents the subject of your event such as a domain class.
+* _optionnal_ Params argument is a *Map* which represents sending behaviors including *namespace*.
+** *String* namespace - default *"app"* when method is triggered from a grails app, *"pluginName"* in the case of a grails plugin. We will details further the scoping consequences in the Listeners documentation.
+** *Boolean* gormSession - default *true* : When used asynchronously, it may be useful to enable/disable GORM session context. We automatically take care of creating, maintaining, flushing and destroying a GORM session.
+* Returns an *EventReply* object.
+
+*EventReply* implements Future<Object> and provides 3 usefuls methods :
+* *List<Object> getValues()* : Return as many values as listeners has replied.
+* *Object getValue()* : Return the first element of getValues().
+* *int size()* : Return the replies count.
+
+
+h3. Sync events
+Synchronous events can be sent from domains, services and controllers artefacts by using _EventReply event(String topic, Object data)_ :
+
+{code}
+class SomeController{
+
+   def logout(){
+      def reply = syncEvent('logout', session.user)
+      //wait for reply
+      render reply.value  //display value
+   }
+}
+{code}
+
+h3. Async events
+Asynchronous events can be sent from domains, services and controllers artefacts by using _EventReply eventAsync(String topic, Object data)_ :
+
+{code}
+class SomeController{
+
+   def logout(){
+      def reply = eventAsync('logout', session.user)
+      //doesn't wait for reply
+      render reply.value //block the thread until event response and display value
+   }
+}
+{code}

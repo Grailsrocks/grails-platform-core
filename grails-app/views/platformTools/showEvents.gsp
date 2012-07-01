@@ -9,7 +9,7 @@
         <p>The following events are registered:</p>
         <ul>
         <g:each in="${events}" var="eventDef">
-            <li>${eventDef.listenerId} in scope ${eventDef.scope} with attributes ${eventDef.othersAttributes}</li>
+            <li>${eventDef.listenerId} in namespace ${eventDef.namespace} with attributes ${eventDef.othersAttributes}</li>
         </g:each>
         </ul>
     </body>

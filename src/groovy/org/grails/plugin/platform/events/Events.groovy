@@ -17,21 +17,19 @@
  */
 package org.grails.plugin.platform.events
 
-import org.grails.plugin.platform.events.EventReply
-
 interface Events {
-    EventReply event(String scope, String topic)
-    EventReply event(String scope, String topic, data)
-    EventReply event(String scope, String topic, data, Map params)
-    EventReply eventAsync(String scope, String topic)
-    EventReply eventAsync(String scope, String topic, data)
-    EventReply eventAsync(String scope, String topic, data, Map params)
-    void eventAsyncWithCallback(String scope, String topic, Closure callback) 
-    void eventAsyncWithCallback(String scope, String topic, data, Closure callback) 
-    void eventAsyncWithCallback(String scope, String topic, data, Closure callback, Map params)
+    EventReply event(String namespace, String topic)
+    EventReply event(String namespace, String topic, data)
+    EventReply event(String namespace, String topic, data, Map params)
+    EventReply eventAsync(String namespace, String topic)
+    EventReply eventAsync(String namespace, String topic, data)
+    EventReply eventAsync(String namespace, String topic, data, Map params)
+    void eventAsyncWithCallback(String namespace, String topic, Closure callback) 
+    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback) 
+    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params)
     
     // ***** Not sure about these *****
-    String addListener(String scope, String topic, Closure callback)
+    String addListener(String namespace, String topic, Closure callback)
     int removeListeners(String callbackId)
     int countListeners(String callbackId)
 

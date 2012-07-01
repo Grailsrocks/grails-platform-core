@@ -1,0 +1,28 @@
+h1. userHasAnyRole(roleList)
+
+_Available in Controllers, Domains, Taglibs and Services_
+
+This method returns *true* if the current user has any of the roles listed.
+
+The implementation of this method is provided by the security provider you
+have installed.
+
+h2. Usage
+
+{code}
+class PurchaseService {
+    void updatePurchase(Purchase p) {
+        if (userHasAnyRole(['ROLE_USER', 'ROLE_ADMIN'])) {
+            ...
+        }
+    }
+    ...
+}
+{code}
+
+h2. Arguments
+
+{table}
+*Name* | *Description*
+roleList | The list of roles to test for
+{table}

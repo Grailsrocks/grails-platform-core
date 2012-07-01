@@ -18,7 +18,7 @@ events = {
 }
 {code}
 
-* scope
+* namespace
 * requiresReply
 * disabled
 * secured
