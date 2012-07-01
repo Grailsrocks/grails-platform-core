@@ -4,7 +4,7 @@ There are few ways to register events.
 
 h3. Defining listeners at compile time
 
-Within Grails services you can use the *@Listener* annotation. This takes a *topic* string, but if you omit this string it will use the method name as the topic to listen for:
+Within Grails services you can use the *@Listener* annotation. This takes a *topic* string, but you can omit it and use the *method name* as the topic to listen for:
 
 {code}
 class SomeService{
@@ -18,11 +18,11 @@ class SomeService{
 }
 {code}
 
-Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.
+Event methods are *always single-argument*, and the value is the object sent with the event. Usually this is the "subject" of the event.
 
 h3. Namespacing
 
-Your declared events belongs to the 'app' namespace, unless you tune it using the *namespace* argument or the Events DSL we will introduce later.
+Your declared events belongs to the *app* namespace, unless you tune it using the *namespace* argument or the Events DSL we will introduce later.
 
 
 {code}
