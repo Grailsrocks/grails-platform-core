@@ -20,14 +20,6 @@ import grails.util.Environment
 class PlatformCoreUrlMappings {
     static mappings = {
         if ( Environment.current == Environment.DEVELOPMENT) {
-/*
-            "/platform"(controller:'platformTools', action:'index')
-            "/platform/security/$id?"(controller:'platformTools', action:'security')
-            "/platform/ui-extensions/$id?"(controller:'platformTools', action:'showUiExtensions')
-            "/platform/events"(controller:'platformTools', action:'showEvents')
-            "/platform/plugin-config/$id?"(controller:'platformTools', action:'showPluginConfig')
-            "/platform/navigation"(controller:'platformTools', action:'showNavigation')
-*/
     		name platformNormal: "/platform/$action?/$id?"{
     		    controller = 'platformTools'
     		}
