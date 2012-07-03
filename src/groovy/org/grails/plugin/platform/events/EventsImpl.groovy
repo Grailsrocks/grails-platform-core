@@ -60,14 +60,17 @@ class EventsImpl implements Events {
                 self.event(null, topic, data, params)
             }
             event { Map args ->
-                self.event(args.for ?: null, args.topic, args.data, args.params)
+                def ns = args.for ?: args.namespace
+                self.event(ns, args.topic, args.data, args.params)
             }
             eventAsync { Map args ->
-                self.eventAsync(args.for ?: null, args.topic, args.data, args.params)
+                def ns = args.for ?: args.namespace
+                self.eventAsync(ns, args.topic, args.data, args.params)
             }
 
             eventAsync { Map args, Closure callback ->
-                self.eventAsyncWithCallback(args.for ?: null, args.topic, args.data, callback, args.params)
+                def ns = args.for ?: args.namespace
+                self.eventAsyncWithCallback(ns, args.topic, args.data, callback, args.params)
             }
 
             eventAsync { String topic, data = null, Map params = null ->
@@ -206,7 +209,7 @@ class EventsImpl implements Events {
                     log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and namespace $namespace but no such event is declared, you may never receive it"
                 }
 
-                grailsEventsRegistry.addListener(
+                grailsEventsRegistry.on(
                         namespace,
                         topic,
                         applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
