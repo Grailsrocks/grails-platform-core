@@ -31,6 +31,9 @@ import org.grails.plugin.platform.util.PluginUtils
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class EventsImpl implements Events {
 
@@ -43,104 +46,112 @@ class EventsImpl implements Events {
 
     List<EventDefinition> eventDefinitions
 
+    static final String APP_NAMESPACE = 'app'
+
     def injectedMethods = { theContext ->
 
         'controller, domain, service' { Class clazz ->
-            String scope = PluginUtils.getNameOfDefiningPlugin(theContext, clazz) ?: 'app'
+            //String defaultNamespace = PluginUtils.getNameOfDefiningPlugin(theContext, clazz) ?: APP_NAMESPACE'
 
             def self = theContext.grailsEvents
-            def config = theContext.grailsApplication.config.plugin.platformCore
+            //def config = theContext.grailsApplication.config.plugin.platformCore
 
             event { String topic, data = null, Map params = null ->
-                self.event(scope, topic, data, params)
+                self.event(null, topic, data, params)
             }
             event { Map args ->
-                self.event(args.scopeOverride ?: scope, args.topic, args.data, args.params)
+                self.event(args.for ?: null, args.topic, args.data, args.params)
             }
             eventAsync { Map args ->
-                self.eventAsync(args.scopeOverride ?: scope, args.topic, args.data, args.params)
+                self.eventAsync(args.for ?: null, args.topic, args.data, args.params)
             }
+
+            eventAsync { Map args, Closure callback ->
+                self.eventAsyncWithCallback(args.for ?: null, args.topic, args.data, callback, args.params)
+            }
+
             eventAsync { String topic, data = null, Map params = null ->
-                self.eventAsync(scope, topic, data, params)
+                self.eventAsync(null, topic, data, params)
             }
-            eventAsync { String topic, data, Closure callback, params = null ->
-                self.eventAsyncWithCallback(scope, topic, data, callback, params)
+            eventAsync { String topic, data, params, Closure callback ->
+                self.eventAsyncWithCallback(null, topic, data, callback, params)
             }
-            eventAsync { String topic, Closure callback, params = null ->
-                self.eventAsyncWithCallback(scope, topic, null, callback, params)
+            eventAsync { String topic, data, Closure callback ->
+                self.eventAsyncWithCallback(null, topic, data, callback, params)
             }
-            copyFrom(self.grailsEventsPublisher, 'waitFor')
-            copyFrom(self.grailsEventsRegistry, ['addListener', 'removeListeners', 'countListeners'])
+            eventAsync { String topic, Closure callback ->
+                self.eventAsyncWithCallback(null, topic, null, callback, null)
+            }
+            on { String topic, Closure callback ->
+                self.grailsEventsRegistry.on(APP_NAMESPACE, topic, callback)
+            }
+            copyFrom(self, 'waitFor')
+            copyFrom(self.grailsEventsRegistry, ['on', 'removeListeners', 'countListeners'])
         }
     }
 
-    // We have to use a list here as [] and ... were failing to compile for some WTF reason - MP
-    Object[] waitFor(List<EventReply> replies) {
-        grailsEventsPublisher.waitFor(replies)
+    Object[] waitFor(long l, TimeUnit timeUnit, EventReply... replies) throws ExecutionException, InterruptedException, TimeoutException {
+        for (reply in replies) {
+            reply?.get(l, timeUnit)
+        }
+        replies
     }
 
-    String addListener(String scope, String topic, Closure callback) {
-        grailsEventsRegistry.addListener(scope, topic, callback)
+    Object[] waitFor(EventReply... replies) throws ExecutionException, InterruptedException, TimeoutException {
+        waitFor(-1l, TimeUnit.NANOSECONDS, replies)
     }
 
-    int removeListeners(String callbackId) {
-        grailsEventsRegistry.removeListeners(callbackId)
+    EventReply event(String namespace, String topic, data) {
+        event(namespace, topic, data, null)
     }
 
-    int countListeners(String callbackId) {
-        grailsEventsRegistry.countListeners(callbackId)
+
+    EventReply event(String namespace, String topic) {
+        event(namespace, topic, null, null)
     }
 
-    EventReply event(String scope, String topic) {
-        event(scope, topic, null, null)
-    }
-    
-    EventReply event(String scope, String topic, data) {
-        event(scope, topic, data, null)
-    }
-    
-    EventReply event(String scope, String topic, data, Map params) {
+    EventReply event(String namespace, String topic, data, Map params) {
         if (log.debugEnabled) {
-            log.debug "Sending event of scope [$scope] and topic [$topic] with data [${data}] and params [${params}]"
+            log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
         }
-        grailsEventsPublisher.event buildEvent(scope, topic, data, params)
+        grailsEventsPublisher.event buildEvent(namespace, topic, data, params)
     }
 
-    EventReply eventAsync(String scope, String topic) {
-        eventAsync(scope, topic, null, null)
+    EventReply eventAsync(String namespace, String topic) {
+        eventAsync(namespace, topic, null, null)
     }
 
-    EventReply eventAsync(String scope, String topic, data) {
-        eventAsync(scope, topic, data, null)
+    EventReply eventAsync(String namespace, String topic, data) {
+        eventAsync(namespace, topic, data, null)
     }
 
-    EventReply eventAsync(String scope, String topic, data, Map params) {
+    EventReply eventAsync(String namespace, String topic, data, Map params) {
         if (log.debugEnabled) {
-            log.debug "Sending async event of scope [$scope] and topic [$topic] with data [${data}] and params [${params}]"
+            log.debug "Sending async event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
         }
-        grailsEventsPublisher.eventAsync buildEvent(scope, topic, data, params)
+        grailsEventsPublisher.eventAsync buildEvent(namespace, topic, data, params)
     }
 
-    void eventAsyncWithCallback(String scope, String topic, Closure callback) {
-        eventAsyncWithCallback(scope, topic, null, callback, null)
+    void eventAsyncWithCallback(String namespace, String topic, Closure callback) {
+        eventAsyncWithCallback(namespace, topic, null, callback, null)
     }
-    
-    void eventAsyncWithCallback(String scope, String topic, data, Closure callback) {
-        eventAsyncWithCallback(scope, topic, data, callback, null)
+
+    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback) {
+        eventAsyncWithCallback(namespace, topic, data, callback, null)
     }
-    
-    void eventAsyncWithCallback(String scope, String topic, data, Closure callback, Map params) {
+
+    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params) {
         if (log.debugEnabled) {
-            log.debug "Sending event of scope [$scope] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
+            log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
         }
-        grailsEventsPublisher.eventAsync buildEvent(scope, topic, data, params), callback
+        grailsEventsPublisher.eventAsync buildEvent(namespace, topic, data, params), callback
     }
 
-    EventMessage buildEvent(String scope, String topic, data, Map params) {
+    EventMessage buildEvent(String namespace, String topic, data, Map params) {
         boolean gormSession = params?.containsKey('gormSession') ? params.remove('gormSession') : true
-        String _scope = params?.remove('scope') ?: scope
+        String _namespace = params?.remove('namespace') ?: namespace
 
-        new EventMessage(topic, data, _scope, gormSession, params)
+        new EventMessage(topic, data, _namespace, gormSession, params)
     }
 
     void reloadListener(Class serviceClass) {
@@ -159,8 +170,10 @@ class EventsImpl implements Events {
             for (Method method : serviceClass.declaredMethods) {
                 Listener annotation = method.getAnnotation(Listener)
                 if (annotation) {
-                    String scope = PluginUtils.getNameOfDefiningPlugin(applicationContext, serviceClass) ?: 'app'
-                    c(scope, annotation.value() ?: method.name, method, serviceClass)
+                    String namespace = /*PluginUtils.getNameOfDefiningPlugin(applicationContext, serviceClass) ?:*/
+                        annotation?.namespace() ?: APP_NAMESPACE
+                    String topic = annotation?.topic() ?: method.name
+                    c(namespace, annotation?.namespace() as boolean, topic, method, serviceClass)
                 }
             }
         }
@@ -179,20 +192,22 @@ class EventsImpl implements Events {
 
     void registerListeners(Collection<Class<?>> serviceClasses) {
 //            grailsEventsDispatcher.scanClassForMappings(serviceClass)
-        eachListener(serviceClasses) {String scope, String topic, Method method, Class serviceClass ->
+        eachListener(serviceClasses) {String namespace, boolean hasInlineNamespace, String topic, Method method, Class serviceClass ->
 
             def definition = matchesDefinition(topic, method, serviceClass)
-            scope = definition?.scope ?: scope
+            if (!hasInlineNamespace || !definition?.definingPlugin) {
+                namespace = definition?.namespace ?: namespace
+            }
             // If there is no match with a known event, or there is a declared event and it is not disabled,
             // add the listener
             if (!definition || !definition.disabled) {
-                log.info "Register event listener $serviceClass.name#$method.name for topic $topic and scope $scope"
+                log.info "Register event listener $serviceClass.name#$method.name for topic $topic and namespace $namespace"
                 if (!definition) {
-                    log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and scope $scope but no such event is declared, you may never receive it"
+                    log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and namespace $namespace but no such event is declared, you may never receive it"
                 }
 
                 grailsEventsRegistry.addListener(
-                        scope,
+                        namespace,
                         topic,
                         applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
                         method,
@@ -254,7 +269,7 @@ class EventsImpl implements Events {
     }
 
     /**
-     * Receives a graph of DSL commend objects and creates the necessary scopes and items
+     * Receives a graph of DSL commend objects and creates the necessary namespaces and items
      *
      * Handles the "magic" inheritance of values and conventions etc.
      */
@@ -281,9 +296,9 @@ class EventsImpl implements Events {
             log.debug "Adding event declared in DSL - listenerPattern: ${listenerPattern}, arguments: ${arguments}, defined by plugin ${definingPlugin}"
         }
         def definition = new EventDefinition()
-        definition.scope = arguments?.remove('scope') 
-        if (!definition.scope) {
-            definition.scope = definingPlugin
+        definition.namespace = arguments?.remove('namespace')
+        if (!definition.namespace) {
+            definition.namespace = definingPlugin
         }
         definition.requiresReply = arguments?.remove('requiresReply') ?: definition.requiresReply
         definition.disabled = arguments?.remove('disabled') ?: definition.disabled
@@ -308,7 +323,7 @@ class EventsImpl implements Events {
             log.debug "Scoring event declared in DSL - definition: ${definition.dump()}"
         }
         int score = 0
-        if (definition.listenerId.scope) score += 1
+        if (definition.listenerId.namespace) score += 1
         if (definition.listenerId.topic) score += 1
         if (definition.listenerId.className) score += 1
         if (definition.listenerId.methodName) score += 1

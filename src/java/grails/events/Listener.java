@@ -34,5 +34,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Listener {
 
-    String value() default "";
+    //String value() default "";
+    String topic() default "";
+    String namespace() default "";
 }

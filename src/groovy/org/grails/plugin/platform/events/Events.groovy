@@ -17,25 +17,23 @@
  */
 package org.grails.plugin.platform.events
 
-import org.grails.plugin.platform.events.EventReply
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeoutException
 
 interface Events {
-    EventReply event(String scope, String topic)
-    EventReply event(String scope, String topic, data)
-    EventReply event(String scope, String topic, data, Map params)
-    EventReply eventAsync(String scope, String topic)
-    EventReply eventAsync(String scope, String topic, data)
-    EventReply eventAsync(String scope, String topic, data, Map params)
-    void eventAsyncWithCallback(String scope, String topic, Closure callback) 
-    void eventAsyncWithCallback(String scope, String topic, data, Closure callback) 
-    void eventAsyncWithCallback(String scope, String topic, data, Closure callback, Map params)
-    
-    // ***** Not sure about these *****
-    String addListener(String scope, String topic, Closure callback)
-    int removeListeners(String callbackId)
-    int countListeners(String callbackId)
+    EventReply event(String namespace, String topic)
+    EventReply event(String namespace, String topic, data)
+    EventReply event(String namespace, String topic, data, Map params)
+    EventReply eventAsync(String namespace, String topic)
+    EventReply eventAsync(String namespace, String topic, data)
+    EventReply eventAsync(String namespace, String topic, data, Map params)
+    void eventAsyncWithCallback(String namespace, String topic, Closure callback) 
+    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback) 
+    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params)
 
     // We have to use a list here as [] and ... were failing to compile for some WTF reason - MP
-    Object[] waitFor(List<EventReply> replies)
-    
+    Object[] waitFor(EventReply[] replies) throws ExecutionException, InterruptedException, TimeoutException
+    Object[] waitFor(long l, TimeUnit timeUnit, EventReply[] replies) throws ExecutionException, InterruptedException, TimeoutException
+
 }

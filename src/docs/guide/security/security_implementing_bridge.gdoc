@@ -4,7 +4,7 @@ Typically this bean will be provided by the security plugin you are using. Howev
 
 Simply implement the interface and register the bean as "grailsSecurityBridge" in your Spring context either in a plugin's @doWithSpring@ or your application's @resources.groovy@:
 
-{code:groovy}
+{code}
 grailsSecurityBridge(com.mycorp.security.MySecurityProvider) {
     // wire in any other dependencies it has
     grailsApplication = ref('grailsApplication')

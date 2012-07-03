@@ -1,0 +1,81 @@
+Usually, an event is _fired and forgot_. In some cases, you may expect an answer to transform your messaging architecture
+into a controlled flow. For instance, a negative reply can be used in GORM events to cancel database writing for the current subjet.
+Another usual example is the aggregation of multiple workers products.
+
+h3. Simple reply
+
+Replying is a simple matter of returning an object from the listener method :
+
+{code}
+class SomeService{
+    @Listener
+    def logout(User user){
+       Date disconnectDate = new Date()
+
+       //do something with user
+
+       return disconnectDate
+    }
+}
+{code}
+
+Whenever a listener return non null object, the caller can access it through the EventReply enveloppe returned immediatly
+after calling event/eventAsync. Getting the value is a blocking operation called *value* :
+
+{code}
+class SomeController{
+
+   def logout(){
+       def reply = eventAsync topic:"logout", data:session.user
+
+       render reply.value //wait and display value
+
+       def reply2 = eventAsync topic:"logout", data:session.user
+
+       render reply.get(30, TimeUnit.SECONDS) //EventReply object is a Future implementation, hence providing the same facilities such as timeout
+   }
+}
+{code}
+
+h3. Multiple replies
+
+Multiple listeners can return values for the same topic/namespace. In this case, EventReply will wait for all handlers before returning any value.
+Remember that a valid result is a non null value, hence why even if 3 handlers have reacted but only 2 did return something, then you will only
+see 2 values in the *EventReply.values*.
+
+{code}
+class SomeController{
+
+   def logout(){
+       def reply = event topic:"sendMails", data:session.user
+
+       render reply.value //wait for all listeners and then display the first value from the aggregated results
+       render reply.values //display all results as List
+   }
+}
+{code}
+
+h3. Waiting replies
+
+In domains, services and controllers artefacts you can wait for events using "EventReply[] waitFor(EventReply... eventReplies)".
+It accepts as many events replies you want and returns the same array for functiunal programming style. This method is rather useless in a sync scenario.
+
+{code}
+class SomeController{
+
+   def logout(){
+      def reply = eventAsync('logout', session.user)
+      def reply2 = eventAsync('logout', session.user)
+      def reply3 = eventAsync('logout', session.user)
+
+      waitFor(reply,reply2,reply3).each{EventReply reply->
+        render reply.value +'</br>'
+      }
+
+      //same with 20 seconds timeout on each reply
+      waitFor(20, TimeUnit.SECONDS, reply,reply2,reply3).each{EventReply reply->
+              render reply.value +'</br>'
+      }
+   }
+}
+{code}

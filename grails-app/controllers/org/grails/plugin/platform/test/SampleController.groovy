@@ -52,7 +52,7 @@ class SampleController {
     }
 
     def testInlineListener = {
-        def listener = addListener("afterInsert") {Book book ->
+        def listener = on("afterInsert") {Book book ->
             println "test $book"
         }
         render "$listener registered"
@@ -61,11 +61,18 @@ class SampleController {
     def index = {
         response.outputStream << "There are ${countListeners('sampleHello')} listeners for topic 'sampleHello' \n"
         response.outputStream << "There are ${countListeners("lal://sampleHello:$SampleService.name")} listeners for class '$SampleService.name' \n"
-        response.outputStream << "sync event with replies values : " + event('sampleHello', '{"message":"world"}', [scope:'lal'])?.values + " \n\n"
-        def async1 = eventAsync('sampleHello',  '{"message":"world A"}', [scope:'lal'])
-        def async2 = eventAsync('sampleHello', '{"message":"world B"}', [scope:'lal'])
+
+        response.outputStream << "sync event with replies values : " + event('sampleHello', '{"message":"world"}', [namespace:'lal'])?.values + " \n\n"
+
+        //Args form
+        def async1 = eventAsync('sampleHello',  '{"message":"world A"}', [namespace:'lal'])
+
+        //Map form
+        def async2 = eventAsync for:'lal', topic:'sampleHello', data:'{"message":"world B"}'
+
         response.outputStream << "async events replies $async1 $async2 \n\n"
-        response.outputStream << "async event reply value " + eventAsync('sampleHello', '{"message":"world2"}', [scope:'lal'])?.value + " \n\n"
+        response.outputStream << "async event reply value " + eventAsync('sampleHello', '{"message":"world2"}', [namespace: 'lal'])?.value + " \n\n"
+
         response.outputStream << "async wait \n\n"
         def values = waitFor(async1, async2)
         response.outputStream << "waited results : $values \n"

@@ -33,12 +33,12 @@ class SampleService {
 
     static transactional = true
 
-    @Listener('beforeInsert')
+    @Listener(topic = 'beforeInsert', namespace = 'gorm')
     void beforeInsertBook(Book book) {
         println "will insert book - $book.title"
     }
 
-    @Listener('beforeInsert')
+    @Listener(topic = 'beforeInsert', namespace = 'gorm')
     void beforeInsertAuthor(Author author) {
         println "will insert author - $author.name"
     }
@@ -48,8 +48,15 @@ class SampleService {
         println "will load author -  $author.name"
     }
 
-    @Listener('sampleHello')
+    @Listener(topic = 'sampleHello')
     def testEvent(test) {
         println "Hello (bis) - $test"
+        'worked 1'
+    }
+
+    @Listener(namespace = 'lal')
+    def sampleHello(test) {
+        println "Hello (bis) - $test"
+
     }
 }

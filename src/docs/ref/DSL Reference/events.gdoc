@@ -3,8 +3,9 @@ h1. The Events DSL
 The Events API allows your code to send and receive messages across application and plugin boundaries,
 using an abstracted message transport.
 
-In order to listen for an event it must be declared. This is done using Events
-artefacts and the corresponding domain-specific language.
+In order to listen for an event it is strongly recommended to be declared. This is done using Events
+artefacts and the corresponding domain-specific language. Events DSL allows you to override some plugin specifics
+namespaces and others behaviors.
 
 The DSL takes the form of method calls representing event names that can be sent by your code,
 with an optional list of arguments:
@@ -18,7 +19,7 @@ events = {
 }
 {code}
 
-* scope
+* namespace
 * requiresReply
 * disabled
 * secured

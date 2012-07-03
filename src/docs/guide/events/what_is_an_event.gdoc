@@ -1,9 +1,0 @@
-An event is often as simple as a "callback" with no parameters, but usually there is some extra state passed as an event object.
-
-An event can be sent to multiple listeners, and any result returned from any listeners is passed back to the original sender of the event.
-
-An event belongs to a "topic" and often has a "subject". The topic is like a channel that identifies the kind or scope of events. The optional subject is the object that the event "happened to".
-
-So for example a simple "app started" notification has no subject but may have topic "grails", but a "user logged in" even may have topic "security" and subject set to the user principal supplied by the security plugin you are using.
-
-When sending or listening for events you indicate the topic and subject.

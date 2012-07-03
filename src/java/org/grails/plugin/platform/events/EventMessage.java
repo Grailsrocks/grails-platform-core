@@ -32,7 +32,7 @@ import java.util.Map;
  * [Does stuff]
  */
 public class EventMessage implements Serializable {
-    final private String scope;
+    final private String namespace;
     final private String event;
     final private Object data;
     final private Boolean gormSession;
@@ -42,18 +42,18 @@ public class EventMessage implements Serializable {
         this(event, data, null);
     }
 
-    public EventMessage(String event, Object data, String scope) {
-        this(event, data, scope, scope == null || !scope.equals(GormTopicSupport.GORM_SOURCE));
+    public EventMessage(String event, Object data, String namespace) {
+        this(event, data, namespace, namespace == null || !namespace.equals(GormTopicSupport.GORM_SOURCE));
     }
 
-    public EventMessage(String event, Object data, String scope, boolean gormSession) {
-        this(event, data, scope, gormSession, null);
+    public EventMessage(String event, Object data, String namespace, boolean gormSession) {
+        this(event, data, namespace, gormSession, null);
     }
 
-    public EventMessage(String event, Object data, String scope, boolean gormSession, Map<String,Serializable> headers) {
+    public EventMessage(String event, Object data, String namespace, boolean gormSession, Map<String,Serializable> headers) {
         this.event = event;
         this.data = data;
-        this.scope = scope;
+        this.namespace = namespace;
         this.gormSession = gormSession;
         this.headers = headers;
     }
@@ -63,8 +63,8 @@ public class EventMessage implements Serializable {
     }
 
 
-    public String getScope() {
-        return scope;
+    public String getNamespace() {
+        return namespace;
     }
 
 

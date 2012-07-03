@@ -25,9 +25,7 @@ import org.grails.plugin.platform.events.EventReply;
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry;
 import org.springframework.core.task.AsyncTaskExecutor;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * @author Stephane Maldini <smaldini@doc4web.com>
@@ -84,13 +82,6 @@ public class DefaultEventsPublisher implements EventsPublisher {
                 onComplete.call(new EventReply(invokeResult.getResult(), invokeResult.getInvoked()));
             }
         });
-    }
-
-    public EventReply[] waitFor(EventReply... replies) throws ExecutionException, InterruptedException {
-        for (EventReply reply : replies) {
-            if (reply != null) reply.get();
-        }
-        return replies;
     }
 
     //INTERNAL

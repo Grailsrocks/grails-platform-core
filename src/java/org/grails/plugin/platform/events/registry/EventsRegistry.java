@@ -33,17 +33,17 @@ import java.lang.reflect.Method;
  */
 public interface EventsRegistry {
 
-    public String addListener(String scope, String topic, Object bean, Method callbackMethod);
+    public String on(String namespace, String topic, Object bean, Method callbackMethod);
 
-    public String addListener(String scope, String topic, Object bean, Method callbackMethod, EventDefinition definition);
+    public String on(String namespace, String topic, Object bean, Method callbackMethod, EventDefinition definition);
 
-    public String addListener(String scope, String topic, Object bean, String callbackMethodName);
+    public String on(String namespace, String topic, Object bean, String callbackMethodName);
 
-    public String addListener(String scope, String topic, Object bean, String callbackMethodName, EventDefinition definition);
+    public String on(String namespace, String topic, Object bean, String callbackMethodName, EventDefinition definition);
 
-    public String addListener(String scope, String topic, Closure callback);
+    public String on(String namespace, String topic, Closure callback);
 
-    public String addListener(String scope, String topic, Closure callback, EventDefinition definition);
+    public String on(String namespace, String topic, EventDefinition definition, Closure callback);
 
     public int removeListeners(String callbackId);
 

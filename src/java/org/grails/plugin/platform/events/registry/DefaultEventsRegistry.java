@@ -51,28 +51,28 @@ public class DefaultEventsRegistry implements EventsRegistry {
         API
      */
 
-    public String addListener(String scope, String topic, Closure callback, EventDefinition definition) {
-        return registerHandler(callback, scope, topic, definition);
+    public String on(String namespace, String topic, EventDefinition definition, Closure callback) {
+        return registerHandler(callback, namespace, topic, definition);
     }
 
-    public String addListener(String scope, String topic, Object bean, String callbackName, EventDefinition definition) {
-        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), scope, topic, definition);
+    public String on(String namespace, String topic, Object bean, String callbackName, EventDefinition definition) {
+        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic, definition);
     }
 
-    public String addListener(String scope, String topic, Object bean, Method callback, EventDefinition definition) {
-        return registerHandler(bean, callback, scope, topic, definition);
+    public String on(String namespace, String topic, Object bean, Method callback, EventDefinition definition) {
+        return registerHandler(bean, callback, namespace, topic, definition);
     }
 
-    public String addListener(String scope, String topic, Closure callback) {
-        return registerHandler(callback, scope, topic, null);
+    public String on(String namespace, String topic, Closure callback) {
+        return registerHandler(callback, namespace, topic, null);
     }
 
-    public String addListener(String scope, String topic, Object bean, String callbackName) {
-        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), scope, topic, null);
+    public String on(String namespace, String topic, Object bean, String callbackName) {
+        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic, null);
     }
 
-    public String addListener(String scope, String topic, Object bean, Method callback) {
-        return registerHandler(bean, callback, scope, topic, null);
+    public String on(String namespace, String topic, Object bean, Method callback) {
+        return registerHandler(bean, callback, namespace, topic, null);
     }
 
     public int removeListeners(String callbackId) {
@@ -101,12 +101,12 @@ public class DefaultEventsRegistry implements EventsRegistry {
        INTERNAL
     */
 
-    private String registerHandler(Closure callback, String scope, String topic, EventDefinition definition) {
+    private String registerHandler(Closure callback, String namespace, String topic, EventDefinition definition) {
         if (log.isDebugEnabled()) {
             log.debug("Registering event handler [" + callback.getClass() + "] for topic [" + topic + "]");
         }
 
-        ListenerId listener = ListenerId.build(scope, topic, callback);
+        ListenerId listener = ListenerId.build(namespace, topic, callback);
         ListenerHandler handler = new ListenerHandler(callback, ReflectionUtils.findMethod(
                 callback.getClass(),
                 "call",
@@ -120,7 +120,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         return listener.toString();
     }
 
-    private String registerHandler(Object bean, Method callback, String scope, String topic, EventDefinition definition) {
+    private String registerHandler(Object bean, Method callback, String namespace, String topic, EventDefinition definition) {
         if (log.isDebugEnabled()) {
             log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");
         }
@@ -134,7 +134,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
                 log.error("failed to retrieve bean origin from proxy", e);
             }
         }
-        ListenerId listener = ListenerId.build(scope, topic, target, callback);
+        ListenerId listener = ListenerId.build(namespace, topic, target, callback);
 
         ListenerHandler handler = new ListenerHandler(target, callback, listener, definition);
 
@@ -163,9 +163,9 @@ public class DefaultEventsRegistry implements EventsRegistry {
 
     public InvokeResult invokeListeners(EventMessage evt) {
         if (log.isDebugEnabled()) {
-            log.debug("Invoking listeners for event [" + evt.getEvent() + "] scoped on [" + evt.getScope() + "] with data [" + evt.getData() + "]");
+            log.debug("Invoking listeners for event [" + evt.getEvent() + "] namespaced on [" + evt.getNamespace() + "] with data [" + evt.getData() + "]");
         }
-        ListenerId listener = new ListenerId(evt.getScope(), evt.getEvent());
+        ListenerId listener = new ListenerId(evt.getNamespace(), evt.getEvent());
         Set<ListenerHandler> listeners = findAll(listener);
 
         if (log.isDebugEnabled()) {

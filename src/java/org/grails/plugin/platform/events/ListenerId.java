@@ -29,19 +29,19 @@ import java.lang.reflect.Method;
  * @date 09/01/12
  * @section DESCRIPTION
  * <p/>
- * format : scope://topic:package.Class#method@hashCode
+ * format : namespace://topic:package.Class#method@hashCode
  */
 public class ListenerId implements Serializable {
     private static final String CLOSURE_METHOD_NAME = "call";
-    private static final String ID_SCOPE_SEPARATOR = "://";
+    private static final String ID_NAMESPACE_SEPARATOR = "://";
     private static final String ID_CLASS_SEPARATOR = ":";
     private static final String ID_METHOD_SEPARATOR = "#";
     private static final String ID_HASHCODE_SEPARATOR = "@";
-    public static final String SCOPE_WILDCARD = "*";
+    public static final String NAMESPACE_WILDCARD = "*";
 
     /*private static final Pattern idRegex = Pattern.compile(
-            "([^" + ID_SCOPE_SEPARATOR + "]*)?" +
-                    "("+ID_SCOPE_SEPARATOR +")?"+
+            "([^" + ID_NAMESPACE_SEPARATOR + "]*)?" +
+                    "("+ID_NAMESPACE_SEPARATOR +")?"+
                     "([^" + ID_CLASS_SEPARATOR + "]*)?" +
                     "(" + ID_CLASS_SEPARATOR + "([^" + ID_METHOD_SEPARATOR + "]*))?"
                     + "(" + ID_METHOD_SEPARATOR + "([^" + ID_HASHCODE_SEPARATOR + "]*))?"
@@ -52,17 +52,17 @@ public class ListenerId implements Serializable {
     private String hashCode;
     private String topic;
 
-    private String scope;
+    private String namespace;
 
-    public ListenerId(String scope, String topic) {
-        this(scope, topic, null, null, null);
+    public ListenerId(String namespace, String topic) {
+        this(namespace, topic, null, null, null);
     }
 
-    public ListenerId(String scope, String topic, String className, String methodName, String hashCode) {
+    public ListenerId(String namespace, String topic, String className, String methodName, String hashCode) {
         this.className = className;
         this.methodName = methodName;
         this.hashCode = hashCode;
-        this.scope = scope;
+        this.namespace = namespace;
         if (topic != null && !topic.isEmpty()) {
             this.topic = topic;
         }
@@ -76,12 +76,12 @@ public class ListenerId implements Serializable {
         this.topic = topic;
     }
 
-    public String getScope() {
-        return scope;
+    public String getNamespace() {
+        return namespace;
     }
 
-    public void setScope(String scope) {
-        this.scope = scope;
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
     public String getClassName() {
@@ -108,36 +108,36 @@ public class ListenerId implements Serializable {
         this.hashCode = hashCode;
     }
 
-    //format : scope://topic:package.Class#method@hashCode
+    //format : namespace://topic:package.Class#method@hashCode
     public String toString() {
         return toStringWithoutHash()
                 + (hashCode != null ? ID_HASHCODE_SEPARATOR + hashCode : "");
     }
 
-    // format : scope://topic:package.Class#method
+    // format : namespace://topic:package.Class#method
     public String toStringWithoutHash() {
-        return (scope != null ? scope + ID_SCOPE_SEPARATOR : "") + (topic != null ? topic : "") + (className != null ? ID_CLASS_SEPARATOR + className : "")
+        return (namespace != null ? namespace + ID_NAMESPACE_SEPARATOR : "") + (topic != null ? topic : "") + (className != null ? ID_CLASS_SEPARATOR + className : "")
                 + (methodName != null ? ID_METHOD_SEPARATOR + methodName : "");
     }
 
-    static public ListenerId build(String scope, String topic, Object target, Method callback) {
-            return new ListenerId(scope, topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
+    static public ListenerId build(String namespace, String topic, Object target, Method callback) {
+            return new ListenerId(namespace, topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
         }
 
-    static public ListenerId build(String scope, String topic, Class target, Method callback) {
-        return new ListenerId(scope, topic, target.getName(), callback.getName(), null);
+    static public ListenerId build(String namespace, String topic, Class target, Method callback) {
+        return new ListenerId(namespace, topic, target.getName(), callback.getName(), null);
     }
 
-    static public ListenerId build(String scope, String topic, Closure target) {
-        return new ListenerId(scope, topic, target.getClass().getName(), CLOSURE_METHOD_NAME, Integer.toString(target.hashCode()));
+    static public ListenerId build(String namespace, String topic, Closure target) {
+        return new ListenerId(namespace, topic, target.getClass().getName(), CLOSURE_METHOD_NAME, Integer.toString(target.hashCode()));
     }
 
     static public ListenerId parse(String id) {
         //Matcher parsed = idRegex.matcher(id);
         if (id != null) {
-            int scopeIndex = id.indexOf(ID_SCOPE_SEPARATOR);
-            String _scope = scopeIndex != -1 ? id.substring(0,scopeIndex) : null;
-            id = scopeIndex != -1 ? id.substring(scopeIndex+3, id.length()) : id;
+            int namespaceIndex = id.indexOf(ID_NAMESPACE_SEPARATOR);
+            String _namespace = namespaceIndex != -1 ? id.substring(0,namespaceIndex) : null;
+            id = namespaceIndex != -1 ? id.substring(namespaceIndex+3, id.length()) : id;
 
             int classIndex = id.indexOf(ID_CLASS_SEPARATOR);
             String _topic = id.substring(0, classIndex != -1 ? classIndex : id.length());
@@ -152,7 +152,7 @@ public class ListenerId implements Serializable {
             String _hashcode = hashcodeIndex != -1 ? id.substring(hashcodeIndex + 1,  id.length()) : null;
 
             return new ListenerId(
-                    _scope,
+                    _namespace,
                     _topic,
                     _class,
                     _method,
@@ -166,16 +166,16 @@ public class ListenerId implements Serializable {
     public boolean matches(ListenerId listener) {
         Boolean result = null;
 
-        if (this.scope != null && listener.getScope() != null) {
-            result = this.scope.equals(SCOPE_WILDCARD) ||
-                    listener.getScope().equals(SCOPE_WILDCARD) ||
-                    this.scope.equalsIgnoreCase(listener.getScope());
+        if (this.namespace != null && listener.getNamespace() != null) {
+            result = this.namespace.equals(NAMESPACE_WILDCARD) ||
+                    listener.getNamespace().equals(NAMESPACE_WILDCARD) ||
+                    this.namespace.equalsIgnoreCase(listener.getNamespace());
         }
 
         if (this.topic != null) {
             result = result == null || result;
-            result &= listener.getTopic().equals(SCOPE_WILDCARD) ||
-                    this.topic.equals(SCOPE_WILDCARD) || this.topic.equals(listener.getTopic());
+            result &= listener.getTopic().equals(NAMESPACE_WILDCARD) ||
+                    this.topic.equals(NAMESPACE_WILDCARD) || this.topic.equals(listener.getTopic());
         }
         if (this.className != null) {
             result = result == null || result;
@@ -204,7 +204,7 @@ public class ListenerId implements Serializable {
         ListenerId listener = (ListenerId) o;
 
         return !(className != null ? !className.equals(listener.className) : listener.className != null) &&
-                 !(scope != null ? !scope.equals(listener.scope) : listener.scope != null) &&
+                 !(namespace != null ? !namespace.equals(listener.namespace) : listener.namespace != null) &&
                 !(hashCode != null ? !hashCode.equals(listener.hashCode) : listener.hashCode != null) &&
                 !(methodName != null ? !methodName.equals(listener.methodName) : listener.methodName != null) &&
                 !(topic != null ? !topic.equals(listener.topic) : listener.topic != null);
@@ -217,7 +217,7 @@ public class ListenerId implements Serializable {
         result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
         result = 31 * result + (hashCode != null ? hashCode.hashCode() : 0);
         result = 31 * result + (topic != null ? topic.hashCode() : 0);
-        result = 31 * result + (scope != null ? scope.hashCode() : 0);
+        result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
         return result;
     }
 }

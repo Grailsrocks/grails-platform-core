@@ -2,7 +2,7 @@ To get started you need to install the platform-core plugin.
 
 Add the plugin platform as a dependency to your application or plugin, either directly or transitively. To do so directly edit your @BuildConfig.groovy@ to look something like this:
 
-{code:groovy}
+{code}
     ...
     plugins {
         ...
