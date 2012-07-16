@@ -25,7 +25,7 @@ import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
-    def version = "1.0.M2j-SNAPSHOT"
+    def version = "1.0.M2"
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
@@ -154,7 +154,7 @@ Grails Plugin Platform Core APIs
             grailsEventsPublisher(DefaultEventsPublisher) {
                 grailsEventsRegistry = ref('grailsEventsRegistry')
                 taskExecutor = ref('grailsTopicExecutor')
-                if(springConfig.containsBean('persistenceInterceptor'))
+                if(manager.hasGrailsPlugin('hibernate'))
                     persistenceInterceptor = ref("persistenceInterceptor")
                 catchFlushExceptions = config.events.catchFlushExceptions
             }
@@ -282,7 +282,7 @@ Grails Plugin Platform Core APIs
 
     static softLoadClass(String className) {
         try {
-            getClassLoader().loadClass(className)
+            this.getClassLoader().loadClass(className)
         } catch (ClassNotFoundException e) {
             println "ERROR: Could not load $className"
             null
