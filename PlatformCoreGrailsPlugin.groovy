@@ -145,7 +145,6 @@ Grails Plugin Platform Core APIs
         // UI Helper API
         if (config.ui.enable)
             grailsUiHelper(org.grails.plugin.platform.ui.UiHelper)
-
         // Events API
         if (config.events.enable) {
             task.executor(id: "grailsTopicExecutor", 'pool-size': config.events.poolSize)
@@ -155,7 +154,8 @@ Grails Plugin Platform Core APIs
             grailsEventsPublisher(DefaultEventsPublisher) {
                 grailsEventsRegistry = ref('grailsEventsRegistry')
                 taskExecutor = ref('grailsTopicExecutor')
-                persistenceInterceptor = ref("persistenceInterceptor")
+                if(springConfig.containsBean('persistenceInterceptor'))
+                    persistenceInterceptor = ref("persistenceInterceptor")
                 catchFlushExceptions = config.events.catchFlushExceptions
             }
 
