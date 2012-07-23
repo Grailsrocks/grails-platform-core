@@ -29,7 +29,7 @@ package org.grails.plugin.platform.events
  */
 
 class EventDefinition implements Comparable<EventDefinition> {
-    ListenerId listenerId
+    String topic
     String namespace = 'app'
 
     Class filterClass = null;

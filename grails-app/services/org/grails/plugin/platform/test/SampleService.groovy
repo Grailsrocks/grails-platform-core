@@ -43,20 +43,26 @@ class SampleService {
         println "will insert author - $author.name"
     }
 
-    @Listener
+    @Listener(namespace = 'platformCore')
     void afterLoad(Author author) {
         println "will load author -  $author.name"
     }
 
-    @Listener(topic = 'sampleHello')
+    @Listener(topic = 'sampleHello', namespace = 'platformCore')
     def testEvent(test) {
-        println "Hello (bis) - $test"
+        println "Hello (bas) - $test"
         'worked 1'
     }
 
     @Listener(namespace = 'lal')
     def sampleHello(test) {
         println "Hello (bis) - $test"
+
+    }
+
+    @Listener(namespace = 'lal', topic='*')
+    def sampleHella(test) {
+        println "Adios bus) - $test"
 
     }
 }

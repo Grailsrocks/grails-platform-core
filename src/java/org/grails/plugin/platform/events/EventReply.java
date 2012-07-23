@@ -92,7 +92,7 @@ public class EventReply implements Serializable, Future<Object> {
         return futureReply == null || futureReply.isDone();
     }
 
-    public int size() {
+    public int size() throws Exception{
         return receivers;
     }
 

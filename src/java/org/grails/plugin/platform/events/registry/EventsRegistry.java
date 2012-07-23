@@ -18,7 +18,6 @@
 package org.grails.plugin.platform.events.registry;
 
 import groovy.lang.Closure;
-import org.grails.plugin.platform.events.EventDefinition;
 
 import java.lang.reflect.Method;
 
@@ -35,15 +34,9 @@ public interface EventsRegistry {
 
     public String on(String namespace, String topic, Object bean, Method callbackMethod);
 
-    public String on(String namespace, String topic, Object bean, Method callbackMethod, EventDefinition definition);
-
     public String on(String namespace, String topic, Object bean, String callbackMethodName);
 
-    public String on(String namespace, String topic, Object bean, String callbackMethodName, EventDefinition definition);
-
     public String on(String namespace, String topic, Closure callback);
-
-    public String on(String namespace, String topic, EventDefinition definition, Closure callback);
 
     public int removeListeners(String callbackId);
 

@@ -17,6 +17,7 @@
  */
 package org.grails.plugin.platform.events
 
+import grails.events.EventDeclarationException
 import grails.events.Listener
 import grails.util.GrailsNameUtils
 import org.apache.log4j.Logger
@@ -25,6 +26,7 @@ import org.grails.plugin.platform.conventions.DSLCallCommand
 import org.grails.plugin.platform.conventions.DSLCommand
 import org.grails.plugin.platform.conventions.DSLEvaluator
 import org.grails.plugin.platform.conventions.DSLNamedArgsCallCommand
+import org.grails.plugin.platform.conventions.DSLSetValueCommand
 import org.grails.plugin.platform.events.publisher.EventsPublisher
 import org.grails.plugin.platform.events.registry.EventsRegistry
 import org.grails.plugin.platform.util.PluginUtils
@@ -51,45 +53,84 @@ class EventsImpl implements Events {
     def injectedMethods = { theContext ->
 
         'controller, domain, service' { Class clazz ->
-            //String defaultNamespace = PluginUtils.getNameOfDefiningPlugin(theContext, clazz) ?: APP_NAMESPACE'
+            String pluginName = PluginUtils.getNameOfDefiningPlugin(theContext, clazz)
+            Map pluginParam = [plugin: pluginName]
 
             def self = theContext.grailsEvents
             //def config = theContext.grailsApplication.config.plugin.platformCore
 
             event { String topic, data = null, Map params = null ->
+                if (pluginName) {
+                    params = params ? pluginParam + params : pluginParam
+                }
                 self.event(null, topic, data, params)
             }
             event { Map args ->
                 def ns = args.for ?: args.namespace
+                if (pluginName) {
+                    args.params = args.params ? pluginParam + args.params : pluginParam
+                }
                 self.event(ns, args.topic, args.data, args.params)
             }
             eventAsync { Map args ->
                 def ns = args.for ?: args.namespace
+                if (pluginName) {
+                    args.params = args.params ? pluginParam + args.params : pluginParam
+                }
                 self.eventAsync(ns, args.topic, args.data, args.params)
             }
 
-            eventAsync { Map args, Closure callback ->
-                def ns = args.for ?: args.namespace
-                self.eventAsyncWithCallback(ns, args.topic, args.data, callback, args.params)
-            }
-
             eventAsync { String topic, data = null, Map params = null ->
+                if (pluginName) {
+                    params = params ? pluginParam + params : pluginParam
+                }
                 self.eventAsync(null, topic, data, params)
             }
+            eventAsync { Map args, Closure callback ->
+                def ns = args.for ?: args.namespace
+                if (pluginName) {
+                    args.params = args.params ? pluginParam + args.params : pluginParam
+                }
+                self.eventAsyncWithCallback(ns, args.topic, args.data, callback, args.params)
+            }
             eventAsync { String topic, data, params, Closure callback ->
+                if (pluginName) {
+                    params = params ? pluginParam + params : pluginParam
+                }
                 self.eventAsyncWithCallback(null, topic, data, callback, params)
             }
             eventAsync { String topic, data, Closure callback ->
-                self.eventAsyncWithCallback(null, topic, data, callback, params)
+                self.eventAsyncWithCallback(null, topic, data, callback, pluginName)
             }
             eventAsync { String topic, Closure callback ->
-                self.eventAsyncWithCallback(null, topic, null, callback, null)
+                self.eventAsyncWithCallback(null, topic, null, callback, pluginName)
             }
             on { String topic, Closure callback ->
-                self.grailsEventsRegistry.on(APP_NAMESPACE, topic, callback)
+                self.checkNamespace pluginName, null
+                self.grailsEventsRegistry.on(null, topic, callback)
             }
+            on { String namespace, String topic, Closure callback ->
+                self.checkNamespace pluginName, namespace
+                self.grailsEventsRegistry.on(namespace, topic, callback)
+            }
+
             copyFrom(self, 'waitFor')
-            copyFrom(self.grailsEventsRegistry, ['on', 'removeListeners', 'countListeners'])
+            copyFrom(self.grailsEventsRegistry, ['removeListeners', 'countListeners'])
+        }
+    }
+
+    private boolean filterEvent(EventMessage message) {
+        EventDefinition definition = eventDefinitions.find {it.topic == message.event}
+
+        return (!definition?.filterClass && !definition?.filterClosure) ||
+                (definition?.filterClass && message.data in definition.filterClass) ||
+                (definition?.filterClosure && definition.filterClosure.clone().call(message.data))
+    }
+
+    private void checkNamespace(pluginNs, targetNs, context = null) {
+        if (pluginNs && !targetNs) {
+            throw new EventDeclarationException("Your plugin $pluginNs must specify the namespace when using events methods or annotations " +
+                    (context ?: ''))
         }
     }
 
@@ -114,10 +155,14 @@ class EventsImpl implements Events {
     }
 
     EventReply event(String namespace, String topic, data, Map params) {
-        if (log.debugEnabled) {
-            log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
+        def eventMessage = buildEvent(params?.plugin, namespace, topic, data, params)
+        if (filterEvent(eventMessage)) {
+            if (log.debugEnabled) {
+                log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
+            }
+            return grailsEventsPublisher.event(eventMessage)
         }
-        grailsEventsPublisher.event buildEvent(namespace, topic, data, params)
+        null
     }
 
     EventReply eventAsync(String namespace, String topic) {
@@ -129,10 +174,14 @@ class EventsImpl implements Events {
     }
 
     EventReply eventAsync(String namespace, String topic, data, Map params) {
-        if (log.debugEnabled) {
-            log.debug "Sending async event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
+        def eventMessage = buildEvent(params?.plugin, namespace, topic, data, params)
+        if (filterEvent(eventMessage)) {
+            if (log.debugEnabled) {
+                log.debug "Sending async event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
+            }
+            return grailsEventsPublisher.eventAsync(eventMessage)
         }
-        grailsEventsPublisher.eventAsync buildEvent(namespace, topic, data, params)
+        null
     }
 
     void eventAsyncWithCallback(String namespace, String topic, Closure callback) {
@@ -144,17 +193,23 @@ class EventsImpl implements Events {
     }
 
     void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params) {
-        if (log.debugEnabled) {
-            log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
+        def eventMessage = buildEvent(params?.plugin, namespace, topic, data, params)
+        if (filterEvent(eventMessage)) {
+            if (log.debugEnabled) {
+                log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
+            }
+            grailsEventsPublisher.eventAsync(eventMessage, callback)
         }
-        grailsEventsPublisher.eventAsync buildEvent(namespace, topic, data, params), callback
     }
 
-    EventMessage buildEvent(String namespace, String topic, data, Map params) {
+    EventMessage buildEvent(String pluginName, String namespace, String topic, data, Map params) {
         boolean gormSession = params?.containsKey('gormSession') ? params.remove('gormSession') : true
-        String _namespace = params?.remove('namespace') ?: namespace
+        namespace = params?.remove('namespace') ?: namespace
+        checkNamespace pluginName, namespace
 
-        new EventMessage(topic, data, _namespace, gormSession, params)
+        namespace = namespace ?: APP_NAMESPACE
+
+        new EventMessage(topic, data, namespace, gormSession, params)
     }
 
     void reloadListener(Class serviceClass) {
@@ -173,20 +228,21 @@ class EventsImpl implements Events {
             for (Method method : serviceClass.declaredMethods) {
                 Listener annotation = method.getAnnotation(Listener)
                 if (annotation) {
-                    String namespace = /*PluginUtils.getNameOfDefiningPlugin(applicationContext, serviceClass) ?:*/
-                        annotation?.namespace() ?: APP_NAMESPACE
+                    String pluginName = PluginUtils.getNameOfDefiningPlugin(applicationContext, serviceClass)
+                    String namespace = annotation?.namespace()
+                    checkNamespace pluginName, namespace, "-> @Listener $serviceClass.name#$method.name"
+
                     String topic = annotation?.topic() ?: method.name
-                    c(namespace, annotation?.namespace() as boolean, topic, method, serviceClass)
+                    c(namespace ?: APP_NAMESPACE, annotation?.namespace() as boolean, topic, method, serviceClass)
                 }
             }
         }
     }
 
     EventDefinition matchesDefinition(String topic, Method method, Class serviceClass) {
-        ListenerId targetId = ListenerId.build(null, topic, serviceClass, method)
         for (definition in eventDefinitions) {
-            if (definition.listenerId.matches(targetId)) {
-                log.info "Applying Event definition [$definition.listenerId] from [$definition.definingPlugin]"
+            if (definition.topic == topic) {
+                log.info "Applying Event definition [$definition.topic] from [$definition.definingPlugin]"
                 return definition
             }
         }
@@ -198,9 +254,7 @@ class EventsImpl implements Events {
         eachListener(serviceClasses) {String namespace, boolean hasInlineNamespace, String topic, Method method, Class serviceClass ->
 
             def definition = matchesDefinition(topic, method, serviceClass)
-            if (!hasInlineNamespace || !definition?.definingPlugin) {
-                namespace = definition?.namespace ?: namespace
-            }
+
             // If there is no match with a known event, or there is a declared event and it is not disabled,
             // add the listener
             if (!definition || !definition.disabled) {
@@ -213,8 +267,7 @@ class EventsImpl implements Events {
                         namespace,
                         topic,
                         applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
-                        method,
-                        definition
+                        method
                 )
             }
         }
@@ -283,6 +336,7 @@ class EventsImpl implements Events {
         for (c in commands) {
             switch (c) {
                 case DSLCallCommand:
+                case DSLSetValueCommand:
                     addItemFromArgs(c.name, null, definingPlugin)
                     break
                 case DSLNamedArgsCallCommand:
@@ -294,9 +348,9 @@ class EventsImpl implements Events {
         }
     }
 
-    private addItemFromArgs(String listenerPattern, Map arguments, String definingPlugin) {
+    private addItemFromArgs(String topic, Map arguments, String definingPlugin) {
         if (log.debugEnabled) {
-            log.debug "Adding event declared in DSL - listenerPattern: ${listenerPattern}, arguments: ${arguments}, defined by plugin ${definingPlugin}"
+            log.debug "Adding event declared in DSL - topic: ${topic}, arguments: ${arguments}, defined by plugin ${definingPlugin}"
         }
         def definition = new EventDefinition()
         definition.namespace = arguments?.remove('namespace')
@@ -320,21 +374,16 @@ class EventsImpl implements Events {
         definition.othersAttributes = arguments
 
         definition.definingPlugin = definingPlugin
-        definition.listenerId = ListenerId.parse(listenerPattern)
+        definition.topic = topic
 
         if (log.debugEnabled) {
             log.debug "Scoring event declared in DSL - definition: ${definition.dump()}"
         }
         int score = 0
-        if (definition.listenerId.namespace) score += 1
-        if (definition.listenerId.topic) score += 1
-        if (definition.listenerId.className) score += 1
-        if (definition.listenerId.methodName) score += 1
-        if (definition.listenerId.hashCode) score += 1
         if (!definingPlugin) score += 1
         definition.score = score
 
-        def overridenDefinition = eventDefinitions.find {it.listenerId.toString() == listenerPattern}
+        def overridenDefinition = eventDefinitions.find {it.topic == topic}
         eventDefinitions.remove(overridenDefinition)
 
         eventDefinitions << definition

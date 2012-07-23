@@ -130,12 +130,8 @@ public class DefaultEventsPublisher implements EventsPublisher {
         }
 
         @Override
-        public int size() {
-            try {
-                get();
-            } catch (InterruptedException e) {
-            } catch (ExecutionException e) {
-            }
+        public int size() throws Exception {
+            get();
             return super.size();
         }
 

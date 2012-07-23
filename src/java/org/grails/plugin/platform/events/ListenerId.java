@@ -121,8 +121,8 @@ public class ListenerId implements Serializable {
     }
 
     static public ListenerId build(String namespace, String topic, Object target, Method callback) {
-            return new ListenerId(namespace, topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
-        }
+        return new ListenerId(namespace, topic, target.getClass().getName(), callback.getName(), Integer.toString(target.hashCode()));
+    }
 
     static public ListenerId build(String namespace, String topic, Class target, Method callback) {
         return new ListenerId(namespace, topic, target.getName(), callback.getName(), null);
@@ -136,20 +136,20 @@ public class ListenerId implements Serializable {
         //Matcher parsed = idRegex.matcher(id);
         if (id != null) {
             int namespaceIndex = id.indexOf(ID_NAMESPACE_SEPARATOR);
-            String _namespace = namespaceIndex != -1 ? id.substring(0,namespaceIndex) : null;
-            id = namespaceIndex != -1 ? id.substring(namespaceIndex+3, id.length()) : id;
+            String _namespace = namespaceIndex != -1 ? id.substring(0, namespaceIndex) : null;
+            id = namespaceIndex != -1 ? id.substring(namespaceIndex + 3, id.length()) : id;
 
             int classIndex = id.indexOf(ID_CLASS_SEPARATOR);
             String _topic = id.substring(0, classIndex != -1 ? classIndex : id.length());
-            id = classIndex != -1 ? id.substring(classIndex+1, id.length()) : id;
+            id = classIndex != -1 ? id.substring(classIndex + 1, id.length()) : id;
 
             int methodIndex = id.indexOf(ID_METHOD_SEPARATOR);
             String _class = classIndex != -1 ? id.substring(0, methodIndex != -1 ? methodIndex : id.length()) : null;
-            id = methodIndex != -1 ? id.substring(methodIndex+1, id.length()) : id;
+            id = methodIndex != -1 ? id.substring(methodIndex + 1, id.length()) : id;
 
             int hashcodeIndex = id.indexOf(ID_HASHCODE_SEPARATOR);
             String _method = methodIndex != -1 ? id.substring(0, hashcodeIndex != -1 ? hashcodeIndex : id.length()) : null;
-            String _hashcode = hashcodeIndex != -1 ? id.substring(hashcodeIndex + 1,  id.length()) : null;
+            String _hashcode = hashcodeIndex != -1 ? id.substring(hashcodeIndex + 1, id.length()) : null;
 
             return new ListenerId(
                     _namespace,
@@ -163,27 +163,32 @@ public class ListenerId implements Serializable {
         return null;
     }
 
-    public boolean matches(ListenerId listener) {
+    public boolean matches(ListenerId target) {
         Boolean result = null;
 
-        if (this.namespace != null && listener.getNamespace() != null) {
+        if (this.namespace != null && target.getNamespace() != null) {
             result = this.namespace.equals(NAMESPACE_WILDCARD) ||
-                    listener.getNamespace().equals(NAMESPACE_WILDCARD) ||
-                    this.namespace.equalsIgnoreCase(listener.getNamespace());
+                    target.getNamespace().equals(NAMESPACE_WILDCARD) ||
+                    this.namespace.equalsIgnoreCase(target.getNamespace());
         }
 
         if (this.topic != null) {
             result = result == null || result;
-            result &= listener.getTopic().equals(NAMESPACE_WILDCARD) ||
-                    this.topic.equals(NAMESPACE_WILDCARD) || this.topic.equals(listener.getTopic());
+            String targetTopic = target.getTopic();
+            int targetTopicIdx = targetTopic.indexOf(NAMESPACE_WILDCARD);
+            int topicIdx = this.topic.indexOf(NAMESPACE_WILDCARD);
+            result &=
+                    targetTopicIdx != -1 && this.topic.startsWith(targetTopic.substring(0, targetTopicIdx)) ||
+                            topicIdx != -1 && targetTopic.startsWith(this.topic.substring(0, topicIdx)) ||
+                            this.topic.equals(targetTopic);
         }
         if (this.className != null) {
             result = result == null || result;
-            result &= this.className.equals(listener.getClassName());
+            result &= this.className.equals(target.getClassName());
             if (this.methodName != null) {
-                result &= this.methodName.equals(listener.getMethodName());
+                result &= this.methodName.equals(target.getMethodName());
                 if (this.hashCode != null) {
-                    result &= this.hashCode.equals(listener.getHashCode());
+                    result &= this.hashCode.equals(target.getHashCode());
                 }
             }
         }
@@ -204,7 +209,7 @@ public class ListenerId implements Serializable {
         ListenerId listener = (ListenerId) o;
 
         return !(className != null ? !className.equals(listener.className) : listener.className != null) &&
-                 !(namespace != null ? !namespace.equals(listener.namespace) : listener.namespace != null) &&
+                !(namespace != null ? !namespace.equals(listener.namespace) : listener.namespace != null) &&
                 !(hashCode != null ? !hashCode.equals(listener.hashCode) : listener.hashCode != null) &&
                 !(methodName != null ? !methodName.equals(listener.methodName) : listener.methodName != null) &&
                 !(topic != null ? !topic.equals(listener.topic) : listener.topic != null);

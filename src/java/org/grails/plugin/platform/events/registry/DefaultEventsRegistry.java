@@ -19,7 +19,6 @@ package org.grails.plugin.platform.events.registry;
 
 import groovy.lang.Closure;
 import org.apache.log4j.Logger;
-import org.grails.plugin.platform.events.EventDefinition;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.ListenerId;
 import org.springframework.aop.framework.Advised;
@@ -51,28 +50,16 @@ public class DefaultEventsRegistry implements EventsRegistry {
         API
      */
 
-    public String on(String namespace, String topic, EventDefinition definition, Closure callback) {
-        return registerHandler(callback, namespace, topic, definition);
-    }
-
-    public String on(String namespace, String topic, Object bean, String callbackName, EventDefinition definition) {
-        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic, definition);
-    }
-
-    public String on(String namespace, String topic, Object bean, Method callback, EventDefinition definition) {
-        return registerHandler(bean, callback, namespace, topic, definition);
-    }
-
     public String on(String namespace, String topic, Closure callback) {
-        return registerHandler(callback, namespace, topic, null);
+        return registerHandler(callback, namespace, topic);
     }
 
     public String on(String namespace, String topic, Object bean, String callbackName) {
-        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic, null);
+        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic);
     }
 
     public String on(String namespace, String topic, Object bean, Method callback) {
-        return registerHandler(bean, callback, namespace, topic, null);
+        return registerHandler(bean, callback, namespace, topic);
     }
 
     public int removeListeners(String callbackId) {
@@ -101,7 +88,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
        INTERNAL
     */
 
-    private String registerHandler(Closure callback, String namespace, String topic, EventDefinition definition) {
+    private String registerHandler(Closure callback, String namespace, String topic) {
         if (log.isDebugEnabled()) {
             log.debug("Registering event handler [" + callback.getClass() + "] for topic [" + topic + "]");
         }
@@ -111,7 +98,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
                 callback.getClass(),
                 "call",
                 Object.class
-        ), listener, definition);
+        ), listener);
 
         synchronized (listeners) {
             listeners.add(handler);
@@ -120,7 +107,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         return listener.toString();
     }
 
-    private String registerHandler(Object bean, Method callback, String namespace, String topic, EventDefinition definition) {
+    private String registerHandler(Object bean, Method callback, String namespace, String topic) {
         if (log.isDebugEnabled()) {
             log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");
         }
@@ -136,7 +123,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         }
         ListenerId listener = ListenerId.build(namespace, topic, target, callback);
 
-        ListenerHandler handler = new ListenerHandler(target, callback, listener, definition);
+        ListenerHandler handler = new ListenerHandler(target, callback, listener);
 
         synchronized (listeners) {
             listeners.add(handler);
@@ -216,12 +203,10 @@ public class DefaultEventsRegistry implements EventsRegistry {
         private Method method;
         private ListenerId listenerId;
         private boolean useEventMessage = false;
-        private EventDefinition definition;
 
-        public ListenerHandler(Object bean, Method m, ListenerId listenerId, EventDefinition definition) {
+        public ListenerHandler(Object bean, Method m, ListenerId listenerId) {
             this.listenerId = listenerId;
             this.method = m;
-            this.definition = definition;
 
             if (m.getParameterTypes().length > 0) {
                 Class type = m.getParameterTypes()[0];
@@ -249,22 +234,20 @@ public class DefaultEventsRegistry implements EventsRegistry {
                         " with arg " + arg.toString());
             }
             try {
-                if (definition == null || (definition.getFilterClass() == null && definition.getFilterClosure() == null) ||
-                        (arg != null && (definition.getFilterClass() != null && definition.getFilterClass().isAssignableFrom(arg.getClass())) ||
-                                definition.getFilterClosure() != null && (Boolean) ((Closure) definition.getFilterClosure().clone()).call(arg))) {
-
-                    res = method.invoke(bean, arg);
-
-                } else if (log.isDebugEnabled()) {
-                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - filtered");
-                }
+                res = method.invoke(bean, arg);
             } catch (IllegalArgumentException e) {
                 if (log.isDebugEnabled()) {
                     log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - illegal arg exception: " + e.toString());
                 }
             } catch (IllegalAccessException e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - illegal access exception: " + e.toString());
+                }
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - illegal invoke target exception: " + e.toString());
+                }
                 e.printStackTrace();
             }
 
