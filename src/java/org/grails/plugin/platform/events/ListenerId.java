@@ -163,25 +163,32 @@ public class ListenerId implements Serializable {
         return null;
     }
 
+    public static boolean matchesTopic(String topicA, String topicB){
+        int topicIdx = topicA.indexOf(NAMESPACE_WILDCARD);
+        int targetTopicIdx = topicB.indexOf(NAMESPACE_WILDCARD);
+        return targetTopicIdx != -1 && topicA.startsWith(topicB.substring(0, targetTopicIdx)) ||
+                        topicIdx != -1 && topicB.startsWith(topicA.substring(0, topicIdx)) ||
+                        topicA.equals(topicB);
+    }
+
+    public static boolean matchesNamespace(String namespaceA, String namespaceB){
+        return namespaceA.equals(NAMESPACE_WILDCARD) ||
+                namespaceB.equals(NAMESPACE_WILDCARD) ||
+                namespaceA.equalsIgnoreCase(namespaceB);
+    }
+
     public boolean matches(ListenerId target) {
         Boolean result = null;
 
         if (this.namespace != null && target.getNamespace() != null) {
-            result = this.namespace.equals(NAMESPACE_WILDCARD) ||
-                    target.getNamespace().equals(NAMESPACE_WILDCARD) ||
-                    this.namespace.equalsIgnoreCase(target.getNamespace());
+            result = matchesNamespace(this.namespace, target.getNamespace());
         }
 
         if (this.topic != null) {
             result = result == null || result;
-            String targetTopic = target.getTopic();
-            int targetTopicIdx = targetTopic.indexOf(NAMESPACE_WILDCARD);
-            int topicIdx = this.topic.indexOf(NAMESPACE_WILDCARD);
-            result &=
-                    targetTopicIdx != -1 && this.topic.startsWith(targetTopic.substring(0, targetTopicIdx)) ||
-                            topicIdx != -1 && targetTopic.startsWith(this.topic.substring(0, topicIdx)) ||
-                            this.topic.equals(targetTopic);
+            result &= matchesTopic(this.topic, target.getTopic());
         }
+
         if (this.className != null) {
             result = result == null || result;
             result &= this.className.equals(target.getClassName());
