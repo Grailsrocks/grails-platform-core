@@ -19,33 +19,91 @@ package org.grails.plugin.platform.ui
 
 import org.slf4j.LoggerFactory
 
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.web.context.request.RequestContextHolder as RCH
+
+import org.grails.plugin.platform.util.PluginUtils
+import org.grails.plugin.platform.util.MapNamespacer
 
 /**
  * Helper methods for common UI features
  */
-class UiHelper {
+class UiHelper implements ApplicationContextAware {
     final log = LoggerFactory.getLogger(UiHelper)
+
+    static final String SESSION_WRAPPER_KEY = 'plugin.platformCore.plugin.session.wrapper';
+    static final String FLASH_WRAPPER_KEY = 'plugin.platformCore.plugin.flash.wrapper';
+    static final String REQUEST_WRAPPER_KEY = 'plugin.platformCore.plugin.request.wrapper';
+    
+    ApplicationContext applicationContext
 
     def injectedMethods = {
         def self = this
         
         controller { clazz ->
+            
+            def pluginName = PluginUtils.getNameOfDefiningPlugin(applicationContext, clazz)
+
             displayMessage { String msg ->
-                self.displayMessage(msg, delegate.request)
+                self.displayMessage(msg, delegate.request, pluginName)
             }
             displayMessage { Map args ->
-                self.displayMessage(args, delegate.request)
+                self.displayMessage(args, delegate.request, pluginName)
             }
             displayFlashMessage { String msg ->
-                self.displayFlashMessage(msg, delegate.flash)
+                self.displayFlashMessage(msg, delegate.flash, pluginName)
             }
             displayFlashMessage { Map args ->
-                self.displayFlashMessage(args, delegate.flash)
+                self.displayFlashMessage(args, delegate.flash, pluginName)
+            }
+
+            if (pluginName) {
+                getPluginSession() { ->
+                    self.getPluginSession(pluginName)
+                }
+                getPluginFlash() { ->
+                    self.getPluginFlash(pluginName)
+                }
+                getPluginRequestAttributes() { ->
+                    self.getPluginRequestAttributes(pluginName)
+                }
             }
         }
     }
 
+    MapNamespacer getPluginSession(String pluginName) {
+        def req = RequestContextHolder.requestAttributes.currentRequest
+        def wrapper = req[SESSION_WRAPPER_KEY]
+        if (!wrapper) {
+            def session = RequestContextHolder.requestAttributes.session
+            wrapper = new MapNamespacer(pluginName+'.', session)
+            req[SESSION_WRAPPER_KEY] = wrapper
+        } 
+        return wrapper
+    }
+    
+    MapNamespacer getPluginFlash(String pluginName) {
+        def req = RequestContextHolder.requestAttributes.currentRequest
+        def wrapper = req[FLASH_WRAPPER_KEY]
+        if (!wrapper) {
+            def flash = RequestContextHolder.requestAttributes.flashScope
+            wrapper = new MapNamespacer(pluginName+'.', flash)
+            req[FLASH_WRAPPER_KEY] = wrapper
+        } 
+        return wrapper
+    }
+    
+    MapNamespacer getPluginRequestAttributes(String pluginName) {
+        def req = RequestContextHolder.requestAttributes.currentRequest
+        def wrapper = req[REQUEST_WRAPPER_KEY]
+        if (!wrapper) {
+            wrapper = new MapNamespacer(pluginName+'.', req)
+            req[REQUEST_WRAPPER_KEY] = wrapper
+        } 
+        return wrapper
+    }
+    
     Map getDisplayMessage(scope) {
         if (log.debugEnabled) {
             log.debug "Getting display message from scope: ${scope}"
@@ -62,34 +120,34 @@ class UiHelper {
         return args
     }
     
-    void displayMessage(String text, request = RCH.requestAttributes.request) {
+    void displayMessage(String text, request = RCH.requestAttributes.request, String pluginName = null) {
         if (log.debugEnabled) {
             log.debug "Setting display message text: ${text}"
         }
-        request[UiConstants.DISPLAY_MESSAGE] = text
+        request[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${text}" : text
     }
 
-    void displayMessage(Map args, request = RCH.requestAttributes.request) {
+    void displayMessage(Map args, request = RCH.requestAttributes.request, String pluginName = null) {
         if (log.debugEnabled) {
             log.debug "Setting display message args: ${args}"
         }
-        request[UiConstants.DISPLAY_MESSAGE] = args.text
+        request[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${args.text}" : args.text
         request[UiConstants.DISPLAY_MESSAGE_ARGS] = args.args
         request[UiConstants.DISPLAY_MESSAGE_TYPE] = args.type
     }
 
-    void displayFlashMessage(String text, flash = RCH.requestAttributes.flashScope) {
+    void displayFlashMessage(String text, flash = RCH.requestAttributes.flashScope, String pluginName = null) {
         if (log.debugEnabled) {
             log.debug "Setting display flash message text: ${text}"
         }
-        flash[UiConstants.DISPLAY_MESSAGE] = msg
+        flash[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${text}" : text
     }
 
-    void displayFlashMessage(Map args, flash = RCH.requestAttributes.flashScope) {
+    void displayFlashMessage(Map args, flash = RCH.requestAttributes.flashScope, String pluginName = null) {
         if (log.debugEnabled) {
             log.debug "Setting display flash message args: ${args}"
         }
-        flash[UiConstants.DISPLAY_MESSAGE] = args.text
+        flash[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${args.text}" : args.text
         flash[UiConstants.DISPLAY_MESSAGE_ARGS] = args.args
         flash[UiConstants.DISPLAY_MESSAGE_TYPE] = args.type
     }
