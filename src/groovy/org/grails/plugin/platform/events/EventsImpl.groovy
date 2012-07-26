@@ -120,11 +120,11 @@ class EventsImpl implements Events {
     }
 
     private boolean filterEvent(EventMessage message) {
-        EventDefinition definition = eventDefinitions.find {it.topic == message.event}
+        EventDefinition definition = eventDefinitions.find {it.topic == message.event && it.namespace == message.namespace}
 
-        return (!definition?.filterClass && !definition?.filterClosure) ||
+        return !definition?.disabled && ((!definition?.filterClass && !definition?.filterClosure) ||
                 (definition?.filterClass && message.data in definition.filterClass) ||
-                (definition?.filterClosure && definition.filterClosure.clone().call(message.data))
+                (definition?.filterClosure && definition.filterClosure.clone().call(message.data)))
     }
 
     private void checkNamespace(pluginNs, targetNs, context = null) {
@@ -257,19 +257,17 @@ class EventsImpl implements Events {
 
             // If there is no match with a known event, or there is a declared event and it is not disabled,
             // add the listener
-            if (!definition || !definition.disabled) {
-                log.info "Register event listener $serviceClass.name#$method.name for topic $topic and namespace $namespace"
-                if (!definition) {
-                    log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and namespace $namespace but no such event is declared, you may never receive it"
-                }
-
-                grailsEventsRegistry.on(
-                        namespace,
-                        topic,
-                        applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
-                        method
-                )
+            log.info "Register event listener $serviceClass.name#$method.name for topic $topic and namespace $namespace"
+            if (!definition) {
+                log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and namespace $namespace but no such event is declared, you may never receive it"
             }
+
+            grailsEventsRegistry.on(
+                    namespace,
+                    topic,
+                    applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
+                    method
+            )
         }
     }
 
@@ -355,7 +353,7 @@ class EventsImpl implements Events {
         def definition = new EventDefinition()
         definition.namespace = arguments?.remove('namespace')
         if (!definition.namespace) {
-            definition.namespace = definingPlugin
+            definition.namespace = APP_NAMESPACE
         }
         definition.requiresReply = arguments?.remove('requiresReply') ?: definition.requiresReply
         definition.disabled = arguments?.remove('disabled') ?: definition.disabled
