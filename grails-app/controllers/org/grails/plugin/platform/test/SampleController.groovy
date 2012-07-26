@@ -64,30 +64,33 @@ class SampleController {
 
         response.outputStream << "sync event with replies values : " + event('sampleHello', '{"message":"world"}', [namespace:'lal'])?.values + " \n\n"
 
-
-        //Args form
-        def async1 = eventAsync('sop',  '{"message":"world A"}', [namespace:'lal'])
-
-        //Map form
-        def async2 = eventAsync for:'lal', topic:'sampleHello', data:'{"message":"world B"}'
+        def async1 = event for:'platformCore', topic:'sampleHello',  data:'{"message":"world A"}', {}
+        def async2 = event for:'lal', topic:'sampleHello', data:'{"message":"world B"}', sync: false
 
 //        def _stream = stream 'someNamespace://samplehello' | reply { println it } | error { println it } << 'test'
 //        _stream.send()
 
 
         response.outputStream << "async events replies $async1 $async2 \n\n"
-        response.outputStream << "async event reply value " + eventAsync('sampleHello', '{"message":"world2"}', [namespace: 'lal'])?.value + " \n\n"
+        response.outputStream << "async event reply value " + event('sampleHello', '{"message":"world2"}', [namespace: 'lal', sync: false])?.value + " \n\n"
 
         response.outputStream << "async wait \n\n"
         def values = waitFor(async1, async2)
         response.outputStream << "waited results : $values \n"
-        response.outputStream << "size async1 : ${async1?.size()} \n"
-        response.outputStream << "size async2 : ${async2?.size()} \n\n"
+        response.outputStream << "size async1 : ${async1.size()} \n"
+        response.outputStream << "size async2 : ${async2.size()} \n\n"
         response.outputStream << "async event with on complete\n"
 
-        eventAsync(topic: 'sampleHello', data: "world 4", for:'lal') {reply ->
+        def r = event(topic: 'sampleHella', data: "world 4", for:'lal') {reply ->
+            println "=="+reply.success
+            println "==-"+reply.cancelled
+            println reply.errors
+            println reply.values
             println 'hidden test'
         }
+        println 'testd'
+        r.cancel()
+        //println r.value
 
     }
 }

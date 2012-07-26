@@ -24,4 +24,8 @@ public class EventException extends PlatformException {
     public EventException(String s) {
         super(s);
     }
+
+    public EventException(Throwable throwable) {
+        super(throwable);
+    }
 }

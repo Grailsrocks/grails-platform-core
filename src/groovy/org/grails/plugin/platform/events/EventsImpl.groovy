@@ -59,52 +59,29 @@ class EventsImpl implements Events {
             def self = theContext.grailsEvents
             //def config = theContext.grailsApplication.config.plugin.platformCore
 
-            event { String topic, data = null, Map params = null ->
-                if (pluginName) {
-                    params = params ? pluginParam + params : pluginParam
-                }
-                self.event(null, topic, data, params)
-            }
-            event { Map args ->
-                def ns = args.for ?: args.namespace
-                if (pluginName) {
-                    args.params = args.params ? pluginParam + args.params : pluginParam
-                }
-                self.event(ns, args.topic, args.data, args.params)
-            }
-            eventAsync { Map args ->
-                def ns = args.for ?: args.namespace
-                if (pluginName) {
-                    args.params = args.params ? pluginParam + args.params : pluginParam
-                }
-                self.eventAsync(ns, args.topic, args.data, args.params)
+            event { String topic, Closure callback ->
+                self.event(null, topic, null, pluginParam, callback)
             }
 
-            eventAsync { String topic, data = null, Map params = null ->
+            event { String topic, data, Closure callback ->
+                self.event(null, topic, data, pluginParam, callback)
+            }
+
+            event { String topic, data = null, Map params = null, Closure callback = null ->
                 if (pluginName) {
                     params = params ? pluginParam + params : pluginParam
                 }
-                self.eventAsync(null, topic, data, params)
+                self.event(null, topic, data, params, callback)
             }
-            eventAsync { Map args, Closure callback ->
-                def ns = args.for ?: args.namespace
-                if (pluginName) {
-                    args.params = args.params ? pluginParam + args.params : pluginParam
-                }
-                self.eventAsyncWithCallback(ns, args.topic, args.data, callback, args.params)
+
+            event { Map args, Closure callback = null ->
+                def ns = args.remove('for') ?: args.remove('namespace')
+                if (pluginName)
+                    args += pluginParam
+
+                self.event(ns, args.remove('topic'), args.remove('data'), args.remove('params') ?: args , callback)
             }
-            eventAsync { String topic, data, params, Closure callback ->
-                if (pluginName) {
-                    params = params ? pluginParam + params : pluginParam
-                }
-                self.eventAsyncWithCallback(null, topic, data, callback, params)
-            }
-            eventAsync { String topic, data, Closure callback ->
-                self.eventAsyncWithCallback(null, topic, data, callback, pluginName)
-            }
-            eventAsync { String topic, Closure callback ->
-                self.eventAsyncWithCallback(null, topic, null, callback, pluginName)
-            }
+
             on { String topic, Closure callback ->
                 self.checkNamespace pluginName, null
                 self.grailsEventsRegistry.on(null, topic, callback)
@@ -145,61 +122,22 @@ class EventsImpl implements Events {
         waitFor(-1l, TimeUnit.NANOSECONDS, replies)
     }
 
-    EventReply event(String namespace, String topic, data) {
-        event(namespace, topic, data, null)
-    }
-
-
-    EventReply event(String namespace, String topic) {
-        event(namespace, topic, null, null)
-    }
-
-    EventReply event(String namespace, String topic, data, Map params) {
+    EventReply event(String namespace, String topic, data = null, Map params = null, Closure callback = null) {
         def eventMessage = buildEvent(params?.plugin, namespace, topic, data, params)
         if (filterEvent(eventMessage)) {
             if (log.debugEnabled) {
                 log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
             }
-            return grailsEventsPublisher.event(eventMessage)
+            def reply
+            if(!callback && (!params?.containsKey('sync') || params.sync)){
+                reply = grailsEventsPublisher.event(eventMessage)
+                reply.value
+            }else
+                reply = grailsEventsPublisher.eventAsync(eventMessage, callback, params?.timeout ?: -1l)
+
+            return reply
         }
         null
-    }
-
-    EventReply eventAsync(String namespace, String topic) {
-        eventAsync(namespace, topic, null, null)
-    }
-
-    EventReply eventAsync(String namespace, String topic, data) {
-        eventAsync(namespace, topic, data, null)
-    }
-
-    EventReply eventAsync(String namespace, String topic, data, Map params) {
-        def eventMessage = buildEvent(params?.plugin, namespace, topic, data, params)
-        if (filterEvent(eventMessage)) {
-            if (log.debugEnabled) {
-                log.debug "Sending async event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
-            }
-            return grailsEventsPublisher.eventAsync(eventMessage)
-        }
-        null
-    }
-
-    void eventAsyncWithCallback(String namespace, String topic, Closure callback) {
-        eventAsyncWithCallback(namespace, topic, null, callback, null)
-    }
-
-    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback) {
-        eventAsyncWithCallback(namespace, topic, data, callback, null)
-    }
-
-    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params) {
-        def eventMessage = buildEvent(params?.plugin, namespace, topic, data, params)
-        if (filterEvent(eventMessage)) {
-            if (log.debugEnabled) {
-                log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] with callback Closure and params [${params}]"
-            }
-            grailsEventsPublisher.eventAsync(eventMessage, callback)
-        }
     }
 
     EventMessage buildEvent(String pluginName, String namespace, String topic, data, Map params) {
@@ -386,4 +324,5 @@ class EventsImpl implements Events {
 
         eventDefinitions << definition
     }
+
 }

@@ -33,6 +33,6 @@ import org.grails.plugin.platform.events.EventReply;
 public interface EventsPublisher {
 
     public EventReply event(final EventMessage event);
-    public EventReply eventAsync(final EventMessage event);
-    public void eventAsync(final EventMessage event, Closure onComplete);
+    public EventReply eventAsync(final EventMessage event, Closure onComplete);
+    public EventReply eventAsync(final EventMessage event, Closure onComplete, long timeout);
 }

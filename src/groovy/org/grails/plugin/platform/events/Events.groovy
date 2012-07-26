@@ -22,15 +22,10 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeoutException
 
 interface Events {
-    EventReply event(String namespace, String topic)
+
     EventReply event(String namespace, String topic, data)
     EventReply event(String namespace, String topic, data, Map params)
-    EventReply eventAsync(String namespace, String topic)
-    EventReply eventAsync(String namespace, String topic, data)
-    EventReply eventAsync(String namespace, String topic, data, Map params)
-    void eventAsyncWithCallback(String namespace, String topic, Closure callback) 
-    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback) 
-    void eventAsyncWithCallback(String namespace, String topic, data, Closure callback, Map params)
+    EventReply event(String namespace, String topic, data, Map params, Closure callback)
 
     // We have to use a list here as [] and ... were failing to compile for some WTF reason - MP
     Object[] waitFor(EventReply[] replies) throws ExecutionException, InterruptedException, TimeoutException

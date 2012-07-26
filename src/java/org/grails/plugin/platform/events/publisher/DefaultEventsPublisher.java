@@ -68,20 +68,33 @@ public class DefaultEventsPublisher implements EventsPublisher {
         return new EventReply(invokeResult.getResult(), invokeResult.getInvoked());
     }
 
-    public EventReply eventAsync(final EventMessage event) {
+    public EventReply eventAsync(final EventMessage event, final Closure onComplete, final long timeout) {
         Future<DefaultEventsRegistry.InvokeResult> invokeResult =
                 taskExecutor.submit(new Callback(event));
 
-        return new WrappedFuture(invokeResult, -1);
+        final WrappedFuture reply = new WrappedFuture(invokeResult, -1);
+        if(onComplete != null){
+            taskExecutor.execute(new Runnable(){
+
+                public void run() {
+                    try {
+                        if(timeout != -1l)
+                            reply.get(timeout, TimeUnit.MILLISECONDS);
+                        else
+                            reply.get();
+                    } catch (Exception e) {
+                        reply.setCallingError(e);
+                    }
+                    onComplete.call(reply);
+                }
+            });
+
+        }
+        return reply;
     }
 
-    public void eventAsync(final EventMessage event, final Closure onComplete) {
-        taskExecutor.execute(new Runnable() {
-            public void run() {
-                DefaultEventsRegistry.InvokeResult invokeResult = new Callback(event).call();
-                onComplete.call(new EventReply(invokeResult.getResult(), invokeResult.getInvoked()));
-            }
-        });
+    public EventReply eventAsync(final EventMessage event, final Closure onComplete) {
+        return eventAsync(event, onComplete, -1);
     }
 
     //INTERNAL
@@ -129,10 +142,8 @@ public class DefaultEventsPublisher implements EventsPublisher {
             super.initValues(message.getResult());
         }
 
-        @Override
-        public int size() throws Exception {
-            get();
-            return super.size();
+        public void setCallingError(Throwable e){
+            super.initValues(e);
         }
 
     }

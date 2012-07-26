@@ -57,12 +57,14 @@ class SampleService {
     @Listener(namespace = 'lal')
     def sampleHello(test) {
         println "Hello (bis) - $test"
-
     }
 
-    @Listener(namespace = 'lal', topic='*')
+    @Listener(namespace = 'lal', topic='sampleHella')
     def sampleHella(test) {
         println "Adios bus) - $test"
+        while(1)
+            sleep(3000)
 
+        'test2'
     }
 }
