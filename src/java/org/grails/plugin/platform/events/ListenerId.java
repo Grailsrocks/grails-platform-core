@@ -163,30 +163,30 @@ public class ListenerId implements Serializable {
         return null;
     }
 
-    public static boolean matchesTopic(String topicA, String topicB){
-        int topicIdx = topicA.indexOf(NAMESPACE_WILDCARD);
-        int targetTopicIdx = topicB.indexOf(NAMESPACE_WILDCARD);
-        return targetTopicIdx != -1 && topicA.startsWith(topicB.substring(0, targetTopicIdx)) ||
-                        topicIdx != -1 && topicB.startsWith(topicA.substring(0, topicIdx)) ||
-                        topicA.equals(topicB);
+    public static boolean matchesTopic(String source, String target, boolean checkTargetTopic){
+        int topicIdx = source.indexOf(NAMESPACE_WILDCARD);
+        int targetTopicIdx = target.indexOf(NAMESPACE_WILDCARD);
+        return checkTargetTopic && targetTopicIdx != -1 && source.startsWith(target.substring(0, targetTopicIdx)) ||
+                        topicIdx != -1 && target.startsWith(source.substring(0, topicIdx)) ||
+                        source.equals(target);
     }
 
-    public static boolean matchesNamespace(String namespaceA, String namespaceB){
-        return namespaceA.equals(NAMESPACE_WILDCARD) ||
-                namespaceB.equals(NAMESPACE_WILDCARD) ||
-                namespaceA.equalsIgnoreCase(namespaceB);
+    public static boolean matchesNamespace(String source, String target, boolean checkTargetTopic){
+        return source.equals(NAMESPACE_WILDCARD) ||
+                checkTargetTopic && target.equals(NAMESPACE_WILDCARD) ||
+                source.equalsIgnoreCase(target);
     }
 
     public boolean matches(ListenerId target) {
         Boolean result = null;
 
         if (this.namespace != null && target.getNamespace() != null) {
-            result = matchesNamespace(this.namespace, target.getNamespace());
+            result = matchesNamespace(this.namespace, target.getNamespace(), true);
         }
 
         if (this.topic != null) {
             result = result == null || result;
-            result &= matchesTopic(this.topic, target.getTopic());
+            result &= matchesTopic(this.topic, target.getTopic(), true);
         }
 
         if (this.className != null) {
