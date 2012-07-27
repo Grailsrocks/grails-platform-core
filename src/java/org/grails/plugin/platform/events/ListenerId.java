@@ -33,11 +33,11 @@ import java.lang.reflect.Method;
  */
 public class ListenerId implements Serializable {
     private static final String CLOSURE_METHOD_NAME = "call";
-    private static final String ID_NAMESPACE_SEPARATOR = "://";
     private static final String ID_CLASS_SEPARATOR = ":";
     private static final String ID_METHOD_SEPARATOR = "#";
     private static final String ID_HASHCODE_SEPARATOR = "@";
     public static final String NAMESPACE_WILDCARD = "*";
+    public static final String ID_NAMESPACE_SEPARATOR = "://";
 
     /*private static final Pattern idRegex = Pattern.compile(
             "([^" + ID_NAMESPACE_SEPARATOR + "]*)?" +

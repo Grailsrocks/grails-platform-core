@@ -25,6 +25,7 @@ import org.grails.plugin.platform.events.EventReply;
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry;
 import org.springframework.core.task.AsyncTaskExecutor;
 
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -44,6 +45,7 @@ public class DefaultEventsPublisher implements EventsPublisher {
     protected AsyncTaskExecutor taskExecutor;
     private PersistenceContextInterceptor persistenceInterceptor;
     private boolean catchFlushExceptions = false;
+
 
     public void setCatchFlushExceptions(boolean catchFlushExceptions) {
         this.catchFlushExceptions = catchFlushExceptions;
@@ -68,33 +70,35 @@ public class DefaultEventsPublisher implements EventsPublisher {
         return new EventReply(invokeResult.getResult(), invokeResult.getInvoked());
     }
 
-    public EventReply eventAsync(final EventMessage event, final Closure onComplete, final long timeout) {
+    public EventReply eventAsync(final EventMessage event, final Map<String, Object> params) {
         Future<DefaultEventsRegistry.InvokeResult> invokeResult =
                 taskExecutor.submit(new Callback(event));
 
         final WrappedFuture reply = new WrappedFuture(invokeResult, -1);
-        if(onComplete != null){
-            taskExecutor.execute(new Runnable(){
 
-                public void run() {
-                    try {
-                        if(timeout != -1l)
-                            reply.get(timeout, TimeUnit.MILLISECONDS);
-                        else
-                            reply.get();
-                    } catch (Exception e) {
-                        reply.setCallingError(e);
+        if (params != null) {
+            reply.setOnError((Closure)params.get(ON_ERROR));
+            if (params.get(ON_REPLY) != null) {
+                taskExecutor.execute(new Runnable() {
+
+                    public void run() {
+                        try {
+                            if (params.get(TIMEOUT) != null)
+                                reply.get((Long) params.get(TIMEOUT), TimeUnit.MILLISECONDS);
+                            else
+                                reply.get();
+
+                            reply.throwError();
+                            ((Closure) params.get(ON_REPLY)).call(reply);
+                        } catch (Throwable e) {
+                            reply.setCallingError(e);
+                        }
                     }
-                    onComplete.call(reply);
-                }
-            });
+                });
 
+            }
         }
         return reply;
-    }
-
-    public EventReply eventAsync(final EventMessage event, final Closure onComplete) {
-        return eventAsync(event, onComplete, -1);
     }
 
     //INTERNAL
@@ -142,8 +146,11 @@ public class DefaultEventsPublisher implements EventsPublisher {
             super.initValues(message.getResult());
         }
 
-        public void setCallingError(Throwable e){
+        public void setCallingError(Throwable e) {
             super.initValues(e);
+            if(getOnError() != null){
+                getOnError().call(this);
+            }
         }
 
     }

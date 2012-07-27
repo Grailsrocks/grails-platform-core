@@ -18,6 +18,7 @@
 package org.grails.plugin.platform.events
 
 import grails.events.EventDeclarationException
+import grails.events.EventException
 import grails.events.Listener
 import grails.util.GrailsNameUtils
 import org.apache.log4j.Logger
@@ -79,7 +80,7 @@ class EventsImpl implements Events {
                 if (pluginName)
                     args += pluginParam
 
-                self.event(ns, args.remove('topic'), args.remove('data'), args.remove('params') ?: args , callback)
+                self.event(ns, args.remove('topic'), args.remove('data'), args.remove('params') ?: args, callback)
             }
 
             on { String topic, Closure callback ->
@@ -129,11 +130,13 @@ class EventsImpl implements Events {
                 log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
             }
             def reply
-            if(!callback && (!params?.containsKey('sync') || params.sync)){
+            callback = callback ?: params?.get(EventsPublisher.ON_REPLY)
+            if (!callback && (!params?.containsKey('sync') || params.sync)) {
                 reply = grailsEventsPublisher.event(eventMessage)
-                reply.value
-            }else
-                reply = grailsEventsPublisher.eventAsync(eventMessage, callback, params?.timeout ?: -1l)
+                reply.onError = params?.get(EventsPublisher.ON_ERROR)
+                reply.throwError()
+            } else
+                reply = grailsEventsPublisher.eventAsync(eventMessage, params)
 
             return reply
         }

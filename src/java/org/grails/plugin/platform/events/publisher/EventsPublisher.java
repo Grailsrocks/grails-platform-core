@@ -21,6 +21,8 @@ import groovy.lang.Closure;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
 
+import java.util.Map;
+
 /**
  * @author Stephane Maldini <smaldini@doc4web.com>
  * @version 1.0
@@ -32,7 +34,10 @@ import org.grails.plugin.platform.events.EventReply;
  */
 public interface EventsPublisher {
 
+    public static final String ON_REPLY = "onReply";
+    public static final String ON_ERROR = "onError";
+    public static final String TIMEOUT = "timeout";
+
     public EventReply event(final EventMessage event);
-    public EventReply eventAsync(final EventMessage event, Closure onComplete);
-    public EventReply eventAsync(final EventMessage event, Closure onComplete, long timeout);
+    public EventReply eventAsync(final EventMessage event, Map<String,Object> params);
 }

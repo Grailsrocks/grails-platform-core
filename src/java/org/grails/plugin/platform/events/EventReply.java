@@ -18,6 +18,7 @@
 package org.grails.plugin.platform.events;
 
 import grails.events.EventException;
+import groovy.lang.Closure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -44,6 +45,15 @@ public class EventReply implements Serializable, Future<Object> {
     private Object value;
     private int receivers;
     private boolean futureReplyLoaded = false;
+    private Closure onError = null;
+
+    public void setOnError(Closure onError) {
+        this.onError = onError;
+    }
+
+    public Closure getOnError() {
+        return onError;
+    }
 
     public EventReply(Object val, int receivers) {
         this.receivers = receivers;
@@ -89,7 +99,6 @@ public class EventReply implements Serializable, Future<Object> {
     }
 
     public boolean cancel(){
-    System.out.println("test");
         return cancel(true);
     }
 
@@ -131,9 +140,13 @@ public class EventReply implements Serializable, Future<Object> {
         return false;
     }
 
-    private void throwError() throws Throwable{
+    public void throwError() throws Throwable{
         if(hasErrors()){
-            throw new EventException(getErrors().get(0));
+            if(onError != null){
+                onError.call(this);
+            }else{
+                throw new EventException(getErrors().get(0));
+            }
         }
     }
 

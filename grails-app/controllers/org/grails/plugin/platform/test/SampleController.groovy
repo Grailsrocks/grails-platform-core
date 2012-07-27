@@ -81,16 +81,16 @@ class SampleController {
         response.outputStream << "size async2 : ${async2.size()} \n\n"
         response.outputStream << "async event with on complete\n"
 
-        def r = event(topic: 'sampleHella', data: "world 4", for:'lal') {reply ->
-            println "=="+reply.success
-            println "==-"+reply.cancelled
-            println reply.errors
-            println reply.values
+        def reply = { r ->
             println 'hidden test'
         }
-        println 'testd'
+
+        def error = { r ->
+            println 'test----' + r
+        }
+
+        def r = event topic: 'sampleHella', data: "world 4", for:'lal', onReply:reply, onError:error
         r.cancel()
-        //println r.value
 
     }
 }
