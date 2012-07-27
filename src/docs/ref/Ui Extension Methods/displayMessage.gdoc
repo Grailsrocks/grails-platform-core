@@ -9,7 +9,12 @@ There are two forms of the method:
 @displayMessage(String msg)@ - set the message string (or message code)
 @displayMessage(Map args)@ - set the message arguments (or message code)
 
-The @args@ supported are:
+{note}
+When plugins call this method, their "text" value is automatically namespaced with "plugin.<pluginName>." so this effectively
+forces all usage in plugins to use i18n messages for text - which is a good thing, because it means the application can override the UI text.
+{note}
+
+If using the Map arguments form, the @args@ supported are:
 
 {table}
 *Name* | *Purpose* 

@@ -1,0 +1,19 @@
+h1. pluginFlash
+
+This property is available to controllers and taglibs, to provide access to the flash scope for only the plugin that
+defines the controller or taglib.
+
+Use this instead of @flash@ scope in your plugin code, to prevent keys accidentally clashing across plugins and apps:
+
+{code}
+class MyPluginController {
+    def index = {
+        pluginFlash.message = 
+            "This is safe, even if app or other plugin uses [message]"
+    }
+}
+{code}
+
+The object returned is a @PropertyNamespacer@ instance, which supports property access, keySet() and toMap() to return only the keys and data
+that is provided by the plugin.
+

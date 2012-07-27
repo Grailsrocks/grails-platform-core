@@ -1,0 +1,19 @@
+h1. pluginRequestAttributes
+
+This property is available to controllers and taglibs, to provide access to the request attributes for only the plugin that
+defines the controller or taglib.
+
+Use this instead of @request[xxxx]@ in your plugin code, to prevent keys accidentally clashing across plugins and apps:
+
+{code}
+class MyPluginController {
+    def index = {
+        pluginRequestAttributes.message = 
+            "This is safe, even if app or other plugin uses [message]"
+    }
+}
+{code}
+
+The object returned is a @PropertyNamespacer@ instance, which supports property access, keySet() and toMap() to return only the keys and data
+that is provided by the plugin.
+
