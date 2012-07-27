@@ -24,13 +24,13 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.web.context.request.RequestContextHolder as RCH
 
 import org.grails.plugin.platform.util.PluginUtils
-import org.grails.plugin.platform.util.MapNamespacer
+import org.grails.plugin.platform.util.PropertyNamespacer
 
 /**
  * Helper methods for common UI features
  */
-class UiHelper implements ApplicationContextAware {
-    final log = LoggerFactory.getLogger(UiHelper)
+class UiExtensions implements ApplicationContextAware {
+    final log = LoggerFactory.getLogger(UiExtensions)
 
     static final String SESSION_WRAPPER_KEY = 'plugin.platformCore.plugin.session.wrapper';
     static final String FLASH_WRAPPER_KEY = 'plugin.platformCore.plugin.flash.wrapper';
@@ -72,33 +72,33 @@ class UiHelper implements ApplicationContextAware {
         }
     }
 
-    MapNamespacer getPluginSession(String pluginName) {
-        def req = RequestContextHolder.requestAttributes.currentRequest
+    PropertyNamespacer getPluginSession(String pluginName) {
+        def req = RCH.requestAttributes.currentRequest
         def wrapper = req[SESSION_WRAPPER_KEY]
         if (!wrapper) {
-            def session = RequestContextHolder.requestAttributes.session
-            wrapper = new MapNamespacer(pluginName+'.', session)
+            def session = RCH.requestAttributes.session
+            wrapper = new PropertyNamespacer(pluginName+'.', session, 'getAttributeNames')
             req[SESSION_WRAPPER_KEY] = wrapper
         } 
         return wrapper
     }
     
-    MapNamespacer getPluginFlash(String pluginName) {
-        def req = RequestContextHolder.requestAttributes.currentRequest
+    PropertyNamespacer getPluginFlash(String pluginName) {
+        def req = RCH.requestAttributes.currentRequest
         def wrapper = req[FLASH_WRAPPER_KEY]
         if (!wrapper) {
-            def flash = RequestContextHolder.requestAttributes.flashScope
-            wrapper = new MapNamespacer(pluginName+'.', flash)
+            def flash = RCH.requestAttributes.flashScope
+            wrapper = new PropertyNamespacer(pluginName+'.', flash, 'keySet')
             req[FLASH_WRAPPER_KEY] = wrapper
         } 
         return wrapper
     }
     
-    MapNamespacer getPluginRequestAttributes(String pluginName) {
-        def req = RequestContextHolder.requestAttributes.currentRequest
+    PropertyNamespacer getPluginRequestAttributes(String pluginName) {
+        def req = RCH.requestAttributes.currentRequest
         def wrapper = req[REQUEST_WRAPPER_KEY]
         if (!wrapper) {
-            wrapper = new MapNamespacer(pluginName+'.', req)
+            wrapper = new PropertyNamespacer(pluginName+'.', req, 'getAttributeNames')
             req[REQUEST_WRAPPER_KEY] = wrapper
         } 
         return wrapper

@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import org.grails.plugin.platform.events.EventsImpl
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
@@ -122,8 +121,9 @@ Grails Plugin Platform Core APIs
         def grailsVersion = application.metadata['app.grails.version']
 
         // Security API
-        if (config.security.enable)
+        if (!config.security.disabled) {
             grailsSecurity(org.grails.plugin.platform.security.SecurityImpl)
+        }
 
         // Injection API
         grailsInjection(org.grails.plugin.platform.injection.InjectionImpl) {
@@ -131,11 +131,12 @@ Grails Plugin Platform Core APIs
         }
 
         // Navigation API
-        if (config.navigation.enable)
+        if (!config.navigation.disabled) {
             grailsNavigation(org.grails.plugin.platform.navigation.NavigationImpl) {
                 grailsApplication = ref('grailsApplication')
                 grailsConventions = ref('grailsConventions')
             }
+        }
 
         // Convention API
         grailsConventions(org.grails.plugin.platform.conventions.ConventionsImpl) {
@@ -143,10 +144,12 @@ Grails Plugin Platform Core APIs
         }
 
         // UI Helper API
-        if (config.ui.enable)
-            grailsUiHelper(org.grails.plugin.platform.ui.UiHelper)
+        if (!config.ui.disabled) {
+            grailsUiExtensions(org.grails.plugin.platform.ui.UiExtensions)
+        }
+        
         // Events API
-        if (config.events.enable) {
+        if (!config.events.disabled) {
             task.executor(id: "grailsTopicExecutor", 'pool-size': config.events.poolSize)
 
             //init api bean
@@ -165,7 +168,7 @@ Grails Plugin Platform Core APIs
                 grailsEventsPublisher = ref('grailsEventsPublisher')
             }
 
-            if (config.events.gorm.enable) {
+            if (!config.events.gorm.disabled) {
                 if (grailsVersion.startsWith('1')) {
                     gormTopicSupport(GormTopicSupport1X)
                 } else {
@@ -191,7 +194,7 @@ Grails Plugin Platform Core APIs
         def config = ctx.grailsApplication.config.plugin.platformCore
         ctx.grailsInjection.initInjections()
 
-        if (config.events.enable)
+        if (!config.events.disabled)
             ctx.grailsEvents.reloadListeners()
     }
 
@@ -204,19 +207,17 @@ Grails Plugin Platform Core APIs
 
         'show.startup.info'(type: Boolean, defaultValue: true)
 
-        'navigation.enable'(type: Boolean, defaultValue: true)
+        'navigation.disabled'(type: Boolean, defaultValue: false)
 
-        'events.enable'(type: Boolean, defaultValue: true)
+        'events.disabled'(type: Boolean, defaultValue: false)
         'events.poolSize'(type: Integer, defaultValue: 10)
         'events.async'(type: Boolean, defaultValue: false)
         'events.catchFlushExceptions'(type: Boolean, defaultValue: true)
-        'events.gorm.enable'(type: Boolean, defaultValue: true)
+        'events.gorm.disabled'(type: Boolean, defaultValue: false)
 
-        'security.enable'(type: Boolean, defaultValue: true)
+        'security.disabled'(type: Boolean, defaultValue: false)
 
-        'config.enable'(type: Boolean, defaultValue: true)
-
-        'ui.enable'(type: Boolean, defaultValue: true)
+        'ui.disabled'(type: Boolean, defaultValue: false)
     }
 
     def doWithConfig = {
@@ -225,14 +226,18 @@ Grails Plugin Platform Core APIs
     def doWithInjection = { ctx ->
         def config = ctx.grailsApplication.config.plugin.platformCore
 
-        if (config.security.enable)
+        if (!config.security.disabled) {
             register ctx.grailsSecurity.injectedMethods
-        if (config.config.enable)
+        }
+        if (!config.config.disabled) {
             register ctx.grailsPluginConfiguration.injectedMethods
-        if (config.events.enable)
+        }
+        if (!config.events.disabled) {
             register ctx.grailsEvents.injectedMethods
-        if (config.ui.enable)
-            register ctx.grailsUiHelper.injectedMethods
+        }
+        if (!config.ui.disabled) {
+            register ctx.grailsUiExtensions.injectedMethods
+        }
     }
 
     def doWithApplicationContext = { applicationContext ->
@@ -250,18 +255,18 @@ Grails Plugin Platform Core APIs
         def eventArtefactType = getEventsArtefactHandler().TYPE
 
         if (event.source instanceof Class) {
-            if (config.navigation.enable && application.isArtefactOfType(navArtefactType, event.source)) {
+            if (!config.navigation.disabled && application.isArtefactOfType(navArtefactType, event.source)) {
                 // Update the app with the new class
                 event.application.addArtefact(navArtefactType, event.source)
                 ctx.grailsNavigation.reload(event.source)
 
-            } else if (config.events.enable && application.isArtefactOfType(eventArtefactType, event.source)) {
+            } else if (!config.events.disabled && application.isArtefactOfType(eventArtefactType, event.source)) {
                 event.application.addArtefact(eventArtefactType, event.source)
                 ctx.grailsEvents.reloadListeners()
             }
-            else if (config.navigation.enable && application.isArtefactOfType('Controller', event.source)) {
+            else if (!config.navigation.disabled && application.isArtefactOfType('Controller', event.source)) {
                 ctx.grailsNavigation.reload() // conventions on controller may have changed
-            } else if (config.events.enable && application.isServiceClass(event.source)) {
+            } else if (!config.events.disabled && application.isServiceClass(event.source)) {
                 ctx.grailsEvents.reloadListener(event.source)
             }
 

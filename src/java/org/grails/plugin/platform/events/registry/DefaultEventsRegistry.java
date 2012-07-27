@@ -164,8 +164,12 @@ public class DefaultEventsRegistry implements EventsRegistry {
             if (log.isDebugEnabled()) {
                 log.debug("Invoking listener [" + _listener.bean + '.' + _listener.method.getName() + "(arg)] for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");
             }
-            result = _listener.invoke(evt);
-            if (result != null) results.add(result);
+            try {
+                result = _listener.invoke(evt);
+                if (result != null) results.add(result);
+            } catch (Throwable t) {
+                log.error("Exception occurred when invoking listener [" + _listener.bean + '.' + _listener.method.getName() + "(arg)] - continuing to call other listeners", t);
+            }
         }
 
         Object resultValues = null;
@@ -235,20 +239,8 @@ public class DefaultEventsRegistry implements EventsRegistry {
             }
             try {
                 res = method.invoke(bean, arg);
-            } catch (IllegalArgumentException e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - illegal arg exception: " + e.toString());
-                }
-            } catch (IllegalAccessException e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - illegal access exception: " + e.toString());
-                }
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - illegal invoke target exception: " + e.toString());
-                }
-                e.printStackTrace();
+            } catch (Throwable e) {
+                log.error("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString(), e);
             }
 
             return res;

@@ -22,6 +22,7 @@ class PlatformToolsController {
     def grailsSecurity
     def grailsNavigation
     def grailsEvents
+    def grailsUiExtensions
     
     def index = {
     }
@@ -43,7 +44,17 @@ class PlatformToolsController {
     }
 
     def showUiExtensions = {
+        pluginSession.testKey = 'session testing'
+        pluginRequestAttributes.testKey = 'request attribute testing'
+        pluginFlash.testKey = 'flash testing, only see this on second load!'
+        
         displayMessage text:"This is an alert message", type:'alert'
+        
+        [
+            pluginSessionInfo: grailsUiExtensions.getPluginSession('platformCore').toMap(),
+            pluginFlashInfo: grailsUiExtensions.getPluginFlash('platformCore').toMap(),
+            pluginRequestInfo: grailsUiExtensions.getPluginRequestAttributes('platformCore').toMap(),
+        ]
     }
 
 /*    

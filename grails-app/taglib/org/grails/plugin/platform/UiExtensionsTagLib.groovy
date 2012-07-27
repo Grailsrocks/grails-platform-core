@@ -27,7 +27,7 @@ class UiExtensionsTagLib {
     // @todo OK if the machine stays up over new year this will become invalid...
     def thisYear = new Date()[Calendar.YEAR].toString()
 
-    def grailsUiHelper
+    def grailsUiExtensions
     
     def label = { attrs, body ->
         out << "<label"
@@ -92,7 +92,7 @@ class UiExtensionsTagLib {
         def classes = attrs.class ?: ''
         def classPrefix = attrs.cssPrefix ?: ''
         for (scope in [request, flash]) {
-            def msgParams = grailsUiHelper.getDisplayMessage(scope)
+            def msgParams = grailsUiExtensions.getDisplayMessage(scope)
             if (msgParams) {
                 if (attrs.type) {
                     classes = joinClasses(values:[classes, classPrefix+attrs.type])

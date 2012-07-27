@@ -1,4 +1,4 @@
 There are a some UI utility classes and beans available:
 
-* [grailsUiHelper|beans] - Provides methods for setting and getting displayMessages
+* [grailsUiExtension|beans] - Provides methods for setting and getting displayMessages
 * [TagLibUtils|utilityClasses] - Provides helper functions for manipulating attributes, CSS class name lists etc.

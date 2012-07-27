@@ -31,5 +31,11 @@
         <p:tagDemo tag="p:siteURL"/>
         <p:tagDemo tag="p:siteLink"/>
         <p:tagDemo tag="p:year"/>
+
+        <h2>Namespaced session, flash and request attributes</h2>
+        <p>Session: ${pluginSessionInfo.encodeAsHTML()}</p>
+        <p>Flash: ${pluginFlashInfo.encodeAsHTML()}</p>
+        <p>Request: ${pluginRequestInfo.encodeAsHTML()}</p>
+
     </body>
 </html>
