@@ -91,7 +91,11 @@ class UiExtensionsTagLib {
     def displayMessage = { attrs ->
         def classes = attrs.class ?: ''
         def classPrefix = attrs.cssPrefix ?: ''
-        for (scope in [request, flash]) {
+        def searchScopes = [
+            grailsUiExtensions.getPluginRequestAttributes('platformCore'), 
+            grailsUiExtensions.getPluginFlash('platformCore')
+        ]
+        for (scope in searchScopes) {
             def msgParams = grailsUiExtensions.getDisplayMessage(scope)
             if (msgParams) {
                 if (attrs.type) {

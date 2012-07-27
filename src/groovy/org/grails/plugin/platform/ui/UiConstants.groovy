@@ -18,8 +18,7 @@
 package org.grails.plugin.platform.ui
 
 class UiConstants {
-    static final PLUGIN_SCOPE = 'plugin.platformCore.'
-    static final DISPLAY_MESSAGE = PLUGIN_SCOPE+'ui.display.message'
-    static final DISPLAY_MESSAGE_ARGS = PLUGIN_SCOPE+'ui.display.message.args'
-    static final DISPLAY_MESSAGE_TYPE = PLUGIN_SCOPE+'ui.display.message.type'
+    static final DISPLAY_MESSAGE = 'ui.display.message'
+    static final DISPLAY_MESSAGE_ARGS = 'ui.display.message.args'
+    static final DISPLAY_MESSAGE_TYPE = 'ui.display.message.type'
 }

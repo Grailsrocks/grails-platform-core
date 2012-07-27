@@ -41,7 +41,7 @@ class UiExtensions implements ApplicationContextAware {
     def injectedMethods = {
         def self = this
         
-        controller { clazz ->
+        'controller, tagLib' { clazz ->
             
             def pluginName = PluginUtils.getNameOfDefiningPlugin(applicationContext, clazz)
 
