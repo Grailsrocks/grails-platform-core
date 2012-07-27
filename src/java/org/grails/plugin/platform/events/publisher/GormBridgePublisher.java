@@ -62,7 +62,7 @@ public class GormBridgePublisher implements ApplicationListener {
                     ), GormTopicSupport.GORM_SOURCE, false));
             try {
                 gormTopicSupport.processCancel(applicationEvent, reply.getValues());
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 throw new RuntimeException(e);//shouldn't happen as its sync event
             }
         }
