@@ -73,7 +73,7 @@ class UiExtensions implements ApplicationContextAware {
     }
 
     PropertyNamespacer getPluginSession(String pluginName) {
-        def req = RCH.requestAttributes.currentRequest
+        def req = RCH.requestAttributes.session
         def wrapper = req[SESSION_WRAPPER_KEY]
         if (!wrapper) {
             def session = RCH.requestAttributes.session
@@ -84,7 +84,7 @@ class UiExtensions implements ApplicationContextAware {
     }
     
     PropertyNamespacer getPluginFlash(String pluginName) {
-        def req = RCH.requestAttributes.currentRequest
+        def req = RCH.requestAttributes.flashScope
         def wrapper = req[FLASH_WRAPPER_KEY]
         if (!wrapper) {
             def flash = RCH.requestAttributes.flashScope
