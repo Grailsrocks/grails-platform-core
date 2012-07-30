@@ -46,16 +46,16 @@ class UiExtensions implements ApplicationContextAware {
             def pluginName = PluginUtils.getNameOfDefiningPlugin(applicationContext, clazz)
 
             displayMessage { String msg ->
-                self.displayMessage(msg, delegate.request, pluginName)
+                self.displayMessage(msg, pluginName)
             }
             displayMessage { Map args ->
-                self.displayMessage(args, delegate.request, pluginName)
+                self.displayMessage(args, pluginName)
             }
             displayFlashMessage { String msg ->
-                self.displayFlashMessage(msg, delegate.flash, pluginName)
+                self.displayFlashMessage(msg, pluginName)
             }
             displayFlashMessage { Map args ->
-                self.displayFlashMessage(args, delegate.flash, pluginName)
+                self.displayFlashMessage(args, pluginName)
             }
 
             if (pluginName) {
@@ -120,33 +120,35 @@ class UiExtensions implements ApplicationContextAware {
         return args
     }
     
-    void displayMessage(String text, request = RCH.requestAttributes.request, String pluginName = null) {
+    void displayMessage(String text, String pluginName = null) {
         if (log.debugEnabled) {
             log.debug "Setting display message text: ${text}"
         }
-        request[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${text}" : text
+        getPluginRequestAttributes('platformCore')[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${text}" : text
     }
 
-    void displayMessage(Map args, request = RCH.requestAttributes.request, String pluginName = null) {
+    void displayMessage(Map args, String pluginName = null) {
         if (log.debugEnabled) {
             log.debug "Setting display message args: ${args}"
         }
-        request[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${args.text}" : args.text
-        request[UiConstants.DISPLAY_MESSAGE_ARGS] = args.args
-        request[UiConstants.DISPLAY_MESSAGE_TYPE] = args.type
+        def reqAttribs = getPluginRequestAttributes('platformCore')
+        reqAttribs[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${args.text}" : args.text
+        reqAttribs[UiConstants.DISPLAY_MESSAGE_ARGS] = args.args
+        reqAttribs[UiConstants.DISPLAY_MESSAGE_TYPE] = args.type
     }
 
-    void displayFlashMessage(String text, flash = RCH.requestAttributes.flashScope, String pluginName = null) {
+    void displayFlashMessage(String text, String pluginName = null) {
         if (log.debugEnabled) {
             log.debug "Setting display flash message text: ${text}"
         }
-        flash[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${text}" : text
+        getPluginFlash('platformCore')[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${text}" : text
     }
 
-    void displayFlashMessage(Map args, flash = RCH.requestAttributes.flashScope, String pluginName = null) {
+    void displayFlashMessage(Map args, String pluginName = null) {
         if (log.debugEnabled) {
             log.debug "Setting display flash message args: ${args}"
         }
+        def flash = getPluginFlash('platformCore')
         flash[UiConstants.DISPLAY_MESSAGE] = pluginName ? "plugin.${pluginName}.${args.text}" : args.text
         flash[UiConstants.DISPLAY_MESSAGE_ARGS] = args.args
         flash[UiConstants.DISPLAY_MESSAGE_TYPE] = args.type
