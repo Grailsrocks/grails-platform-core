@@ -37,5 +37,16 @@
         <p>Flash: ${pluginFlashInfo.encodeAsHTML()}</p>
         <p>Request: ${pluginRequestInfo.encodeAsHTML()}</p>
 
+        <h2>Namespaced i18n messages</h2>
+        <p>There is a <code>p:text</code> tag that is like <code>g:message</code> but uses plugin namespaced i18n codes
+            and uses the body as default text. The messages are namespaced as <code>plugin.[GSP plugin Name].[code]</code>:
+            <blockquote>
+                <p:tagDemo tag="p:text" code="test.message">This will not show</p:tagDemo>
+            </blockquote>
+            <blockquote>
+                <p:tagDemo tag="p:text" code="test.missing.message">This will show because the code used does not exist</p:tagDemo>
+            </blockquote>
+        </p>
+        
     </body>
 </html>

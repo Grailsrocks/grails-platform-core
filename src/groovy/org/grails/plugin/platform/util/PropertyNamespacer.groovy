@@ -41,24 +41,29 @@ class PropertyNamespacer {
     }
     
     Object get(Object key) {
-        delegateMapLikeObject[keyPrefix + key.toString()]
+        this.@delegateMapLikeObject[this.@keyPrefix + key.toString()]
     }
 
     Object put(Object key, Object value) {
-        delegateMapLikeObject[keyPrefix + key.toString()] = value
+        this.@delegateMapLikeObject[this.@keyPrefix + key.toString()] = value
     }
     
     Set<String> keySet() {
-        def allKeys = delegateMapLikeObject."$keySetMethodName"()
-        def prefix = keyPrefix
+        def allKeys = this.@delegateMapLikeObject."$keySetMethodName"()
+        def prefix = this.@keyPrefix
         allKeys.findAll { it.startsWith(prefix) } as Set
     }
     
     Map toMap() {
         Map result = [:]
         for (k in keySet()) {
-            result[k] = delegateMapLikeObject[k]
+            def value = this.@delegateMapLikeObject[k]
+            result[k] = value
         }
         return result
+    }
+    
+    String toString() {
+        "PropertyNamespacer for namespace [${this.@keyPrefix}] with keys: ${keySet()}"
     }
 }

@@ -18,6 +18,8 @@
 package org.grails.plugin.platform
 
 import org.grails.plugin.platform.util.TagLibUtils
+import org.grails.plugin.platform.util.PluginUtils
+import grails.util.GrailsNameUtils
 
 class UiExtensionsTagLib {
     static namespace = "p"
@@ -80,7 +82,7 @@ class UiExtensionsTagLib {
     protected getMessageOrBody(Map attrs, Closure body) {
         def textCode = attrs.remove('text')
         def textCodeArgs = attrs.remove('textArgs')
-        def textFromCode = textCode ? g.message(code:textCode, args:textCodeArgs) : null
+        def textFromCode = textCode ? p.text(code:textCode, args:textCodeArgs) : null
         if (textFromCode) {
             textFromCode = textFromCode.encodeAsHTML()
         }
@@ -108,6 +110,7 @@ class UiExtensionsTagLib {
                 attrs.encodeAs = 'HTML'
             
                 out << "<div class=\"${classes.encodeAsHTML()}\">"
+                // Message is already namespaced
                 out << g.message(attrs)
                 out << "</div>"
             }
@@ -118,7 +121,7 @@ class UiExtensionsTagLib {
         def con = attrs.controller ?: controllerName
         def defaultAction = 'index' // make this ask the artefact which is default
         def act = attrs.action ?: defaultAction
-        def text = g.message(code:"action.${con}.${act}", encodeAs:'HTML')
+        def text = p.message(code:"action.${con}.${act}", encodeAs:'HTML')
         out << g.link(attrs, text)
     }
     
@@ -204,6 +207,43 @@ class UiExtensionsTagLib {
         }
     }
     
+    
+    /** 
+     * Get i18n text string, like g:message but with some attrib changes and code namespaced by plugin that declared GSP
+     * Attributes:
+     * @attr code The i18n code
+     * @attr args The i18n args (optional)
+     * 
+     * Body is the default text if code does not resolve.
+     */
+    def text = { attrs, body ->
+        def pluginPath = pageScope.pluginContextPath
+        def pluginPathMatcher = pluginPath =~ '/plugins/(.+)-[\\d]+.*$'
+        def appPlugin = PluginUtils.findAppPlugin(grailsApplication.mainContext)
+        def bodyText = body() ?: attrs.default
+        if (pluginPathMatcher.matches() || appPlugin) {
+            def pluginName = pluginPathMatcher.matches() ? 
+                GrailsNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName(pluginPathMatcher[0][1]) :
+                appPlugin.name
+                
+            def namespacedCode = "plugin.${pluginName}.${attrs.code}"
+            if (log.debugEnabled) {
+                log.debug "Resolving plugin-scoped i18n message from plugin [${pluginName}] using code [${namespacedCode}]"
+            }
+            if (!bodyText) {
+                bodyText = namespacedCode
+            }
+            
+            out << g.message(code:namespacedCode, args:attrs.args, default:bodyText, encodeAs:attrs.encodeAs)
+        } else {
+            if (!bodyText) {
+                bodyText = attrs.code
+            }            
+
+            out << g.message(code:attrs.code, args:attrs.args, default:bodyText, encodeAs:attrs.encodeAs)
+        }
+    }
+ 
     def dummyText = { attrs -> 
         def n = attrs.size ? attrs.size.toString().toInteger() : 0
         if (!n) {

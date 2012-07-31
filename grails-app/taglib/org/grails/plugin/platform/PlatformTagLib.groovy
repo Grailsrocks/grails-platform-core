@@ -45,7 +45,7 @@ class PlatformTagLib {
         out << "<div class=\"tag-demo\">"
         out << "<div class=\"tag-source\"><strong>GSP code:</strong><pre>\n"+markup.encodeAsHTML()+"</pre></div>"
         out << "<div class=\"tag-result\"><strong>Result:</strong> ${b}</div>"
-        out << "<div class=\"tag-output\"><strong>Output:</strong><pre>\n"+b.encodeAsHTML()+"</pre></div>"
+        out << "<div class=\"tag-output\"><strong>Markup:</strong><pre>\n"+b.encodeAsHTML()+"</pre></div>"
         out << "</div>"
     }
 }

@@ -1,0 +1,28 @@
+h1. p:text
+
+h2. Purpose
+
+Renders i18n text like g:message, but automatically namespacing the message codes based on the plugin that provides the GSP
+that calls the tag.
+
+This makes it easy for plugin GSPs to provide i18n strings without clashing with strings from the application or other plugins.
+
+h2. Example
+
+{code:xml}
+<p:text code="welcome.message"/>
+<p:text code="inbox.title" args="${messages.size()}"/>
+<p:text code="hello">Welcome to our app!</p:text>
+{code}
+
+All of these messages will be resolved using @plugin.<GSP plugin name>.<code>@ and the body is used as a default if the message cannot be resolved.
+
+h2. Attributes
+
+{table}
+*Name* | Required | *Purpose* 
+code | | The i18n message code
+args | | Arguments for i18n message
+default | | Default value for message if it cannot be resolved
+encodeAs | | Codec to apply to message, defaults to none
+{table}

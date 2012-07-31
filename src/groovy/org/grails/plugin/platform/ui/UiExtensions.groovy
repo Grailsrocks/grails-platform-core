@@ -106,7 +106,7 @@ class UiExtensions implements ApplicationContextAware {
     
     Map getDisplayMessage(scope) {
         if (log.debugEnabled) {
-            log.debug "Getting display message from scope: ${scope}"
+            log.debug "Getting display message from scope: ${scope.toString()}"
         }
         def args = [:]
         if (scope[UiConstants.DISPLAY_MESSAGE]) {
@@ -115,7 +115,9 @@ class UiExtensions implements ApplicationContextAware {
             args.type = scope[UiConstants.DISPLAY_MESSAGE_TYPE]
         }
         if (log.debugEnabled) {
-            log.debug "Found display message from scope [${scope}]: ${args}"
+            if (args) {
+                log.debug "Found display message from scope [${scope.toString()}]: ${args}"
+            }
         }
         return args
     }
