@@ -36,6 +36,9 @@ public interface EventsPublisher {
 
     public static final String ON_REPLY = "onReply";
     public static final String ON_ERROR = "onError";
+    public static final String FORK = "fork";
+    public static final String GORM = "gormSession";
+    public static final String NAMESPACE = "namespace";
     public static final String TIMEOUT = "timeout";
 
     public EventReply event(final EventMessage event);

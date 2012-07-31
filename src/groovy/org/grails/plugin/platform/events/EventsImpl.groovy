@@ -131,7 +131,7 @@ class EventsImpl implements Events {
             }
             def reply
             callback = callback ?: params?.get(EventsPublisher.ON_REPLY)
-            if (!callback && (!params?.containsKey('sync') || params.sync)) {
+            if (!callback && (params?.containsKey(EventsPublisher.FORK) && !params.get(EventsPublisher.FORK))) {
                 reply = grailsEventsPublisher.event(eventMessage)
                 reply.onError = params?.get(EventsPublisher.ON_ERROR)
                 reply.throwError()
@@ -144,8 +144,8 @@ class EventsImpl implements Events {
     }
 
     EventMessage buildEvent(String pluginName, String namespace, String topic, data, Map params) {
-        boolean gormSession = params?.containsKey('gormSession') ? params.remove('gormSession') : true
-        namespace = params?.remove('namespace') ?: namespace
+        boolean gormSession = params?.containsKey(EventsPublisher.GORM) ? params.remove(EventsPublisher.GORM) : true
+        namespace = params?.remove(EventsPublisher.NAMESPACE) ?: namespace
         checkNamespace pluginName, namespace
 
         namespace = namespace ?: APP_NAMESPACE
