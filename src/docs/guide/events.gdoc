@@ -13,18 +13,25 @@ and get maximum flexibility when required :
 * Simple *config keys*
 
 In a nutshell, you will :
-* send events :
-{code}
+* Send events :
+{html}
+<pre class="brush: groovy;">
 class UserController{
 
    def registration(){
          def user = new User(params).save()
          if(user){
             //non-blocking call, will trigger application listeners for this topic
-            eventAsync('mailRegistration', user)
+            event('mailRegistration', user)
+
+            //blocking call :
+            //event('mailRegistration', user).waitFor()
 
             //can also be written like that
-            //eventAsync topic:'mailRegistration', data:user
+            //event topic:'mailRegistration', data:user
+
+            //and if you need to reuse the current thread
+            //event topic:'mailRegistration', data:user, fork:false
 
             render(view:'sendingRegistrationMail')
          }else{
@@ -32,15 +39,17 @@ class UserController{
          }
   }
 }
-{code}
+</pre>
+{html}
 
-* write a listener (or event handler, or event reactor or whatever you call it):
-{code}
+* Write listeners (or event handler, or event reactor or whatever you call it):
+{html}
+<pre class="brush: groovy;">
 class UserService{
 
    //use method name 'mailRegistration' as topic name
-   @grails.events.Listener
    //can also use custom topic name using topic arg: @Listener(topic='test')
+   @grails.events.Listener
    def mailRegistration(User user){
          sendMail{
             to user.mail
@@ -48,5 +57,16 @@ class UserService{
             html g.render(template:"userMailConfirmation")
         }
   }
+
+  //Can also receive the event enveloppe EventMessage to get more information on this particular event)
+  @grails.events.Listener(topic="mailRegistration")
+  def mailRegistration2(org.grails.plugin.platform.events.EventMessage msg){
+        sendMail{
+           to msg.data.mail
+           subject "Confirmation"
+           html g.render(template:"userMailConfirmation")
+        }
+  }
 }
-{code}
+</pre>
+{html}

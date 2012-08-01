@@ -40,6 +40,7 @@ public interface EventsPublisher {
     public static final String GORM = "gormSession";
     public static final String NAMESPACE = "namespace";
     public static final String TIMEOUT = "timeout";
+    public static final String HEADERS = "headers";
 
     public EventReply event(final EventMessage event);
     public EventReply eventAsync(final EventMessage event, Map<String,Object> params);

@@ -150,7 +150,7 @@ class EventsImpl implements Events {
 
         namespace = namespace ?: APP_NAMESPACE
 
-        new EventMessage(topic, data, namespace, gormSession, params)
+        new EventMessage(topic, data, namespace, gormSession, params?.remove(EventsPublisher.HEADERS))
     }
 
     void reloadListener(Class serviceClass) {

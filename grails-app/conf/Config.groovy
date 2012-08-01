@@ -35,3 +35,6 @@ grails.doc.license = "ASL 2"
 grails.doc.copyright = "&copy; 2012 Marc Palmer & Stéphane Maldini"
 grails.doc.footer = "Please contact the authors with any corrections or suggestions"
 
+grails.doc.css = new File("$basedir/src/docs/templates/css")
+grails.doc.style = new File("$basedir/src/docs/templates/html")
+grails.doc.js = new File("$basedir/src/docs/templates/js")

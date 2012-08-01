@@ -4,10 +4,13 @@ There are few ways to register events.
 
 h3. Defining listeners at compile time
 
-Within Grails services you can use the *@Listener* annotation. This takes a *topic* string, but you can omit it and use the *method name* as the topic to listen for:
+Within Grails services you can use the *@Listener* annotation. It takes a *topic* string, but you can omit it and use the *method name* as the topic to listen for:
 
-{code}
+
+{html}
+<pre class="brush: groovy;">
 class SomeService{
+
    @grails.events.Listener(topic = 'userLogged')
    def myMethod(User user){
    }
@@ -16,42 +19,67 @@ class SomeService{
    def mailSent(User user){
   }
 }
-{code}
+</pre>
+{html}
 
-Event methods are *always single-argument*, and the value is the object sent with the event. Usually this is the "subject" of the event.
+Event methods are *single-argument*, and the value is the object sent with the event. Usually this is the "subject" of the event.
+However an event is carried by an enveloppe called EventMessage which contains several useful metadata like additionnal headers, current topic :
+
+{html}
+<pre class="brush: groovy;">
+class SomeService{
+
+   @grails.events.Listener(topic = 'userLogged')
+   def myMethod(org.grails.plugin.platform.events.EventMessage userMessage){
+    println userMessage.headers // display opt headers
+    println userMessage.event // displays current topic
+    println userMessage.data // displays data
+   }
+}
+</pre>
+{html}
 
 h3. Namespacing
 
 Your declared events belongs to the *app* namespace, unless you tune it using the *namespace* argument or the Events DSL we will introduce later.
 
-
-{code}
+{html}
+<pre class="brush: groovy;">
 class SomeService{
+
    @grails.events.Listener(topic = 'userLogged', namespace = 'security')
    def myMethod(User user){
    }
 
-   @grails.events.Listener(namespace = 'gorm') //will assign this method to topic 'afterInsert' on namespace 'gorm'
+   @grails.events.Listener(namespace = 'gorm') //will subscribe this method to topic 'afterInsert' on namespace 'gorm'
    def afterInsert(User user){
   }
 }
-{code}
+</pre>
+{html}
 
 Remember that you will need to specify the scope when triggering events if you customize it with a different value than *app* :
 
-{code}
+{html}
+<pre class="brush: groovy;">
 class SomeController{
    def myAction(){
         event for:'security', topic:'userLogged', data:session.user
    }
 }
-{code}
+</pre>
+{html}
+
+{warning}
+It's mandatory to declare namespace when using events bus from a plugin in order to avoid any conflicts.
+{warning}
 
 h3. Dynamic listeners
 
 Some edge cases need runtime registration. If you meet this use case, use the injected [on|Events Methods] method :
 
-{code}
+{html}
+<pre class="brush: groovy;">
 class SomeController{
 
  def testInlineListener = {
@@ -70,4 +98,26 @@ class SomeController{
           render "$listener registered"
  }
 }
-{code}
+</pre>
+{html}
+
+h3. Wildcard support
+
+Capturing a wider group of events can be useful, specially for monitoring purposes. It's possible to listen for multiple topics/namespaces in a single shot using *wildcard as the last character*.
+
+{html}
+<pre class="brush: groovy;">
+class SomeService{
+
+ @grails.events.Listener(namespace='role-*', topic = 'chat-*')
+   def myMethod(org.grails.plugin.platform.events.EventMessage userMessage){
+      println userMessage.namespace
+      println userMessage.event
+   }
+}
+</pre>
+{html}
+
+{note}
+This feature will probably evolve to a smarter implementation behaving like UrlMappings and authorizing substring captures
+{note}
