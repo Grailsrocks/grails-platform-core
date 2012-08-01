@@ -113,15 +113,16 @@ public class DefaultEventsRegistry implements EventsRegistry {
         }
 
         Object target = bean;
+        Object realTarget = bean;
 
         if (bean instanceof Advised) {
             try {
-                target = ((Advised) bean).getTargetSource().getTarget();
+                realTarget = ((Advised) bean).getTargetSource().getTarget();
             } catch (Exception e) {
                 log.error("failed to retrieve bean origin from proxy", e);
             }
         }
-        ListenerId listener = ListenerId.build(namespace, topic, target, callback);
+        ListenerId listener = ListenerId.build(namespace, topic, realTarget, callback);
 
         ListenerHandler handler = new ListenerHandler(target, callback, listener);
 
