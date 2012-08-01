@@ -62,12 +62,13 @@ public class EventReply implements Serializable, Future<Object> {
 
     @SuppressWarnings("unchecked")
     protected void initValues(Object val) {
+        this.values = new ArrayList<Object>();
+
         if (receivers > 1 && val instanceof Collection) {
-            this.values = new ArrayList<Object>((Collection) val);
+            this.values.addAll((Collection) val);
             this.value = values.get(0);
-        } else {
+        } else if(receivers != 0 || val != null) {
             this.value = val;
-            this.values = new ArrayList<Object>();
             this.values.add(this.value);
         }
         this.futureReplyLoaded = true;
@@ -158,6 +159,18 @@ public class EventReply implements Serializable, Future<Object> {
 
     protected void setReceivers(int receivers) {
         this.receivers = receivers;
+    }
+
+    public EventReply waitFor() throws Throwable {
+        get();
+        throwError();
+        return this;
+    }
+
+    public EventReply waitFor(long l) throws Throwable {
+        get(l, TimeUnit.MILLISECONDS);
+        throwError();
+        return this;
     }
 
     public Object get() throws InterruptedException, ExecutionException {
