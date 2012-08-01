@@ -1,12 +1,12 @@
 Usually, an event is _fired and forgot_. In some cases, you may expect an answer to transform your messaging architecture
-into a controlled flow. For instance, a negative reply can be used in GORM events to cancel database writing for the current subjet.
+into a controlled flow. For instance, a negative reply can be used in GORM events to veto database writing for the current subjet.
 Another usual example is the aggregation of multiple workers products.
 
 h3. Simple reply
 
 Replying is a simple matter of returning an object from the listener method :
 
-{code}
+{html:groovy}
 class SomeService{
     @Listener
     def logout(User user){
@@ -17,25 +17,38 @@ class SomeService{
        return disconnectDate
     }
 }
-{code}
+{html}
 
-Whenever a listener return non null object, the caller can access it through the EventReply enveloppe returned immediatly
-after calling event/eventAsync. Getting the value is a blocking operation called *value* :
+If listeners return non null objects, the caller can access them through the EventReply enveloppe returned immediatly
+after calling *event* method. The other option is the use of a *reply handler* :
 
-{code}
+{html:groovy}
 class SomeController{
 
    def logout(){
-       def reply = eventAsync topic:"logout", data:session.user
+       def reply = event topic:"logout", data:session.user, fork:false
+       render reply.value //display value
 
-       render reply.value //wait and display value
+       //Using callback closure
+       def replyHandler = {EventReply reply-> }
+       event topic:"logout", data:session.user, onReply:replyHandler
 
-       def reply2 = eventAsync topic:"logout", data:session.user
+       //Or as last argument
+       event(topic:"logout", data:session.user){ EventReply r-> }
 
-       render reply.get(30, TimeUnit.SECONDS) //EventReply object is a Future implementation, hence providing the same facilities such as timeout
+
+       //EventReply object is a Future implementation
+       def reply_future = event topic:"logout", data:session.user
+       render reply_future.get(30, TimeUnit.SECONDS)
    }
 }
-{code}
+{html}
+
+{note}
+Whenever an event is triggered, a task is submitted into the events bus thread pool and a Future returned, wrapped into EventReply.
+It's also planned to fully support reply-address pattern in a future version (replyTo parameter) which brings interesting
+features out of the box : non blocking response, streaming, forwarding...
+{note}
 
 h3. Multiple replies
 
@@ -43,30 +56,79 @@ Multiple listeners can return values for the same topic/namespace. In this case,
 Remember that a valid result is a non null value, hence why even if 3 handlers have reacted but only 2 did return something, then you will only
 see 2 values in the *EventReply.values*.
 
-{code}
+{html:groovy}
 class SomeController{
 
    def logout(){
        def reply = event topic:"sendMails", data:session.user
 
-       render reply.value //wait for all listeners and then display the first value from the aggregated results
-       render reply.values //display all results as List
+       //wait for all listeners and then display the first value from the aggregated results
+       render reply.value
+       
+       //display all results as List
+       render reply.values
    }
 }
-{code}
+{html}
+
+h3. Exceptions
+
+Because no code is perfect, exceptions can happen in the event process for 3 reasons :
+* RuntimeException in one or more handlers
+* InterruptedException if the process has been cancelled
+* TimeoutException if the maximum process time has been reached (timeout parameter)
+
+An *onError* parameter is available and accepts a *Closure{List<Throwable> errors}*. If non set, exceptions are
+ propagated to the caller when blocking the EventReply object (_getValue_ etc) and/or when *fork == false*.
+
+Exceptions in multiple listeners scenario don't interrupt the execution flow and leave a chance to others listeners to execute as well.
+ The return value from a failing listener becomes the raised exception.
+
+{html:groovy}
+class SomeController{
+
+   def logout(){
+       on('test'){
+         sleep(5000)
+         throw new MyException('haha')
+       }
+
+       def reply = event topic:"test"
+       reply.values //throws MyException after 5s
+
+
+       def errorsHandler = {println it}
+       reply = event topic:"test", onError:errorsHandler
+       reply.values //calls errorsHandler and returns values which contain at MyException
+
+       event(topic:"test", onError:errorsHandler, timeout:1000){
+          //executes both this and errorsHandler closures with a TimeoutException
+       }
+
+       reply = event(topic:"test", onError:errorsHandler, timeout:1000)
+       reply.cancel() //executes errorsHandler closure with an InterruptedException
+
+       event(topic:"test", fork:false)
+       //wait 5s and raises an exception in the caller thread
+
+   }
+}
+{html}
 
 h3. Waiting replies
 
 In domains, services and controllers artefacts you can wait for events using "EventReply[] waitFor(EventReply... eventReplies)".
-It accepts as many events replies you want and returns the same array for functiunal programming style. This method is rather useless in a sync scenario.
+It accepts as many events replies you want and returns the same array for functiunal programming style.
+EventReply also have a waitFor method for one-line waiting.
 
-{code}
+
+{html:groovy}
 class SomeController{
 
    def logout(){
-      def reply = eventAsync('logout', session.user)
-      def reply2 = eventAsync('logout', session.user)
-      def reply3 = eventAsync('logout', session.user)
+      def reply = event('logout', session.user)
+      def reply2 = event('logout', session.user)
+      def reply3 = event('logout', session.user)
 
       waitFor(reply,reply2,reply3).each{EventReply reply->
         render reply.value +'</br>'
@@ -74,8 +136,13 @@ class SomeController{
 
       //same with 20 seconds timeout on each reply
       waitFor(20, TimeUnit.SECONDS, reply,reply2,reply3).each{EventReply reply->
-              render reply.value +'</br>'
+              render reply.value
       }
+
+      //other style :
+      event('logout', session.user).waitFor() //blocks event
+      event('logout', session.user).waitFor(2000) //blocks event for maximum 2 seconds
+
    }
 }
-{code}
+{html}

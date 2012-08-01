@@ -14,8 +14,7 @@ and get maximum flexibility when required :
 
 In a nutshell, you will :
 * Send events :
-{html}
-<pre class="brush: groovy;">
+{html:groovy}
 class UserController{
 
    def registration(){
@@ -39,12 +38,10 @@ class UserController{
          }
   }
 }
-</pre>
 {html}
 
 * Write listeners (or event handler, or event reactor or whatever you call it):
-{html}
-<pre class="brush: groovy;">
+{html:groovy}
 class UserService{
 
    //use method name 'mailRegistration' as topic name
@@ -58,7 +55,7 @@ class UserService{
         }
   }
 
-  //Can also receive the event enveloppe EventMessage to get more information on this particular event)
+  //Can also receive an EventMessage to get more information on this particular event)
   @grails.events.Listener(topic="mailRegistration")
   def mailRegistration2(org.grails.plugin.platform.events.EventMessage msg){
         sendMail{
@@ -68,5 +65,4 @@ class UserService{
         }
   }
 }
-</pre>
 {html}

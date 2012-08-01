@@ -131,10 +131,11 @@ class EventsImpl implements Events {
             }
             def reply
             callback = callback ?: params?.get(EventsPublisher.ON_REPLY)
-            if (!callback && (params?.containsKey(EventsPublisher.FORK) && !params.get(EventsPublisher.FORK))) {
+            if (params?.containsKey(EventsPublisher.FORK) && !params.get(EventsPublisher.FORK)) {
                 reply = grailsEventsPublisher.event(eventMessage)
                 reply.onError = params?.get(EventsPublisher.ON_ERROR)
                 reply.throwError()
+                callback?.call(reply)
             } else
                 reply = grailsEventsPublisher.eventAsync(eventMessage, params)
 

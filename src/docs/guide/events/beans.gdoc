@@ -1,0 +1,9 @@
+{table}
+*Bean Name* | *Type* | *Default Implementation* | *Description*
+*grailsEvents* | _org.grails.plugin.platform.events .Events_ | _org.grails.plugin.platform.events .EventsImpl_ | Main events gateway which contains injected methods in artifacts
+*grailsEventsPublisher* | _org.grails.plugin.platform.events .publisher.EventsPublisher_ | _org.grails.plugin.platform.events .publisher.DefaultsEventsPublisher_ | Publisher bean, triggers events. To be implemented by extensions if required (e.g. *events-si*)
+*grailsEventsRegistry* | _org.grails.plugin.platform.events .registry.EventsRegistry_ | _org.grails.plugin.platform.events .registry.DefaultsEventsRegistry_ | Registry bean, store listeners and route events. To be implemented by extensions if required (e.g. *events-si*)
+*gormTopicSupport* | _org.grails.plugin.platform.events .dispatcher.GormTopicSupport_ | _org.grails.plugin.platform.events .dispatcher.GormTopicSupport2X_ | Translates gorm events to topic names and processes veto(s).
+*grailsEventsGormBridge* | _org.grails.plugin.platform.events .publisher.GormBridgePublisher_ |  | Listens for GORM events and publishes to the right bus using gormTopicSupport.
+*grailsTopicExecutor* | _org.springframework .core.task.TaskExecutor_ | _org.springframework.scheduling .concurrent.ThreadPoolTaskExecutor_ | Carries on events execution.
+{table}

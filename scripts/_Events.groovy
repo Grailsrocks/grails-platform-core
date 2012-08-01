@@ -30,7 +30,17 @@ eventDocStart = {
 
             @Override
             void execute(Writer writer, org.radeox.macro.parameter.MacroParameter params) {
-                writer << replace(org.radeox.util.Encoder.unescape(params.content))
+                def content = replace(org.radeox.util.Encoder.unescape(params.content))
+                if(params.length == 0){
+                    writer << content
+                }else{
+                    switch(params.get(0)){
+                        case 'groovy':
+                            writer << '<pre class="brush: groovy;">' << content << '</pre>'
+                            break
+                    }
+
+                }
             }
         })
     }

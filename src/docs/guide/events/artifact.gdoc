@@ -1,0 +1,38 @@
+An extensible Events DSL is available in *grails-app/conf* for routing configuration.
+This artifact does detail behaviors of *event* method by selecting topics and namespaces to apply :
+* Filtering
+* Disabling
+* _Extensions_
+* _Security_
+* _Declarations_
+
+{note}
+The DSL is intended to evolve. One of the most wanted features is topic/namespace declaration: assigning a definition
+ to a property would generate an injectable eponym bean with streaming methods.
+{note}
+
+The DSL requires to assign a closure to an *events* variable.
+Each call is a definition, the method name is parsed as a topic name and key/value arguments are definitions attributes.
+Wildcard topics/namespaces are supported as well.
+
+{html:groovy}
+events = {
+    //prevents any events in gorm namespace
+    '*' namespace:'gorm', disabled:true
+
+    //filters any events on 'testTopic' where data <= 2
+    testTopic filter:{it > 2}
+
+    //filters any events on 'testTopic2' where data is not a TestTopic type
+    testTopic2 filter:TestTopic
+
+    //only if using events-push plugin, allows client-side listener on this topic
+    testTopic3 browser:true
+
+    //not yet implemented
+    //myTopic = testTopic4()
+
+    //not yet implemented
+    //testTopic5 secured:true
+}
+{html}
