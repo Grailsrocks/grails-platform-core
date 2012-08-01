@@ -80,7 +80,7 @@ class SomeController{
 }
 {html}
 
-h3. Assign a namespace
+h3. Assigning a namespace
 All listeners get a property called namespace which prevents topic naming collisions and undesired events. By default, they are all assigned to *app*.
  This is the same default used when you send an event, but what if you want to reach others namespaced listeners, like 'browser' ones if you use *events-push* plugin ? Simply use *namespace* argument or use *for* if you stick with Map notation.
 

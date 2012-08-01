@@ -29,10 +29,18 @@ events = {
     //only if using events-push plugin, allows client-side listener on this topic
     testTopic3 browser:true
 
-    //not yet implemented
-    //myTopic = testTopic4()
+    //not yet implemented: Assigning and merging definitions
+    //myTopic = testTopic4(filter:{i>2})
+    //myTopic = testTopic4(filter:{i<4})
 
-    //not yet implemented
+    //not yet implemented: Enabling security context for target listeners
     //testTopic5 secured:true
+
+    //not yet implemented: Forwarding
+    //testTopic6 to:'anotherTopic'
+
+    //not yet implemented: Global Error Handling, Global Reply Handling
+    //testTopic8 onError:{}, onReply:{}
+    //testTopic9 onError:'anotherTopicErrors', onReply:'anotherTopicReplies'
 }
 {html}

@@ -113,7 +113,7 @@ This feature will probably evolve to a smarter implementation behaving like UrlM
 
 h3. Listener ID
 
-Registered listeners generate a unique id (*ListenerId*) applying the following pattern :
+Registered listeners generate a unique id (*ListenerId*) applying the following pattern : \\
 @\[namespace://\]topic\[:package.Class\]\[#method\]\[\@hashcode\]@
 
 The above square brackets determine each optional part of the sequence id thus allowing to target group of listeners depending

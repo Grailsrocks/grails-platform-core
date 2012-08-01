@@ -175,9 +175,9 @@ Grails Plugin Platform Core APIs
                 } else {
                     gormTopicSupport(GormTopicSupport2X) {
                         translateTable = [
-                                'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate', 'PreLoadEvent': 'beforeLoad',
+                                'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate', /*'PreLoadEvent': 'beforeLoad',*/
                                 'PreDeleteEvent': 'beforeDelete', 'ValidationEvent': 'beforeValidate', 'PostInsertEvent': 'afterInsert',
-                                'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete', 'PostLoadEvent': 'afterLoad',
+                                'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete', /*'PostLoadEvent': 'afterLoad',*/
                                 'SaveOrUpdateEvent': 'onSaveOrUpdate'
                         ]
                     }

@@ -1,0 +1,6 @@
+Starting from Grails 2, the Events Bus supports GORM events.
+
+{note}
+GORM may generate tons of events. Consider using it wisely, combine it with routing filtering
+as seen in the previous chapter. You can also totally disable gorm bridge by using @events.gorm.disabled@ configuration key.
+{note}
