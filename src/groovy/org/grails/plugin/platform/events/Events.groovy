@@ -23,6 +23,8 @@ import java.util.concurrent.TimeoutException
 
 interface Events {
 
+    List<EventDefinition> getEventDefinitions()
+
     EventReply event(String namespace, String topic, data)
     EventReply event(String namespace, String topic, data, Map params)
     EventReply event(String namespace, String topic, data, Map params, Closure callback)
