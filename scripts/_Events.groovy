@@ -1,50 +1,7 @@
-includeTargets << grailsScript("_GrailsInit")
+//includeTargets << grailsScript("_GrailsInit")
 
-ant.property(environment: "env")
+//ant.property(environment: "env")
 
-
-eventDocStart = {
-
-    if (it == 'refdocs') {
-        org.radeox.macro.MacroLoader.newInstance().add(org.radeox.macro.MacroRepository.instance, new org.radeox.macro.Preserved() {
-            @Override
-            String getName() {
-                'html'
-            }
-
-            @Override
-            void setInitialContext(org.radeox.api.engine.context.InitialRenderContext context) {
-                super.setInitialContext(context)
-                addSpecial('[' as char)
-                addSpecial(']' as char)
-                addSpecial('{' as char)
-                addSpecial('}' as char)
-                addSpecial('*' as char)
-                addSpecial('-' as char)
-                addSpecial('#' as char)
-                addSpecial('@' as char)
-                addSpecial('\\' as char)
-                addSpecial('\n' as char)
-                addSpecial('\r' as char)
-            }
-
-            @Override
-            void execute(Writer writer, org.radeox.macro.parameter.MacroParameter params) {
-                def content = replace(org.radeox.util.Encoder.unescape(params.content))
-                if(params.length == 0){
-                    writer << content
-                }else{
-                    switch(params.get(0)){
-                        case 'groovy':
-                            writer << '<pre class="brush: groovy;">' << content << '</pre>'
-                            break
-                    }
-
-                }
-            }
-        })
-    }
-}
 
 /**
  * Hooks to the compile grails event

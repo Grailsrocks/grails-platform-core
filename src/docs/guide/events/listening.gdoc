@@ -83,11 +83,11 @@ class SomeController{
  }
 
  def testInlineListener2 = {
-          //register a 'gorm' namespaced handler on 'afterInsert' topic.
-          def listener = on("gorm", "afterInsert") {Book book ->
-              println "test $book"
-          }
-          render "$listener registered"
+        //register a 'gorm' namespaced handler on 'afterInsert' topic.
+        def listener = on("gorm", "afterInsert") {Book book ->
+            println "test $book"
+        }
+        render "$listener registered"
  }
 }
 {html}
