@@ -30,6 +30,7 @@ import org.grails.plugin.platform.conventions.DSLNamedArgsCallCommand
 import org.grails.plugin.platform.conventions.DSLSetValueCommand
 import org.grails.plugin.platform.events.publisher.EventsPublisher
 import org.grails.plugin.platform.events.registry.EventsRegistry
+import org.grails.plugin.platform.events.utils.EventsUtils
 import org.grails.plugin.platform.util.PluginUtils
 import org.springframework.aop.framework.Advised
 import org.springframework.aop.support.AopUtils
@@ -210,7 +211,7 @@ class EventsImpl implements Events {
 
             bean = applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass))
             if (!proxySupport) {
-                bean = AopUtils.getTargetClass(bean);
+                bean = EventsUtils.unproxy(bean);
             }
 
             grailsEventsRegistry.on(
