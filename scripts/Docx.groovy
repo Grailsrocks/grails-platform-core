@@ -25,6 +25,10 @@ includeTargets << grailsScript("_GrailsDocs")
 
 target(addMacros:'New Macros') {
     depends(setupDoc)
+
+    config.grails.doc.css = config.grails?.doc?.css ?: new File("$platformCorePluginDir/src/docs/templates/css")
+    config.grails.doc.style = config.grails?.doc?.style ?: new File("$platformCorePluginDir/src/docs/templates/html")
+
     org.radeox.macro.MacroLoader.newInstance().add(org.radeox.macro.MacroRepository.instance, new org.radeox.macro.Preserved() {
         @Override
         String getName() {
@@ -65,7 +69,7 @@ target(addMacros:'New Macros') {
 }
 
 target(extradocs:"Extra Docs") {
-    depends(addMacros, docs)
+    depends(createConfig, addMacros, docs)
 }
 
 
