@@ -1,4 +1,48 @@
-Starting from Grails 2, the Events Bus supports GORM events.
+Starting from Grails 2, the Events Bus supports [GORM events|http://grails.org/doc/latest/guide/GORM.html#eventsAutoTimestamping].
+
+h3. GORM Listeners
+
+To listen for GORM, simply declare listeners on the *gorm* namespace using the following supported topics table :
+{table}
+*Event Type* | *Target Topic*
+PreInsertEvent | beforeInsert
+PreUpdateEvent | beforeUpdate
+PreDeleteEvent | beforeDelete
+ValidationEvent | beforeValidate
+PostInsertEvent | afterInsert
+PostUpdateEvent | afterUpdate
+PostDeleteEvent | afterDelete
+SaveOrUpdateEvent | onSaveOrUpdate
+{table}
+
+Same listeners behaviors apply, e.g. Using EventMessage for the argument type, using wildcard topic name etc.
+{html:groovy}
+class SomeService{
+
+    @Listener(namespace = 'gorm')
+    void afterInsert(Author author) {
+        println "after save author -  $author.name"
+    }
+
+    @Listener(topic = 'beforeInsert', namespace = 'gorm')
+    void beforeInsertBook(Book book) {
+        println "will insert book - $book.title"
+    }
+
+    @Listener(topic = 'before*', namespace = 'gorm')
+    void beforeEachGormEventAuthor(EventMessage message) {
+        println "gorm event $message.event on domain $message.data.class"
+    }
+
+}
+{html}
+
+h3. Filtering with Events Artifact
+
+{html:groovy}
+{html}
+
+h3. Vetoing changes
 
 {note}
 GORM may generate tons of events. Consider using it wisely, combine it with routing filtering

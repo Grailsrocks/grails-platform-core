@@ -14,13 +14,14 @@ class SomeService{
    def myMethod(User user){
    }
 
-   @grails.events.Listener //use 'mailSent' as topic name
-   def mailSent(User user){
+   //use 'mailSent' as topic name
+   @grails.events.Listener
+   def mailSent(){
   }
 }
 {html}
 
-Event methods are *single-argument*, and the value is the object sent with the event. Usually this is the "subject" of the event.
+Event methods can define a *single argument*, and the value is the object sent with the event. Usually this is the "subject" of the event.
 However an event is carried by an enveloppe called EventMessage which contains several useful metadata like additionnal headers, current topic :
 
 {html:groovy}
