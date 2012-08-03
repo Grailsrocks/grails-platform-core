@@ -43,7 +43,7 @@ class SampleService {
         println "will insert author - $author.name"
     }
 
-    @Listener(namespace = 'platformCore')
+    @Listener(namespace = 'gorm')
     void afterInsert(Author author) {
         println "will load author -  $author.name"
     }

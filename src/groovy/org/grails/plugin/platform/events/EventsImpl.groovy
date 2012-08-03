@@ -210,7 +210,7 @@ class EventsImpl implements Events {
             bean = applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass))
             if (bean instanceof Advised) {
                 try {
-                    bean = Advised.cast(bean).targetSource.target
+                    bean = Advised.cast(bean).getTargetSource().getTarget()
                 } catch (Exception e) {
                     log.error("failed to retrieve bean origin from proxy", e);
                 }
