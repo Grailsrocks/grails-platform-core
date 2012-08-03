@@ -86,26 +86,28 @@ class InjectionImpl implements Injection {
             log.debug "Applying injected methods to [${clazz}]"
         }
         def artefactType = grailsApplication.getArtefactType(clazz)
-        def type = GrailsNameUtils.getPropertyName(artefactType.type)
-        List<Closure> applicators = injectionsByArtefactType[type]
-        List<Closure> globalApplicators = injectionsByArtefactType['*']
+        if(artefactType) {
+            def type = GrailsNameUtils.getPropertyName(artefactType.type)
+            List<Closure> applicators = injectionsByArtefactType[type]
+            List<Closure> globalApplicators = injectionsByArtefactType['*']
 
-        if (log.debugEnabled) {
-            log.debug "Applying injected methods for artefact type [$type]"
-        }
-        for (a in applicators) {
-            // @todo do we need to clone always?
-            def builder = new InjectionBuilderMethodDelegate(clazz, artefactType, a, grailsApplication.mainContext)
-            def methodsToApply = builder.build()
-            applyMethodsTo(clazz, methodsToApply)
-        }
-        if (log.debugEnabled) {
-            log.debug "Applying injected methods for all artefact types"
-        }
-        for (a in globalApplicators) {
-            def builder = new InjectionBuilderMethodDelegate(clazz, artefactType, a, grailsApplication.mainContext)
-            def methodsToApply = builder.build()
-            applyMethodsTo(clazz, methodsToApply)
+            if (log.debugEnabled) {
+                log.debug "Applying injected methods for artefact type [$type]"
+            }
+            for (a in applicators) {
+                // @todo do we need to clone always?
+                def builder = new InjectionBuilderMethodDelegate(clazz, artefactType, a, grailsApplication.mainContext)
+                def methodsToApply = builder.build()
+                applyMethodsTo(clazz, methodsToApply)
+            }
+            if (log.debugEnabled) {
+                log.debug "Applying injected methods for all artefact types"
+            }
+            for (a in globalApplicators) {
+                def builder = new InjectionBuilderMethodDelegate(clazz, artefactType, a, grailsApplication.mainContext)
+                def methodsToApply = builder.build()
+                applyMethodsTo(clazz, methodsToApply)
+            }
         }
     }
     

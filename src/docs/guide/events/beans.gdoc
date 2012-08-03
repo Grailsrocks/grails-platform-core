@@ -1,27 +1,9 @@
-Listening for events simply requires registering the method that should receive the event notifications.
-
-There are a few ways to register events.
-
-h3. Defining listeners at compile time
-
-Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:
-
-{code}
-class SomeService{
-   @grails.events.Listener('userLogged')
-   def myMethod(User user){
-      //do something with user
-   }
-
-   @grails.events.Listener
-   def mailSent(User user){ //use 'mailSent' as topic name
-         //do something with user
-  }
-}
-{code}
-
-Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.
-
-h3. Defining listeners at run time
-
-
+{table}
+*Bean Name* | *Type* | *Default Implementation* | *Description*
+*grailsEvents* | _org.grails.plugin.platform.events .Events_ | _org.grails.plugin.platform.events .EventsImpl_ | Main events gateway which contains injected methods in artifacts
+*grailsEventsPublisher* | _org.grails.plugin.platform.events .publisher.EventsPublisher_ | _org.grails.plugin.platform.events .publisher.DefaultsEventsPublisher_ | Publisher bean, triggers events. To be implemented by extensions if required (e.g. *events-si*)
+*grailsEventsRegistry* | _org.grails.plugin.platform.events .registry.EventsRegistry_ | _org.grails.plugin.platform.events .registry.DefaultsEventsRegistry_ | Registry bean, store listeners and route events. To be implemented by extensions if required (e.g. *events-si*)
+*gormTopicSupport* | _org.grails.plugin.platform.events .dispatcher.GormTopicSupport_ | _org.grails.plugin.platform.events .dispatcher.GormTopicSupport2X_ | Translates gorm events to topic names and processes veto(s).
+*grailsEventsGormBridge* | _org.grails.plugin.platform.events .publisher.GormBridgePublisher_ |  | Listens for GORM events and publishes to the right bus using gormTopicSupport.
+*grailsTopicExecutor* | _org.springframework .core.task.TaskExecutor_ | _org.springframework.scheduling .concurrent.ThreadPoolTaskExecutor_ | Carries on events execution.
+{table}

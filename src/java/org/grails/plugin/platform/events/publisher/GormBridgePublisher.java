@@ -54,16 +54,18 @@ public class GormBridgePublisher implements ApplicationListener {
         //fixme horrible hack to support grails 1.3.x
         if (applicationEvent.getClass().getName().startsWith(GORM_EVENT_PACKAGE)) {
             String topic = gormTopicSupport.convertTopic(applicationEvent);
-            log.debug("sending " + applicationEvent + " to topic " + topic);
-            EventReply reply = grailsEventsPublisher.event(new EventMessage(topic,
-                    ReflectionUtils.invokeMethod(
-                            ReflectionUtils.findMethod(applicationEvent.getClass(), "getEntityObject"),
-                            applicationEvent
-                    ), GormTopicSupport.GORM_SOURCE, false));
-            try {
-                gormTopicSupport.processCancel(applicationEvent, reply.getValues());
-            } catch (Exception e) {
-                throw new RuntimeException(e);//shouldn't happen as its sync event
+            if (topic != null) {
+                log.debug("sending " + applicationEvent + " to topic " + topic);
+                EventReply reply = grailsEventsPublisher.event(new EventMessage(topic,
+                        ReflectionUtils.invokeMethod(
+                                ReflectionUtils.findMethod(applicationEvent.getClass(), "getEntityObject"),
+                                applicationEvent
+                        ), GormTopicSupport.GORM_SOURCE, false));
+                try {
+                    gormTopicSupport.processCancel(applicationEvent, reply.getValues());
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);//shouldn't happen as its sync event
+                }
             }
         }
     }

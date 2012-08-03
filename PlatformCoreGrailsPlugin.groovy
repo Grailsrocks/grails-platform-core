@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import org.grails.plugin.platform.events.EventsImpl
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
@@ -24,7 +25,7 @@ import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
-    def version = "1.0.M2k-SNAPSHOT"
+    def version = "1.0.M2-SNAPSHOT"
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
@@ -174,9 +175,9 @@ Grails Plugin Platform Core APIs
                 } else {
                     gormTopicSupport(GormTopicSupport2X) {
                         translateTable = [
-                                'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate', 'PreLoadEvent': 'beforeLoad',
+                                'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate', /*'PreLoadEvent': 'beforeLoad',*/
                                 'PreDeleteEvent': 'beforeDelete', 'ValidationEvent': 'beforeValidate', 'PostInsertEvent': 'afterInsert',
-                                'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete', 'PostLoadEvent': 'afterLoad',
+                                'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete', /*'PostLoadEvent': 'afterLoad',*/
                                 'SaveOrUpdateEvent': 'onSaveOrUpdate'
                         ]
                     }
@@ -211,7 +212,6 @@ Grails Plugin Platform Core APIs
 
         'events.disabled'(type: Boolean, defaultValue: false)
         'events.poolSize'(type: Integer, defaultValue: 10)
-        'events.async'(type: Boolean, defaultValue: false)
         'events.catchFlushExceptions'(type: Boolean, defaultValue: true)
         'events.gorm.disabled'(type: Boolean, defaultValue: false)
 

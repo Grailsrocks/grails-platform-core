@@ -62,32 +62,35 @@ class SampleController {
         response.outputStream << "There are ${countListeners('sampleHello')} listeners for topic 'sampleHello' \n"
         response.outputStream << "There are ${countListeners("lal://sampleHello:$SampleService.name")} listeners for class '$SampleService.name' \n"
 
-        response.outputStream << "sync event with replies values : " + event('sampleHello', '{"message":"world"}', [namespace:'lal'])?.values + " \n\n"
+        response.outputStream << "sync event with replies values : " + event('sampleHello', '{"message":"world"}', [namespace:'lal']).waitFor() + " \n\n"
 
-
-        //Args form
-        def async1 = eventAsync('sop',  '{"message":"world A"}', [namespace:'lal'])
-
-        //Map form
-        def async2 = eventAsync for:'lal', topic:'sampleHello', data:'{"message":"world B"}'
+        def async1 = event for:'platformCore', topic:'sampleHello',  data:'{"message":"world A"}'
+        def async2 = event for:'lal', topic:'sampleHello', data:'{"message":"world B"}'
 
 //        def _stream = stream 'someNamespace://samplehello' | reply { println it } | error { println it } << 'test'
 //        _stream.send()
 
 
         response.outputStream << "async events replies $async1 $async2 \n\n"
-        response.outputStream << "async event reply value " + eventAsync('sampleHello', '{"message":"world2"}', [namespace: 'lal'])?.value + " \n\n"
+        response.outputStream << "async event reply value " + event('sampleHello', '{"message":"world2"}', [namespace: 'lal']).value + " \n\n"
 
         response.outputStream << "async wait \n\n"
         def values = waitFor(async1, async2)
         response.outputStream << "waited results : $values \n"
-        response.outputStream << "size async1 : ${async1?.size()} \n"
-        response.outputStream << "size async2 : ${async2?.size()} \n\n"
+        response.outputStream << "size async1 : ${async1.values} \n"
+        response.outputStream << "size async2 : ${async2.size()} \n\n"
         response.outputStream << "async event with on complete\n"
 
-        eventAsync(topic: 'sampleHello', data: "world 4", for:'lal') {reply ->
+        def reply = { r ->
             println 'hidden test'
         }
+
+        def error = { r ->
+            println 'test----' + r
+        }
+
+        def r = event topic: 'sampleHella', data: "world 4", for:'lal', onReply:reply, onError:error
+        r.cancel()
 
     }
 }

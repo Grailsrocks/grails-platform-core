@@ -17,6 +17,9 @@
  */
 package org.grails.plugin.platform.events;
 
+import grails.events.EventException;
+import groovy.lang.Closure;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +45,15 @@ public class EventReply implements Serializable, Future<Object> {
     private Object value;
     private int receivers;
     private boolean futureReplyLoaded = false;
+    private Closure onError = null;
+
+    public void setOnError(Closure onError) {
+        this.onError = onError;
+    }
+
+    public Closure getOnError() {
+        return onError;
+    }
 
     public EventReply(Object val, int receivers) {
         this.receivers = receivers;
@@ -50,12 +62,13 @@ public class EventReply implements Serializable, Future<Object> {
 
     @SuppressWarnings("unchecked")
     protected void initValues(Object val) {
+        this.values = new ArrayList<Object>();
+
         if (receivers > 1 && val instanceof Collection) {
-            this.values = new ArrayList<Object>((Collection) val);
+            this.values.addAll((Collection) val);
             this.value = values.get(0);
-        } else if (receivers == 1) {
+        } else if(receivers != 0 || val != null) {
             this.value = val;
-            this.values = new ArrayList<Object>();
             this.values.add(this.value);
         }
         this.futureReplyLoaded = true;
@@ -66,18 +79,28 @@ public class EventReply implements Serializable, Future<Object> {
         this.futureReply = future;
     }
 
-    public List<Object> getValues() throws ExecutionException, InterruptedException {
+    protected void addValue(Object v) {
+        values.add(v);
+    }
+
+    public List<Object> getValues() throws Throwable {
         if (!futureReplyLoaded) {
             get();
         }
+        throwError();
         return values;
     }
 
-    public Object getValue() throws ExecutionException, InterruptedException {
+    public Object getValue() throws Throwable{
         if (!futureReplyLoaded) {
             get();
         }
+        throwError();
         return value;
+    }
+
+    public boolean cancel(){
+        return cancel(true);
     }
 
     public boolean cancel(boolean b) {
@@ -92,12 +115,62 @@ public class EventReply implements Serializable, Future<Object> {
         return futureReply == null || futureReply.isDone();
     }
 
-    public int size() throws Exception{
+    public boolean isSuccess() {
+        return isDone() && !hasErrors();
+    }
+
+    public List<Throwable> getErrors() {
+        List<Throwable> ex = new ArrayList<Throwable>();
+        if (values != null) {
+            for (Object v : values) {
+                if (v != null && Throwable.class.isAssignableFrom(v.getClass())) {
+                    ex.add((Throwable) v);
+                }
+            }
+        }
+
+        return ex;
+    }
+
+    public boolean hasErrors() {
+        for (Object v : values) {
+            if (v != null && Throwable.class.isAssignableFrom(v.getClass())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void throwError() throws Throwable{
+        if(hasErrors()){
+            if(onError != null){
+                onError.call(this);
+            }else{
+                throw new EventException(getErrors().get(0));
+            }
+        }
+    }
+
+    public int size() throws Throwable {
+        get();
+        throwError();
         return receivers;
     }
 
     protected void setReceivers(int receivers) {
         this.receivers = receivers;
+    }
+
+    public EventReply waitFor() throws Throwable {
+        get();
+        throwError();
+        return this;
+    }
+
+    public EventReply waitFor(long l) throws Throwable {
+        get(l, TimeUnit.MILLISECONDS);
+        throwError();
+        return this;
     }
 
     public Object get() throws InterruptedException, ExecutionException {
@@ -115,4 +188,5 @@ public class EventReply implements Serializable, Future<Object> {
         }
         return val;
     }
+
 }

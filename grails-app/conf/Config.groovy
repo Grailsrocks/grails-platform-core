@@ -34,4 +34,3 @@ grails.doc.authors = "Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (ste
 grails.doc.license = "ASL 2"
 grails.doc.copyright = "&copy; 2012 Marc Palmer & Stéphane Maldini"
 grails.doc.footer = "Please contact the authors with any corrections or suggestions"
-

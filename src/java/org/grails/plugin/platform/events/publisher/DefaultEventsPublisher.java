@@ -25,6 +25,7 @@ import org.grails.plugin.platform.events.EventReply;
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry;
 import org.springframework.core.task.AsyncTaskExecutor;
 
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -44,6 +45,7 @@ public class DefaultEventsPublisher implements EventsPublisher {
     protected AsyncTaskExecutor taskExecutor;
     private PersistenceContextInterceptor persistenceInterceptor;
     private boolean catchFlushExceptions = false;
+
 
     public void setCatchFlushExceptions(boolean catchFlushExceptions) {
         this.catchFlushExceptions = catchFlushExceptions;
@@ -68,20 +70,35 @@ public class DefaultEventsPublisher implements EventsPublisher {
         return new EventReply(invokeResult.getResult(), invokeResult.getInvoked());
     }
 
-    public EventReply eventAsync(final EventMessage event) {
+    public EventReply eventAsync(final EventMessage event, final Map<String, Object> params) {
         Future<DefaultEventsRegistry.InvokeResult> invokeResult =
                 taskExecutor.submit(new Callback(event));
 
-        return new WrappedFuture(invokeResult, -1);
-    }
+        final WrappedFuture reply = new WrappedFuture(invokeResult, -1);
 
-    public void eventAsync(final EventMessage event, final Closure onComplete) {
-        taskExecutor.execute(new Runnable() {
-            public void run() {
-                DefaultEventsRegistry.InvokeResult invokeResult = new Callback(event).call();
-                onComplete.call(new EventReply(invokeResult.getResult(), invokeResult.getInvoked()));
+        if (params != null) {
+            reply.setOnError((Closure)params.get(ON_ERROR));
+            if (params.get(ON_REPLY) != null) {
+                taskExecutor.execute(new Runnable() {
+
+                    public void run() {
+                        try {
+                            if (params.get(TIMEOUT) != null)
+                                reply.get((Long) params.get(TIMEOUT), TimeUnit.MILLISECONDS);
+                            else
+                                reply.get();
+
+                            reply.throwError();
+                            ((Closure) params.get(ON_REPLY)).call(reply);
+                        } catch (Throwable e) {
+                            reply.setCallingError(e);
+                        }
+                    }
+                });
+
             }
-        });
+        }
+        return reply;
     }
 
     //INTERNAL
@@ -129,10 +146,11 @@ public class DefaultEventsPublisher implements EventsPublisher {
             super.initValues(message.getResult());
         }
 
-        @Override
-        public int size() throws Exception {
-            get();
-            return super.size();
+        public void setCallingError(Throwable e) {
+            super.initValues(e);
+            if(getOnError() != null){
+                getOnError().call(this);
+            }
         }
 
     }

@@ -1,27 +1,46 @@
-Listening for events simply requires registering the method that should receive the event notifications.
+An extensible Events DSL is available in *grails-app/conf* for routing configuration.
+This artifact does detail behaviors of *event* method by selecting topics and namespaces to apply :
+* Filtering
+* Disabling
+* _Extensions_
+* _Security_
+* _Declarations_
 
-There are a few ways to register events.
+{note}
+The DSL is intended to evolve. One of the most wanted features is topic/namespace declaration: assigning a definition
+ to a property would generate an injectable eponym bean with streaming methods.
+{note}
 
-h3. Defining listeners at compile time
+The DSL requires to assign a closure to an *events* variable.
+Each call is a definition, the method name is parsed as a topic name and key/value arguments are definitions attributes.
+Wildcard topics/namespaces are supported as well.
 
-Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:
+{html:groovy}
+events = {
+    //prevents any events in gorm namespace
+    '*' namespace:'gorm', disabled:true
 
-{code}
-class SomeService{
-   @grails.events.Listener('userLogged')
-   def myMethod(User user){
-      //do something with user
-   }
+    //filters any events on 'testTopic' where data <= 2
+    testTopic filter:{it > 2}
 
-   @grails.events.Listener
-   def mailSent(User user){ //use 'mailSent' as topic name
-         //do something with user
-  }
+    //filters any events on 'testTopic2' where data is not a TestTopic type
+    testTopic2 filter:TestTopic
+
+    //only if using events-push plugin, allows client-side listener on this topic
+    testTopic3 browser:true
+
+    //not yet implemented: Assigning and merging definitions
+    //myTopic = testTopic4(filter:{i>2})
+    //myTopic = testTopic4(filter:{i<4})
+
+    //not yet implemented: Enabling security context for target listeners
+    //testTopic5 secured:true
+
+    //not yet implemented: Forwarding
+    //testTopic6 to:'anotherTopic'
+
+    //not yet implemented: Global Error Handling, Global Reply Handling
+    //testTopic8 onError:{}, onReply:{}
+    //testTopic9 onError:'anotherTopicErrors', onReply:'anotherTopicReplies'
 }
-{code}
-
-Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.
-
-h3. Defining listeners at run time
-
-
+{html}

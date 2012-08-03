@@ -58,6 +58,6 @@ class GormTopicSupport2X implements GormTopicSupport {
             }
         }
         
-        return evt.getClass().simpleName
+        null
     }
 }
