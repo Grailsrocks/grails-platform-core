@@ -121,7 +121,7 @@ class UiExtensionsTagLib {
         def con = attrs.controller ?: controllerName
         def defaultAction = 'index' // make this ask the artefact which is default
         def act = attrs.action ?: defaultAction
-        def text = p.message(code:"action.${con}.${act}", encodeAs:'HTML')
+        def text = p.text(code:"action.${con}.${act}", encodeAs:'HTML')
         out << g.link(attrs, text)
     }
     
