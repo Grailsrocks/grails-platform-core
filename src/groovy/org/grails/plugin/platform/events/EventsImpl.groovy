@@ -219,7 +219,7 @@ class EventsImpl implements Events {
             grailsEventsRegistry.on(
                     namespace,
                     topic,
-                    ,
+                    bean,
                     method
             )
         }
