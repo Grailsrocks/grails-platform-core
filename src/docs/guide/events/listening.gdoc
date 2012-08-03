@@ -36,6 +36,9 @@ class SomeService{
 }
 {html}
 
+If a listener argument type is not assignable to an event data type, the event *silently skips the mismatching listener*. If you want to catch
+every events type, use Object type or if the argument is not necessary, do not declare it.
+
 h3. Namespacing
 
 Your declared events belongs to the *app* namespace, unless you tune it using the *namespace* argument or the Events DSL we will introduce later.
@@ -67,6 +70,23 @@ class SomeController{
 {warning}
 It's mandatory to declare namespace when using events bus from a plugin in order to avoid any conflicts.
 {warning}
+
+h3. Proxy (AOP) support
+
+By default, listeners try to call the original method (unproxified bean). Using *proxySupport* you can tweak this setting :
+
+{html:groovy}
+class SomeService{
+
+   static transactional = true
+
+   //Will invoke transactional logic, similar to someSerice.myMethod()
+   @grails.events.Listener(proxySupport=true)
+   def myMethod(User user){
+   }
+
+}
+{html}
 
 h3. Dynamic listeners
 

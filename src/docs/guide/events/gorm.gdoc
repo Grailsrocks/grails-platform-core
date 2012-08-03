@@ -15,7 +15,10 @@ PostDeleteEvent | afterDelete
 SaveOrUpdateEvent | onSaveOrUpdate
 {table}
 
-Same listeners behaviors apply, e.g. Using EventMessage for the argument type, using wildcard topic name etc.
+Same listeners behaviors apply, e.g. using EventMessage for the argument type, using wildcard topics etc.
+Because listeners are called if there are *no arguments* or the argument *type is assignable to current event data type*, specifying
+a domain class is the only required step to filter domains events.
+
 {html:groovy}
 class SomeService{
 
@@ -39,7 +42,14 @@ class SomeService{
 
 h3. Filtering with Events Artifact
 
+
+
 {html:groovy}
+events = {
+    'afterInsert' namespace:'gorm', filter:Book
+    'afterDelete' namespace:'gorm', filter:{it.id > 5}
+    'afterUpdate' namespace:'gorm', filter:{it in Book || it in Author}
+}
 {html}
 
 h3. Vetoing changes

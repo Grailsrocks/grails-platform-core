@@ -18,6 +18,7 @@
 package org.grails.plugin.platform.test
 
 import grails.events.Listener
+import org.grails.plugin.platform.events.EventMessage
 
 /**
  * @file
@@ -34,8 +35,8 @@ class SampleService {
     static transactional = true
 
     @Listener(topic = 'beforeInsert', namespace = 'gorm')
-    void beforeInsertBook(Book book) {
-        println "will insert book - $book.title"
+    void beforeInsertBook(EventMessage msg) {
+        println "will insert domain - $msg.data"
     }
 
     @Listener(topic = 'beforeInsert', namespace = 'gorm')

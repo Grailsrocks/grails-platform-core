@@ -31,26 +31,26 @@ import java.util.Map;
  * <p/>
  * [Does stuff]
  */
-public class EventMessage implements Serializable {
+public class EventMessage<D> implements Serializable {
     final private String namespace;
     final private String event;
-    final private Object data;
+    final private D data;
     final private Boolean gormSession;
     final private Map<String, Serializable> headers;
 
-    public EventMessage(String event, Object data) {
+    public EventMessage(String event, D data) {
         this(event, data, null);
     }
 
-    public EventMessage(String event, Object data, String namespace) {
+    public EventMessage(String event, D data, String namespace) {
         this(event, data, namespace, namespace == null || !namespace.equals(GormTopicSupport.GORM_SOURCE));
     }
 
-    public EventMessage(String event, Object data, String namespace, boolean gormSession) {
+    public EventMessage(String event, D data, String namespace, boolean gormSession) {
         this(event, data, namespace, gormSession, null);
     }
 
-    public EventMessage(String event, Object data, String namespace, boolean gormSession, Map<String,Serializable> headers) {
+    public EventMessage(String event, D data, String namespace, boolean gormSession, Map<String,Serializable> headers) {
         this.event = event;
         this.data = data;
         this.namespace = namespace;
@@ -58,7 +58,7 @@ public class EventMessage implements Serializable {
         this.headers = headers;
     }
 
-    public Object getData() {
+    public D getData() {
         return data;
     }
 

@@ -112,11 +112,9 @@ public class DefaultEventsRegistry implements EventsRegistry {
             log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");
         }
 
-        Object target = bean;
+        ListenerId listener = ListenerId.build(namespace, topic, bean, callback);
 
-        ListenerId listener = ListenerId.build(namespace, topic, target, callback);
-
-        ListenerHandler handler = new ListenerHandler(target, callback, listener);
+        ListenerHandler handler = new ListenerHandler(bean, callback, listener);
 
         synchronized (listeners) {
             listeners.add(handler);
