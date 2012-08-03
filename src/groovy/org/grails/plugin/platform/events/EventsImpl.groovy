@@ -32,6 +32,7 @@ import org.grails.plugin.platform.events.publisher.EventsPublisher
 import org.grails.plugin.platform.events.registry.EventsRegistry
 import org.grails.plugin.platform.util.PluginUtils
 import org.springframework.aop.framework.Advised
+import org.springframework.aop.support.AopUtils
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
@@ -208,12 +209,8 @@ class EventsImpl implements Events {
             }
 
             bean = applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass))
-            if (bean instanceof Advised) {
-                try {
-                    bean = Advised.cast(bean).getTargetSource().getTarget()
-                } catch (Exception e) {
-                    log.error("failed to retrieve bean origin from proxy", e);
-                }
+            if (!proxySupport) {
+                bean = AopUtils.getTargetClass(bean);
             }
 
             grailsEventsRegistry.on(
