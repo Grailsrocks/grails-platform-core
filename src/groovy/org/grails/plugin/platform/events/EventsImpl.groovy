@@ -249,7 +249,10 @@ class EventsImpl implements Events {
     }
 
     void loadDSL(Class dslClass) {
-        def dslInstance = dslClass.newInstance()
+        Script dslInstance = dslClass.newInstance()
+        dslInstance.binding.setVariable("grailsApplication", grailsApplication)
+        dslInstance.binding.setVariable("ctx", grailsApplication.mainContext)
+        dslInstance.binding.setVariable("config", grailsApplication.config)
         dslInstance.run()
         def dsl = dslInstance.binding.getVariable('events')
         if (dsl) {

@@ -37,7 +37,13 @@ class SomeService{
 {html}
 
 If a listener argument type is not assignable to an event data type, the event *silently skips the mismatching listener*. If you want to catch
-every events type, use Object type or if the argument is not necessary, do not declare it.
+every event types, use Object type or if the argument is not necessary, do not declare it.
+
+{warning}
+Filtering on the EventMessage<D> generic type doesn't work, e.g. EventMessage<Book> won't prevent EventMessage<Author> invokation. For such fine grained
+ control, you can rely on [Events Artifact|artifact}
+{warning}
+
 
 h3. Namespacing
 

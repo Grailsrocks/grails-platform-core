@@ -42,19 +42,22 @@ class SomeService{
 
 h3. Filtering with Events Artifact
 
-
+Setting a filter through an Events artifact allows more fined control and efficient selection since it prevents events to be
+propagated :
 
 {html:groovy}
 events = {
     'afterInsert' namespace:'gorm', filter:Book
     'afterDelete' namespace:'gorm', filter:{it.id > 5}
     'afterUpdate' namespace:'gorm', filter:{it in Book || it in Author}
+    'beforeDelete' namespace:'gorm', disabled:true
 }
 {html}
-
-h3. Vetoing changes
 
 {note}
 GORM may generate tons of events. Consider using it wisely, combine it with routing filtering
 as seen in the previous chapter. You can also totally disable gorm bridge by using @events.gorm.disabled@ configuration key.
 {note}
+
+h3. Vetoing changes
+
