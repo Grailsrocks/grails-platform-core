@@ -1,7 +1,14 @@
-An event is often as simple as a "callback" with no parameters, but usually there is some extra state passed as an event object.
+*Why an events bus ?*
+ Today's applications rely more and more on non-blocking processing, elasticity and modularity. An events bus loosely couples modules,
+ enabling different codes and frameworks to work together, because *the right tool for the right purpose* paradigm is
+ becoming a reality. The bus may also support *publish/subscribe* pattern, distributing the same message across the handling modules and giving an
+ excellent opportunity to deploy the same application into a cluster or _cloud_.
+
+Within the bus, an event is often as simple as a "callback" with no parameters, but usually there is some extra state passed as an event object.
 An event can be sent to multiple listeners, and any result returned from any listeners is passed back to the original sender of the event.
 An event belongs to a "topic" and often has a "subject". The topic is like a channel that identifies the kind of events. The optional subject is the object that the event "happened to".
 So for example a simple "app started" notification has no subject but may have topic "grails", but a "user logged in" even may have topic "security" and subject set to the user principal supplied by the security plugin you are using.
+
 
 With Platform-Core plugin we have implemented a couple of features and artifacts to let you simply manage an _event bus_
 and get maximum flexibility when required :
@@ -20,6 +27,7 @@ class UserController{
    def registration(){
          def user = new User(params).save()
          if(user){
+
             //non-blocking call, will trigger application listeners for this topic
             event('mailRegistration', user)
 

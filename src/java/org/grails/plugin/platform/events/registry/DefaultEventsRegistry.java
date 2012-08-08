@@ -1,7 +1,7 @@
 /* Copyright 2011-2012 the original author or authors:
  *
  *    Marc Palmer (marc@grailsrocks.com)
- *    Stéphane Maldini (stephane.maldini@gmail.com)
+ *    Stéphane Maldini (smaldini@vmware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Stephane Maldini <smaldini@doc4web.com>
+ * @author Stephane Maldini <smaldini@vmware.com>
  * @version 1.0
  * @file
  * @date 02/01/12
@@ -112,19 +112,9 @@ public class DefaultEventsRegistry implements EventsRegistry {
             log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");
         }
 
-        Object target = bean;
-        Object realTarget = bean;
+        ListenerId listener = ListenerId.build(namespace, topic, bean, callback);
 
-        if (bean instanceof Advised) {
-            try {
-                realTarget = ((Advised) bean).getTargetSource().getTarget();
-            } catch (Exception e) {
-                log.error("failed to retrieve bean origin from proxy", e);
-            }
-        }
-        ListenerId listener = ListenerId.build(namespace, topic, realTarget, callback);
-
-        ListenerHandler handler = new ListenerHandler(target, callback, listener);
+        ListenerHandler handler = new ListenerHandler(bean, callback, listener);
 
         synchronized (listeners) {
             listeners.add(handler);
@@ -163,7 +153,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         Object result;
         for (ListenerHandler _listener : listeners) {
             if (log.isDebugEnabled()) {
-                log.debug("Invoking listener [" + _listener.bean + '.' + _listener.method.getName() + "(arg)] for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");
+                log.debug("Invoking listener [" + _listener.bean.getClass() + '.' + _listener.method.getName() + "(arg)] for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");
             }
             try {
                 result = _listener.invoke(evt);
@@ -208,6 +198,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
         private Method method;
         private ListenerId listenerId;
         private boolean useEventMessage = false;
+        private boolean noArgs = false;
 
         public ListenerHandler(Object bean, Method m, ListenerId listenerId) {
             this.listenerId = listenerId;
@@ -217,8 +208,10 @@ public class DefaultEventsRegistry implements EventsRegistry {
                 Class type = m.getParameterTypes()[0];
                 useEventMessage = EventMessage.class.isAssignableFrom(type);
                 if (useEventMessage && log.isDebugEnabled()) {
-                    log.debug("Listener " + bean + "." + method.getName() + " will receive EventMessage enveloppe");
+                    log.debug("Listener " + bean.getClass() + "." + method.getName() + " will receive EventMessage enveloppe");
                 }
+            } else {
+                noArgs = true;
             }
             this.bean = bean;
             //this.mapping = mapping;
@@ -235,14 +228,23 @@ public class DefaultEventsRegistry implements EventsRegistry {
                     argTypes.append(e.toString());
                     argTypes.append(',');
                 }
-                log.debug("About to invoke listener method " + bean + "." + method.getName() + " with arg type " + argTypes +
+                log.debug("About to invoke listener method " + bean.getClass() + "." + method.getName() + " with arg type " + argTypes +
                         " with arg " + arg.toString());
             }
             try {
-                res = method.invoke(bean, arg);
+                if (noArgs) {
+                    res = method.invoke(bean);
+                } else {
+                    res = method.invoke(bean, arg);
+                }
+            } catch (IllegalArgumentException e) {
+                //ignoring
+                if (log.isDebugEnabled()) {
+                    log.debug("Ignoring call to " + bean.getClass() + "." + method.getName() + " with args " + arg.toString() + " - illegal arg exception: " + e.toString());
+                }
             } catch (Throwable e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Ignoring call to " + bean + "." + method.getName() + " with args " + arg.toString() + " - illegal arg exception: " + e.toString());
+                    log.debug("Failing call to " + bean.getClass() + "." + method.getName() + " with args " + arg.toString() + " : " + e.toString());
                 }
                 throw e;
             }

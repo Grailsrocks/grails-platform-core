@@ -1,7 +1,7 @@
 /* Copyright 2011-2012 the original author or authors:
  *
  *    Marc Palmer (marc@grailsrocks.com)
- *    Stéphane Maldini (stephane.maldini@gmail.com)
+ *    Stéphane Maldini (smaldini@vmware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * @author Stephane Maldini <smaldini@doc4web.com>
+ * @author Stephane Maldini <smaldini@vmware.com>
  * @version 1.0
  * @file
  * @date 30/12/11
@@ -31,26 +31,26 @@ import java.util.Map;
  * <p/>
  * [Does stuff]
  */
-public class EventMessage implements Serializable {
+public class EventMessage<D> implements Serializable {
     final private String namespace;
     final private String event;
-    final private Object data;
+    final private D data;
     final private Boolean gormSession;
     final private Map<String, Serializable> headers;
 
-    public EventMessage(String event, Object data) {
+    public EventMessage(String event, D data) {
         this(event, data, null);
     }
 
-    public EventMessage(String event, Object data, String namespace) {
+    public EventMessage(String event, D data, String namespace) {
         this(event, data, namespace, namespace == null || !namespace.equals(GormTopicSupport.GORM_SOURCE));
     }
 
-    public EventMessage(String event, Object data, String namespace, boolean gormSession) {
+    public EventMessage(String event, D data, String namespace, boolean gormSession) {
         this(event, data, namespace, gormSession, null);
     }
 
-    public EventMessage(String event, Object data, String namespace, boolean gormSession, Map<String,Serializable> headers) {
+    public EventMessage(String event, D data, String namespace, boolean gormSession, Map<String,Serializable> headers) {
         this.event = event;
         this.data = data;
         this.namespace = namespace;
@@ -58,7 +58,7 @@ public class EventMessage implements Serializable {
         this.headers = headers;
     }
 
-    public Object getData() {
+    public D getData() {
         return data;
     }
 

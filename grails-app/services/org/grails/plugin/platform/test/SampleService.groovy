@@ -1,7 +1,7 @@
 /* Copyright 2011-2012 the original author or authors:
  *
  *    Marc Palmer (marc@grailsrocks.com)
- *    Stéphane Maldini (stephane.maldini@gmail.com)
+ *    Stéphane Maldini (smaldini@vmware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@
 package org.grails.plugin.platform.test
 
 import grails.events.Listener
+import org.grails.plugin.platform.events.EventMessage
 
 /**
  * @file
- * @author Stephane Maldini <smaldini@doc4web.com>
+ * @author Stephane Maldini <smaldini@vmware.com>
  * @version 1.0
  * @date 02/01/12
 
@@ -34,8 +35,8 @@ class SampleService {
     static transactional = true
 
     @Listener(topic = 'beforeInsert', namespace = 'gorm')
-    void beforeInsertBook(Book book) {
-        println "will insert book - $book.title"
+    void beforeInsertBook(EventMessage msg) {
+        println "will insert domain - $msg.data"
     }
 
     @Listener(topic = 'beforeInsert', namespace = 'gorm')
@@ -43,14 +44,14 @@ class SampleService {
         println "will insert author - $author.name"
     }
 
-    @Listener(namespace = 'platformCore')
-    void afterLoad(Author author) {
+    @Listener(namespace = 'gorm')
+    void afterInsert(Author author) {
         println "will load author -  $author.name"
     }
 
     @Listener(topic = 'sampleHello', namespace = 'platformCore')
-    def testEvent(test) {
-        println "Hello (bas) - $test"
+    def testEvent() {
+        println "Hello (bas) !!!!!"
         'worked 1'
     }
 

@@ -1,7 +1,7 @@
 /* Copyright 2011-2012 the original author or authors:
  *
  *    Marc Palmer (marc@grailsrocks.com)
- *    Stéphane Maldini (stephane.maldini@gmail.com)
+ *    Stéphane Maldini (smaldini@vmware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,10 @@ import org.grails.plugin.platform.conventions.DSLNamedArgsCallCommand
 import org.grails.plugin.platform.conventions.DSLSetValueCommand
 import org.grails.plugin.platform.events.publisher.EventsPublisher
 import org.grails.plugin.platform.events.registry.EventsRegistry
+import org.grails.plugin.platform.events.utils.EventsUtils
 import org.grails.plugin.platform.util.PluginUtils
+import org.springframework.aop.framework.Advised
+import org.springframework.aop.support.AopUtils
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
@@ -171,11 +174,11 @@ class EventsImpl implements Events {
                 Listener annotation = method.getAnnotation(Listener)
                 if (annotation) {
                     String pluginName = PluginUtils.getNameOfDefiningPlugin(applicationContext, serviceClass)
-                    String namespace = annotation?.namespace()
+                    String namespace = annotation.namespace()
                     checkNamespace pluginName, namespace, "-> @Listener $serviceClass.name#$method.name"
 
-                    String topic = annotation?.topic() ?: method.name
-                    c(namespace ?: APP_NAMESPACE, annotation?.namespace() as boolean, topic, method, serviceClass)
+                    String topic = annotation.topic() ?: method.name
+                    c(namespace ?: APP_NAMESPACE, annotation?.namespace() as boolean, topic, method, serviceClass, annotation.proxySupport())
                 }
             }
         }
@@ -193,7 +196,9 @@ class EventsImpl implements Events {
 
     void registerListeners(Collection<Class<?>> serviceClasses) {
 //            grailsEventsDispatcher.scanClassForMappings(serviceClass)
-        eachListener(serviceClasses) {String namespace, boolean hasInlineNamespace, String topic, Method method, Class serviceClass ->
+        def bean
+        eachListener(serviceClasses) {String namespace, boolean hasInlineNamespace,
+                                      String topic, Method method, Class serviceClass, boolean proxySupport ->
 
             def definition = matchesDefinition(topic, method, serviceClass)
 
@@ -204,10 +209,15 @@ class EventsImpl implements Events {
                 log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and namespace $namespace but no such event is declared, you may never receive it"
             }
 
+            bean = applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass))
+            if (!proxySupport) {
+                bean = EventsUtils.unproxy(bean);
+            }
+
             grailsEventsRegistry.on(
                     namespace,
                     topic,
-                    applicationContext.getBean(GrailsNameUtils.getPropertyName(serviceClass)),
+                    bean,
                     method
             )
         }
@@ -239,7 +249,10 @@ class EventsImpl implements Events {
     }
 
     void loadDSL(Class dslClass) {
-        def dslInstance = dslClass.newInstance()
+        Script dslInstance = dslClass.newInstance()
+        dslInstance.binding.setVariable("grailsApplication", grailsApplication)
+        dslInstance.binding.setVariable("ctx", grailsApplication.mainContext)
+        dslInstance.binding.setVariable("config", grailsApplication.config)
         dslInstance.run()
         def dsl = dslInstance.binding.getVariable('events')
         if (dsl) {

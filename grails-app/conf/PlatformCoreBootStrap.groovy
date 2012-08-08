@@ -1,7 +1,7 @@
 /* Copyright 2011-2012 the original author or authors:
  *
  *    Marc Palmer (marc@grailsrocks.com)
- *    Stéphane Maldini (stephane.maldini@gmail.com)
+ *    Stéphane Maldini (smaldini@vmware.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -1,6 +1,63 @@
-Starting from Grails 2, the Events Bus supports GORM events.
+Starting from Grails 2, the Events Bus supports [GORM events|http://grails.org/doc/latest/guide/GORM.html#eventsAutoTimestamping].
+
+h3. GORM Listeners
+
+To listen for GORM, simply declare listeners on the *gorm* namespace using the following supported topics table :
+{table}
+*Event Type* | *Target Topic*
+PreInsertEvent | beforeInsert
+PreUpdateEvent | beforeUpdate
+PreDeleteEvent | beforeDelete
+ValidationEvent | beforeValidate
+PostInsertEvent | afterInsert
+PostUpdateEvent | afterUpdate
+PostDeleteEvent | afterDelete
+SaveOrUpdateEvent | onSaveOrUpdate
+{table}
+
+Same listeners behaviors apply, e.g. using EventMessage for the argument type, using wildcard topics etc.
+Because listeners are called if there are *no arguments* or the argument *type is assignable to current event data type*, specifying
+a domain class is the only required step to filter domains events.
+
+{html:groovy}
+class SomeService{
+
+    @Listener(namespace = 'gorm')
+    void afterInsert(Author author) {
+        println "after save author -  $author.name"
+    }
+
+    @Listener(topic = 'beforeInsert', namespace = 'gorm')
+    void beforeInsertBook(Book book) {
+        println "will insert book - $book.title"
+    }
+
+    @Listener(topic = 'before*', namespace = 'gorm')
+    void beforeEachGormEventAuthor(EventMessage message) {
+        println "gorm event $message.event on domain $message.data.class"
+    }
+
+}
+{html}
+
+h3. Filtering with Events Artifact
+
+Setting a filter through an Events artifact allows more fined control and efficient selection since it prevents events to be
+propagated :
+
+{html:groovy}
+events = {
+    'afterInsert' namespace:'gorm', filter:Book
+    'afterDelete' namespace:'gorm', filter:{it.id > 5}
+    'afterUpdate' namespace:'gorm', filter:{it in Book || it in Author}
+    'beforeDelete' namespace:'gorm', disabled:true
+}
+{html}
 
 {note}
 GORM may generate tons of events. Consider using it wisely, combine it with routing filtering
 as seen in the previous chapter. You can also totally disable gorm bridge by using @events.gorm.disabled@ configuration key.
 {note}
+
+h3. Vetoing changes
+

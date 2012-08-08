@@ -14,13 +14,14 @@ class SomeService{
    def myMethod(User user){
    }
 
-   @grails.events.Listener //use 'mailSent' as topic name
-   def mailSent(User user){
+   //use 'mailSent' as topic name
+   @grails.events.Listener
+   def mailSent(){
   }
 }
 {html}
 
-Event methods are *single-argument*, and the value is the object sent with the event. Usually this is the "subject" of the event.
+Event methods can define a *single argument*, and the value is the object sent with the event. Usually this is the "subject" of the event.
 However an event is carried by an enveloppe called EventMessage which contains several useful metadata like additionnal headers, current topic :
 
 {html:groovy}
@@ -34,6 +35,15 @@ class SomeService{
    }
 }
 {html}
+
+If a listener argument type is not assignable to an event data type, the event *silently skips the mismatching listener*. If you want to catch
+every event types, use Object type or if the argument is not necessary, do not declare it.
+
+{warning}
+Filtering on the EventMessage<D> generic type doesn't work, e.g. EventMessage<Book> won't prevent EventMessage<Author> invokation. For such fine grained
+ control, you can rely on [Events Artifact|artifact}
+{warning}
+
 
 h3. Namespacing
 
@@ -66,6 +76,23 @@ class SomeController{
 {warning}
 It's mandatory to declare namespace when using events bus from a plugin in order to avoid any conflicts.
 {warning}
+
+h3. Proxy (AOP) support
+
+By default, listeners try to call the original method (unproxified bean). Using *proxySupport* you can tweak this setting :
+
+{html:groovy}
+class SomeService{
+
+   static transactional = true
+
+   //Will invoke transactional logic, similar to someSerice.myMethod()
+   @grails.events.Listener(proxySupport=true)
+   def myMethod(User user){
+   }
+
+}
+{html}
 
 h3. Dynamic listeners
 
