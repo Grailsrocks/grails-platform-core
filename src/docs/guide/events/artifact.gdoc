@@ -15,6 +15,15 @@ The DSL requires to assign a closure to an *events* variable.
 Each call is a definition, the method name is parsed as a topic name and key/value arguments are definitions attributes.
 Wildcard topics/namespaces are supported as well.
 
+An *Events* artifact is a script with some bound variables:
+{table}
+*Variable* | *Description*
+grailsApplication | Grails application object, retrieves artifacts, context etc.
+ctx | Spring context, useful for beans access, e.g. _ctx.myService.method()_
+config | Configuration object
+{table}
+
+
 {html:groovy}
 events = {
     //prevents any events in gorm namespace
@@ -23,11 +32,16 @@ events = {
     //filters any events on 'testTopic' where data <= 2
     testTopic filter:{it > 2}
 
-    //filters any events on 'testTopic2' where data is not a TestTopic type
+    //filters any events on 'testTopic2' where data is not a TestTopic class type
     testTopic2 filter:TestTopic
+
+    //filters any events on 'testTopicX' using boolean method from service
+    testTopicX filter:ctx.myService.&someMethod
 
     //only if using events-push plugin, allows client-side listener on this topic
     testTopic3 browser:true
+
+    //-------------- roadmap --------------
 
     //not yet implemented: Assigning and merging definitions
     //myTopic = testTopic4(filter:{i>2})
