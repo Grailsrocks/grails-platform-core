@@ -13,6 +13,8 @@ h2. Example
 <p:text code="welcome.message"/>
 <p:text code="inbox.title" args="${messages.size()}"/>
 <p:text code="hello">Welcome to our app!</p:text>
+<p:text codes="my.error.code,default.error.code">An error occurred!</p:text>
+<p:text codes="['my.error.code','default.error.code']">An error occurred!</p:text>
 {code}
 
 All of these messages will be resolved using @plugin.<GSP plugin name>.<code>@ and the body is used as a default if the message cannot be resolved.
@@ -22,6 +24,8 @@ h2. Attributes
 {table}
 *Name* | Required | *Purpose* 
 code | | The i18n message code
+codes | | A list of i18n message codes
+error | | An Grails field error object 
 args | | Arguments for i18n message
 default | | Default value for message if it cannot be resolved
 encodeAs | | Codec to apply to message, defaults to none

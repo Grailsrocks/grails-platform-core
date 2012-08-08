@@ -47,6 +47,11 @@
                 <p:tagDemo tag="p:text" code="test.missing.message">This will show because the code used does not exist</p:tagDemo>
             </blockquote>
         </p>
+        <p>Also supports multiple codes, resolving until it finds a match
+            <blockquote>
+                <p:tagDemo tag="p:text" codes="['nonsense.message', 'test.message']">This will not show</p:tagDemo>
+            </blockquote>
+        </p>
         
     </body>
 </html>

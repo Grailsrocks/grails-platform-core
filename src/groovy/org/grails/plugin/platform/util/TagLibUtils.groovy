@@ -25,6 +25,40 @@ class TagLibUtils {
 
     static final String EMPTY = ''
     
+    static valueToGroovy(v, boolean quoteString = false) {
+        def vString
+        if (v instanceof Map) {
+            vString = new StringBuilder("[")
+            boolean first = true
+            for (entry in v) {
+                if (!first) {
+                    vString <<= ','
+                }
+                first = false
+                vString << "${entry.key}: ${valueToGroovy(entry.value, true)}"
+            }
+            vString << ']'
+        } else if (v instanceof Collection) {
+            vString = new StringBuilder("[")
+            boolean first = true
+            for (entry in v) {
+                if (!first) {
+                    vString <<= ','
+                }
+                first = false
+                vString << valueToGroovy(entry.value, true)
+            }
+            vString << ']'
+        } else if (v instanceof Number) {
+            vString = '\${v}'
+        } else if (v instanceof Boolean) {
+            vString = '${'+v+'}'
+        } else {
+            vString = quoteString ? "'${v}'" : v.toString()
+        }
+        return vString
+    }
+
     /**
      * Convert a Map of attributes to a HTML attribute list String
      * @param attrs The map of attributes
@@ -35,7 +69,8 @@ class TagLibUtils {
         for (e in attrs.entrySet()) {
             def v = e.value
             if (v != null) {
-                resultingAttributes << "${e.key}=\"${v.encodeAsHTML()}\""
+                def vString = valueToGroovy(v)
+                resultingAttributes << "${e.key}=\"${vString}\""
             }
         }
         return resultingAttributes ? " ${resultingAttributes.join(' ')}" : EMPTY

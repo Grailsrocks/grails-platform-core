@@ -221,26 +221,43 @@ class UiExtensionsTagLib {
         def pluginPathMatcher = pluginPath =~ '/plugins/(.+)-[\\d]+.*$'
         def appPlugin = PluginUtils.findAppPlugin(grailsApplication.mainContext)
         def bodyText = body() ?: attrs.default
+        def codes = attrs.error ? attrs.error.codes : (attrs.codes ?: [attrs.code])
+
         if (pluginPathMatcher.matches() || appPlugin) {
             def pluginName = pluginPathMatcher.matches() ? 
                 GrailsNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName(pluginPathMatcher[0][1]) :
                 appPlugin.name
-                
-            def namespacedCode = "plugin.${pluginName}.${attrs.code}"
-            if (log.debugEnabled) {
-                log.debug "Resolving plugin-scoped i18n message from plugin [${pluginName}] using code [${namespacedCode}]"
-            }
-            if (!bodyText) {
-                bodyText = namespacedCode
-            }
             
-            out << g.message(code:namespacedCode, args:attrs.args, default:bodyText, encodeAs:attrs.encodeAs)
+            for (code in codes) {    
+                def namespacedCode = "plugin.${pluginName}.${code}"
+                if (log.debugEnabled) {
+                    log.debug "Resolving plugin-scoped i18n message from plugin [${pluginName}] using code [${namespacedCode}]"
+                }
+                if (!bodyText) {
+                    bodyText = namespacedCode
+                }
+                
+                def msg = g.message(code:namespacedCode, args:attrs.args, default:null, encodeAs:attrs.encodeAs)
+                if (msg) {
+                    out << msg
+                    return
+                }
+            }
+            out << bodyText
+
         } else {
             if (!bodyText) {
                 bodyText = attrs.code
             }            
 
-            out << g.message(code:attrs.code, args:attrs.args, default:bodyText, encodeAs:attrs.encodeAs)
+            for (code in codes) {    
+                def msg = g.message(code:attrs.code, args:attrs.args, default:null, encodeAs:attrs.encodeAs)
+                if (msg) {
+                    out << msg
+                    return
+                }
+            }
+            out << bodyText
         }
     }
  
