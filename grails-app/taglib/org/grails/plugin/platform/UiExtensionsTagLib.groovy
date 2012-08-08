@@ -217,27 +217,42 @@ class UiExtensionsTagLib {
      * Body is the default text if code does not resolve.
      */
     def text = { attrs, body ->
-        def pluginPath = pageScope.pluginContextPath
-        def pluginPathMatcher = pluginPath =~ '/plugins/(.+)-[\\d]+.*$'
-        def appPlugin = PluginUtils.findAppPlugin(grailsApplication.mainContext)
+        def i18nscope = pageScope['plugin.platformCore.ui.text.scope']
+        if (!i18nscope) {
+            def pluginPath = pageScope.pluginContextPath
+            def pluginPathMatcher = pluginPath =~ '/plugins/(.+)-[\\d]+.*$'
+            def appPlugin = PluginUtils.findAppPlugin(grailsApplication.mainContext)
+            if (pluginPathMatcher.matches() || appPlugin) {
+                def pluginName = pluginPathMatcher.matches() ? 
+                    GrailsNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName(pluginPathMatcher[0][1]) :
+                    appPlugin.name
+                i18nscope = "plugin.${pluginName}"
+            }
+        }
+
         def bodyText = body() ?: attrs.default
         def codes = attrs.error ? attrs.error.codes : (attrs.codes ?: [attrs.code])
+        if (!codes && !bodyText) {
+            throwTagError "The attributes [codes], [code] and [default] - as well as the body are all empty. This tag is for rendering text!z"
+        }
 
-        if (pluginPathMatcher.matches() || appPlugin) {
-            def pluginName = pluginPathMatcher.matches() ? 
-                GrailsNameUtils.getPropertyNameForLowerCaseHyphenSeparatedName(pluginPathMatcher[0][1]) :
-                appPlugin.name
-            
+        if (i18nscope) {
             for (code in codes) {    
-                def namespacedCode = "plugin.${pluginName}.${code}"
+                def namespacedCode = "${i18nscope}.${code}"
                 if (log.debugEnabled) {
-                    log.debug "Resolving plugin-scoped i18n message from plugin [${pluginName}] using code [${namespacedCode}]"
+                    log.debug "Resolving scoped i18n message from scope [${i18nscope}] using code [${namespacedCode}]"
                 }
                 if (!bodyText) {
                     bodyText = namespacedCode
                 }
                 
+                if (log.debugEnabled) {
+                    log.debug "Attempting to resolve scoped i18n message code [${namespacedCode}]"
+                }
                 def msg = g.message(code:namespacedCode, args:attrs.args, default:null, encodeAs:attrs.encodeAs)
+                if (log.debugEnabled) {
+                    log.debug "Attempt to resolve scoped i18n message code [${namespacedCode}] yielded: ${msg}"
+                }
                 if (msg) {
                     out << msg
                     return
@@ -247,11 +262,17 @@ class UiExtensionsTagLib {
 
         } else {
             if (!bodyText) {
-                bodyText = attrs.code
+                bodyText = codes[0]
             }            
 
             for (code in codes) {    
-                def msg = g.message(code:attrs.code, args:attrs.args, default:null, encodeAs:attrs.encodeAs)
+                if (log.debugEnabled) {
+                    log.debug "Attempting to resolve i18n message code [${code}]"
+                }
+                def msg = g.message(code:code, args:attrs.args, default:null, encodeAs:attrs.encodeAs)
+                if (log.debugEnabled) {
+                    log.debug "Attempt to resolve unscoped i18n message code [${code}] yielded: ${msg}"
+                }
                 if (msg) {
                     out << msg
                     return
@@ -259,6 +280,15 @@ class UiExtensionsTagLib {
             }
             out << bodyText
         }
+    }
+
+    /**
+     * Set the scope of p:text i18n codes for the duration of this request
+     * Used by GSPs in apps that override plugin GSPs, or just to scope all the i18n safely in an scenario
+     */
+    def textScope = { attrs ->
+        def scope = attrs.plugin ? "plugin.${attrs.plugin}" : attrs.scope
+        pageScope['plugin.platformCore.ui.text.scope'] = scope ?: null
     }
  
     def dummyText = { attrs -> 
