@@ -62,9 +62,24 @@ GORM may generate tons of events. Consider using it wisely, combine it with rout
 
 h3. Threading behaviors
 
-GORM listeners are executed in the same thread than the caller.
+GORM Listeners are executed in the same thread than the caller in order to reuse the current opened session, if any.
+Avoid blocking logic if possible or use the listener body to call another event.
 
 h3. Vetoing changes
 
+If a listener handles one of the _before\*_ topics and returns a boolean value, it becomes part of the vetoing chain:
+* Returning *false* will cancel the current database write
+* Returning *true* will just let the chain continuing
 
 
+{html:groovy}
+class SomeService{
+
+    //veto any Book insert
+    @Listener(topic = 'beforeInsert', namespace = 'gorm')
+    boolean beforeInsertBook(Book book) {
+        false
+    }
+
+}
+{html}

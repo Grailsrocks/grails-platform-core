@@ -159,3 +159,7 @@ countListeners("gorm://*")
 //remove every listeners in TestService
 removeListeners("*:my.TestService")
 {html}
+
+h3. Reloading in Development mode
+
+It works.

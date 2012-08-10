@@ -2,6 +2,7 @@ An extensible Events DSL is available in *grails-app/conf* for routing configura
 This artifact does detail behaviors of *event* method by selecting topics and namespaces to apply :
 * Filtering
 * Disabling
+* Sending behaviors
 * _Extensions_
 * _Security_
 * _Declarations_
@@ -12,7 +13,7 @@ The DSL is intended to evolve. One of the most wanted features is topic/namespac
 {note}
 
 The DSL requires to assign a closure to an *events* variable.
-Each call is a definition, the method name is parsed as a topic name and key/value arguments are definitions attributes.
+Each call is a *definition*, the method name is parsed as a topic name and key/value arguments are definitions attributes.
 Wildcard topics/namespaces are supported as well.
 
 An *Events* artifact is a script with some bound variables:
@@ -23,6 +24,18 @@ ctx | Spring context, useful for beans access, e.g. _ctx.myService.method()_
 config | Configuration object
 {table}
 
+Each *definition* supports the following attributes:
+{table}
+*Attribute name* | *Type* | *Default* | *Description*
+namespace | String | _"app"_ | Define which namespace the current definition is bound
+filter | Closure(Object)\\Closure(EventMessage)\\Class | | If a closure is passed, the return value matched as the condition for event propagation.\\If a class is passed, the subject data type must match.
+disabled | boolean | false | Disable event propagation
+fork | boolean | false | Use the current thread for event processing (blocking call)
+onError | Closure(List<Throwable>) |  | Default onError handler for the current topic(s)
+onReply | Closure(EventReply) |  | Default onReply handler for the current topic(s)
+timeout | Long |  | Default timeout for execution time, throwing a TimeoutException and calls handlers
+\* | \* |  | Any attributes can be written to be used by plugins through EventDefinition.othersAttributes
+{table}
 
 {html:groovy}
 events = {
@@ -41,6 +54,11 @@ events = {
     //only if using events-push plugin, allows client-side listener on this topic
     testTopic3 browser:true
 
+    //Default Error Handling, Global Reply Handling, timeout and fork
+    testTopicD onError:{}, onReply:{}, timeout:1000l
+    testTopicD2 fork:false
+
+
     //-------------- roadmap --------------
 
     //not yet implemented: Assigning and merging definitions
@@ -50,11 +68,15 @@ events = {
     //not yet implemented: Enabling security context for target listeners
     //testTopic5 secured:true
 
-    //not yet implemented: Forwarding
+    //not yet implemented: Topic Forwarding
     //testTopic6 to:'anotherTopic'
 
-    //not yet implemented: Global Error Handling, Global Reply Handling
-    //testTopic8 onError:{}, onReply:{}
+    //not yet implemented: Topic Handlers
     //testTopic9 onError:'anotherTopicErrors', onReply:'anotherTopicReplies'
+
 }
 {html}
+
+h3. Reloading in Development mode
+
+It works.

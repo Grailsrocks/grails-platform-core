@@ -1,0 +1,9 @@
+Writing extensions is one of the greatest habbits of *grails* developpers. Groovy and Grails communites are like that,
+pragmatic and pleasant.
+
+Having seen the referenced beans in the previous chapter should already give you ideas to improve or customize your needs.
+There are two available examples of extensions:
+* [events-si|http://github.com/smaldini/grails-events-si] : This plugin overrides the publisher and registry beans in order to replace the default mechanisms with the much
+more flexible Spring Integration channels and endpoints.
+* [events-push|http://github.com/smaldini/grails-events-push] : This plugin registers new Listeners from your cool browsers using javascript, authorized through the
+new Events DSL attributes _browser_ and _browserFilter_
