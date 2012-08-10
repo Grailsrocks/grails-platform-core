@@ -18,7 +18,6 @@
 package org.grails.plugin.platform.events
 
 import grails.events.EventDeclarationException
-import grails.events.EventException
 import grails.events.Listener
 import grails.util.GrailsNameUtils
 import org.apache.log4j.Logger
@@ -32,8 +31,6 @@ import org.grails.plugin.platform.events.publisher.EventsPublisher
 import org.grails.plugin.platform.events.registry.EventsRegistry
 import org.grails.plugin.platform.events.utils.EventsUtils
 import org.grails.plugin.platform.util.PluginUtils
-import org.springframework.aop.framework.Advised
-import org.springframework.aop.support.AopUtils
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
@@ -53,6 +50,9 @@ class EventsImpl implements Events {
     List<EventDefinition> eventDefinitions
 
     static final String APP_NAMESPACE = 'app'
+
+    static final dslArgumentsToMap = [EventsPublisher.TIMEOUT, EventsPublisher.ON_ERROR, EventsPublisher.ON_REPLY,
+             EventsPublisher.FORK]
 
     def injectedMethods = { theContext ->
 
@@ -100,12 +100,23 @@ class EventsImpl implements Events {
         }
     }
 
-    private boolean filterEvent(EventMessage message) {
+    private boolean processEventsDefinition(EventMessage message, Map params) {
         EventDefinition definition = eventDefinitions.find {it.topic == message.event && it.namespace == message.namespace}
 
-        return !definition?.disabled && ((!definition?.filterClass && !definition?.filterClosure) ||
+        if (!definition?.disabled && ((!definition?.filterClass && !definition?.filterClosure) ||
                 (definition?.filterClass && message.data in definition.filterClass) ||
-                (definition?.filterClosure && definition.filterClosure.clone().call(message.data)))
+                (definition?.filterClosure &&
+                        definition.filterClosure.clone().call(definition.filterEventMessage ? message : message.data)))) {
+
+            if (definition) {
+                for (key in dslArgumentsToMap) {
+                    if (!params.containsKey(key)) params[key] = definition[key]
+                }
+            }
+            true
+        } else {
+            false
+        }
     }
 
     private void checkNamespace(pluginNs, targetNs, context = null) {
@@ -126,15 +137,15 @@ class EventsImpl implements Events {
         waitFor(-1l, TimeUnit.NANOSECONDS, replies)
     }
 
-    EventReply event(String namespace, String topic, data = null, Map params = null, Closure callback = null) {
+    EventReply event(String namespace, String topic, data = null, Map params = [:], Closure callback = null) {
         def eventMessage = buildEvent(params?.plugin, namespace, topic, data, params)
-        if (filterEvent(eventMessage)) {
+        if (processEventsDefinition(eventMessage, params)) {
             if (log.debugEnabled) {
                 log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
             }
             def reply
             callback = callback ?: params?.get(EventsPublisher.ON_REPLY)
-            if (params?.containsKey(EventsPublisher.FORK) && !params.get(EventsPublisher.FORK)) {
+            if (params?.containsKey(EventsPublisher.FORK) && !params.remove(EventsPublisher.FORK)) {
                 reply = grailsEventsPublisher.event(eventMessage)
                 reply.onError = params?.get(EventsPublisher.ON_ERROR)
                 reply.throwError()
@@ -306,18 +317,23 @@ class EventsImpl implements Events {
             log.debug "Adding event declared in DSL - topic: ${topic}, arguments: ${arguments}, defined by plugin ${definingPlugin}"
         }
         def definition = new EventDefinition()
-        definition.namespace = arguments?.remove('namespace')
+
+        for (key in [EventsPublisher.NAMESPACE, 'requiresReply', 'disabled', 'secured',
+                EventsPublisher.TIMEOUT, EventsPublisher.ON_ERROR, EventsPublisher.ON_REPLY,
+               EventsPublisher.FORK]) {
+            definition[key] = arguments?.remove(key) ?: definition[key]
+        }
+
         if (!definition.namespace) {
             definition.namespace = APP_NAMESPACE
         }
-        definition.requiresReply = arguments?.remove('requiresReply') ?: definition.requiresReply
-        definition.disabled = arguments?.remove('disabled') ?: definition.disabled
-        definition.secured = arguments?.remove('secured') ?: definition.secured
+
         def filter = arguments?.remove('filter')
 
         if (filter) {
             if (Closure.isAssignableFrom(filter.getClass())) {
                 definition.filterClosure = filter
+                definition.filterEventMessage = EventMessage.isAssignableFrom(Closure.cast(filter).parameterTypes[0])
             }
             if (Class.isAssignableFrom(filter.getClass())) {
                 definition.filterClass = filter
@@ -334,6 +350,7 @@ class EventsImpl implements Events {
         }
         int score = 0
         if (!definingPlugin) score += 1
+        if (!topic.contains('*')) score += 1
         definition.score = score
 
         def overridenDefinition = eventDefinitions.find {it.topic == topic}

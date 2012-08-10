@@ -184,7 +184,7 @@ Grails Plugin Platform Core APIs
                 }
                 grailsEventsGormBridge(GormBridgePublisher) {
                     gormTopicSupport = ref("gormTopicSupport")
-                    grailsEventsPublisher = ref("grailsEventsPublisher")
+                    grailsEvents = ref("grailsEvents")
                 }
 
             }

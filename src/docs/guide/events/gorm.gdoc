@@ -1,4 +1,4 @@
-Starting from Grails 2, the Events Bus supports [GORM events|http://grails.org/doc/latest/guide/GORM.html#eventsAutoTimestamping].
+Starting *from Grails 2*, the Events Bus supports [GORM events|http://grails.org/doc/latest/guide/GORM.html#eventsAutoTimestamping].
 
 h3. GORM Listeners
 
@@ -32,8 +32,9 @@ class SomeService{
         println "will insert book - $book.title"
     }
 
+    //Will catch everything since we don't filter on the subject by using EventMessage
     @Listener(topic = 'before*', namespace = 'gorm')
-    void beforeEachGormEventAuthor(EventMessage message) {
+    void beforeEachGormEvent(EventMessage message) {
         println "gorm event $message.event on domain $message.data.class"
     }
 
@@ -55,9 +56,15 @@ events = {
 {html}
 
 {note}
-GORM may generate tons of events. Consider using it wisely, combine it with routing filtering
-as seen in the previous chapter. You can also totally disable gorm bridge by using @events.gorm.disabled@ configuration key.
+GORM may generate tons of events. Consider using it wisely, combine it with routing filtering.
+ You can also totally disable gorm bridge by using @events.gorm.disabled@ configuration key.
 {note}
 
+h3. Threading behaviors
+
+GORM listeners are executed in the same thread than the caller.
+
 h3. Vetoing changes
+
+
 
