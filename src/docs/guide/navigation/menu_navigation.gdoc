@@ -8,7 +8,7 @@ The main menu would use [primary|navigationTags] & [secondary|navigationTags] ta
 
 You would then render the user and footer navigation using the menu tag, and passing the user and footer scopes:
 
-{docx}
+{docx:xml}
 <html>
 <body>
     <nav:primary/>
