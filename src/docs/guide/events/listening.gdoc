@@ -96,7 +96,7 @@ class SomeService{
 
 h3. Dynamic listeners
 
-Some edge cases need runtime registration. If you meet this use case, use the injected [on|Events Methods] method :
+Some edge cases need runtime registration. If you meet this use case, use the injected [on|eventsMethods] method :
 
 {docx}
 class SomeController{

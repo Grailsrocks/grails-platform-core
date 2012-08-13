@@ -1,28 +1,25 @@
-h1. countListeners(String listenerIdPattern)
+h1. removeListeners(String listenerIdPattern)
 
 _Available in Controllers, Domains and Services_
 
-This method returns the number of *\@Listeners* for a given [pattern|guide:events].
-
-The implementation of this method is provided by the security provider you
-have installed.
+Count listeners using the pattern argument. The pattern should at least contains the topic information.
+It returns an int number of removed listeners.
 
 h2. Usage
 
 {docx}
-class PurchaseService {
-    void updatePurchase(Purchase p) {
-        if (userHasAnyRole(['ROLE_USER', 'ROLE_ADMIN'])) {
-            …
-        }
-    }
-    …
-}
+//display the number of listeners in TestService
+println countListeners("*:my.TestService")
 {docx}
 
 h2. Arguments
 
 {table}
-*Name* | *Type*  | *Description*
-listenerIdPattern | String  | The list of roles to test for
+*Name* | *Description*
+listenerIdPattern | A pattern to match against when finding listeners in registry.
 {table}
+
+{note}
+Registered listeners generate a unique id (*ListenerId*) applying the following pattern : \\
+@\[namespace://\]topic\[:package.Class\]\[#method\]\[\@hashcode\]@
+{note}

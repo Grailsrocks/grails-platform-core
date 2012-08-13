@@ -2,33 +2,51 @@ h1. event(String topic \[, Object data, Map params\])
 
 _Available in Controllers, Domains, Taglibs and Services_
 
-This method returns *true* if the current user has all of the roles listed.
-
-h1. event(Map argument)
-
-_Available in Controllers, Domains, Taglibs and Services_
-
-This method returns *true* if the current user has all of the roles listed.
-
-The implementation of this method is provided by the security provider you
-have installed.
+This method returns [EventReply|api:org.grails.plugin.platform.events.EventReply] if the current user has all of the roles listed.
 
 h2. Usage
 
 {docx}
-class PurchaseService {
-    void updatePurchase(Purchase p) {
-        if (userHasAllRoles(['ROLE_CUSTOMER', 'ROLE_MANAGER'])) {
-            …
-        }
-    }
-    …
+class SomeController{
+
+   def logout(){
+      def reply = event("logout", session.user)
+      //doesn't wait for event execution
+
+      render reply.value  //wait and display value
+
+      event(topic:"afterLogout").waitFor()
+
+      //Only triggered when "afterLogout" finished
+      def errorHandler = {errs -> }
+      //Use a dedicated error handler
+      event(topic:"afterAfterLogout", onError:errs)
+   }
 }
 {docx}
 
 h2. Arguments
 
 {table}
-*Name* | *Description*
-roleList | The list of roles to test for
+Name | Mandatory | Default | Description
+topic | true | | A *String* which represents channel subscribed by listeners.
+data | false | | An *Object* -_preferrably Serializable for IO facilities_- which represents the subject of your event such as a domain class.
+params | false | _See below for arguments defaults_ | A *Map* which represents sending behaviors including *namespace*.
+callbackClosure | false | | A *Closure* triggered after an event completion.
 {table}
+
+*Params* arguments :
+{table}
+*Key* | *Type* | *Default* | *Description*
+ fork | @Boolean@ | @false@ | Force the event to reuse the caller thread, therefore executing the method synchronously and propagating any errors.
+ namespace / for | @String@ | @'app'@ | Target a dedicated topic namespace. To avoid overlapping topic names, the events bus supports a scoping concept called namespace. E.g. 'gorm' is used by gorm events and 'browser' is used for Javascript listeners in *events-push* plugin.
+ onReply | @Closure\{EventReply reply\}@ | | Same behavior than _callbackClosure_ argument, overrides it if both are defined.
+ onError | @Closure\{List<Exception> errors\}@ | | If exceptions has been raised by listeners, this callback will be triggered. If undefined, exceptions will be propagated on EventReply.getValue(s).
+ gormSession | @Boolean@ | @true@ | Opens a GORM session for the new thread which carries event execution.
+ timeout | @Long@ | | Define a maximum time in millisecond for the event execution.
+ headers | @Map<String, Serializable>@ | | Additional headers for the event message enveloppe.
+{table}
+
+h1. event(Map argument)
+
+The map notation allows you to reuse the same arguments than params plus *topic* for topic, *data* for data and *for* (shortcut for 'namespace'). If you specify *params*, it will use it for the *params* argument otherwise the first level map is used as *params*.

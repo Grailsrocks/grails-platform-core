@@ -2,27 +2,24 @@ h1. removeListeners(String listenerIdPattern)
 
 _Available in Controllers, Domains and Services_
 
-This method returns *true* if the current user has any of the roles listed.
-
-The implementation of this method is provided by the security provider you
-have installed.
+Remove listeners using the pattern argument. The pattern should at least contains the topic information.
+It returns an int number of removed listeners.
 
 h2. Usage
 
 {docx}
-class PurchaseService {
-    void updatePurchase(Purchase p) {
-        if (userHasAnyRole(['ROLE_USER', 'ROLE_ADMIN'])) {
-            …
-        }
-    }
-    …
-}
+//remove every listeners in TestService
+removeListeners("*:my.TestService")
 {docx}
 
 h2. Arguments
 
 {table}
 *Name* | *Description*
-roleList | The list of roles to test for
+listenerIdPattern | A pattern to match against when finding listeners in registry.
 {table}
+
+{note}
+Registered listeners generate a unique id (*ListenerId*) applying the following pattern : \\
+@\[namespace://\]topic\[:package.Class\]\[#method\]\[\@hashcode\]@
+{note}

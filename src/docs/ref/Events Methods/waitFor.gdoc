@@ -1,28 +1,47 @@
-h1. waitFor(EventReply replies...)
+h1. waitFor(\[long timeout, TimeUnit timeUnit, \], EventReply replies...)
 
 _Available in Controllers, Domains and Services_
 
-This method returns *true* if the current user has any of the roles listed.
+This method blocks for each passed reply until the relevant event has been processed, hence initializing the EventReply.value.
+It returns the same array of passed [Event Replies|api:org.grails.plugin.platform.events.EventReply] for fluent programming style.
 
-The implementation of this method is provided by the security provider you
-have installed.
 
 h2. Usage
 
 {docx}
-class PurchaseService {
-    void updatePurchase(Purchase p) {
-        if (userHasAnyRole(['ROLE_USER', 'ROLE_ADMIN'])) {
-            …
-        }
-    }
-    …
+class SomeController{
+
+   def logout(){
+      def reply = event('logout', session.user)
+      def reply2 = event('logout', session.user)
+      def reply3 = event('logout', session.user)
+
+      waitFor(reply,reply2,reply3).each{EventReply reply->
+        render reply.value +'</br>'
+      }
+
+      //same with 20 seconds timeout on each reply
+      waitFor(20, TimeUnit.SECONDS, reply,reply2,reply3).each{EventReply reply->
+              render reply.value
+      }
+
+      //other style :
+      event('logout', session.user).waitFor() //blocks event
+      event('logout', session.user).waitFor(2000) //blocks event for maximum 2 seconds
+
+   }
 }
 {docx}
 
 h2. Arguments
 
 {table}
-*Name* | *Description*
-roleList | The list of roles to test for
+Name | Mandatory | Default | Description
+timeout | false |  _app_ | A timeout number associated to a time unit. E.g. 20
+timeUnit | false |  | TimeUnit unit for timeout. E.g. TimeUnit.Second
+replies | true | | An [EventReply|api:org.grails.plugin.platform.events.EventReply] list passed through multi-arg call style to block on each one.
 {table}
+
+{note}
+You can directly call [event|eventsMethods] and use the [EventReply|api:org.grails.plugin.platform.events.EventReply] object to waitFor.
+{note}
