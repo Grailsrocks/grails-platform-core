@@ -1,6 +1,6 @@
 Sending an event is simple. You only need to remind 1 method name and 2 different signatures:
 * *event*(topic, \[data, params, callbackClosure\])
-* *event*(Map args \[callbackClosure\])
+* *event*(Map args, \[callbackClosure\])
 We recommend using the former signature if you don't have any params, otherwise the latter is more elegant in that case.
 
 Let's see what the key arguments are doing:
