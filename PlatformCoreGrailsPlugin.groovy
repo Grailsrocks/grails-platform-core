@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import org.grails.plugin.platform.events.EventsImpl
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport1X
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport2X
@@ -25,7 +24,7 @@ import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
-    def version = "1.0.M2j-SNAPSHOT"
+    def version = "1.0.M2"
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
