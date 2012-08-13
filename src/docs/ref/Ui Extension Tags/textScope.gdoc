@@ -4,7 +4,7 @@ h2. Purpose
 
 Sets the current scope (prefix) for i18n text rendered using the [text|uiExtensionTags] tag, to either the supplied scope or the scope used for a specific plugin.
 
-The scope is set for the current GSP (or GSP fragment) only.
+The scope is set for the current GSP or GSP fragment only.
 
 This is especially useful in the case where an application overrides a GSP supplied by a plugin, but wishes to reuse the i18n messages supplied by the plugin. If the plugin used p:text, the overriding GSP would not use the plugin's messages. Adding this tag to your overriding GSP, using @plugin="<nameOfPlugin>"@ will solve this.
 
@@ -27,6 +27,6 @@ h2. Attributes
 
 {table}
 *Name* | Required | *Purpose* 
-scope | | The i18n message code
-plugin | | A list of i18n message codes
+scope | | An arbitrary scoping prefix to use. A trailing "." will be added automatically. Example value: "myapp.messages"
+plugin | | A plugin name in bean casing i.e. myPluginName. This makes future p:text resolutions appear to come from this plugin.
 {table}

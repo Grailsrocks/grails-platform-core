@@ -2,7 +2,7 @@ h1. p:label
 
 h2. Purpose
 
-Renders a <label> element, with the text optionally loaded from i18n if required.
+Renders a <label> element, with the text loaded from i18n using the [text|uiExtensionTags] tag mechanism.
 
 h2. Example
 

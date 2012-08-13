@@ -9,7 +9,8 @@ It will automatically display the message stored in request or flash scope, or
 both if both are set.
 
 The text is rendered using i18n messages and arguments if supplied when the
-@displayMessage@ or @displayFlashMessage@ methods were called.
+@displayMessage@ or @displayFlashMessage@ methods were called. Note that the @p:text@ tag is not used to resolve
+such messages - however the [displayMessage|uiExtensionMethods] methods apply plugin namespacing at point of invocation.
 
 The output is wrapped in a single div, with a class that you supply plus the
 message type.
@@ -42,5 +43,3 @@ class | Optional CSS classes to apply to the div. The value of the message "type
 cssPrefix | Optional string to prepend to the message type for use as a CSS class on the div. i.e. Specifying "alert-" would result in CSS classes like "alert-warning"
 type | Optional override of the type of the message. If the controller did not set a type or you wish to override it you can e.g. set this to "error"
 {table}
-
-Any other attributes specified are passed through to g:message to create the text.

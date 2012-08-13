@@ -2,7 +2,7 @@ h1. p:smartLink
 
 h2. Purpose
 
-This tag renders a link using i18n conventions for the link text.
+This tag renders a link using i18n conventions for the link text, using the [text|uiExtensionTags] tag to automatically namespace the i18n messages based on the plugin that called the tag (if any).
 
 h2. Example
 

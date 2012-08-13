@@ -105,13 +105,15 @@ class UiExtensionsTagLib {
                 } else if (msgParams.type){
                     classes = joinClasses(values:[classes, classPrefix+msgParams.type])
                 }
-                attrs.code = msgParams.text
-                attrs.args = msgParams.args
-                attrs.encodeAs = 'HTML'
+                def msgAttrs = [
+                    code: msgParams.text,
+                    args: msgParams.args,
+                    encodeAs:'HTML'
+                ]
             
                 out << "<div class=\"${classes.encodeAsHTML()}\">"
                 // Message is already namespaced
-                out << g.message(attrs)
+                out << g.message(msgAttrs)
                 out << "</div>"
             }
         }

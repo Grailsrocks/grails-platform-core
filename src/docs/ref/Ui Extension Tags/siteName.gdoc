@@ -2,7 +2,11 @@ h1. p:siteName
 
 h2. Purpose
 
-Renders the name of the site. This is defined in config @plugin.platformCore.site.name@
+Renders the name of the site. This is defined in config @plugin.platformCore.site.name@.
+
+For example your Config would set this to the name of your product or service, such as "Twitter".
+
+Plugins and views can use this to refer to your web application.
 
 h2. Example
 
