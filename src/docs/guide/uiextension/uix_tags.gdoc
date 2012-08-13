@@ -1,4 +1,3 @@
-
 h3. Linking tags
 
 The [smartLink|uiExtensionTags] tag renders links for controllers and actions, automatically working out the text of the link using i18n.
