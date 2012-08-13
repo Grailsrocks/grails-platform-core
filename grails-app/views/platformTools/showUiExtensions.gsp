@@ -35,9 +35,9 @@
                 <p:tagDemo tag="p:year"/>
 
                 <h2>Namespaced session, flash and request attributes</h2>
-                <p>Session: ${pluginSessionInfo.encodeAsHTML()}</p>
-                <p>Flash: ${pluginFlashInfo.encodeAsHTML()}</p>
-                <p>Request: ${pluginRequestInfo.encodeAsHTML()}</p>
+                <p>Session: <p:prettyPrint value="${pluginSessionInfo}"/></p>
+                <p>Flash: <p:prettyPrint value="${pluginFlashInfo}"/></p>
+                <p>Request: <p:prettyPrint value="${pluginRequestInfo}"/></p>
 
                 <h2>Namespaced i18n messages</h2>
                 <p>There is a <code>p:text</code> tag that is like <code>g:message</code> but uses plugin namespaced i18n codes

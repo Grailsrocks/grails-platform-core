@@ -12,7 +12,7 @@
         
                 <p>The current plugin's config is:
                     <pre>
-                        ${configInfo.encodeAsHTML()}
+                        <p:prettyPrint value="${configInfo}"/>
                     </pre>
                 </p>
             </div>

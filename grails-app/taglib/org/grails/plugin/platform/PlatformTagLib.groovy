@@ -46,4 +46,37 @@ class PlatformTagLib {
         out << "<div class=\"tag-output\"><strong>Markup:</strong><pre>\n"+b.encodeAsHTML()+"</pre></div>"
         out << "</div>"
     }
+
+    private prettyItem(value) {
+        StringBuilder sb = new StringBuilder()
+        if (value instanceof Map) {
+            for (entry in value.entrySet().sort({ a, b -> a.key <=> b.key})) {
+                sb << "<li>${entry.key?.encodeAsHTML()}"
+                if ((entry.value instanceof Map) ||
+                    (entry.value instanceof List) ||
+                    (entry.value instanceof Set)) {
+                    sb << p.prettyPrint(value:entry.value)
+                } else {
+                    sb << " = " 
+                    sb << entry.value?.encodeAsHTML()
+                }
+                sb << "</li>"
+            }
+        } else if (value instanceof Collection) {
+            for (entry in value) {
+                sb << prettyPrint(entry)
+            }
+        } else {
+            sb << "<li>${value?.encodeAsHTML()}</li>"
+        }
+        return sb
+    }
+
+    def prettyPrint = { attrs ->
+        def value = attrs.value
+
+        out << "<ul>"
+        out << prettyItem(value)
+        out << "</ul>"
+    }
 }
