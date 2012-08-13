@@ -34,12 +34,18 @@ class EventDefinition implements Comparable<EventDefinition> {
 
     Class filterClass = null;
     Closure filterClosure = null;
+    boolean filterEventMessage = false;
 
     boolean requiresReply = false
-    public boolean disabled = false
+    boolean disabled = false
     boolean secured = false
     String definingPlugin
     Map othersAttributes
+
+    Boolean fork = true
+    Closure onError = null
+    Closure onReply = null
+    Long timeout = null
 
     int score = 0
 

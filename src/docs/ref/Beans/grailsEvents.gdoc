@@ -1,1 +1,9 @@
-This API is still under construction
+h1. grailsEvents
+
+The [grailsEvents|guide:events] bean is an instance of
+[Events|api:org.grails.plugin.platform.events.Events] that provides access to the
+generic events bus features of the platform.
+
+The implementation itself delegates much of the functionality to
+@grailsEventsPublisher@ and @grailsEventsRegistry@ beans provided by any events bus plugins that are installed.
+

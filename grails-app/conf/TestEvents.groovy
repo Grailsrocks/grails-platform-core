@@ -18,6 +18,6 @@
 //import org.grails.plugin.platform.test.Book
 
 events = {
-    sampleHello
-    afterLoad
+    //sampleHello namespace:'lal', onReply: { println 'joy' }
+    beforeInsert
 }

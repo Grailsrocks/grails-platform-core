@@ -20,10 +20,16 @@ package org.grails.plugin.platform.events.publisher;
 import org.apache.log4j.Logger;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
+import org.grails.plugin.platform.events.Events;
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.ReflectionUtils;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Stephane Maldini <smaldini@vmware.com>
@@ -37,13 +43,13 @@ import org.springframework.util.ReflectionUtils;
 public class GormBridgePublisher implements ApplicationListener {
 
     private GormTopicSupport gormTopicSupport;
-    private EventsPublisher grailsEventsPublisher;
+    private Events grailsEvents;
 
     private final static Logger log = Logger.getLogger(GormBridgePublisher.class);
     static final private String GORM_EVENT_PACKAGE = "org.grails.datastore.mapping.engine.event";
 
-    public void setGrailsEventsPublisher(EventsPublisher grailsEventsPublisher) {
-        this.grailsEventsPublisher = grailsEventsPublisher;
+    public void setGrailsEvents(Events grailsEvents) {
+        this.grailsEvents = grailsEvents;
     }
 
     public void setGormTopicSupport(GormTopicSupport gormTopicSupport) {
@@ -56,13 +62,18 @@ public class GormBridgePublisher implements ApplicationListener {
             String topic = gormTopicSupport.convertTopic(applicationEvent);
             if (topic != null) {
                 log.debug("sending " + applicationEvent + " to topic " + topic);
-                EventReply reply = grailsEventsPublisher.event(new EventMessage(topic,
+
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put(EventsPublisher.GORM, false);
+                params.put(EventsPublisher.FORK, false);
+
+                EventReply reply = grailsEvents.event(GormTopicSupport.GORM_SOURCE, topic,
                         ReflectionUtils.invokeMethod(
                                 ReflectionUtils.findMethod(applicationEvent.getClass(), "getEntityObject"),
                                 applicationEvent
-                        ), GormTopicSupport.GORM_SOURCE, false));
+                        ), params);
                 try {
-                    gormTopicSupport.processCancel(applicationEvent, reply.getValues());
+                    gormTopicSupport.processCancel(applicationEvent, reply != null ? reply.getValues() : null);
                 } catch (Throwable e) {
                     throw new RuntimeException(e);//shouldn't happen as its sync event
                 }

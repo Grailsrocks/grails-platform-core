@@ -1,8 +1,8 @@
-h1. userHasAnyRole(roleList)
+h1. *Integer* countListeners(*String* listenerIdPattern)
 
-_Available in Controllers, Domains, Taglibs and Services_
+_Available in Controllers, Domains and Services_
 
-This method returns *true* if the current user has any of the roles listed.
+This method returns the number of *\@Listeners* for a given [pattern|guide:events].
 
 The implementation of this method is provided by the security provider you
 have installed.
@@ -23,6 +23,6 @@ class PurchaseService {
 h2. Arguments
 
 {table}
-*Name* | *Description*
-roleList | The list of roles to test for
+*Name* | *Type*  | *Description*
+listenerIdPattern | String  | The list of roles to test for
 {table}

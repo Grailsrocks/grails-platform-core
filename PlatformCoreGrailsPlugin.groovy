@@ -40,7 +40,7 @@ class PlatformCoreGrailsPlugin {
             "grails-app/src/groovy/org/grails/plugin/platform/test/**/*.groovy",
             "grails-app/src/java/org/grails/plugin/platform/test/**/*.java",
             "grails-app/views/error.gsp",
-            "grails-app/views/test/**/*.gsp",
+            "grails-app/views/test/**/*.gsp"
     ]
 
     def observe = ['*'] // We observe everything so we can re-apply dynamic methods, conventions etc
@@ -184,7 +184,7 @@ Grails Plugin Platform Core APIs
                 }
                 grailsEventsGormBridge(GormBridgePublisher) {
                     gormTopicSupport = ref("gormTopicSupport")
-                    grailsEventsPublisher = ref("grailsEventsPublisher")
+                    grailsEvents = ref("grailsEvents")
                 }
 
             }

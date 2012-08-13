@@ -1,0 +1,25 @@
+Based on Platform-Core [configuration|guide:configuration] mechanism, the plugin provides the following Events-Bus related keys:
+
+{table}
+ *Configuration Key* | *Type* | *Default* | *Description*
+ grails.plugin.platform.events.disabled | Boolean | false | Fully disable Events Bus mechanism, no events methods will be injected
+ grails.plugin.platform.events.poolSize | Integer | 10 | Allow X concurrent workers to process events
+ grails.plugin.platform.events.gorm.disabled | Boolean | false | Disable GORM bridge, stopping GORM events from being published
+ grails.plugin.platform.events.catchFlushException | Boolean | true | Catch any GORM flushing exceptions which could be noisy specially when vetoing changes
+{table}
+
+In addition, you can override beans values such as gormTopicSupport
+{html:groovy}
+beans{
+    gormTopicSupport {
+        //transform gorm Events Objects types into topics
+        translateTable = [
+            'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate',
+            /*'PreLoadEvent': 'beforeLoad',*/ 'PreDeleteEvent': 'beforeDelete',
+            'ValidationEvent': 'beforeValidate', 'PostInsertEvent': 'afterInsert',
+            'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete',
+            /*'PostLoadEvent': 'afterLoad',*/ 'SaveOrUpdateEvent': 'onSaveOrUpdate'
+        ]
+    }
+}
+{html}

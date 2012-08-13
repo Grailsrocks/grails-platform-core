@@ -1,3 +1,6 @@
+Plugin developpers and any crazy tweakers may need to override one or more Events Bus beans, like the *Spring Integration plugin* does.
+The *grailsEvents* bean is also useful to inject events methods into unhandled artifacts (other than *domain*, *service*, *controller*).
+
 {table}
 *Bean Name* | *Type* | *Default Implementation* | *Description*
 *grailsEvents* | _org.grails.plugin.platform.events .Events_ | _org.grails.plugin.platform.events .EventsImpl_ | Main events gateway which contains injected methods in artifacts

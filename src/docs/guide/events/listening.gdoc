@@ -41,7 +41,7 @@ every event types, use Object type or if the argument is not necessary, do not d
 
 {warning}
 Filtering on the EventMessage<D> generic type doesn't work, e.g. EventMessage<Book> won't prevent EventMessage<Author> invokation. For such fine grained
- control, you can rely on [Events Artifact|artifact}
+ control, you can rely on [Events Artifact|artifact]
 {warning}
 
 
@@ -159,3 +159,7 @@ countListeners("gorm://*")
 //remove every listeners in TestService
 removeListeners("*:my.TestService")
 {html}
+
+h3. Reloading in Development mode
+
+It works.
