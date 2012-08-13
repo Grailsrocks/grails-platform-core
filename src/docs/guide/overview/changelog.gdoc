@@ -1,4 +1,6 @@
-h3. 1.0.M2
+h3. 1.0.M3
+
+Was: 1.0.M2 but due to release error we had to roll to M3.
 
 * Events API
 * New UI Extension tags p:text and p:textScope

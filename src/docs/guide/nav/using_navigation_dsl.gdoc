@@ -50,7 +50,7 @@ navigation = {
 {docx}
 
 You can also use overrides in the navigation DSL to move items from one scope to another for example to move items declared by a plugin into your primary application navigation.
-{note}This part is not implemented in 1.0.M2-SNAPSHOT - code sample to be written{note}
+{note}This part is not implemented in 1.0.M2/M3 - code sample to be written{note}
 
 Using tags such as the [primary|navigationTags] and [secondary|navigationTags] navigation tags you can render all the page elements you need. 
 
