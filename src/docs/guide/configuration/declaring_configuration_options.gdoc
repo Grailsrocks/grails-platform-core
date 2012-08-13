@@ -4,23 +4,23 @@ This allows the platform to warn users when they mistype a config name or supply
 
 Do declare the options your plugin supports, add the @doWithConfigOptions@ closure to your plugin descriptor:
 
-{code}
+{docx}
 def doWithConfigOptions = {
     'organization.name'(type: String, defaultValue: 'My Corp (set plugin.platformCore.organization.name)')
     'site.name'(type: String, defaultValue: 'Our App (set plugin.platformCore.site.name)')
 }
-{code}
+{docx}
 
 This block, from the platform core, defines two configuration values of type String, with a default value.
 
 You can also supply a custom validator:
 
-{code}
+{docx}
 def doWithConfigOptions = {
     'concurrentConnections'(type: Integer, defaultValue: 10, 
         validator: { v -> v < 500 ? null : 'concurrent.connections.too.big' }
 }
-{code}
+{docx}
 
 Behaving just like constraint validators, your validator returns null for "ok" or an i18n message string for the error.
 

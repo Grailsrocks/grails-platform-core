@@ -7,7 +7,7 @@ The code uses a simple DSL that is identical to normal Config except:
 
 The application Config is loaded first. All the doWithConfig blocks are evaluated and the results merged in.
 
-{code}
+{docx}
 def doWithConfig = { config ->
     platformUi {
         ui.Bootstrap.button.cssClass = 'btn'
@@ -21,6 +21,6 @@ def doWithConfig = { config ->
         grails.x.y = config.p.q == 'something' ? true : false
     }
 }
-{code}
+{docx}
 
 See [doWithConfig|pluginConventions] for more details.

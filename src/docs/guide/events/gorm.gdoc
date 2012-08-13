@@ -19,7 +19,7 @@ Same listeners behaviors apply, e.g. using EventMessage for the argument type, u
 Because listeners are called if there are *no arguments* or the argument *type is assignable to current event data type*, specifying
 a domain class is the only required step to filter domains events.
 
-{html:groovy}
+{docx}
 class SomeService{
 
     @Listener(namespace = 'gorm')
@@ -39,21 +39,21 @@ class SomeService{
     }
 
 }
-{html}
+{docx}
 
 h3. Filtering with Events Artifact
 
 Setting a filter through an Events artifact allows more fined control and efficient selection since it prevents events to be
 propagated :
 
-{html:groovy}
+{docx}
 events = {
     'afterInsert' namespace:'gorm', filter:Book
     'afterDelete' namespace:'gorm', filter:{it.id > 5}
     'afterUpdate' namespace:'gorm', filter:{it in Book || it in Author}
     'beforeDelete' namespace:'gorm', disabled:true
 }
-{html}
+{docx}
 
 {note}
 GORM may generate tons of events. Consider using it wisely, combine it with routing filtering.
@@ -72,7 +72,7 @@ If a listener handles one of the _before\*_ topics and returns a boolean value, 
 * Returning *true* will just let the chain continuing
 
 
-{html:groovy}
+{docx}
 class SomeService{
 
     //veto any Book insert
@@ -82,4 +82,4 @@ class SomeService{
     }
 
 }
-{html}
+{docx}

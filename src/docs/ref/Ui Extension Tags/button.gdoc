@@ -8,13 +8,13 @@ The text is loaded from namespaced i18n using the same logic as the [text|uiExte
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:button>OK</p:button>
 <p:button text="button.ok"/>
 <p:button disabled="true">Cancel</p:button>
 <p:button kind="anchor" href="#" text="button.cancel"/>
 <p:button kind="submit" text="button.send.to" textArgs="${recipient.name}"/>
-{code}
+{docx}
 
 h2. Attributes
 

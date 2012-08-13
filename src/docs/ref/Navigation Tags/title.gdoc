@@ -8,13 +8,13 @@ Use this in custom menu bodies for correct and easy i18n message resolution.
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <nav:menu id="nav" custom="true">
     <li>
        <nav:title item="$\{item\}"/>
     </li>
 </nav:menu>
-{code}
+{docx}
 
 h2. Attributes
 

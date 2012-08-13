@@ -6,13 +6,13 @@ This tag renders a link using i18n conventions for the link text, using the [tex
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <%-- Link to default action of BooksController --%>
 <ui:link controller="books"/>
 
 <%-- Link to list action of current controller --%>
 <ui:link action="list"/>
-{code}
+{docx}
 
 These will use i18n messages located by convention of the form: @action.*controllerName*.*actionName*@
 

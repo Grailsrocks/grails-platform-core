@@ -8,9 +8,9 @@ Uses the [createLogoutLink|securityTags] tag to get a URL from the security prov
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <s:logoutButton/>
-{code}
+{docx}
 
 h2. Attributes
 

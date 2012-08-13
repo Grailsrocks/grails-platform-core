@@ -6,10 +6,10 @@ Renders a <label> element, with the text loaded from i18n using the [text|uiExte
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:label text="field.user.name"/>
 <p:label text="field.user.name" textArgs="[user.name]"/>
-{code}
+{docx}
 
 h2. Attributes
 

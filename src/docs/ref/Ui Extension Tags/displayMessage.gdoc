@@ -17,23 +17,23 @@ message type.
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:displayMessage class="msg"/>
-{code}
+{docx}
 
 So for example with the above, if your controller has called:
 
-{code}
+{docx}
 displayMessage text:'book.save.error', args:[book.title], type:'alert'
-{code}
+{docx}
 
 This might output:
 
-{code:xml}
+{docx:xml}
 <div class="msg alert">
    Something has gone wrong saving book "The Design of Everyday Things"
 </div>
-{code}
+{docx}
 
 h2. Attributes
 

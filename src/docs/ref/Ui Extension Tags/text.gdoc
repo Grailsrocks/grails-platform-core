@@ -9,14 +9,14 @@ This makes it easy for plugin GSPs to provide i18n strings without clashing with
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:text code="welcome.message"/>
 <p:text code="inbox.title" args="${messages.size()}"/>
 <p:text code="hello">Welcome to our app!</p:text>
 <p:text codes="my.error.code,default.error.code">An error occurred!</p:text>
 <p:text codes="['my.error.code','default.error.code']">An error occurred!</p:text>
 <p:text error="${mybean.errors[0]}"/>
-{code}
+{docx}
 
 All of these messages will be resolved using @plugin.<GSP plugin name>.<code>@ and the body is used as a default if the message cannot be resolved.
 

@@ -8,9 +8,9 @@ The current year is cached once, so this has a very low overhead.
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:year/>
-{code}
+{docx}
 
 h2. Attributes
 

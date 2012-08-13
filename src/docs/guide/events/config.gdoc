@@ -9,7 +9,7 @@ Based on Platform-Core [configuration|guide:configuration] mechanism, the plugin
 {table}
 
 In addition, you can override beans values such as gormTopicSupport
-{html:groovy}
+{docx}
 beans{
     gormTopicSupport {
         //transform gorm Events Objects types into topics
@@ -22,4 +22,4 @@ beans{
         ]
     }
 }
-{html}
+{docx}

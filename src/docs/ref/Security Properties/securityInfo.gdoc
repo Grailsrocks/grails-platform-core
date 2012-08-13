@@ -11,14 +11,14 @@ No guarantees are made about the type or properties of the returned object.
 
 h2. Usage
 
-{code}
+{docx}
 class PurchaseService {
     def getPurchases() {
         Purchase.findAllByUser(securityInfo)
     }
     ...
 }
-{code}
+{docx}
 
 Here the securityInfo object is assumed to be a domain object that is associated to the Purchase domain as the "user" property.
 

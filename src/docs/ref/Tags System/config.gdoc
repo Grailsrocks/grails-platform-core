@@ -6,9 +6,9 @@ Renders a value from Config.
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:config name="myapp.upload.url"/>
-{code}
+{docx}
 
 h2. Attributes
 

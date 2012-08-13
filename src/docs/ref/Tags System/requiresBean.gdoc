@@ -8,10 +8,10 @@ Use this to avoid having to create empty domain or command objects in your contr
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:requiresBean name="form" class="MyFormCommand"/>
 <input name="title" value="${form.title}"/>
-{code}
+{docx}
 
 h2. Attributes
 

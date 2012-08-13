@@ -14,7 +14,7 @@ menu instead of the default "app" menu.
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <html>
 <body>
     <!-- pretend we are in support/error even though we are in a GSP with no controller -->
@@ -27,7 +27,7 @@ h2. Example
     <p>Something went wrong!</p>
 </body>
 </html>
-{code}
+{docx}
 
 h2. Attributes
 

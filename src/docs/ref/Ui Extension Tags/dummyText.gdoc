@@ -6,9 +6,9 @@ Generates dummy text to use in work-in-progress UIs.
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:dummyText size="3"/>
-{code}
+{docx}
 
 This generates Lorem Ipsum content, for a total of 3 paragraphs.
 

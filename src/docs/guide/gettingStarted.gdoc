@@ -2,13 +2,13 @@ To get started you need to install the platform-core plugin.
 
 Add the plugin platform as a dependency to your application or plugin, either directly or transitively. To do so directly edit your @BuildConfig.groovy@ to look something like this:
 
-{code}
+{docx}
     ...
     plugins {
         ...
         compile "\:platform-core\:1.0.M1"
     }
-{code}
+{docx}
 
 You can run your code now and browse to @http://localhost:8080/<appname>/platform/@, a special page available only in the development environment. From there you can explore some of the plugin platform features in the debug interface.
 

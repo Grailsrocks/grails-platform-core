@@ -3,13 +3,13 @@ h3. Linking tags
 
 The [smartLink|uiExtensionTags] tag renders links for controllers and actions, automatically working out the text of the link using i18n.
 
-{code:xml}
+{docx:xml}
 <%-- Link to default action of BooksController --%>
 <p:smartLink controller="books"/>
 
 <%-- Link to list action of current controller --%>
 <p:smartLink action="list"/>
-{code}
+{docx}
 
 These will use i18n messages located by convention of the form: @action.*controllerName*.*actionName*@
     
@@ -17,9 +17,9 @@ h3. Label tag
 
 The label tag will render a <label> with the text optionally loaded from i18n:
 
-{code:xml}
+{docx:xml}
 <p:label text="field.user.name"/>
-{code}
+{docx}
 
 See [label|uiExtensionTags] for full details of the attributes, which include passing arguments to the i18n message.
 
@@ -27,9 +27,9 @@ h3. Button tag
 
 The button tag will render a text-based button using either a <button>, <input type="submit"> or <a> tag, with the text optionally loaded from i18n:
 
-{code:xml}
+{docx:xml}
 <p:button text="button.save"/>
-{code}
+{docx}
 
 See [button|uiExtensionTags] for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.
 
@@ -37,9 +37,9 @@ h3. Display message tag
 
 The displayMessage tag works with the @displayMessage@ and @displayFlashMessage@ controller methods to make it easy to render messages to the user in a uniform way.
 
-{code:xml}
+{docx:xml}
 <p:displayMessage/>
-{code}
+{docx}
 
 See [displayMessage|uiExtensionTags] for full details of the attributes and the [displayMessage|uiExtensionMethods] and [displayFlashMessage|uiExtensionMethods] controller methods.
 

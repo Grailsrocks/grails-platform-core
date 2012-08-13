@@ -6,11 +6,11 @@ Joins a list of CSS classes, safely handling null values and ensuring no extra w
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <div class="${g.joinClasses(values:[userClass, 'notice', 'alert'])}">
 ..
 </div>
-{code}
+{docx}
 
 This would output the class attribute as @class="somevalue notice alert"@ if userClass was set to "somevalue".
 

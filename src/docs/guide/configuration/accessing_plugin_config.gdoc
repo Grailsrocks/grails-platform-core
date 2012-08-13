@@ -6,7 +6,7 @@ your plugin, automatically namespace for your plugin using the @plugin.<pluginNa
 
 So in a service you can trivially access this config inside a service or controller for example:
 
-{code}
+{docx}
 class MyPluginService {
     def doSomething() {
        if (pluginConfig.enabled) {
@@ -14,5 +14,5 @@ class MyPluginService {
        }
     }
 }
-{code}
+{docx}
 
