@@ -1,0 +1,492 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>7 Navigation API 1.0.M3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript" src="../css/shCore.js"></script>
+    <script type="text/javascript" src="../css/shBrushXml.js"></script>
+    <script type="text/javascript" src="../css/shBrushGroovy.js"></script>
+    <link type="text/css" rel="stylesheet" href="../css/shCoreMidnight.css"/>
+    <script type="text/javascript">
+        SyntaxHighlighter.config.stripBrs = true;
+        SyntaxHighlighter.defaults['smart-tabs'] = true;
+        SyntaxHighlighter.all();
+        function addJsClass() {
+            var classes = document.body.className.split(" ");
+            classes.push("js");
+            document.body.className = classes.join(" ");
+        }
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/overview.html"><strong>1</strong><span>Overview</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/gettingStarted.html"><strong>2</strong><span>Getting Started</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/configuration.html"><strong>3</strong><span>Configuration API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/security.html"><strong>4</strong><span>Security API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/nav.html"><strong>7</strong><span>Navigation API</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>APIs and Tags for advanced Plugin integration</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                <div class="toc-item prev-left"><a href="../guide/injection.html">&lt;&lt; <strong>6</strong><span>Injection API</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                <div class="toc-item next-right"><a href="../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>7 Navigation API - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)</p>
+
+                    <p><strong>Version:</strong> 1.0.M3</p>
+
+                    
+                </div>
+
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#navigation_concepts"><strong>7.1</strong><span>Concepts</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#navigation_getting_started"><strong>7.2</strong><span>Getting Started</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#navigation_by_convention"><strong>7.3</strong><span>Navigation by convention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#primary_navigation"><strong>7.4</strong><span>What is primary and secondary navigation?</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#menu_navigation"><strong>7.5</strong><span>Rendering other menus</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#using_navigation_dsl"><strong>7.6</strong><span>Using the Navigation DSL</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#navigation_tags"><strong>7.7</strong><span>The Navigation Tags</span></a>
+                    </div>
+                    
+                </div>
+                
+
+                
+
+<h1 id="nav">7 Navigation API</h1>
+The Navigation API provides a standard way to expose information about the menus available in your application and plugins.<p class="paragraph"/>Aside from application navigation, plugins can expose their controllers and actions so that application can reuse them in their own navigation structure. Applications can also add items to the navigation structure of plugins, to merge items into the UI of plugins.<p class="paragraph"/>
+
+
+<h2 id="navigation_concepts">7.1 Concepts</h2>
+There are only three concepts to understand in the Navigation API - items, scopes and the activation path.<p class="paragraph"/>Out of the box, scopes are created for all your application and plugin controllers automatically by convention. Items are created in these scopes for every action on the controller.<p class="paragraph"/>You will typically move from this to using the navigation DSL artefact for more control over the navigation structure.<p class="paragraph"/><h3>What is a navigation item?</h3><p class="paragraph"/>An item is a place the user can reach in your navigation structure. Every item results in a menu item and link. Whether it is visible or enabled can be determined at runtime.<p class="paragraph"/>Items are always inside one scope.<p class="paragraph"/>Items can have child items.<p class="paragraph"/>Items must be resolvable from a controller/action pair, so the navigation API can always tell where the user is in the structure if the current controller/action is known and you have an item declared for them.<p class="paragraph"/><h3>What is a Scope?</h3><p class="paragraph"/>A scope is a name that identifies one or more navigation items. Top-level scopes are called root scopes and represent your main groupings of navigation items. For example you may have your application navigation for regular users and an admin root scope for backend administration.<p class="paragraph"/>Example of scope names:
+<div class="code"><pre>app                     // typically your <span class="java&#45;keyword">default</span> app navigation root scope
+app/messages            // the <span class="java&#45;quote">"messages"</span> item in the <span class="java&#45;quote">"app"</span> root scope
+admin/scaffolding/book  // the <span class="java&#45;quote">"book"</span> item under <span class="java&#45;quote">"scaffolding"</span> item in the <span class="java&#45;quote">"admin"</span> scope
+plugin.cms/admin        // the <span class="java&#45;quote">"admin"</span> item supplied by the <span class="java&#45;quote">"CMS"</span> plugin
+plugin.socialFeed/feeds // the <span class="java&#45;quote">"feeds"</span> item supplied by the <span class="java&#45;quote">"social&#45;feed"</span> plugin</pre></div><p class="paragraph"/>Root scopes do not generate any menu links themselves, they are merely containers for your top level navigation items. They enable you to have multiple sets of navigation for different contexts.<p class="paragraph"/>The items that scopes refer to can be nested arbitrarily. It is however generally recommended that you use at most 2 levels of navigation, sometimes three if really necessary. This is purely because of the user experience issues with deep navigation.<p class="paragraph"/>Usually you should factor out deep navigation into separate root scopes. For example most applications would have the "app" scope, a "footer" scope for footer links like Terms of Use, Support etc., and a "user" scope for log in/out and so on.<p class="paragraph"/><h3>What is an Activation Path?</h3><p class="paragraph"/>An activation path is a string that represents the currently active navigation item. This may be a few levels down in your navigation structure and represents the breadcrumb trail the user would see to get to the location they are currently viewing.<p class="paragraph"/><blockquote class="note">
+Breadcrumbs themselves represent a navigational superset of your app's primary navigation structure. They are not supported in this release of the API, because the work has not yet been done to declare breadcrumbs that represent non-navigational items i.e. nested content inside a multi-page document is not part of your regular site navigation.
+</blockquote><p class="paragraph"/>The activation path is set on the current request and indicates which node is currently active. By default navigation API attempts to identify the correct activation path in your structure using the current controller and action, much like reverse URL mapping.<p class="paragraph"/>However you can explicitly set the activation path using a tag or some code, for cases where you need to "fudge" it - for example if your action performs some odd redirection, or the endpoint is simply a GSP view which cannot be reversed to a location in the structure.
+
+
+<h2 id="navigation_getting_started">7.2 Getting Started</h2>
+The first thing you need to do is install the platform-core plugin if you haven't already.<p class="paragraph"/>If you then run your application and you have some existing controllers you'll find that if you add the nav:<a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> tag to one of your sitemesh layouts or GSP pages you will see top-level navigation for each of your controllers.<p class="paragraph"/>
+
+
+<h2 id="navigation_by_convention">7.3 Navigation by convention</h2>
+To get you started quickly, all your controllers will be automatically registered in the "app" scope and each controller has sub-items for each of it actions.<p class="paragraph"/>All the tags default to the "app" scope if you don't supply a scope and the current controller/action are within that scope, so it just works out of the box for the simple cases. So add the following to your sitemesh layout or GSP:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:primary/&#62;&#10;&#60;nav:secondary/&#62;&#10;</pre><p class="paragraph"/>This will render one or two &#60;ul&#62; tags for the "app" scope based on the currently active controller/action pair.<p class="paragraph"/>By default all your controllers are automatically declared for you inside the "app" scope if they are not explicitly declared in a navigation DSL artefact and the navigationScope property is not set on them.<p class="paragraph"/>These controller scopes have a nested item for each action defined on the controller, including the default action (the same as the link for e controller scope itself).<p class="paragraph"/><h3>Moving some controllers from the default app navigation scope</h3><p class="paragraph"/>You often have some controllers that you don't want to appear in the main navigation of the application. You may want these to appear in an admin interface for example. To do this with convention based navigation you can just add a static navigationScope property to controllers.<p class="paragraph"/><pre class="brush: groovy;">&#10;class BookController &#123;&#10;    static scaffold = Book&#10;    &#10;    static navigationScope = 'admin'&#10;&#125;&#10;</pre><p class="paragraph"/>This allows you to push controllers into another scope. Note that plugin controllers are automatically namespaced into a scope under "plugin.&#60;pluginName&#62;", in a scope beneath this with the value of the navigationScope property.<p class="paragraph"/>You will not need to change your tags to render the admin navigation - if the controller/action the user is viewing resolves to an item inside the admin scope, the nav:primary tag will render the admin scope.<p class="paragraph"/>
+
+
+<h2 id="primary_navigation">7.4 What is primary and secondary navigation?</h2>
+The primary navigation is the top level application the user sees, and the secondary is the context-sensitive sub items of the currently active primary item.<p class="paragraph"/>Contemporary site styles typically separate out the primary and secondary navigation.<p class="paragraph"/>The primary and secondary tags are geared up for this and automatically lookup up the scope and activation path to work out what to render.<p class="paragraph"/>Normally you will only use these once in a page.<p class="paragraph"/>
+
+
+<h2 id="menu_navigation">7.5 Rendering other menus</h2>
+You can render any part of your navigation structure as a menu as many times as you like anywhere in your pages, using the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/><h3>Rendering multiple navigation scopes on the same page</h3><p class="paragraph"/>A typical contemporary application will have something like three separate menus used on most pages; main, user and footer.<p class="paragraph"/>The main menu would use <a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> &#38; <a href="../ref/Navigation Tags/secondary.html" class="navigationTags">secondary</a> tags.<p class="paragraph"/>You would then render the user and footer navigation using the menu tag, and passing the user and footer scopes:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;html&#62;&#10;&#60;body&#62;&#10;    &#60;nav:primary/&#62;&#10;    &#60;nav:secondary/&#62;&#10;&#10;    &#60;div id="user&#45;nav"&#62;&#10;        &#60;nav:menu scope="user"/&#62;&#10;    &#60;/div&#62;    &#10;&#10;    &#60;g:layoutBody/&#62;&#10;&#10;    &#60;div id="footer&#45;nav"&#62;&#10;        &#60;nav:menu scope="footer"/&#62;&#10;    &#60;/div&#62;    &#10;&#60;/body&#62;&#10;&#60;/html&#62;&#10;</pre><p class="paragraph"/>This results in a page where there are actually for navigation renderings, showing different scopes.<p class="paragraph"/>
+
+
+<h2 id="using_navigation_dsl">7.6 Using the Navigation DSL</h2>
+To declare navigation items you use navigation DSL artefacts to determine the items in each scope. Scopes are named and can be nested to provide a hierarchy.<p class="paragraph"/>Navigation artefacts are groovy scripts end in the name "Navigation" in <code>grails-app/conf</code>.<p class="paragraph"/>Here's an example for the various ways to use the DSL to declare scopes and items:<p class="paragraph"/>Example contents of <code>grails-app/conf/AppNavigation.groovy</code>:
+<pre class="brush: groovy;">&#10;navigation = &#123;&#10;    // Declare the "app" scope, used by default in tags&#10;    app &#123;&#10;    &#10;        // A nav item pointing to HomeController, using the default action&#10;        home()&#10;&#10;        // Items pointing to ContentController, using the specific action&#10;        about(controller:'content')&#10;        contact(controller:'content')&#10;        help(controller:'content')&#10;        &#10;        // Some user interface actions in second&#45;level nav&#10;        // All in BooksController&#10;        books &#123;&#10;            // "list" action in "books" controller&#10;            list()&#10;            // "create" action in "books" controller&#10;            create()&#10;        &#125;&#10;        &#10;        // More convoluted stuff split across controllers/locations&#10;        support(controller:'content', action:'support') &#123;&#10;            faq(url:'http://faqs.mysite.com') // point to CMS&#10;            makeRequest(controller:'supportRequest', action:'create')&#10;        &#125;&#10;    &#125;&#10;    &#10;    // Some back&#45;end admin scaffolding stuff in a separate scope&#10;    admin &#123;&#10;        // Use "list" action as default item, even if its not default action&#10;        // and create automatic sub&#45;items for the other actions&#10;        books(controller:'bookAdmin', action:'list, create, search')&#10;        &#10;        // User admin, with default screen using "search" action&#10;        users(controller:'userAdmin', action:'search') &#123;&#10;            // Declare action alias so "create" is active for both "create" and "update" actions&#10;            create(action:'create', actionAliases:'update')&#10;        &#125;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>You can also use overrides in the navigation DSL to move items from one scope to another for example to move items declared by a plugin into your primary application navigation.
+<blockquote class="note">This part is not implemented in 1.0.M2/M3 - code sample to be written</blockquote><p class="paragraph"/>Using tags such as the <a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> and <a href="../ref/Navigation Tags/secondary.html" class="navigationTags">secondary</a> navigation tags you can render all the page elements you need.<p class="paragraph"/><h3>The Navigation DSL Definition</h3><p class="paragraph"/>The script must return a Closure in the <code>navigation</code> variable in the binding.<p class="paragraph"/>This closure represents the DSL and method invocations have a special meaning within the DSL.<p class="paragraph"/>The name used in method calls is used to construct the activation path of each item. So a call to "app" that has a call to "messages" which has a closure that calls "inbox" will create:
+<ol>
+<li>A scope called "app"</li>
+<li>A top-level item in the "app" scope, called "messages", with activation path <code>app/message</code></li>
+</ol><p class="paragraph"/># A nested item under "messages" called "inbox" with activation path <code>app/messages/inbox</code><p class="paragraph"/><h4>Top level method invocations (root scopes)</h4><p class="paragraph"/>The top-level method calls that pass a Closure define root scopes in the navigation structure.<p class="paragraph"/>The "app" scope is a prime example of this:<p class="paragraph"/><pre class="brush: groovy;">&#10;navigation = &#123;&#10;    app &#123;&#10;        home controller:'test', data:&#91;icon:'house'&#93;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>By default scopes defined by Navigation artefacts within plugins are automatically namespaced to prevent collisions with application namespaces.<p class="paragraph"/>Thus the scope "app" in a plugin called "SpringSecurityCore" would become the scope "plugin.springSecurityCore.app". If a plugin defines the scope with the <code>global:true</code> argument, this will not happen:<p class="paragraph"/><pre class="brush: groovy;">&#10;// Example of a plugin exposing a root scope without namespacing&#10;navigation = &#123;&#10;    app(global:true) &#123;&#10;        contact controller:'test', data:&#91;icon:'mail'&#93;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><h4>Nested method calls - defining navigation items</h4><p class="paragraph"/>The DSL supports the following arguments when defining a navigation items.<p class="paragraph"/><h4>Linking arguments</h4><p class="paragraph"/>These are <code>controller</code>, <code>action</code>, <code>uri</code>, <code>url</code> and <code>view</code>. These are passed to <code>g:link</code> to create links. The "view" attribute is handled internally and removed and converted to "uri" for the purpose of calling g:link<p class="paragraph"/>These values are passed through to the navigation tags for link rendering just as you would expect when calling <code>g:link</code>.<p class="paragraph"/>There are some special behaviours however:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>controller</code></td><td>Optional - it will be inherited from the parent node if the parent uses <code>controller</code> to create its link, or failing that it will use the name of the DSL method call</td></tr><tr class="table-even"><td><code>action</code></td><td>Optional - it will fall back to the name of the method call if the controller is specified or inherited. If the controller was not specified either (and hence "uses up" the method call name), this will use the default action of the controller or "index" if none is set. The <code>action</code> value can be a List or comma-delimited string. If it is, the first element is the action used to generate the item's link, and any other actions listed will have sub-items created for them, in alphabetical order.</td></tr><tr class="table-odd"><td><code>actionAliases</code></td><td>Optional - list of actions that will also <strong class="bold">activate</strong> this navigation item. The link is always to the <code>action</code> defined for the item in the DSL, but if the current controller/action resolves to an action in this alias list, the navigation item will appear to be active. Used for those situations where you have multiple actions presenting the same user view i.e. create/save, edit/update</td></tr></table><p class="paragraph"/><h4>Visibility and Status</h4><p class="paragraph"/>You can control per request whether items are visible or enabled, or set this in the navigation structure statically.<p class="paragraph"/>The arguments:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>visible</code></td><td>Determines whether the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a delegate that supplies request and application properties (see below)</td></tr><tr class="table-even"><td><code>enabled</code></td><td>Determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a delegate that supplies request and application properties (see below)</td></tr></table><p class="paragraph"/>Typically you will want to hide items if the user is not permitted to see them. An example of doing this with Spring Security Core:<p class="paragraph"/><pre class="brush: groovy;">&#10;import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils&#10;&#10;def loggedIn = &#123; &#45;&#62; &#10;    springSecurityService.principal instanceof String&#10;&#125;&#10;def loggedOut = &#123; &#45;&#62; &#10;    !(springSecurityService.principal instanceof String)&#10;&#125;&#10;def isAdmin = &#123; &#45;&#62; &#10;    SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')&#10;&#125;&#10;&#10;navigation = &#123;&#10;    app &#123;&#10;        home controller:'test', data:&#91;icon:'house'&#93;&#10;        …&#10;    &#125;&#10;    &#10;    admin &#123;&#10;        superUserStuff controller:'admin', visible: isAdmin&#10;        …&#10;    &#125;&#10;&#10;    user &#123;&#10;        login controller:'auth', action:'login', visible: notLoggedIn&#10;        logout controller:'auth', action:'logout', visible: loggedIn&#10;        signup controller:'auth', action:'signup', visible: notLoggedIn&#10;        profile controller:'auth', action:'profile', visible: loggedIn&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>Note how the Closures are "def"'d in the script to make them reusable and reachable within the DSL<p class="paragraph"/>The closures receive a delegate which resolves the following standard Grails properties:
+<ul class="star">
+<li>grailsApplication</li>
+<li>pageScope</li>
+<li>session</li>
+<li>request</li>
+<li>controllerName</li>
+<li>actionName</li>
+<li>flash</li>
+<li>params</li>
+</ul><p class="paragraph"/>Any unresolved properties will resolve to the model (pageScope) and failing that, to the application's bean context, so you can resolve service beans etc by just accessing them by name.<p class="paragraph"/><h4>Title text</h4><p class="paragraph"/>The title of an item is the text used to display the navigation item.<p class="paragraph"/>Two arguments are used for this:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>title</code></td><td>Optional. Represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path <code>app/messages/inbox</code> becomes the i18n code <code>nav.app.messages.inbox</code></td></tr><tr class="table-even"><td><code>titleText</code></td><td>Optional. represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of <code>title</code></td></tr></table><p class="paragraph"/>For automatically created action navigation items, the titleText defaults to the "human friendly" form of the action name. i.e. "index" becomes "Index", "showItems" becomes "Show Items".<p class="paragraph"/><h4>Application custom data</h4><p class="paragraph"/>Each item can have arbitrary data associated with it - but note that this data is singleton and should not change at runtime.<p class="paragraph"/>Typically you would use this to associate some extra data such as an icon name, which you then use in custom menu rendering code.<p class="paragraph"/>Just put the values into the "data" Map:<p class="paragraph"/><pre class="brush: groovy;">&#10;navigation = &#123;&#10;    app &#123;&#10;        home controller:'test', action:'home', data:&#91;icon:'house'&#93;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><h4>Ordering of items</h4><p class="paragraph"/>Items are ordered naturally in the order they are declared in the DSL.<p class="paragraph"/>However you may wish to manually order items, for example so that plugins (or the application) can inject items into certain positions in your navigation.<p class="paragraph"/>Just pass the integer value in the <code>order</code> argument:<p class="paragraph"/><pre class="brush: groovy;">&#10;navigation = &#123;&#10;    app &#123;&#10;        home controller:'test', action:'home', order:&#45;1000&#10;        about controller:'test', action:'about', order:100&#10;        contact controller:'test', action:'contact', order:500 data:&#91;icon:'mail'&#93;&#10;        messages(controller:'test', data:&#91;icon:'inbox'&#93;, order:10) &#123;&#10;            inbox action:'inbox'&#10;            archive action:'archive'&#10;            trash action:'trash', order:99999999 // always last&#10;        &#125;&#10;    &#125;&#10;</pre>
+
+
+
+<h2 id="navigation_tags">7.7 The Navigation Tags</h2>
+There are a few Navigation tags available, all detailed in the reference section.<p class="paragraph"/>The most common tags you will use are explained here.<p class="paragraph"/>It is important to understand that all the tags work by default using the current scope and activation path as determined by the request - but you can override scope and path on all of these tags to render anything you like.<p class="paragraph"/>Navigation is rendered by default as an HTML <code>&#60;ul&#62;</code> tag with an <code>&#60;li&#62;</code> containing a single link for each of the items. Nested items are rendered as nested <code>&#60;ul&#62;</code>.<p class="paragraph"/>All navigation rendering tags support attributes for CSS class, id and custom rendering of items if required. These are still always rendered within <code>&#60;ul&#62;</code>.<p class="paragraph"/><h3>nav:primary</h3><p class="paragraph"/>Use this tag to render the primary user navigation of your site:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:primary scope="admin" id="nav" class="admin"/&#62;&#10;&#10;&#60;%&#45;&#45; With custom item rendering &#45;&#45;%&#62;&#10;&#60;nav:primary scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#10;   &#60;p:callTag tag="g:link" attrs="$&#123;linkArgs + &#91;class:'nav button'&#93;&#125;"&#62;&#10;      &#60;nav:title item="$&#123;item&#125;"/&#62;&#10;   &#60;/p:callTag&#62;&#10;   &#60;/li&#62;&#10;&#60;/nav:primary&#62;&#10;</pre><p class="paragraph"/>This supports custom rendering in the same way as the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/>See the <a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> tag reference for full details.<p class="paragraph"/><h3>nav:secondary</h3><p class="paragraph"/>Use this tag to render the second-level navigation based on the selected item within the current primary navigation. The scope resolved by <code>nav:primary</code> is stored in the request so that this tag knows which scope to use:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:secondary id="secondary&#45;nav" class="admin"/&#62;&#10;</pre><p class="paragraph"/>This supports custom rendering in the same way as the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/>See the <a href="../ref/Navigation Tags/secondary.html" class="navigationTags">secondary</a> tag reference for full details.<p class="paragraph"/><h3>nav:menu</h3><p class="paragraph"/>The menu tag is used internally by the primary/secondary tags and can be called directly to render any part of the navigation structure, with any activation path.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:menu id="main&#45;nav"/&#62;&#10;&#10;&#60;%&#45;&#45; Render the admin nav 3&#45;deep, including all nested descendents whether active or not &#45;&#45;%&#62;&#10;&#60;nav:menu scope="admin" depth="3" forceChildren="true"/&#62;&#10;&#10;&#60;%&#45;&#45; With custom item rendering &#45;&#45;%&#62;&#10;&#60;nav:menu scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#10;   &#60;p:callTag tag="g:link" attrs="$&#123;linkArgs + &#91;class:'nav button'&#93;&#125;"&#62;&#10;      &#60;nav:title item="$&#123;item&#125;"/&#62;&#10;   &#60;/p:callTag&#62;&#10;   &#60;/li&#62;&#10;&#60;/nav:menu&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag reference for full details.<p class="paragraph"/><h3>nav:title</h3><p class="paragraph"/>This renders the i18n title of a specific navigation item passed to it; for use in custom menu rendering.<p class="paragraph"/><pre class="brush: groovy;">&#10;&#60;nav:primary scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#60;nav:title item="$&#123;item&#125;"/&#62;&#60;/li&#62;&#10;&#60;/nav:primary&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag reference for full details.<p class="paragraph"/><h3>nav:set</h3><p class="paragraph"/>You can call this tag from inside a controller or GSP if you need to define request-specific parameters.<p class="paragraph"/>You can "fudge" the current request's activation path or set the default scope to be used by navigation tags.<p class="paragraph"/>You may need to do this inside an error.gsp for example, or inside admin pages to reuse a generic theme that renders navigation using <code>nav:primary</code>.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;html&#62;&#10;&#60;body&#62;&#10;    &#60;!&#45;&#45; pretend we are in messages/inbox even though we are in a GSP with no controller &#45;&#45;&#62;&#10;    &#60;nav:set path="app/messages/inbox"/&#62;&#10;    &#60;nav:set scope="admin"/&#62;&#10;&#10;    &#60;!&#45;&#45; or set those together &#45;&#45;&#62;&#10;    &#60;nav:set path="app/messages/inbox" scope="admin"/&#62;&#10;&#10;    &#60;!&#45;&#45; these will use whatever the current active path and scope are &#45;&#45;&#62;&#10;    &#60;nav:primary/&#62;&#10;    &#60;nav:secondary/&#62;&#10;&#10;    &#60;p&#62;Something went wrong!&#60;/p&#62;&#10;&#60;/body&#62;&#10;&#60;/html&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/set.html" class="navigationTags">set</a> tag reference for full details.
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                <div class="toc-item prev-left"><a href="../guide/injection.html">&lt;&lt; <strong>6</strong><span>Injection API</span></a></div>
+                
+                <div class="toc-item next-right"><a href="../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Beans</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Beans/grailsConventions.html">grailsConventions</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Beans/grailsEvents.html">grailsEvents</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Beans/grailsInjection.html">grailsInjection</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Beans/grailsNavigation.html">grailsNavigation</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Beans/grailsPluginConfiguration.html">grailsPluginConfiguration</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Beans/grailsSecurity.html">grailsSecurity</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Beans/grailsUiExtensions.html">grailsUiExtensions</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Events Methods</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/countListeners.html">countListeners</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/event.html">event</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/on.html">on</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/removeListeners.html">removeListeners</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/waitFor.html">waitFor</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Global Properties</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Global%20Properties/pluginConfig.html">pluginConfig</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Navigation Tags</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/menu.html">menu</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/primary.html">primary</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/secondary.html">secondary</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/set.html">set</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/title.html">title</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Plugin Conventions</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Plugin%20Conventions/doWithConfig.html">doWithConfig</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Plugin%20Conventions/doWithConfigOptions.html">doWithConfigOptions</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Scripts/update-header.html">update-header</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Methods</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Methods/userHasAllRoles.html">userHasAllRoles</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Methods/userHasAnyRole.html">userHasAnyRole</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Methods/userIsAllowed.html">userIsAllowed</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Methods/withUser.html">withUser</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Properties</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Properties/securityIdentity.html">securityIdentity</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Properties/securityInfo.html">securityInfo</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Tags</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/createLoginLink.html">createLoginLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/createLogoutLink.html">createLogoutLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/createSignupLink.html">createSignupLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/identity.html">identity</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/ifLoggedIn.html">ifLoggedIn</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/ifNotLoggedIn.html">ifNotLoggedIn</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/ifNotPermitted.html">ifNotPermitted</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/ifPermitted.html">ifPermitted</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/info.html">info</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/loginButton.html">loginButton</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/logoutButton.html">logoutButton</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Security%20Tags/signupButton.html">signupButton</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags System</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Tags%20System/config.html">config</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Tags%20System/requiresBean.html">requiresBean</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Methods</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Methods/displayFlashMessage.html">displayFlashMessage</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Methods/displayMessage.html">displayMessage</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Properties</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Properties/pluginFlash.html">pluginFlash</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Properties/pluginRequestAttributes.html">pluginRequestAttributes</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Properties/pluginSession.html">pluginSession</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Tags</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/attrIfSet.html">attrIfSet</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/button.html">button</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/callTag.html">callTag</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/displayMessage.html">displayMessage</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/dummyText.html">dummyText</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/joinClasses.html">joinClasses</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/label.html">label</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/organization.html">organization</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/siteLink.html">siteLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/siteName.html">siteName</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/siteURL.html">siteURL</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/smartLink.html">smartLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/text.html">text</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/textScope.html">textScope</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/year.html">year</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Utility Classes</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Utility%20Classes/TagLibUtils.html">TagLibUtils</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    &copy; 2012 Marc Palmer & Stéphane Maldini
+    Please contact the authors with any corrections or suggestions
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

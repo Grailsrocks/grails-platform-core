@@ -31,7 +31,9 @@ All Classes
 <BR>
 <A HREF="org/grails/plugin/platform/config/ConfigOptionsBuilder.html" title="class in org.grails.plugin.platform.config" target="classFrame">ConfigOptionsBuilder</A>
 <BR>
-<A HREF="org/grails/plugin/platform/conventions/Conventions.html" title="class in org.grails.plugin.platform.conventions" target="classFrame">Conventions</A>
+<A HREF="org/grails/plugin/platform/conventions/Conventions.html" title="interface in org.grails.plugin.platform.conventions" target="classFrame"><I>Conventions</I></A>
+<BR>
+<A HREF="org/grails/plugin/platform/conventions/ConventionsImpl.html" title="class in org.grails.plugin.platform.conventions" target="classFrame">ConventionsImpl</A>
 <BR>
 <A HREF="org/grails/plugin/platform/conventions/DSLBlockCommand.html" title="class in org.grails.plugin.platform.conventions" target="classFrame">DSLBlockCommand</A>
 <BR>
@@ -41,11 +43,13 @@ All Classes
 <BR>
 <A HREF="org/grails/plugin/platform/conventions/DSLEvaluator.html" title="class in org.grails.plugin.platform.conventions" target="classFrame">DSLEvaluator</A>
 <BR>
+<A HREF="org/grails/plugin/platform/conventions/DSLNamedArgsBlockCommand.html" title="class in org.grails.plugin.platform.conventions" target="classFrame">DSLNamedArgsBlockCommand</A>
+<BR>
 <A HREF="org/grails/plugin/platform/conventions/DSLNamedArgsCallCommand.html" title="class in org.grails.plugin.platform.conventions" target="classFrame">DSLNamedArgsCallCommand</A>
 <BR>
 <A HREF="org/grails/plugin/platform/conventions/DSLSetValueCommand.html" title="class in org.grails.plugin.platform.conventions" target="classFrame">DSLSetValueCommand</A>
 <BR>
-<A HREF="org/grails/plugin/platform/events/dispatcher/DefaultEventsDispatcher.html" title="class in org.grails.plugin.platform.events.dispatcher" target="classFrame">DefaultEventsDispatcher</A>
+<A HREF="org/grails/plugin/platform/events/DefaultEventsClass.html" title="class in org.grails.plugin.platform.events" target="classFrame">DefaultEventsClass</A>
 <BR>
 <A HREF="org/grails/plugin/platform/events/publisher/DefaultEventsPublisher.html" title="class in org.grails.plugin.platform.events.publisher" target="classFrame">DefaultEventsPublisher</A>
 <BR>
@@ -59,23 +63,35 @@ All Classes
 <BR>
 <A HREF="org/grails/plugin/platform/events/registry/DefaultEventsRegistry.ListenerHandler.html" title="class in org.grails.plugin.platform.events.registry.DefaultEventsRegistry" target="classFrame">DefaultEventsRegistry.ListenerHandler</A>
 <BR>
+<A HREF="org/grails/plugin/platform/navigation/DefaultNavigationClass.html" title="class in org.grails.plugin.platform.navigation" target="classFrame">DefaultNavigationClass</A>
+<BR>
+<A HREF="grails/events/EventDeclarationException.html" title="class in grails.events" target="classFrame">EventDeclarationException</A>
+<BR>
+<A HREF="org/grails/plugin/platform/events/EventDefinition.html" title="class in org.grails.plugin.platform.events" target="classFrame">EventDefinition</A>
+<BR>
+<A HREF="grails/events/EventException.html" title="class in grails.events" target="classFrame">EventException</A>
+<BR>
 <A HREF="org/grails/plugin/platform/events/registry/EventHandler.html" title="interface in org.grails.plugin.platform.events.registry" target="classFrame"><I>EventHandler</I></A>
 <BR>
-<A HREF="org/grails/plugin/platform/events/dispatcher/builder/EventMapping.html" title="class in org.grails.plugin.platform.events.dispatcher.builder" target="classFrame">EventMapping</A>
-<BR>
-<A HREF="org/grails/plugin/platform/events/EventObject.html" title="class in org.grails.plugin.platform.events" target="classFrame">EventObject</A>
+<A HREF="org/grails/plugin/platform/events/EventMessage.html" title="class in org.grails.plugin.platform.events" target="classFrame">EventMessage</A>
 <BR>
 <A HREF="org/grails/plugin/platform/events/EventReply.html" title="class in org.grails.plugin.platform.events" target="classFrame">EventReply</A>
 <BR>
-<A HREF="org/grails/plugin/platform/events/Events.html" title="class in org.grails.plugin.platform.events" target="classFrame">Events</A>
+<A HREF="org/grails/plugin/platform/events/Events.html" title="interface in org.grails.plugin.platform.events" target="classFrame"><I>Events</I></A>
 <BR>
-<A HREF="org/grails/plugin/platform/events/dispatcher/EventsDispatcher.html" title="interface in org.grails.plugin.platform.events.dispatcher" target="classFrame"><I>EventsDispatcher</I></A>
+<A HREF="org/grails/plugin/platform/events/EventsArtefactHandler.html" title="class in org.grails.plugin.platform.events" target="classFrame">EventsArtefactHandler</A>
 <BR>
-<A HREF="org/grails/plugin/platform/events/dispatcher/builder/EventsMethodBuilder.html" title="class in org.grails.plugin.platform.events.dispatcher.builder" target="classFrame">EventsMethodBuilder</A>
+<A HREF="org/grails/plugin/platform/events/EventsClass.html" title="interface in org.grails.plugin.platform.events" target="classFrame"><I>EventsClass</I></A>
+<BR>
+<A HREF="org/grails/plugin/platform/events/EventsImpl.html" title="class in org.grails.plugin.platform.events" target="classFrame">EventsImpl</A>
 <BR>
 <A HREF="org/grails/plugin/platform/events/publisher/EventsPublisher.html" title="interface in org.grails.plugin.platform.events.publisher" target="classFrame"><I>EventsPublisher</I></A>
 <BR>
 <A HREF="org/grails/plugin/platform/events/registry/EventsRegistry.html" title="interface in org.grails.plugin.platform.events.registry" target="classFrame"><I>EventsRegistry</I></A>
+<BR>
+<A HREF="org/grails/plugin/platform/events/utils/EventsUtils.html" title="class in org.grails.plugin.platform.events.utils" target="classFrame">EventsUtils</A>
+<BR>
+<A HREF="org/grails/plugin/platform/events/publisher/GormBridgePublisher.html" title="class in org.grails.plugin.platform.events.publisher" target="classFrame">GormBridgePublisher</A>
 <BR>
 <A HREF="org/grails/plugin/platform/events/dispatcher/GormTopicSupport.html" title="interface in org.grails.plugin.platform.events.dispatcher" target="classFrame"><I>GormTopicSupport</I></A>
 <BR>
@@ -85,7 +101,7 @@ All Classes
 <BR>
 <A HREF="org/grails/plugin/platform/injection/InjectedMethod.html" title="class in org.grails.plugin.platform.injection" target="classFrame">InjectedMethod</A>
 <BR>
-<A HREF="org/grails/plugin/platform/injection/Injection.html" title="class in org.grails.plugin.platform.injection" target="classFrame">Injection</A>
+<A HREF="org/grails/plugin/platform/injection/Injection.html" title="interface in org.grails.plugin.platform.injection" target="classFrame"><I>Injection</I></A>
 <BR>
 <A HREF="org/grails/plugin/platform/injection/InjectionBuilder.html" title="class in org.grails.plugin.platform.injection" target="classFrame">InjectionBuilder</A>
 <BR>
@@ -93,15 +109,23 @@ All Classes
 <BR>
 <A HREF="org/grails/plugin/platform/injection/InjectionBuilderMethodDelegate.html" title="class in org.grails.plugin.platform.injection" target="classFrame">InjectionBuilderMethodDelegate</A>
 <BR>
-<A HREF="org/grails/plugin/platform/events/Listener.html" title="annotation type in org.grails.plugin.platform.events" target="classFrame">Listener</A>
+<A HREF="org/grails/plugin/platform/injection/InjectionImpl.html" title="class in org.grails.plugin.platform.injection" target="classFrame">InjectionImpl</A>
+<BR>
+<A HREF="grails/events/Listener.html" title="annotation type in grails.events" target="classFrame">Listener</A>
 <BR>
 <A HREF="org/grails/plugin/platform/events/ListenerId.html" title="class in org.grails.plugin.platform.events" target="classFrame">ListenerId</A>
 <BR>
-<A HREF="org/grails/plugin/platform/events/dispatcher/builder/MappedEventMethod.html" title="class in org.grails.plugin.platform.events.dispatcher.builder" target="classFrame">MappedEventMethod</A>
+<A HREF="org/grails/plugin/platform/events/test/MockEvents.html" title="class in org.grails.plugin.platform.events.test" target="classFrame">MockEvents</A>
 <BR>
-<A HREF="org/grails/plugin/platform/navigation/Navigation.html" title="class in org.grails.plugin.platform.navigation" target="classFrame">Navigation</A>
+<A HREF="org/grails/plugin/platform/navigation/Navigation.html" title="interface in org.grails.plugin.platform.navigation" target="classFrame"><I>Navigation</I></A>
 <BR>
-<A HREF="org/grails/plugin/platform/navigation/NavigationNode.html" title="class in org.grails.plugin.platform.navigation" target="classFrame">NavigationNode</A>
+<A HREF="org/grails/plugin/platform/navigation/NavigationArtefactHandler.html" title="class in org.grails.plugin.platform.navigation" target="classFrame">NavigationArtefactHandler</A>
+<BR>
+<A HREF="org/grails/plugin/platform/navigation/NavigationClass.html" title="interface in org.grails.plugin.platform.navigation" target="classFrame"><I>NavigationClass</I></A>
+<BR>
+<A HREF="org/grails/plugin/platform/navigation/NavigationImpl.html" title="class in org.grails.plugin.platform.navigation" target="classFrame">NavigationImpl</A>
+<BR>
+<A HREF="org/grails/plugin/platform/navigation/NavigationItem.html" title="class in org.grails.plugin.platform.navigation" target="classFrame">NavigationItem</A>
 <BR>
 <A HREF="org/grails/plugin/platform/navigation/NavigationScope.html" title="class in org.grails.plugin.platform.navigation" target="classFrame">NavigationScope</A>
 <BR>
@@ -117,25 +141,33 @@ All Classes
 <BR>
 <A HREF="DefaultPackage/PlatformCoreUrlMappings.html" title="class in PlatformCoreUrlMappings" target="classFrame">PlatformCoreUrlMappings</A>
 <BR>
+<A HREF="grails/platform/PlatformException.html" title="class in grails.platform" target="classFrame">PlatformException</A>
+<BR>
 <A HREF="org/grails/plugin/platform/PlatformTagLib.html" title="class in org.grails.plugin.platform" target="classFrame">PlatformTagLib</A>
 <BR>
 <A HREF="org/grails/plugin/platform/controllers/PlatformToolsController.html" title="class in org.grails.plugin.platform.controllers" target="classFrame">PlatformToolsController</A>
 <BR>
-<A HREF="org/grails/plugin/platform/config/PluginConfiguration.html" title="class in org.grails.plugin.platform.config" target="classFrame">PluginConfiguration</A>
+<A HREF="org/grails/plugin/platform/config/PluginConfiguration.html" title="interface in org.grails.plugin.platform.config" target="classFrame"><I>PluginConfiguration</I></A>
 <BR>
 <A HREF="org/grails/plugin/platform/config/PluginConfigurationEntry.html" title="class in org.grails.plugin.platform.config" target="classFrame">PluginConfigurationEntry</A>
 <BR>
 <A HREF="org/grails/plugin/platform/config/PluginConfigurationFactory.html" title="class in org.grails.plugin.platform.config" target="classFrame">PluginConfigurationFactory</A>
 <BR>
+<A HREF="org/grails/plugin/platform/config/PluginConfigurationImpl.html" title="class in org.grails.plugin.platform.config" target="classFrame">PluginConfigurationImpl</A>
+<BR>
 <A HREF="org/grails/plugin/platform/util/PluginUtils.html" title="class in org.grails.plugin.platform.util" target="classFrame">PluginUtils</A>
+<BR>
+<A HREF="org/grails/plugin/platform/util/PropertyNamespacer.html" title="class in org.grails.plugin.platform.util" target="classFrame">PropertyNamespacer</A>
 <BR>
 <A HREF="org/grails/plugin/platform/test/SampleController.html" title="class in org.grails.plugin.platform.test" target="classFrame">SampleController</A>
 <BR>
 <A HREF="org/grails/plugin/platform/test/SampleService.html" title="class in org.grails.plugin.platform.test" target="classFrame">SampleService</A>
 <BR>
-<A HREF="org/grails/plugin/platform/security/Security.html" title="class in org.grails.plugin.platform.security" target="classFrame">Security</A>
+<A HREF="org/grails/plugin/platform/security/Security.html" title="interface in org.grails.plugin.platform.security" target="classFrame"><I>Security</I></A>
 <BR>
 <A HREF="org/grails/plugin/platform/security/SecurityBridge.html" title="interface in org.grails.plugin.platform.security" target="classFrame"><I>SecurityBridge</I></A>
+<BR>
+<A HREF="org/grails/plugin/platform/security/SecurityImpl.html" title="class in org.grails.plugin.platform.security" target="classFrame">SecurityImpl</A>
 <BR>
 <A HREF="org/grails/plugin/platform/SecurityTagLib.html" title="class in org.grails.plugin.platform" target="classFrame">SecurityTagLib</A>
 <BR>
@@ -149,13 +181,15 @@ All Classes
 <BR>
 <A HREF="org/grails/plugin/platform/ui/UiConstants.html" title="class in org.grails.plugin.platform.ui" target="classFrame">UiConstants</A>
 <BR>
+<A HREF="org/grails/plugin/platform/ui/UiExtensions.html" title="class in org.grails.plugin.platform.ui" target="classFrame">UiExtensions</A>
+<BR>
 <A HREF="org/grails/plugin/platform/UiExtensionsTagLib.html" title="class in org.grails.plugin.platform" target="classFrame">UiExtensionsTagLib</A>
 <BR>
-<A HREF="org/grails/plugin/platform/ui/UiHelper.html" title="class in org.grails.plugin.platform.ui" target="classFrame">UiHelper</A>
+<A HREF="org/grails/plugin/platform/conventions/UnsupportedDSLOperationException.html" title="class in org.grails.plugin.platform.conventions" target="classFrame">UnsupportedDSLOperationException</A>
 <BR>
 <A HREF="DefaultPackage/UrlMappings.html" title="class in UrlMappings" target="classFrame">UrlMappings</A>
 <BR>
-<A HREF="org/grails/plugin/platform/events/dispatcher/builder/WhenMapping.html" title="class in org.grails.plugin.platform.events.dispatcher.builder" target="classFrame">WhenMapping</A>
+<A HREF="org/grails/plugin/platform/util/ViewCallbackDelegate.html" title="class in org.grails.plugin.platform.util" target="classFrame">ViewCallbackDelegate</A>
 <BR>
 
 	  

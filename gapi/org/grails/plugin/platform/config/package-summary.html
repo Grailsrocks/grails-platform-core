@@ -83,6 +83,25 @@ Package org.grails.plugin.platform.config
 
 
 
+<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
+    <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
+    <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2">
+    <B>Interface Summary</B></FONT></TH>
+    </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="PluginConfiguration.html" title="class in org/grails/plugin/platform/config">PluginConfiguration</A></B></TD>
+        <TD>Public interface for the Plugin Configuration API</TD>
+        </TR>
+
+</TABLE>
+&nbsp;
+<P>
+<DL>
+</DL>
+<hr>
+    
+
 
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
     <TR BGCOLOR="#90DDF7" CLASS="TableHeadingColor">
@@ -92,17 +111,13 @@ Package org.grails.plugin.platform.config
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
         <TD WIDTH="15%"><B><A HREF="ConfigBuilder.html" title="class in org/grails/plugin/platform/config">ConfigBuilder</A></B></TD>
-        <TD></TD>
+        <TD>Builder for doWithConfig DSL</TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
         <TD WIDTH="15%"><B><A HREF="ConfigOptionsBuilder.html" title="class in org/grails/plugin/platform/config">ConfigOptionsBuilder</A></B></TD>
-        <TD></TD>
-        </TR>
-
-        <TR BGCOLOR="white" CLASS="TableRowColor">
-        <TD WIDTH="15%"><B><A HREF="PluginConfiguration.html" title="class in org/grails/plugin/platform/config">PluginConfiguration</A></B></TD>
-        <TD>Bean for declaring and accessing plugin config</TD>
+        <TD>Builder for the doWithConfigOptions DSL
+ Supports simple method calls like this:</TD>
         </TR>
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
@@ -112,7 +127,13 @@ Package org.grails.plugin.platform.config
 
         <TR BGCOLOR="white" CLASS="TableRowColor">
         <TD WIDTH="15%"><B><A HREF="PluginConfigurationFactory.html" title="class in org/grails/plugin/platform/config">PluginConfigurationFactory</A></B></TD>
-        <TD>This is really ugly hack to allow us to init before spring context is done</TD>
+        <TD>This is really ugly hack to allow us to init before spring context is done.
+ </TD>
+        </TR>
+
+        <TR BGCOLOR="white" CLASS="TableRowColor">
+        <TD WIDTH="15%"><B><A HREF="PluginConfigurationImpl.html" title="class in org/grails/plugin/platform/config">PluginConfigurationImpl</A></B></TD>
+        <TD>Bean for declaring and accessing plugin config</TD>
         </TR>
 
 </TABLE>

@@ -1,17 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Grails Plugin Platform Core 1.0.M1</title>
+    <title>Grails Plugin Platform Core 1.0.M3</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript" src="../../css/shCore.js"></script>
+    <script type="text/javascript" src="../../css/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="../../css/shBrushXml.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../css/shCoreMidnight.css"/>
     <script type="text/javascript">
-function addJsClass(el) {
-    var classes = document.body.className.split(" ");
-    classes.push("js");
-    document.body.className = classes.join(" ");
-}
+        SyntaxHighlighter.config.stripBrs = true;
+        SyntaxHighlighter.defaults['smart-tabs'] = true;
+        SyntaxHighlighter.all();
+        function addJsClass() {
+            var classes = document.body.className.split(" ");
+            classes.push("js");
+            document.body.className = classes.join(" ");
+        }
     </script>
 </head>
 
@@ -31,22 +38,22 @@ function addJsClass(el) {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/gettingStarted.html"><strong>2</strong><span>Getting Started</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>3</strong><span>UI Extensions</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>3</strong><span>Configuration API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>4</strong><span>Configuration API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/security.html"><strong>4</strong><span>Security API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/security.html"><strong>5</strong><span>Security API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>6</strong><span>Events API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>7</strong><span>Injection API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/nav.html"><strong>7</strong><span>Navigation API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/navigation.html"><strong>8</strong><span>Navigation API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
@@ -76,7 +83,8 @@ function addJsClass(el) {
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                This API is still under construction
+                <h1>grailsNavigation</h1><p class="paragraph"/>The grailsNavigation bean is an instance of
+<a href="../../gapi/org/grails/plugin/platform/navigation/Navigation.html" class="api">Navigation</a> that provides access to the data structures behind the <a href="../../guide/single.html#nav" class="guide">Navigation API</a>.<p class="paragraph"/>
 
             </div>
         </td>
@@ -111,7 +119,30 @@ function addJsClass(el) {
                             <div class="menu-item"><a href="../../ref/Beans/grailsSecurity.html">grailsSecurity</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Beans/grailsUiHelper.html">grailsUiHelper</a>
+                            <div class="menu-item"><a href="../../ref/Beans/grailsUiExtensions.html">grailsUiExtensions</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Events Methods</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Events%20Methods/countListeners.html">countListeners</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Events%20Methods/event.html">event</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Events%20Methods/on.html">on</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Events%20Methods/removeListeners.html">removeListeners</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Events%20Methods/waitFor.html">waitFor</a>
                             </div>
                             
                         </div>
@@ -123,6 +154,29 @@ function addJsClass(el) {
                             
                             
                             <div class="menu-item"><a href="../../ref/Global%20Properties/pluginConfig.html">pluginConfig</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Navigation Tags</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/menu.html">menu</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/primary.html">primary</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/secondary.html">secondary</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/set.html">set</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Navigation%20Tags/title.html">title</a>
                             </div>
                             
                         </div>
@@ -188,44 +242,44 @@ function addJsClass(el) {
                     </div>
                     
                     <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags Security</h1>
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Security Tags</h1>
                         <div class="menu-sub">
                             
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/createLoginLink.html">createLoginLink</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/createLoginLink.html">createLoginLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/createLogoutLink.html">createLogoutLink</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/createLogoutLink.html">createLogoutLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/createSignupLink.html">createSignupLink</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/createSignupLink.html">createSignupLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/identity.html">identity</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/identity.html">identity</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/ifLoggedIn.html">ifLoggedIn</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/ifLoggedIn.html">ifLoggedIn</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/ifNotLoggedIn.html">ifNotLoggedIn</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/ifNotLoggedIn.html">ifNotLoggedIn</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/ifNotPermitted.html">ifNotPermitted</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/ifNotPermitted.html">ifNotPermitted</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/ifPermitted.html">ifPermitted</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/ifPermitted.html">ifPermitted</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/info.html">info</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/info.html">info</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/loginButton.html">loginButton</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/loginButton.html">loginButton</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/logoutButton.html">logoutButton</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/logoutButton.html">logoutButton</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/signupButton.html">signupButton</a>
+                            <div class="menu-item"><a href="../../ref/Security%20Tags/signupButton.html">signupButton</a>
                             </div>
                             
                         </div>
@@ -246,50 +300,6 @@ function addJsClass(el) {
                     </div>
                     
                     <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags Ui Extension</h1>
-                        <div class="menu-sub">
-                            
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/button.html">button</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/callTag.html">callTag</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/displayMessage.html">displayMessage</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/dummyText.html">dummyText</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/joinClasses.html">joinClasses</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/label.html">label</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/organization.html">organization</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteLink.html">siteLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteName.html">siteName</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteURL.html">siteURL</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/smartLink.html">smartLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/year.html">year</a>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    
-                    <div class="menu-block">
                         <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Ui Extension Methods</h1>
                         <div class="menu-sub">
                             
@@ -298,6 +308,76 @@ function addJsClass(el) {
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Ui%20Extension%20Methods/displayMessage.html">displayMessage</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Ui Extension Properties</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Properties/pluginFlash.html">pluginFlash</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Properties/pluginRequestAttributes.html">pluginRequestAttributes</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Properties/pluginSession.html">pluginSession</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Ui Extension Tags</h1>
+                        <div class="menu-sub">
+                            
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/attrIfSet.html">attrIfSet</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/button.html">button</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/callTag.html">callTag</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/displayMessage.html">displayMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/dummyText.html">dummyText</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/joinClasses.html">joinClasses</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/organization.html">organization</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/siteLink.html">siteLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/siteName.html">siteName</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/siteURL.html">siteURL</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/smartLink.html">smartLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/text.html">text</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/textScope.html">textScope</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/year.html">year</a>
                             </div>
                             
                         </div>

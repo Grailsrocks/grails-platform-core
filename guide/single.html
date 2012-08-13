@@ -1,121 +1,162 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <head>
-        <title>Grails Plugin Platform Core 1.0.M1</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
-        <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+<head>
+    <title>Grails Plugin Platform Core 1.0.M3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+    <script type="text/javascript" src="../css/shCore.js"></script>
+    <script type="text/javascript" src="../css/shBrushXml.js"></script>
+    <script type="text/javascript" src="../css/shBrushGroovy.js"></script>
+    <link type="text/css" rel="stylesheet" href="../css/shCoreMidnight.css"/>
     <script type="text/javascript">
-function addJsClass(el) {
-    var classes = document.body.className.split(" ");
-    classes.push("js");
-    document.body.className = classes.join(" ");
-}
+        SyntaxHighlighter.config.stripBrs = true;
+        SyntaxHighlighter.defaults['smart-tabs'] = true;
+        SyntaxHighlighter.all();
+        function addJsClass() {
+            var classes = document.body.className.split(" ");
+            classes.push("js");
+            document.body.className = classes.join(" ");
+        }
     </script>
-    </head>
+</head>
 
-    <body class="body" onload="addJsClass();">
-        <div id="navigation">
-            <ul>
-                <li>
-                    <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
-                        <a href="../guide/index.html" class="button">Table of contents</a>
-                        <div id="nav-summary-childs" style="display:none;">
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#overview"><strong>1</strong><span>Overview</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#gettingStarted"><strong>2</strong><span>Getting Started</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#uiextension"><strong>3</strong><span>UI Extensions</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#configuration"><strong>4</strong><span>Configuration API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#security"><strong>5</strong><span>Security API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#events"><strong>6</strong><span>Events API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#injection"><strong>7</strong><span>Injection API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#navigation"><strong>8</strong><span>Navigation API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0"><a href="#convention"><strong>9</strong><span>Convention API</span></a></div>
-                            
-                        </div>
-                    </div>
-                </li>
-                <li class="separator selected">
-                    <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
-                </li>
-            </ul>
-        </div>
-        <div id="header">
-            <div class="images clearfix">
-                
-                
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#overview"><strong>1</strong><span>Overview</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#gettingStarted"><strong>2</strong><span>Getting Started</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#configuration"><strong>3</strong><span>Configuration API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#security"><strong>4</strong><span>Security API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#events"><strong>5</strong><span>Events Bus API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#injection"><strong>6</strong><span>Injection API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#nav"><strong>7</strong><span>Navigation API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#uiextension"><strong>8</strong><span>UI Extensions</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="#convention"><strong>9</strong><span>Convention API</span></a></div>
+                    
+                </div>
             </div>
-            <p>APIs and Tags for advanced Plugin integration</p>
-        </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>APIs and Tags for advanced Plugin integration</p>
+</div>
 
 
-        <table id="colset" border="0" cellpadding="0" cellspacing="0">
-            <tr>
-                <td id="col1">
-                    <div id="main" class="corner-all">
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
 
-                        <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                        <div class="project">
-                            <h1>Grails Plugin Platform Core - Reference Documentation</h1>
-                            <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (stephane.maldini@gmail.com)</p>
-                            <p><strong>Version:</strong> 1.0.M1</p>
-                            
-                        </div>
+                <div class="project">
+                    <h1>Grails Plugin Platform Core - Reference Documentation</h1>
+                    <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)</p>
+                    <p><strong>Version:</strong> 1.0.M3</p>
+                    
+                </div>
 
-                        
-                        <div id="table-of-content">
-                            <h2>Table of Contents</h2>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#overview"><strong>1</strong><span>Overview</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#apis"><strong>1.1</strong><span>The APIs</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#changelog"><strong>1.2</strong><span>Change log</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#knownissues"><strong>1.3</strong><span>Known Issues</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#gettingStarted"><strong>2</strong><span>Getting Started</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#uiextension"><strong>3</strong><span>UI Extensions</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#uix_tags"><strong>3.1</strong><span>Tags</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#uix_code"><strong>3.2</strong><span>Beans and utilities</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#configuration"><strong>4</strong><span>Configuration API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#changing_config"><strong>4.1</strong><span>Changing Application and Plugin Config Values</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#declaring_configuration_options"><strong>4.2</strong><span>Declaring Configuration Options</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#accessing_plugin_config"><strong>4.3</strong><span>Accessing Plugin Config</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#security"><strong>5</strong><span>Security API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:10px"><a href="#security_implementing_bridge"><strong>5.1</strong><span>Implementing a Security Bridge</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#events"><strong>6</strong><span>Events API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#injection"><strong>7</strong><span>Injection API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#navigation"><strong>8</strong><span>Navigation API</span></a></div>
-                            
-                            <div class="toc-item" style="margin-left:0px"><a href="#convention"><strong>9</strong><span>Convention API</span></a></div>
-                            
-                            <div style="clear:both" ></div>
-                        </div>
-                        
-                        
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#overview"><strong>1</strong><span>Overview</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#apis"><strong>1.1</strong><span>The APIs</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#changelog"><strong>1.2</strong><span>Change log</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#knownissues"><strong>1.3</strong><span>Known Issues</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#gettingStarted"><strong>2</strong><span>Getting Started</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#configuration"><strong>3</strong><span>Configuration API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#changing_config"><strong>3.1</strong><span>Changing Application and Plugin Config Values</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#declaring_configuration_options"><strong>3.2</strong><span>Declaring Configuration Options</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#accessing_plugin_config"><strong>3.3</strong><span>Accessing Plugin Config</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#security"><strong>4</strong><span>Security API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#security_implementing_bridge"><strong>4.1</strong><span>Implementing a Security Bridge</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#events"><strong>5</strong><span>Events Bus API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#sending"><strong>5.1</strong><span>Sending Events</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#listening"><strong>5.2</strong><span>Listening Events</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#replying"><strong>5.3</strong><span>Replying from Listeners</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#artifact"><strong>5.4</strong><span>Routing configuration -- The XxxEvents Artifact</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#gorm"><strong>5.5</strong><span>Listening GORM events</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#beans"><strong>5.6</strong><span>Spring Beans</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#secure"><strong>5.7</strong><span>Securing events</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#extensions"><strong>5.8</strong><span>Extensions</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#config"><strong>5.9</strong><span>Configuration properties</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#injection"><strong>6</strong><span>Injection API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#nav"><strong>7</strong><span>Navigation API</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#navigation_concepts"><strong>7.1</strong><span>Concepts</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#navigation_getting_started"><strong>7.2</strong><span>Getting Started</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#navigation_by_convention"><strong>7.3</strong><span>Navigation by convention</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#primary_navigation"><strong>7.4</strong><span>What is primary and secondary navigation?</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#menu_navigation"><strong>7.5</strong><span>Rendering other menus</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#using_navigation_dsl"><strong>7.6</strong><span>Using the Navigation DSL</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#navigation_tags"><strong>7.7</strong><span>The Navigation Tags</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#uiextension"><strong>8</strong><span>UI Extensions</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#uix_tags"><strong>8.1</strong><span>Tags</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#uix_properties"><strong>8.2</strong><span>Properties</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:10px"><a href="#uix_code"><strong>8.3</strong><span>Beans and utilities</span></a></div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#convention"><strong>9</strong><span>Convention API</span></a></div>
+                    
+                    <div style="clear:both" ></div>
+                </div>
+                
+                
 
 <h1 id="overview">1 Overview</h1>
 The Plugin Platform provides APIs and utilities that provide the glue required for advanced Grails plugin development and integration across multiple Grails versions, and turbo-charge the development of a new generation of plugins.<p class="paragraph"/>The founding principle is that these platform features should not be part of
@@ -127,17 +168,39 @@ The features include in this release include:
 <ul class="star">
 <li>Configuration API - Plugin-namespaced config, Config merging, validation and default values</li>
 <li>Security API - An abstraction of basic security features that most applications require, with implementations to be provided by plugins or your application</li>
-<li>UI Extensions - A set of tags and helper functions</li>
-</ul><p class="paragraph"/>Each feature is covered in more detail later in this documentation.<p class="paragraph"/>The platform is very self-referential - it uses own APIs - for example to provide event hooks for Grails application lifecycle, to declare dynamic methods on your controller and service artefacts, and to declare the configuration values that it uses.<p class="paragraph"/>All of these APIs are designed to be as simple as possible while providing some very high level features.<p class="paragraph"/>Use this platform to add tighter and more consistent integration to your own plugins.
+<li>UI Extensions - A set of tags and helper properties and functions</li>
+<li>Navigation API - A standard artefact and DSL for navigation and tags for accessing this</li>
+<li>Events API - A standard event bus that can be plugged in to any event implementation, with a lightweight default provider for in-app messaging</li>
+</ul><p class="paragraph"/>Each feature is covered in more detail later in this documentation.<p class="paragraph"/>The platform is very self-referential - it uses own APIs - for example to provide event hooks for Grails application lifecycle, to declare dynamic methods on your controller and service artefacts, and to declare the configuration values that it uses.<p class="paragraph"/>All of these APIs are designed to be as simple as possible.<p class="paragraph"/>Use this platform to add tighter and more consistent integration to your own plugins.
 
 
 <h2 id="changelog">1.2 Change log</h2>
-<h3>1.0.M1</h3><p class="paragraph"/>First public release with Config and Security APIs and some UI Extensions. Work-in-progress APIs for Events, Injection, Conventions and Navigation.
+<h3>1.0.M3</h3><p class="paragraph"/>Was: 1.0.M2 but due to release error we had to roll to M3.
+<ul class="star">
+<li>Events API</li>
+<li>New UI Extension tags p:text and p:textScope</li>
+<li>New UI Extension properties pluginFlash, pluginSession, pluginRequestAttributes</li>
+<li>Documentation for Events API, Navigation API, new UI Extensions</li>
+<li>A little Grails treat for those browsing /platform/ on Mac</li>
+</ul><p class="paragraph"/><h3>1.0.M2-SNAPSHOT</h3>
+<ul class="star">
+<li>Refined and documented Navigation API</li>
+<li>There are no longer any "g" namespaced tags. All <code>g:</code> tags have move to <code>p:</code> namespace</li>
+<li>Added "site.url" Config setting for <a href="../ref/Ui Extension Tags/siteLink.html" class="uiExtensionTags">siteLink</a> tag to use instead of grails.serverURL if the two differ for your use case</li>
+<li>Refactored Injection, Conventions and Navigation implementations into public interface + implementation classes</li>
+<li>Config reloading supported now - all plugin configs and constraints etc. are re-applied</li>
+<li>legacyPrefix support in doWithConfigOptions - automatically copies over old Config values to your new plugin namespaced config</li>
+<li>Added cssPrefix attribute to <a href="../ref/Ui Extension Tags/displayMessage.html" class="uiExtensionTags">displayMessage</a></li>
+</ul><p class="paragraph"/><h3>1.0.M1</h3><p class="paragraph"/>First public release with Config and Security APIs and some UI Extensions. Work-in-progress APIs for Events, Injection, Conventions and Navigation.
 
 
 
 <h2 id="knownissues">1.3 Known Issues</h2>
-<h3>1.0.M1</h3>
+<h3>1.0.M3</h3>
+<ul class="star">
+<li>Automatic convention controller navigation includes all actions, not just those with GET allowedMethod</li>
+<li>Platform "dev" navigation scope items do not render when browsing /platform in your own applications.</li>
+</ul><p class="paragraph"/><h3>1.0.M1</h3>
 <ul class="star">
 <li>Config API - false validation errors with platform-ui due to no x.y.'*' support yet</li>
 <li>Navigation API - controllers do not auto-register in Grails 1.3.x, no DSL artefact, no reloading</li>
@@ -148,43 +211,10 @@ The features include in this release include:
 
 
 <h1 id="gettingStarted">2 Getting Started</h1>
-To get started you need to install the platform-core plugin.<p class="paragraph"/>Add the plugin platform as a dependency to your application or plugin, either directly or transitively. To do so directly edit your <code>BuildConfig.groovy</code> to look something like this:<p class="paragraph"/><div class="code"><pre>&#8230;
-    plugins &#123;
-        &#8230;
-        compile <span class="java&#45;quote">"&#58;platform&#45;core&#58;1.0.M1"</span>
-    &#125;</pre></div><p class="paragraph"/>You can run your code now and browse to <code>http://localhost:8080/&#60;appname&#62;/platform/</code>, a special page available only in the development environment. From there you can explore some of the plugin platform features in the debug interface.<p class="paragraph"/>There is no default security implementation for the Security API, this will need to come from the security plugin you use, or your application. See <a href="../guide/single.html#security_implementing_bridge" class="guide">implementing a security bridge</a><p class="paragraph"/>
+To get started you need to install the platform-core plugin.<p class="paragraph"/>Add the plugin platform as a dependency to your application or plugin, either directly or transitively. To do so directly edit your <code>BuildConfig.groovy</code> to look something like this:<p class="paragraph"/><pre class="brush: groovy;">&#10;grails.project.dependency.resolution = &#123;&#10;	// inside your plugin dependencies block&#10;	plugins &#123;&#10;	    compile ':platform&#45;core:1.0.M1'&#10;	&#125;&#10;&#125;&#10;</pre><p class="paragraph"/>You can run your code now and browse to <code>http://localhost:8080/&#60;appname&#62;/platform/</code>, a special page available only in the development environment. From there you can explore some of the plugin platform features in the debug interface.<p class="paragraph"/>There is no default security implementation for the Security API, this will need to come from the security plugin you use, or your application. See <a href="../guide/single.html#security_implementing_bridge" class="guide">implementing a security bridge</a><p class="paragraph"/>
 
 
-<h1 id="uiextension">3 UI Extensions</h1>
-Several simple UI Extensions are included in platform-core.<p class="paragraph"/>The tags supplied make it trivial to render links to controllers and actions
-using i18n messages, display messages to the end user, and render buttons and
-labels in i18n friendly ways.
-
-
-
-<h2 id="uix_tags">3.1 Tags</h2>
-
-<h3>Linking tags</h3><p class="paragraph"/>The <a href="../ref/Tags Ui Extension/smartLink.html" class="tagsUiExtension">smartLink</a> tag renders links for controllers and actions, automatically working out the text of the link using i18n.<p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;%&#45;&#45; Link to default action of BooksController &#45;&#45;%&#62;</span>
-<span class="xml&#45;tag">&#60;g:smartLink controller=<span class="xml&#45;quote">"books"</span>/&#62;</span><p class="paragraph"/><span class="xml&#45;tag">&#60;%&#45;&#45; Link to list action of current controller &#45;&#45;%&#62;</span>
-<span class="xml&#45;tag">&#60;g:smartLink action=<span class="xml&#45;quote">"list"</span>/&#62;</span></pre></div><p class="paragraph"/>These will use i18n messages located by convention of the form: <code>action.<strong class="bold">controllerName</strong>.<strong class="bold">actionName</strong></code><p class="paragraph"/><h3>Label tag</h3><p class="paragraph"/>The label tag will render a &#60;label&#62; with the text optionally loaded from i18n:<p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;g:label text=<span class="xml&#45;quote">"field.user.name"</span>/&#62;</span></pre></div><p class="paragraph"/>See <a href="../ref/Tags Ui Extension/label.html" class="tagsUiExtension">label</a> for full details of the attributes, which include passing arguments to the i18n message.<p class="paragraph"/><h3>Button tag</h3><p class="paragraph"/>The button tag will render a text-based button using either a &#60;button&#62;, &#60;input type="submit"&#62; or &#60;a&#62; tag, with the text optionally loaded from i18n:<p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;g:button text=<span class="xml&#45;quote">"button.save"</span>/&#62;</span></pre></div><p class="paragraph"/>See <a href="../ref/Tags Ui Extension/button.html" class="tagsUiExtension">button</a> for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.<p class="paragraph"/><h3>Display message tag</h3><p class="paragraph"/>The displayMessage tag works with the <code>displayMessage</code> and <code>displayFlashMessage</code> controller methods to make it easy to render messages to the user in a uniform way.<p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;g:displayMessage/&#62;</span></pre></div><p class="paragraph"/>See <a href="../ref/Tags Ui Extension/displayMessage.html" class="tagsUiExtension">displayMessage</a> for full details of the attributes and the <a href="../ref/Ui Extension Methods/displayMessage.html" class="uiExtensionMethods">displayMessage</a> and <a href="../ref/Ui Extension Methods/displayFlashMessage.html" class="uiExtensionMethods">displayFlashMessage</a> controller methods.<p class="paragraph"/>The tag will render both request and flash messages, and wraps them in a div with CSS classes according to the type of message.<p class="paragraph"/><h3>Branding tags</h3><p class="paragraph"/>There are several simple but useful site branding tags included. Commonly to be used in site footers and emails templates.
-<ul class="star">
-<li><a href="../ref/Tags Ui Extension/organization.html" class="tagsUiExtension">organization</a> - Renders the name of the business, taken from Config var <code>plugin.platformCore.organization.name</code></li>
-<li><a href="../ref/Tags Ui Extension/siteName.html" class="tagsUiExtension">siteName</a> - Renders the name of the site/product, taken from Config var <code>plugin.platformCore.site.name</code></li>
-<li><a href="../ref/Tags Ui Extension/siteURL.html" class="tagsUiExtension">siteURL</a> - Renders an absolute URL for the root of the site</li>
-<li><a href="../ref/Tags Ui Extension/siteLink.html" class="tagsUiExtension">siteLink</a> - Renders an absolute link to the site, with the site name as the link text</li>
-<li><a href="../ref/Tags Ui Extension/year.html" class="tagsUiExtension">year</a> - Renders the current year, for use in copyright footers</li>
-</ul><p class="paragraph"/>
-
-
-<h2 id="uix_code">3.2 Beans and utilities</h2>
-There are a some UI utility classes and beans:
-<ul class="star">
-<li><a href="../ref/Beans/grailsUiHelper.html" class="beans">grailsUiHelper</a> - Provides methods for setting and getting displayMessages</li>
-<li><a href="../ref/Utility Classes/TagLibUtils.html" class="utilityClasses">TagLibUtils</a> - Provides helper functions for manipulating attributes, CSS class name lists etc.</li>
-</ul><p class="paragraph"/>
-
-
-<h1 id="configuration">4 Configuration API</h1>
+<h1 id="configuration">3 Configuration API</h1>
 The Configuration API adds the following features:
 <ul class="star">
 <li>A way to declare the Config properties that a plugin supports</li>
@@ -193,51 +223,33 @@ The Configuration API adds the following features:
 <li>Merging of config from plugins into main Application config</li>
 <li>The ability for plugins to configure other plugins</li>
 <li>An injected "pluginConfig" variable in all artefacts containing the plugin's configuration</li>
+<li>Automatic merging of legacy Config settings into the new plugin namespace</li>
 </ul><p class="paragraph"/>All of this adds up to more powerful integration and less frustration and confusion for developers.
 
 
 
-<h2 id="changing_config">4.1 Changing Application and Plugin Config Values</h2>
+<h2 id="changing_config">3.1 Changing Application and Plugin Config Values</h2>
 To change application or plugin configuration from within a plugin you need to declare the <strong class="bold">doWithConfig</strong> hook in your plugin descriptor.<p class="paragraph"/>The code uses a simple DSL that is identical to normal Config except:
 <ol>
 <li>The top level nodes are plugin names or "application" to determine what scope of config you are changing</li>
 <li>The closure is passed the existing config as its first and only argument</li>
-</ol><p class="paragraph"/>The application Config is loaded first. All the doWithConfig blocks are evaluated and the results merged in.<p class="paragraph"/><div class="code"><pre>def doWithConfig = &#123; config &#45;&#62;
-    platformUi &#123;
-        ui.Bootstrap.button.cssClass = 'btn'
-        ui.Bootstrap.tab.cssClass = 'tab&#45;pane'
-        ui.Bootstrap.field.cssClass = 'input'
-    &#125;<p class="paragraph"/>    application &#123;
-        // set something based on another config value that has already been
-        // by the application
-        grails.x.y = confg.p.q == 'something' ? <span class="java&#45;keyword">true</span> : <span class="java&#45;keyword">false</span>
-    &#125;
-&#125;</pre></div><p class="paragraph"/>The plugin name scope is the camel case beanNameConventionStyle. So the above is setting config values for the "grails-platform-ui" plugin.<p class="paragraph"/>Any values within a plugin scoped block as in the first block above, are merged into the main Config under <code>plugin.&#60;pluginName&#62;</code>. It is therefore impossible to change global Config values within a plugin config block.<p class="paragraph"/>Values inside the "application" block are merged into the root level of the application Config, so you can set any normal value.
+</ol><p class="paragraph"/>The application Config is loaded first. All the doWithConfig blocks are evaluated and the results merged in.<p class="paragraph"/><pre class="brush: groovy;">&#10;def doWithConfig = &#123; config &#45;&#62;&#10;    platformUi &#123;&#10;        ui.Bootstrap.button.cssClass = 'btn'&#10;        ui.Bootstrap.tab.cssClass = 'tab&#45;pane'&#10;        ui.Bootstrap.field.cssClass = 'input'&#10;    &#125;&#10;    &#10;    application &#123;&#10;        // set something based on another config value that has already been&#10;        // by the application&#10;        grails.x.y = config.p.q == 'something' ? true : false&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>See <a href="../ref/Plugin Conventions/doWithConfig.html" class="pluginConventions">doWithConfig</a> for more details.
 
 
-<h2 id="declaring_configuration_options">4.2 Declaring Configuration Options</h2>
-To make use of the plugin configuration features and make life easier for developers, your plugin must define the configuration options it accepts.<p class="paragraph"/>This allows the platform to warn users when they mistype a config name or supply and invalid value - and to formalize definition of default values rather than a plugin merging in default values.<p class="paragraph"/>Do declare the options your plugin supports, add the <code>doWithConfigOptions</code>  closure to your plugin descriptor:<p class="paragraph"/><div class="code"><pre>def doWithConfigOptions = &#123;
-    'organization.name'(type: <span class="java&#45;object">String</span>, defaultValue: 'My Corp (set plugin.platformCore.organization.name)')
-    'site.name'(type: <span class="java&#45;object">String</span>, defaultValue: 'Our App (set plugin.platformCore.site.name)')
-&#125;</pre></div><p class="paragraph"/>This block, from the platform core, defines two configuration values of type String, with a default value.<p class="paragraph"/>You can also supply a custom validator:<p class="paragraph"/><div class="code"><pre>def doWithConfigOptions = &#123;
-    'concurrentConnections'(type: <span class="java&#45;object">Integer</span>, defaultValue: 10, 
-        validator: &#123; v &#45;&#62; v &#60; 500 ? <span class="java&#45;keyword">null</span> : 'concurrent.connections.too.big' &#125;
-&#125;</pre></div><p class="paragraph"/>Behaving just like constraint validators, your validator returns null for "ok" or an i18n message string for the error.<p class="paragraph"/>
+
+<h2 id="declaring_configuration_options">3.2 Declaring Configuration Options</h2>
+To make use of the plugin configuration features and make life easier for developers, your plugin must define the configuration options it accepts.<p class="paragraph"/>This allows the platform to warn users when they mistype a config name or supply and invalid value - and to formalise definition of default values rather than a plugin merging in default values.<p class="paragraph"/>Do declare the options your plugin supports, add the <code>doWithConfigOptions</code> closure to your plugin descriptor:<p class="paragraph"/><pre class="brush: groovy;">&#10;def doWithConfigOptions = &#123;&#10;    'organization.name'(type: String, defaultValue: 'My Corp (set plugin.platformCore.organization.name)')&#10;    'site.name'(type: String, defaultValue: 'Our App (set plugin.platformCore.site.name)')&#10;&#125;&#10;</pre><p class="paragraph"/>This block, from the platform core, defines two configuration values of type String, with a default value.<p class="paragraph"/>You can also supply a custom validator:<p class="paragraph"/><pre class="brush: groovy;">&#10;def doWithConfigOptions = &#123;&#10;    'concurrentConnections'(type: Integer, defaultValue: 10, &#10;        validator: &#123; v &#45;&#62; v &#60; 500 ? null : 'concurrent.connections.too.big' &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>Behaving just like constraint validators, your validator returns null for "ok" or an i18n message string for the error.<p class="paragraph"/>When implementing this config in your plugins, you may want to use the <code>legacyPrefix</code> value so that applications that use
+your existing Config settings will continue to work, and users will be warned to update their Config.<p class="paragraph"/>See <a href="../ref/Plugin Conventions/doWithConfigOptions.html" class="pluginConventions">doWithConfigOptions</a> for more details.
 
 
-<h2 id="accessing_plugin_config">4.3 Accessing Plugin Config</h2>
+
+<h2 id="accessing_plugin_config">3.3 Accessing Plugin Config</h2>
 Plugins that declare their configuration with <a href="../ref/Plugin Conventions/doWithConfigOptions.html" class="pluginConventions">doWithConfigOptions</a> can get access 
 to their "slice" of the Config using the <a href="../ref/Global Properties/pluginConfig.html" class="globalProperties">pluginConfig</a> variable.<p class="paragraph"/>The <code>pluginConfig</code> variable is automatically injected into all artefacts of
-your plugin, automatically namespace for your plugin using the <code>plugin.&#60;pluginName&#62;.</code> prefix.<p class="paragraph"/>So in a service you can trivially access this config inside a service or controller for example:<p class="paragraph"/><div class="code"><pre>class MyPluginService &#123;
-    def doSomething() &#123;
-       <span class="java&#45;keyword">if</span> (pluginConfig.enabled) &#123;
-          println <span class="java&#45;quote">"It worked!"</span>
-       &#125;
-    &#125;
-&#125;</pre></div><p class="paragraph"/>
+your plugin, automatically namespace for your plugin using the <code>plugin.&#60;pluginName&#62;.</code> prefix.<p class="paragraph"/>So in a service you can trivially access this config inside a service or controller for example:<p class="paragraph"/><pre class="brush: groovy;">&#10;class MyPluginService &#123;&#10;    def doSomething() &#123;&#10;       if (pluginConfig.enabled) &#123;&#10;          println "It worked!"&#10;       &#125;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>
 
 
-<h1 id="security">5 Security API</h1>
+<h1 id="security">4 Security API</h1>
 The Security API provides common security related functionality so that plugins and in some cases applications no longer need to be tied to a specific security implementation.<p class="paragraph"/>It is deliberately minimal to place few requirements on implementations.<p class="paragraph"/>It is not intended to be a complete security abstraction, but "just enough" for the needs of most applications and plugins that do not require advanced security manipulation - which will likely always require direct knowledge of the underlying provider.<p class="paragraph"/>This API provides the most basic security features to enable this
 interoperability, using a bridging interface that security plugins must
 implement to actually provide these services.<p class="paragraph"/>Security plugins must implement the "provider" bean - out of the box there is no security implementation.<p class="paragraph"/><h3>Dynamic methods</h3><p class="paragraph"/>These methods and properties are added to Services, Controllers, TagLibs and Domain Classes:
@@ -248,17 +260,7 @@ implement to actually provide these services.<p class="paragraph"/>Security plug
 <li><a href="../ref/Security Methods/userHasAllRoles.html" class="securityMethods">userHasAllRoles</a> - test if the current user has all of the roles</li>
 <li><a href="../ref/Security Methods/userIsAllowed.html" class="securityMethods">userIsAllowed</a> - test if the current user has a specified permission on an object</li>
 <li><a href="../ref/Security Methods/withUser.html" class="securityMethods">withUser</a> - run a section of code as another user</li>
-</ul><p class="paragraph"/>See the reference guide for Security Properties and Security Methods for further details on these.<p class="paragraph"/>All of these features and more can be accessed by any code in your application by using the <a href="../ref/Beans/grailsSecurity.html" class="beans">grailsSecurity</a> bean.<p class="paragraph"/><h3>Tags</h3><p class="paragraph"/>Here's an example of some of the security tags available:<p class="paragraph"/><div class="code"><pre>&#60;s:identity/&#62;
-&#60;s:info property=<span class="java&#45;quote">"email"</span>/&#62;
-&#60;s:ifPermitted role=<span class="java&#45;quote">"ROLE_ADMIN"</span>&#62;
-    &#8230;
-&#60;/s:ifPermitted&#62;
-&#60;s:ifNotPermitted role=<span class="java&#45;quote">"ROLE_ADMIN"</span>&#62;
-    &#8230;
-&#60;/s:ifNotPermitted&#62;
-&#60;a href=<span class="java&#45;quote">"$&#123;s.createLoginLink()&#125;"</span>&#62;Log in&#60;/a&#62;
-&#60;a href=<span class="java&#45;quote">"$&#123;s.createLogoutLink()&#125;"</span>&#62;Log out&#60;/a&#62;
-&#60;a href=<span class="java&#45;quote">"$&#123;s.createSignupLink()&#125;"</span>&#62;Sign up&#60;/a&#62;</pre></div><p class="paragraph"/>See the <strong class="bold">Tags Security</strong> reference section for details.<p class="paragraph"/><h3>grailsSecurity bean</h3><p class="paragraph"/>The Security bean provides access to all the basic security functions. These are passed through to the security bridge implementation.<p class="paragraph"/>This includes methods for applications and plugins to use such as:
+</ul><p class="paragraph"/>See the reference guide for Security Properties and Security Methods for further details on these.<p class="paragraph"/>All of these features and more can be accessed by any code in your application by using the <a href="../ref/Beans/grailsSecurity.html" class="beans">grailsSecurity</a> bean.<p class="paragraph"/><h3>Tags</h3><p class="paragraph"/>Here's an example of some of the security tags available:<p class="paragraph"/><pre class="brush: groovy;">&#10;&#60;s:identity/&#62;&#10;&#60;s:info property="email"/&#62;&#10;&#60;s:ifPermitted role="ROLE_ADMIN"&#62;&#10;    …&#10;&#60;/s:ifPermitted&#62;&#10;&#60;s:ifNotPermitted role="ROLE_ADMIN"&#62;&#10;    …&#10;&#60;/s:ifNotPermitted&#62;&#10;&#60;a href="$&#123;s.createLoginLink()&#125;"&#62;Log in&#60;/a&#62;&#10;&#60;a href="$&#123;s.createLogoutLink()&#125;"&#62;Log out&#60;/a&#62;&#10;&#60;a href="$&#123;s.createSignupLink()&#125;"&#62;Sign up&#60;/a&#62;&#10;</pre><p class="paragraph"/>See the <strong class="bold">Tags Security</strong> reference section for details.<p class="paragraph"/><h3>grailsSecurity bean</h3><p class="paragraph"/>The Security bean provides access to all the basic security functions. These are passed through to the security bridge implementation.<p class="paragraph"/>This includes methods for applications and plugins to use such as:
 <ul class="star">
 <li>String getUserIdentity()</li>
 <li>def getUserInfo()</li>
@@ -268,64 +270,292 @@ implement to actually provide these services.<p class="paragraph"/>Security plug
 </ul><p class="paragraph"/>You simply auto wire this bean into your classes using the name "grailsSecurity"<p class="paragraph"/>For more details see <a href="../ref/Beans/grailsSecurity.html" class="beans">grailsSecurity</a>.
 
 
-<h2 id="security_implementing_bridge">5.1 Implementing a Security Bridge</h2>
-To use the Security API, an application must have a Security Bridge bean that implements the <a href="../gapi/org/grails/plugin/platform/security/SecurityBridge.html" class="api">SecurityBridge</a> interface,<p class="paragraph"/>Typically this bean will be provided by the security plugin you are using. However you can easily implement your own in your own plugin or application.<p class="paragraph"/>Simply implement the interface and register the bean as "grailsSecurityBridge" in your Spring context either in a plugin's <code>doWithSpring</code> or your application's <code>resources.groovy</code>:<p class="paragraph"/><div class="code"><pre>grailsSecurityBridge(com.mycorp.security.MySecurityProvider) &#123;
-    // wire in any other dependencies it has
-    grailsApplication = ref('grailsApplication')
-&#125;</pre></div><p class="paragraph"/>The interface is defined here:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">interface</span> SecurityBridge &#123;<p class="paragraph"/>    /&#42;&#42;
-     &#42; Implementations must <span class="java&#45;keyword">return</span> the name of their security provider 
-     &#42; @<span class="java&#45;keyword">return</span> A name such as <span class="java&#45;quote">"Spring Security"</span>
-     &#42;/
-    <span class="java&#45;object">String</span> getProviderName()<p class="paragraph"/>    /&#42;&#42;
-     &#42; Get user id string i.e. <span class="java&#45;quote">"marcpalmer"</span> of the currently logged in user, from whatever
-     &#42; underlying security API is in force
-     &#42; @<span class="java&#45;keyword">return</span> the user name / identity <span class="java&#45;object">String</span> or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> nobody is logged in
-     &#42;/
-    <span class="java&#45;object">String</span> getUserIdentity()<p class="paragraph"/>    /&#42;&#42;
-     &#42; Get user info object containing i.e. email address, other stuff defined by the security implementation
-     &#42; @<span class="java&#45;keyword">return</span> the implementation's user object or <span class="java&#45;keyword">null</span> <span class="java&#45;keyword">if</span> nobody is logged in
-     &#42;/
-    def getUserInfo()<p class="paragraph"/>    /&#42;&#42;
-     &#42; Return <span class="java&#45;keyword">true</span> <span class="java&#45;keyword">if</span> the current logged in user has the specified role
-     &#42;/
-    <span class="java&#45;object">boolean</span> userHasRole(role)<p class="paragraph"/>    /&#42;&#42;
-     &#42; Can the current user access <span class="java&#45;keyword">this</span> object to perform the named action?
-     &#42; @param object The object, typically domain but we don't care what
-     &#42; @param action Some application&#45;defined action string i.e. <span class="java&#45;quote">"view"</span> or <span class="java&#45;quote">"edit"</span>
-     &#42;/
-    <span class="java&#45;object">boolean</span> userIsAllowed(object, action)<p class="paragraph"/>    /&#42;&#42;
-     &#42; Create a link to the specified security action
-     &#42; @param action One of <span class="java&#45;quote">"login"</span>, <span class="java&#45;quote">"logout"</span>, <span class="java&#45;quote">"signup"</span>
-     &#42; @<span class="java&#45;keyword">return</span> Must <span class="java&#45;keyword">return</span> a Map of arguments to pass to g:link to create the link
-     &#42;/
-    Map createLink(<span class="java&#45;object">String</span> action)<p class="paragraph"/>    /&#42;&#42;
-     &#42; Execute code masquerading as the specified user, <span class="java&#45;keyword">for</span> the duration of the Closure block
-     &#42; @<span class="java&#45;keyword">return</span> Whatever the closure returns
-     &#42;/
-    def withUser(identity, Closure code)
-&#125;</pre></div>
+<h2 id="security_implementing_bridge">4.1 Implementing a Security Bridge</h2>
+To use the Security API, an application must have a Security Bridge bean that implements the <a href="../gapi/org/grails/plugin/platform/security/SecurityBridge.html" class="api">SecurityBridge</a> interface,<p class="paragraph"/>Typically this bean will be provided by the security plugin you are using. However you can easily implement your own in your own plugin or application.<p class="paragraph"/>Simply implement the interface and register the bean as "grailsSecurityBridge" in your Spring context either in a plugin's <code>doWithSpring</code> or your application's <code>resources.groovy</code>:<p class="paragraph"/><pre class="brush: groovy;">&#10;grailsSecurityBridge(com.mycorp.security.MySecurityProvider) &#123;&#10;    // wire in any other dependencies it has&#10;    grailsApplication = ref('grailsApplication')&#10;&#125;&#10;</pre><p class="paragraph"/>The interface is defined here:<p class="paragraph"/><pre class="brush: groovy;">&#10;interface SecurityBridge &#123;&#10;    &#10;    /&#42;&#42;&#10;     &#42; Implementations must return the name of their security provider &#10;     &#42; &#64;return A name such as "Spring Security"&#10;     &#42;/&#10;    String getProviderName() &#10;&#10;    /&#42;&#42;&#10;     &#42; Get user id string i.e. "marcpalmer" of the currently logged in user, from whatever&#10;     &#42; underlying security API is in force&#10;     &#42; &#64;return the user name / identity String or null if nobody is logged in&#10;     &#42;/&#10;    String getUserIdentity()&#10;&#10;    /&#42;&#42;&#10;     &#42; Get user info object containing i.e. email address, other stuff defined by the security implementation&#10;     &#42; &#64;return the implementation's user object or null if nobody is logged in&#10;     &#42;/&#10;    def getUserInfo()&#10;&#10;    /&#42;&#42;&#10;     &#42; Return true if the current logged in user has the specified role&#10;     &#42;/&#10;    boolean userHasRole(role)&#10;&#10;    /&#42;&#42;&#10;     &#42; Can the current user access this object to perform the named action?&#10;     &#42; &#64;param object The object, typically domain but we don't care what&#10;     &#42; &#64;param action Some application&#45;defined action string i.e. "view" or "edit"&#10;     &#42;/&#10;    boolean userIsAllowed(object, action)&#10;    &#10;    /&#42;&#42;&#10;     &#42; Create a link to the specified security action&#10;     &#42; &#64;param action One of "login", "logout", "signup"&#10;     &#42; &#64;return Must return a Map of arguments to pass to g:link to create the link&#10;     &#42;/&#10;    Map createLink(String action)&#10;    &#10;    /&#42;&#42;&#10;     &#42; Execute code masquerading as the specified user, for the duration of the Closure block&#10;     &#42; &#64;return Whatever the closure returns&#10;     &#42;/&#10;    def withUser(identity, Closure code)&#10;&#125;&#10;</pre>
 
 
 
-<h1 id="events">6 Events API</h1>
+<h1 id="events">5 Events Bus API</h1>
+<strong class="bold">Why an events bus ?</strong>
+ Today's applications rely more and more on non-blocking processing, elasticity and modularity. An events bus loosely couples modules,
+ enabling different codes and frameworks to work together, because <strong class="bold">the right tool for the right purpose</strong> paradigm is
+ becoming a reality. The bus may also support <strong class="bold">publish/subscribe</strong> pattern, distributing the same message across the handling modules and giving an
+ excellent opportunity to deploy the same application into a cluster or  <em class="italic">cloud</em> .<p class="paragraph"/>Within the bus, an event is often as simple as a "callback" with no parameters, but usually there is some extra state passed as an event object.
+An event can be sent to multiple listeners, and any result returned from any listeners is passed back to the original sender of the event.
+An event belongs to a "topic" and often has a "subject". The topic is like a channel that identifies the kind of events. The optional subject is the object that the event "happened to".
+So for example a simple "app started" notification has no subject but may have topic "grails", but a "user logged in" even may have topic "security" and subject set to the user principal supplied by the security plugin you are using.<p class="paragraph"/>
+With Platform-Core plugin we have implemented a couple of features and artifacts to let you simply manage an  <em class="italic">event bus</em> 
+and get maximum flexibility when required :
+<ul class="star">
+<li>Sending <strong class="bold">Events methods</strong> injected in your <strong class="bold">Domains</strong>, <strong class="bold">Controllers</strong> and <strong class="bold">Services</strong></li>
+<li><strong class="bold">@Listener</strong> annotations for your <strong class="bold">Services</strong> methods.</li>
+<li>Events mapping <strong class="bold">DSL artifact</strong> to select and control events topics</li>
+<li><strong class="bold">Spring beans</strong> with access to underlying API</li>
+<li><strong class="bold">More cool stuff</strong> with <a href="../ref/Httpsgithubcomsmaldinigrailseventssi/Events Spring Integration.html" class="https://github.com/smaldini/grails-events-si">Events Spring Integration</a> and <a href="../ref/Httpsgithubcomsmaldinigrailseventspush/Events Push.html" class="https://github.com/smaldini/grails-events-push">Events Push</a></li>
+<li>Simple <strong class="bold">config keys</strong></li>
+</ul><p class="paragraph"/>In a nutshell, you will :
+<ul class="star">
+<li>Send events :</li>
+</ul><p class="paragraph"/><pre class="brush: groovy;">&#10;class UserController&#123;&#10;&#10;   def registration()&#123;&#10;         def user = new User(params).save()&#10;         if(user)&#123;&#10;&#10;            //non&#45;blocking call, will trigger application listeners for this topic&#10;            event('mailRegistration', user)&#10;&#10;            //blocking call :&#10;            //event('mailRegistration', user).waitFor()&#10;&#10;            //can also be written like that&#10;            //event topic:'mailRegistration', data:user&#10;&#10;            //and if you need to reuse the current thread&#10;            //event topic:'mailRegistration', data:user, fork:false&#10;&#10;            render(view:'sendingRegistrationMail')&#10;         &#125;else&#123;&#10;            render(view:'errorRegistration')&#10;         &#125;&#10;  &#125;&#10;&#125;&#10;</pre>
+<ul class="star">
+<li>Write listeners (or event handler, or event reactor or whatever you call it):</li>
+</ul><p class="paragraph"/><pre class="brush: groovy;">&#10;class UserService&#123;&#10;&#10;   //use method name 'mailRegistration' as topic name&#10;   //can also use custom topic name using topic arg: &#64;Listener(topic='test')&#10;   &#64;grails.events.Listener&#10;   def mailRegistration(User user)&#123;&#10;         sendMail&#123;&#10;            to user.mail&#10;            subject "Confirmation"&#10;            html g.render(template:"userMailConfirmation")&#10;        &#125;&#10;  &#125;&#10;&#10;  //Can also receive an EventMessage to get more information on this particular event)&#10;  &#64;grails.events.Listener(topic="mailRegistration")&#10;  def mailRegistration2(org.grails.plugin.platform.events.EventMessage msg)&#123;&#10;        sendMail&#123;&#10;           to msg.data.mail&#10;           subject "Confirmation"&#10;           html g.render(template:"userMailConfirmation")&#10;        &#125;&#10;  &#125;&#10;&#125;&#10;</pre>
+
+
+
+<h2 id="sending">5.1 Sending Events</h2>
+Sending an event is simple. You only need to remind 1 method name and 2 different signatures:
+<ul class="star">
+<li><strong class="bold">event</strong>(topic, &#91;data, params, callbackClosure&#93;)</li>
+<li><strong class="bold">event</strong>(Map args, &#91;callbackClosure&#93;)</li>
+</ul><p class="paragraph"/>We recommend using the former signature if you don't have any params, otherwise the latter is more elegant in that case.<p class="paragraph"/>Let's see what the key arguments are doing:
+<ul class="star">
+<li>Topic argument is a <strong class="bold">String</strong> which represents channel subscribed by listeners.</li>
+<li> <em class="italic">optional</em>  Data argument is an <strong class="bold">Object</strong> - <em class="italic">preferrably Serializable for IO facilities</em> - which represents the subject of your event such as a domain class.</li>
+<li> <em class="italic">optional</em>  Params argument is a <strong class="bold">Map</strong> which represents sending behaviors including <strong class="bold">namespace</strong>.</li>
+<li> <em class="italic">optional</em>  callbackClosure is a <strong class="bold">Closure</strong> triggered after an event completion.</li>
+<li>The map notation allows you to reuse the same arguments than params plus <strong class="bold">topic</strong> for topic, <strong class="bold">data</strong> for data and <strong class="bold">for</strong> (shortcut for 'namespace'). If you specify <strong class="bold">params</strong>, it will use it for the <strong class="bold">params</strong> argument otherwise the first level map is used as <strong class="bold">params</strong>.</li>
+</ul><p class="paragraph"/>There are several <strong class="bold">params</strong> arguments :
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Key</strong></th><th><strong class="bold">Type</strong></th><th><strong class="bold">Default</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>fork</td><td><code>Boolean</code></td><td><code>false</code></td><td>Force the event to reuse the caller thread, therefore executing the method synchronously and propagating any errors.</td></tr><tr class="table-even"><td>namespace / for</td><td><code>String</code></td><td><code>'app'</code></td><td>Target a dedicated topic namespace. To avoid overlapping topic names, the events bus supports a scoping concept called namespace. E.g. 'gorm' is used by gorm events and 'browser' is used for Javascript listeners in <strong class="bold">events-push</strong> plugin.</td></tr><tr class="table-odd"><td>onReply</td><td><code>Closure&#123;EventReply reply&#125;</code></td><td>&#160;</td><td>Same behavior than  <em class="italic">callbackClosure</em>  argument, overrides it if both are defined.</td></tr><tr class="table-even"><td>onError</td><td><code>Closure&#123;List&#60;Exception&#62; errors&#125;</code></td><td>&#160;</td><td>If exceptions has been raised by listeners, this callback will be triggered. If undefined, exceptions will be propagated on EventReply.getValue(s).</td></tr><tr class="table-odd"><td>gormSession</td><td><code>Boolean</code></td><td><code>true</code></td><td>Opens a GORM session for the new thread which carries event execution.</td></tr><tr class="table-even"><td>timeout</td><td><code>Long</code></td><td>&#160;</td><td>Define a maximum time in millisecond for the event execution.</td></tr><tr class="table-odd"><td>headers</td><td><code>Map&#60;String, Serializable&#62;</code></td><td>&#160;</td><td>Additional headers for the event message enveloppe.</td></tr></table><p class="paragraph"/>The event method returns <strong class="bold">EventReply</strong> which implements Future&#60;Object&#62; and provides usefuls methods :
+<ul class="star">
+<li><strong class="bold">List&#60;Object&#62; getValues()</strong> : Returns as many values as listeners has replied.</li>
+<li><strong class="bold">Object getValue()</strong> : First element of getValues().</li>
+<li><strong class="bold">int size()</strong> : Invoked listeners count.</li>
+<li><strong class="bold">List&#60;Throwable&#62; getErrors()</strong> : Available errors.</li>
+<li><strong class="bold">boolean hasErrors()</strong> : Scans for any errors.</li>
+<li><strong class="bold">EventReply waitFor()</strong> : blocks current thread and return this reply.</li>
+<li><strong class="bold">EventReply waitFor(long time)</strong> : blocks current thread for T milliseconds and returns this reply.</li>
+</ul><p class="paragraph"/><h3>Events workflow</h3>
+Events can be sent from domains, services and controllers artefacts by using  <em class="italic">EventReply event(String topic, Object data)</em> .
+Platform-core Events bus provides a non-blocking way to send events by default, however you can <strong class="bold">block on several methods</strong> from <strong class="bold">EventReply</strong> :
+<ul class="star">
+<li><strong class="bold">size</strong></li>
+<li><strong class="bold">waitFor</strong></li>
+<li><strong class="bold">get</strong></li>
+<li><strong class="bold">getValues</strong></li>
+<li><strong class="bold">getValue</strong></li>
+</ul><p class="paragraph"/>Therefore you have the control on the execution flow if you want. Just keep in mind it does not block for processing right after event() call, which seems to be a
+sensible default for the bus. Eventual <strong class="bold">Exceptions</strong> will be raised after using one of the mentioned blocking methods  except if <strong class="bold">onError</strong> parameter is used.<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeController&#123;&#10;&#10;   def logout()&#123;&#10;      def reply = event("logout", session.user)&#10;      //doesn't wait for event execution&#10;      &#10;      render reply.value  //wait and display value&#10;      &#10;      event(topic:"afterLogout").waitFor()&#10;      &#10;      //Only triggered when "afterLogout" finished&#10;      def errorHandler = &#123;errs &#45;&#62; &#125;&#10;      //Use a dedicated error handler&#10;      event(topic:"afterAfterLogout", onError:errs)&#10;   &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>
+<h3>Non forked events</h3>
+If you want to reuse the current thread and force synchronous processing, use the fork param. Be aware that each exception will be directly propagated to caller even without using blocking methods except
+if <strong class="bold">onError</strong> parameter is used.<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeController&#123;&#10;&#10;   def logout()&#123;&#10;      def reply = event('logout', session.user, &#91;fork:false&#93;)&#10;      //block for processing&#10;&#10;      //no need to wait for reply since it has been populated on event call.&#10;      render reply.value&#10;   &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><h3>Assigning a namespace</h3>
+All listeners get a property called namespace which prevents topic naming collisions and undesired events. By default, they are all assigned to <strong class="bold">app</strong>.
+ This is the same default used when you send an event, but what if you want to reach others namespaced listeners, like 'browser' ones if you use <strong class="bold">events-push</strong> plugin ? Simply use <strong class="bold">namespace</strong> argument or use <strong class="bold">for</strong> if you stick with Map notation.<p class="paragraph"/><pre class="brush: groovy;">&#10; class SomeController&#123;&#10;&#10;    def logout()&#123;&#10;        //we use the Map form, the namespace argument is identified by the 'for' key&#10;       event for:'browser', topic:'logout', data:session.user&#10;    &#125;&#10; &#125;&#10;</pre><p class="paragraph"/><blockquote class="warning">
+It's mandatory to declare namespace when using events bus from a plugin in order to avoid any conflicts.
+</blockquote><p class="paragraph"/><h3>Wildcard support</h3>
+It's possible to call multiple topics/namespaces in a single shot using <strong class="bold">wildcard as the last character</strong>.<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeController&#123;&#10;&#10;    def logout()&#123;&#10;        /&#42;&#10;          We send to every listeners starting with "chat&#45;"&#10;          on every namespaces starting with "role&#45;"&#10;        &#42;/&#10;        event for:'role&#45;&#42;', topic:'chat&#45;&#42;', data:session.user&#10;&#10;        //Here we can trigger every listeners in the default namespace 'app'&#10;        event '&#42;'&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><blockquote class="note">
+This feature will probably evolve to a smarter implementation behaving like UrlMappings and authorizing substring captures
+</blockquote><p class="paragraph"/>
+
+
+
+<h2 id="listening">5.2 Listening Events</h2>
+Listening for events simply requires registering the method that should receive the event notifications.<p class="paragraph"/>There are few ways to register events.<p class="paragraph"/><h3>Defining listeners at compile time</h3><p class="paragraph"/>Within Grails services you can use the <strong class="bold">@Listener</strong> annotation. It takes a <strong class="bold">topic</strong> string, but you can omit it and use the <strong class="bold">method name</strong> as the topic to listen for:<p class="paragraph"/>
+<pre class="brush: groovy;">&#10;class SomeService&#123;&#10;&#10;   &#64;grails.events.Listener(topic = 'userLogged')&#10;   def myMethod(User user)&#123;&#10;   &#125;&#10;&#10;   //use 'mailSent' as topic name&#10;   &#64;grails.events.Listener&#10;   def mailSent()&#123;&#10;  &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>Event methods can define a <strong class="bold">single argument</strong>, and the value is the object sent with the event. Usually this is the "subject" of the event.
+However an event is carried by an enveloppe called EventMessage which contains several useful metadata like additionnal headers, current topic :<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeService&#123;&#10;&#10;   &#64;grails.events.Listener(topic = 'userLogged')&#10;   def myMethod(org.grails.plugin.platform.events.EventMessage userMessage)&#123;&#10;    println userMessage.headers // display opt headers&#10;    println userMessage.event // displays current topic&#10;    println userMessage.data // displays data&#10;   &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>If a listener argument type is not assignable to an event data type, the event <strong class="bold">silently skips the mismatching listener</strong>. If you want to catch
+every event types, use Object type or if the argument is not necessary, do not declare it.<p class="paragraph"/><blockquote class="warning">
+Filtering on the EventMessage&#60;D&#62; generic type doesn't work, e.g. EventMessage&#60;Book&#62; won't prevent EventMessage&#60;Author&#62; invokation. For such fine grained
+ control, you can rely on <a href="../guide/single.html#artifact" class="guide">Events Artifact</a>
+</blockquote><p class="paragraph"/>
+<h3>Namespacing</h3><p class="paragraph"/>Your declared events belongs to the <strong class="bold">app</strong> namespace, unless you tune it using the <strong class="bold">namespace</strong> argument or the Events DSL we will introduce later.<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeService&#123;&#10;&#10;   &#64;grails.events.Listener(topic = 'userLogged', namespace = 'security')&#10;   def myMethod(User user)&#123;&#10;   &#125;&#10;&#10;   //will subscribe this method to topic 'afterInsert' on namespace 'gorm'&#10;   &#64;grails.events.Listener(namespace = 'gorm')&#10;   def afterInsert(User user)&#123;&#10;  &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>Remember that you will need to specify the scope when triggering events if you customize it with a different value than <strong class="bold">app</strong> :<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeController&#123;&#10;   def myAction()&#123;&#10;        event for:'security', topic:'userLogged', data:session.user&#10;   &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><blockquote class="warning">
+It's mandatory to declare namespace when using events bus from a plugin in order to avoid any conflicts.
+</blockquote><p class="paragraph"/><h3>Proxy (AOP) support</h3><p class="paragraph"/>By default, listeners try to call the original method (unproxified bean). Using <strong class="bold">proxySupport</strong> you can tweak this setting :<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeService&#123;&#10;&#10;   static transactional = true&#10;&#10;   //Will invoke transactional logic, similar to someSerice.myMethod()&#10;   &#64;grails.events.Listener(proxySupport=true)&#10;   def myMethod(User user)&#123;&#10;   &#125;&#10;&#10;&#125;&#10;</pre><p class="paragraph"/><h3>Dynamic listeners</h3><p class="paragraph"/>Some edge cases need runtime registration. If you meet this use case, use the injected <a href="../ref/Events Methods/on.html" class="eventsMethods">on</a> method :<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeController&#123;&#10;&#10; def testInlineListener = &#123;&#10;        //register with 'logout' topic on 'app' default namespace&#10;        def listener = on("logout") &#123;User user &#45;&#62;&#10;            println "test $user"&#10;        &#125;&#10;        render "$listener registered"&#10; &#125;&#10;&#10; def testInlineListener2 = &#123;&#10;        //register a 'gorm' namespaced handler on 'afterInsert' topic.&#10;        def listener = on("gorm", "afterInsert") &#123;Book book &#45;&#62;&#10;            println "test $book"&#10;        &#125;&#10;        render "$listener registered"&#10; &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><h3>Wildcard support</h3><p class="paragraph"/>Capturing a wider group of events can be useful, specially for monitoring purposes. It's possible to listen for multiple topics/namespaces in a single shot using <strong class="bold">wildcard as the last character</strong>.<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeService&#123;&#10;&#10; &#64;grails.events.Listener(namespace='role&#45;&#42;', topic = 'chat&#45;&#42;')&#10;   def myMethod(org.grails.plugin.platform.events.EventMessage userMessage)&#123;&#10;      println userMessage.namespace&#10;      println userMessage.event&#10;   &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><blockquote class="note">
+This feature will probably evolve to a smarter implementation behaving like UrlMappings and authorizing substring captures
+</blockquote><p class="paragraph"/><h3>Listener ID</h3><p class="paragraph"/>Registered listeners generate a unique id (<strong class="bold">ListenerId</strong>) applying the following pattern : <br/>
+<code>&#91;namespace://&#93;topic&#91;:package.Class&#93;&#91;#method&#93;&#91;&#64;hashcode&#93;</code><p class="paragraph"/>The above square brackets determine each optional part of the sequence id thus allowing to target group of listeners depending
+ of the known arguments: namespace, class, method, hashcode.<p class="paragraph"/>This pattern is useful when using <strong class="bold">countListeners</strong>, <strong class="bold">removeListeners</strong> or <strong class="bold">extensions</strong>. For instance, overriding
+a generated <strong class="bold">channel</strong> with <strong class="bold">events-si</strong> plugin requires to use <code>namespace://topic</code> if  <em class="italic">namespace</em>  is different from "app".
+Another example to count listeners:
+<pre class="brush: groovy;">&#10;//count every listeners subscribed to 'mytopic' inside TestService&#10;countListeners("mytopic:my.TestService")&#10;&#10;//count every listeners using gorm namespace&#10;countListeners("gorm://&#42;")&#10;&#10;//remove every listeners in TestService&#10;removeListeners("&#42;:my.TestService")&#10;</pre><p class="paragraph"/><h3>Reloading in Development mode</h3><p class="paragraph"/>It works.
+
+
+<h2 id="replying">5.3 Replying from Listeners</h2>
+Usually, an event is  <em class="italic">fired and forgot</em> . In some cases, you may expect an answer to transform your messaging architecture
+into a controlled flow. For instance, a negative reply can be used in GORM events to veto database writing for the current subjet.
+Another usual example is the aggregation of multiple workers products.<p class="paragraph"/><h3>Simple reply</h3><p class="paragraph"/>Replying is a simple matter of returning an object from the listener method :<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeService&#123;&#10;    &#64;Listener&#10;    def logout(User user)&#123;&#10;       Date disconnectDate = new Date()&#10;&#10;       //do something with user&#10;&#10;       return disconnectDate&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>If listeners return non null objects, the caller can access them through the EventReply enveloppe returned immediatly
+after calling <strong class="bold">event</strong> method. The other option is the use of a <strong class="bold">reply handler</strong> :<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeController&#123;&#10;&#10;   def logout()&#123;&#10;       def reply = event topic:"logout", data:session.user, fork:false&#10;       render reply.value //display value&#10;&#10;       //Using callback closure&#10;       def replyHandler = &#123;EventReply reply&#45;&#62; &#125;&#10;       event topic:"logout", data:session.user, onReply:replyHandler&#10;&#10;       //Or as last argument&#10;       event(topic:"logout", data:session.user)&#123; EventReply r&#45;&#62; &#125;&#10;&#10;&#10;       //EventReply object is a Future implementation&#10;       def reply_future = event topic:"logout", data:session.user&#10;       render reply_future.get(30, TimeUnit.SECONDS)&#10;   &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><blockquote class="note">
+Whenever an event is triggered, a task is submitted into the events bus thread pool and a Future returned, wrapped into EventReply.
+It's also planned to fully support reply-address pattern in a future version (replyTo parameter) which brings interesting
+features out of the box : non blocking response, streaming handler response one by one, forwarding using topic name instead of closure…
+</blockquote><p class="paragraph"/><h3>Multiple replies</h3><p class="paragraph"/>Multiple listeners can return values for the same topic/namespace. In this case, EventReply will wait for all handlers before returning any value.
+Remember that a valid result is a non null value, hence why even if 3 handlers have reacted but only 2 did return something, then you will only
+see 2 values in the <strong class="bold">EventReply.values</strong>.<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeController&#123;&#10;&#10;   def logout()&#123;&#10;       def reply = event topic:"sendMails", data:session.user&#10;&#10;       //wait for all listeners and then display the first value from the aggregated results&#10;       render reply.value&#10;       &#10;       //display all results as List&#10;       render reply.values&#10;   &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><h3>Exceptions</h3><p class="paragraph"/>Because no code is perfect, exceptions can happen in the event process for 3 reasons :
+<ul class="star">
+<li>RuntimeException in one or more handlers</li>
+<li>InterruptedException if the process has been cancelled</li>
+<li>TimeoutException if the maximum process time has been reached (timeout parameter)</li>
+</ul><p class="paragraph"/>An <strong class="bold">onError</strong> parameter is available and accepts a <strong class="bold">Closure{List&#60;Throwable&#62; errors}</strong>. If non set, exceptions are
+ propagated to the caller when blocking the EventReply object ( <em class="italic">getValue</em>  etc) and/or when <strong class="bold">fork == false</strong>.<p class="paragraph"/>Exceptions in multiple listeners scenario don't interrupt the execution flow and leave a chance to others listeners to execute as well.
+ The return value from a failing listener becomes the raised exception.<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeController&#123;&#10;&#10;   def logout()&#123;&#10;       on('test')&#123;&#10;         sleep(5000)&#10;         throw new MyException('haha')&#10;       &#125;&#10;&#10;       def reply = event topic:"test"&#10;       reply.values //throws MyException after 5s&#10;&#10;&#10;       def errorsHandler = &#123;println it&#125;&#10;       reply = event topic:"test", onError:errorsHandler&#10;       reply.values //calls errorsHandler and returns values which contain at MyException&#10;&#10;       event(topic:"test", onError:errorsHandler, timeout:1000)&#123;&#10;          //executes both this and errorsHandler closures with a TimeoutException&#10;       &#125;&#10;&#10;       reply = event(topic:"test", onError:errorsHandler, timeout:1000)&#10;       reply.cancel() //executes errorsHandler closure with an InterruptedException&#10;&#10;       event(topic:"test", fork:false)&#10;       //wait 5s and raises an exception in the caller thread&#10;&#10;   &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><h3>Waiting replies</h3><p class="paragraph"/>In domains, services and controllers artefacts you can wait for events using "EventReply waitFor(EventReply&#8230; eventReplies)".
+It accepts as many events replies you want and returns the same array for functiunal programming style.
+EventReply also have a waitFor method for one-line waiting.<p class="paragraph"/>
+<pre class="brush: groovy;">&#10;class SomeController&#123;&#10;&#10;   def logout()&#123;&#10;      def reply = event('logout', session.user)&#10;      def reply2 = event('logout', session.user)&#10;      def reply3 = event('logout', session.user)&#10;&#10;      waitFor(reply,reply2,reply3).each&#123;EventReply reply&#45;&#62;&#10;        render reply.value +'&#60;/br&#62;'&#10;      &#125;&#10;&#10;      //same with 20 seconds timeout on each reply&#10;      waitFor(20, TimeUnit.SECONDS, reply,reply2,reply3).each&#123;EventReply reply&#45;&#62;&#10;              render reply.value&#10;      &#125;&#10;&#10;      //other style :&#10;      event('logout', session.user).waitFor() //blocks event&#10;      event('logout', session.user).waitFor(2000) //blocks event for maximum 2 seconds&#10;&#10;   &#125;&#10;&#125;&#10;</pre>
+
+
+<h2 id="artifact">5.4 Routing configuration -- The XxxEvents Artifact</h2>
+An extensible Events DSL is available in <strong class="bold">grails-app/conf</strong> for routing configuration.
+This artifact does detail behaviors of <strong class="bold">event</strong> method by selecting topics and namespaces to apply :
+<ul class="star">
+<li>Filtering</li>
+<li>Disabling</li>
+<li>Sending behaviors</li>
+<li> <em class="italic">Extensions</em> </li>
+<li> <em class="italic">Security</em> </li>
+<li> <em class="italic">Declarations</em> </li>
+</ul><p class="paragraph"/><blockquote class="note">
+The DSL is intended to evolve. One of the most wanted features is topic/namespace declaration: assigning a definition
+ to a property would generate an injectable eponym bean with streaming methods.
+</blockquote><p class="paragraph"/>The DSL requires to assign a closure to an <strong class="bold">events</strong> variable.
+Each call is a <strong class="bold">definition</strong>, the method name is parsed as a topic name and key/value arguments are definitions attributes.
+Wildcard topics/namespaces are supported as well.<p class="paragraph"/>An <strong class="bold">Events</strong> artifact is a script with some bound variables:
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Variable</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>grailsApplication</td><td>Grails application object, retrieves artifacts, context etc.</td></tr><tr class="table-even"><td>ctx</td><td>Spring context, useful for beans access, e.g.  <em class="italic">ctx.myService.method()</em> </td></tr><tr class="table-odd"><td>config</td><td>Configuration object</td></tr></table><p class="paragraph"/>Each <strong class="bold">definition</strong> supports the following attributes:
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Attribute name</strong></th><th><strong class="bold">Type</strong></th><th><strong class="bold">Default</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>namespace</td><td>String</td><td> <em class="italic">"app"</em> </td><td>Define which namespace the current definition is bound</td></tr><tr class="table-even"><td>filter</td><td>Closure(Object)<br/>Closure(EventMessage)<br/>Class</td><td>&#160;</td><td>If a closure is passed, the return value matched as the condition for event propagation.<br/>If a class is passed, the subject data type must match.</td></tr><tr class="table-odd"><td>disabled</td><td>boolean</td><td>false</td><td>Disable event propagation</td></tr><tr class="table-even"><td>fork</td><td>boolean</td><td>false</td><td>Use the current thread for event processing (blocking call)</td></tr><tr class="table-odd"><td>onError</td><td>Closure(List&#60;Throwable&#62;)</td><td>&#160;</td><td>Default onError handler for the current topic(s)</td></tr><tr class="table-even"><td>onReply</td><td>Closure(EventReply)</td><td>&#160;</td><td>Default onReply handler for the current topic(s)</td></tr><tr class="table-odd"><td>timeout</td><td>Long</td><td>&#160;</td><td>Default timeout for execution time, throwing a TimeoutException and calls handlers</td></tr><tr class="table-even"><td>&#42;</td><td>&#42;</td><td>&#160;</td><td>Any attributes can be written to be used by plugins through EventDefinition.othersAttributes</td></tr></table><p class="paragraph"/><pre class="brush: groovy;">&#10;events = &#123;&#10;    //prevents any events in gorm namespace&#10;    '&#42;' namespace:'gorm', disabled:true&#10;&#10;    //filters any events on 'testTopic' where data &#60;= 2&#10;    testTopic filter:&#123;it &#62; 2&#125;&#10;&#10;    //filters any events on 'testTopic2' where data is not a TestTopic class type&#10;    testTopic2 filter:TestTopic&#10;&#10;    //filters any events on 'testTopicX' using boolean method from service&#10;    testTopicX filter:ctx.myService.&someMethod&#10;&#10;    //only if using events&#45;push plugin, allows client&#45;side listener on this topic&#10;    testTopic3 browser:true&#10;&#10;    //Default Error Handling, Global Reply Handling, timeout and fork&#10;    testTopicD onError:&#123;&#125;, onReply:&#123;&#125;, timeout:1000l&#10;    testTopicD2 fork:false&#10;&#10;&#10;    //&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; roadmap &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#10;&#10;    //not yet implemented: Assigning and merging definitions&#10;    //myTopic = testTopic4(filter:&#123;i&#62;2&#125;)&#10;    //myTopic = testTopic4(filter:&#123;i&#60;4&#125;)&#10;&#10;    //not yet implemented: Enabling security context for target listeners&#10;    //testTopic5 secured:true&#10;&#10;    //not yet implemented: Topic Forwarding&#10;    //testTopic6 to:'anotherTopic'&#10;&#10;    //not yet implemented: Topic Handlers&#10;    //testTopic9 onError:'anotherTopicErrors', onReply:'anotherTopicReplies'&#10;&#10;&#125;&#10;</pre><p class="paragraph"/><h3>Reloading in Development mode</h3><p class="paragraph"/>It works.
+
+
+<h2 id="gorm">5.5 Listening GORM events</h2>
+Starting <strong class="bold">from Grails 2</strong>, the Events Bus supports <a href="http://grails.org/doc/latest/guide/GORM.html#eventsAutoTimestamping" target="blank">GORM events</a>.<p class="paragraph"/><h3>GORM Listeners</h3><p class="paragraph"/>To listen for GORM, simply declare listeners on the <strong class="bold">gorm</strong> namespace using the following supported topics table :
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Event Type</strong></th><th><strong class="bold">Target Topic</strong></th></tr><tr class="table-odd"><td>PreInsertEvent</td><td>beforeInsert</td></tr><tr class="table-even"><td>PreUpdateEvent</td><td>beforeUpdate</td></tr><tr class="table-odd"><td>PreDeleteEvent</td><td>beforeDelete</td></tr><tr class="table-even"><td>ValidationEvent</td><td>beforeValidate</td></tr><tr class="table-odd"><td>PostInsertEvent</td><td>afterInsert</td></tr><tr class="table-even"><td>PostUpdateEvent</td><td>afterUpdate</td></tr><tr class="table-odd"><td>PostDeleteEvent</td><td>afterDelete</td></tr><tr class="table-even"><td>SaveOrUpdateEvent</td><td>onSaveOrUpdate</td></tr></table><p class="paragraph"/>Same listeners behaviors apply, e.g. using EventMessage for the argument type, using wildcard topics etc.
+Because listeners are called if there are <strong class="bold">no arguments</strong> or the argument <strong class="bold">type is assignable to current event data type</strong>, specifying
+a domain class is the only required step to filter domains events.<p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeService&#123;&#10;&#10;    &#64;Listener(namespace = 'gorm')&#10;    void afterInsert(Author author) &#123;&#10;        println "after save author &#45;  $author.name"&#10;    &#125;&#10;&#10;    &#64;Listener(topic = 'beforeInsert', namespace = 'gorm')&#10;    void beforeInsertBook(Book book) &#123;&#10;        println "will insert book &#45; $book.title"&#10;    &#125;&#10;&#10;    //Will catch everything since we don't filter on the subject by using EventMessage&#10;    &#64;Listener(topic = 'before&#42;', namespace = 'gorm')&#10;    void beforeEachGormEvent(EventMessage message) &#123;&#10;        println "gorm event $message.event on domain $message.data.class"&#10;    &#125;&#10;&#10;&#125;&#10;</pre><p class="paragraph"/><h3>Filtering with Events Artifact</h3><p class="paragraph"/>Setting a filter through an Events artifact allows more fined control and efficient selection since it prevents events to be
+propagated :<p class="paragraph"/><pre class="brush: groovy;">&#10;events = &#123;&#10;    'afterInsert' namespace:'gorm', filter:Book&#10;    'afterDelete' namespace:'gorm', filter:&#123;it.id &#62; 5&#125;&#10;    'afterUpdate' namespace:'gorm', filter:&#123;it in Book || it in Author&#125;&#10;    'beforeDelete' namespace:'gorm', disabled:true&#10;&#125;&#10;</pre><p class="paragraph"/><blockquote class="note">
+GORM may generate tons of events. Consider using it wisely, combine it with routing filtering.
+ You can also totally disable gorm bridge by using <code>events.gorm.disabled</code> configuration key.
+</blockquote><p class="paragraph"/><h3>Threading behaviors</h3><p class="paragraph"/>GORM Listeners are executed in the same thread than the caller in order to reuse the current opened session, if any.
+Avoid blocking logic if possible or use the listener body to call another event.<p class="paragraph"/><h3>Vetoing changes</h3><p class="paragraph"/>If a listener handles one of the  <em class="italic">before&#42;</em>  topics and returns a boolean value, it becomes part of the vetoing chain:
+<ul class="star">
+<li>Returning <strong class="bold">false</strong> will cancel the current database write</li>
+<li>Returning <strong class="bold">true</strong> will just let the chain continuing</li>
+</ul><p class="paragraph"/><pre class="brush: groovy;">&#10;class SomeService&#123;&#10;&#10;    //veto any Book insert&#10;    &#64;Listener(topic = 'beforeInsert', namespace = 'gorm')&#10;    boolean beforeInsertBook(Book book) &#123;&#10;        false&#10;    &#125;&#10;&#10;&#125;&#10;</pre>
+
+
+<h2 id="beans">5.6 Spring Beans</h2>
+Plugin developpers and any crazy tweakers may need to override one or more Events Bus beans, like the <strong class="bold">Spring Integration plugin</strong> does.
+The <strong class="bold">grailsEvents</strong> bean is also useful to inject events methods into unhandled artifacts (other than <strong class="bold">domain</strong>, <strong class="bold">service</strong>, <strong class="bold">controller</strong>).<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Bean Name</strong></th><th><strong class="bold">Type</strong></th><th><strong class="bold">Default Implementation</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><strong class="bold">grailsEvents</strong></td><td> <em class="italic">org.grails.plugin.platform.events .Events</em> </td><td> <em class="italic">org.grails.plugin.platform.events .EventsImpl</em> </td><td>Main events gateway which contains injected methods in artifacts</td></tr><tr class="table-even"><td><strong class="bold">grailsEventsPublisher</strong></td><td> <em class="italic">org.grails.plugin.platform.events .publisher.EventsPublisher</em> </td><td> <em class="italic">org.grails.plugin.platform.events .publisher.DefaultsEventsPublisher</em> </td><td>Publisher bean, triggers events. To be implemented by extensions if required (e.g. <strong class="bold">events-si</strong>)</td></tr><tr class="table-odd"><td><strong class="bold">grailsEventsRegistry</strong></td><td> <em class="italic">org.grails.plugin.platform.events .registry.EventsRegistry</em> </td><td> <em class="italic">org.grails.plugin.platform.events .registry.DefaultsEventsRegistry</em> </td><td>Registry bean, store listeners and route events. To be implemented by extensions if required (e.g. <strong class="bold">events-si</strong>)</td></tr><tr class="table-even"><td><strong class="bold">gormTopicSupport</strong></td><td> <em class="italic">org.grails.plugin.platform.events .dispatcher.GormTopicSupport</em> </td><td> <em class="italic">org.grails.plugin.platform.events .dispatcher.GormTopicSupport2X</em> </td><td>Translates gorm events to topic names and processes veto(s).</td></tr><tr class="table-odd"><td><strong class="bold">grailsEventsGormBridge</strong></td><td> <em class="italic">org.grails.plugin.platform.events .publisher.GormBridgePublisher</em> </td><td>&#160;</td><td>Listens for GORM events and publishes to the right bus using gormTopicSupport.</td></tr><tr class="table-even"><td><strong class="bold">grailsTopicExecutor</strong></td><td> <em class="italic">org.springframework .core.task.TaskExecutor</em> </td><td> <em class="italic">org.springframework.scheduling .concurrent.ThreadPoolTaskExecutor</em> </td><td>Carries on events execution.</td></tr></table>
+
+
+<h2 id="secure">5.7 Securing events</h2>
+<blockquote class="note">
+To be implemented. You can still use headers or data to pass security context for instance. M4 release will bring platform-security abstraction ready for events.
+</blockquote><p class="paragraph"/>
+
+
+<h2 id="extensions">5.8 Extensions</h2>
+Writing extensions is one of the greatest habbits of <strong class="bold">grails</strong> developpers. Groovy and Grails communites are like that,
+pragmatic and pleasant.<p class="paragraph"/>Having seen the referenced beans in the previous chapter should already give you ideas to improve or customize your needs.
+There are two available examples of extensions:
+<ul class="star">
+<li><a href="http://github.com/smaldini/grails-events-si" target="blank">events-si</a> : This plugin overrides the publisher and registry beans in order to replace the default mechanisms with the much</li>
+</ul><p class="paragraph"/>more flexible Spring Integration channels and endpoints.
+<ul class="star">
+<li><a href="http://github.com/smaldini/grails-events-push" target="blank">events-push</a> : This plugin registers new Listeners from your cool browsers using javascript, authorized through the</li>
+</ul><p class="paragraph"/>new Events DSL attributes  <em class="italic">browser</em>  and  <em class="italic">browserFilter</em> 
+
+
+<h2 id="config">5.9 Configuration properties</h2>
+Based on Platform-Core <a href="../guide/single.html#configuration" class="guide">configuration</a> mechanism, the plugin provides the following Events-Bus related keys:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Configuration Key</strong></th><th><strong class="bold">Type</strong></th><th><strong class="bold">Default</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>grails.plugin.platform.events.disabled</td><td>Boolean</td><td>false</td><td>Fully disable Events Bus mechanism, no events methods will be injected</td></tr><tr class="table-even"><td>grails.plugin.platform.events.poolSize</td><td>Integer</td><td>10</td><td>Allow X concurrent workers to process events</td></tr><tr class="table-odd"><td>grails.plugin.platform.events.gorm.disabled</td><td>Boolean</td><td>false</td><td>Disable GORM bridge, stopping GORM events from being published</td></tr><tr class="table-even"><td>grails.plugin.platform.events.catchFlushException</td><td>Boolean</td><td>true</td><td>Catch any GORM flushing exceptions which could be noisy specially when vetoing changes</td></tr></table><p class="paragraph"/>In addition, you can override beans values such as gormTopicSupport
+<pre class="brush: groovy;">&#10;beans&#123;&#10;    gormTopicSupport &#123;&#10;        //transform gorm Events Objects types into topics&#10;        translateTable = &#91;&#10;            'PreInsertEvent': 'beforeInsert', 'PreUpdateEvent': 'beforeUpdate',&#10;            /&#42;'PreLoadEvent': 'beforeLoad',&#42;/ 'PreDeleteEvent': 'beforeDelete',&#10;            'ValidationEvent': 'beforeValidate', 'PostInsertEvent': 'afterInsert',&#10;            'PostUpdateEvent': 'afterUpdate', 'PostDeleteEvent': 'afterDelete',&#10;            /&#42;'PostLoadEvent': 'afterLoad',&#42;/ 'SaveOrUpdateEvent': 'onSaveOrUpdate'&#10;        &#93;&#10;    &#125;&#10;&#125;&#10;</pre>
+
+
+
+<h1 id="injection">6 Injection API</h1>
 Pending
 
 
-<h1 id="injection">7 Injection API</h1>
-Pending
+<h1 id="nav">7 Navigation API</h1>
+The Navigation API provides a standard way to expose information about the menus available in your application and plugins.<p class="paragraph"/>Aside from application navigation, plugins can expose their controllers and actions so that application can reuse them in their own navigation structure. Applications can also add items to the navigation structure of plugins, to merge items into the UI of plugins.<p class="paragraph"/>
 
 
-<h1 id="navigation">8 Navigation API</h1>
-Pending
+<h2 id="navigation_concepts">7.1 Concepts</h2>
+There are only three concepts to understand in the Navigation API - items, scopes and the activation path.<p class="paragraph"/>Out of the box, scopes are created for all your application and plugin controllers automatically by convention. Items are created in these scopes for every action on the controller.<p class="paragraph"/>You will typically move from this to using the navigation DSL artefact for more control over the navigation structure.<p class="paragraph"/><h3>What is a navigation item?</h3><p class="paragraph"/>An item is a place the user can reach in your navigation structure. Every item results in a menu item and link. Whether it is visible or enabled can be determined at runtime.<p class="paragraph"/>Items are always inside one scope.<p class="paragraph"/>Items can have child items.<p class="paragraph"/>Items must be resolvable from a controller/action pair, so the navigation API can always tell where the user is in the structure if the current controller/action is known and you have an item declared for them.<p class="paragraph"/><h3>What is a Scope?</h3><p class="paragraph"/>A scope is a name that identifies one or more navigation items. Top-level scopes are called root scopes and represent your main groupings of navigation items. For example you may have your application navigation for regular users and an admin root scope for backend administration.<p class="paragraph"/>Example of scope names:
+<div class="code"><pre>app                     // typically your <span class="java&#45;keyword">default</span> app navigation root scope
+app/messages            // the <span class="java&#45;quote">"messages"</span> item in the <span class="java&#45;quote">"app"</span> root scope
+admin/scaffolding/book  // the <span class="java&#45;quote">"book"</span> item under <span class="java&#45;quote">"scaffolding"</span> item in the <span class="java&#45;quote">"admin"</span> scope
+plugin.cms/admin        // the <span class="java&#45;quote">"admin"</span> item supplied by the <span class="java&#45;quote">"CMS"</span> plugin
+plugin.socialFeed/feeds // the <span class="java&#45;quote">"feeds"</span> item supplied by the <span class="java&#45;quote">"social&#45;feed"</span> plugin</pre></div><p class="paragraph"/>Root scopes do not generate any menu links themselves, they are merely containers for your top level navigation items. They enable you to have multiple sets of navigation for different contexts.<p class="paragraph"/>The items that scopes refer to can be nested arbitrarily. It is however generally recommended that you use at most 2 levels of navigation, sometimes three if really necessary. This is purely because of the user experience issues with deep navigation.<p class="paragraph"/>Usually you should factor out deep navigation into separate root scopes. For example most applications would have the "app" scope, a "footer" scope for footer links like Terms of Use, Support etc., and a "user" scope for log in/out and so on.<p class="paragraph"/><h3>What is an Activation Path?</h3><p class="paragraph"/>An activation path is a string that represents the currently active navigation item. This may be a few levels down in your navigation structure and represents the breadcrumb trail the user would see to get to the location they are currently viewing.<p class="paragraph"/><blockquote class="note">
+Breadcrumbs themselves represent a navigational superset of your app's primary navigation structure. They are not supported in this release of the API, because the work has not yet been done to declare breadcrumbs that represent non-navigational items i.e. nested content inside a multi-page document is not part of your regular site navigation.
+</blockquote><p class="paragraph"/>The activation path is set on the current request and indicates which node is currently active. By default navigation API attempts to identify the correct activation path in your structure using the current controller and action, much like reverse URL mapping.<p class="paragraph"/>However you can explicitly set the activation path using a tag or some code, for cases where you need to "fudge" it - for example if your action performs some odd redirection, or the endpoint is simply a GSP view which cannot be reversed to a location in the structure.
 
+
+<h2 id="navigation_getting_started">7.2 Getting Started</h2>
+The first thing you need to do is install the platform-core plugin if you haven't already.<p class="paragraph"/>If you then run your application and you have some existing controllers you'll find that if you add the nav:<a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> tag to one of your sitemesh layouts or GSP pages you will see top-level navigation for each of your controllers.<p class="paragraph"/>
+
+
+<h2 id="navigation_by_convention">7.3 Navigation by convention</h2>
+To get you started quickly, all your controllers will be automatically registered in the "app" scope and each controller has sub-items for each of it actions.<p class="paragraph"/>All the tags default to the "app" scope if you don't supply a scope and the current controller/action are within that scope, so it just works out of the box for the simple cases. So add the following to your sitemesh layout or GSP:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:primary/&#62;&#10;&#60;nav:secondary/&#62;&#10;</pre><p class="paragraph"/>This will render one or two &#60;ul&#62; tags for the "app" scope based on the currently active controller/action pair.<p class="paragraph"/>By default all your controllers are automatically declared for you inside the "app" scope if they are not explicitly declared in a navigation DSL artefact and the navigationScope property is not set on them.<p class="paragraph"/>These controller scopes have a nested item for each action defined on the controller, including the default action (the same as the link for e controller scope itself).<p class="paragraph"/><h3>Moving some controllers from the default app navigation scope</h3><p class="paragraph"/>You often have some controllers that you don't want to appear in the main navigation of the application. You may want these to appear in an admin interface for example. To do this with convention based navigation you can just add a static navigationScope property to controllers.<p class="paragraph"/><pre class="brush: groovy;">&#10;class BookController &#123;&#10;    static scaffold = Book&#10;    &#10;    static navigationScope = 'admin'&#10;&#125;&#10;</pre><p class="paragraph"/>This allows you to push controllers into another scope. Note that plugin controllers are automatically namespaced into a scope under "plugin.&#60;pluginName&#62;", in a scope beneath this with the value of the navigationScope property.<p class="paragraph"/>You will not need to change your tags to render the admin navigation - if the controller/action the user is viewing resolves to an item inside the admin scope, the nav:primary tag will render the admin scope.<p class="paragraph"/>
+
+
+<h2 id="primary_navigation">7.4 What is primary and secondary navigation?</h2>
+The primary navigation is the top level application the user sees, and the secondary is the context-sensitive sub items of the currently active primary item.<p class="paragraph"/>Contemporary site styles typically separate out the primary and secondary navigation.<p class="paragraph"/>The primary and secondary tags are geared up for this and automatically lookup up the scope and activation path to work out what to render.<p class="paragraph"/>Normally you will only use these once in a page.<p class="paragraph"/>
+
+
+<h2 id="menu_navigation">7.5 Rendering other menus</h2>
+You can render any part of your navigation structure as a menu as many times as you like anywhere in your pages, using the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/><h3>Rendering multiple navigation scopes on the same page</h3><p class="paragraph"/>A typical contemporary application will have something like three separate menus used on most pages; main, user and footer.<p class="paragraph"/>The main menu would use <a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> &#38; <a href="../ref/Navigation Tags/secondary.html" class="navigationTags">secondary</a> tags.<p class="paragraph"/>You would then render the user and footer navigation using the menu tag, and passing the user and footer scopes:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;html&#62;&#10;&#60;body&#62;&#10;    &#60;nav:primary/&#62;&#10;    &#60;nav:secondary/&#62;&#10;&#10;    &#60;div id="user&#45;nav"&#62;&#10;        &#60;nav:menu scope="user"/&#62;&#10;    &#60;/div&#62;    &#10;&#10;    &#60;g:layoutBody/&#62;&#10;&#10;    &#60;div id="footer&#45;nav"&#62;&#10;        &#60;nav:menu scope="footer"/&#62;&#10;    &#60;/div&#62;    &#10;&#60;/body&#62;&#10;&#60;/html&#62;&#10;</pre><p class="paragraph"/>This results in a page where there are actually for navigation renderings, showing different scopes.<p class="paragraph"/>
+
+
+<h2 id="using_navigation_dsl">7.6 Using the Navigation DSL</h2>
+To declare navigation items you use navigation DSL artefacts to determine the items in each scope. Scopes are named and can be nested to provide a hierarchy.<p class="paragraph"/>Navigation artefacts are groovy scripts end in the name "Navigation" in <code>grails-app/conf</code>.<p class="paragraph"/>Here's an example for the various ways to use the DSL to declare scopes and items:<p class="paragraph"/>Example contents of <code>grails-app/conf/AppNavigation.groovy</code>:
+<pre class="brush: groovy;">&#10;navigation = &#123;&#10;    // Declare the "app" scope, used by default in tags&#10;    app &#123;&#10;    &#10;        // A nav item pointing to HomeController, using the default action&#10;        home()&#10;&#10;        // Items pointing to ContentController, using the specific action&#10;        about(controller:'content')&#10;        contact(controller:'content')&#10;        help(controller:'content')&#10;        &#10;        // Some user interface actions in second&#45;level nav&#10;        // All in BooksController&#10;        books &#123;&#10;            // "list" action in "books" controller&#10;            list()&#10;            // "create" action in "books" controller&#10;            create()&#10;        &#125;&#10;        &#10;        // More convoluted stuff split across controllers/locations&#10;        support(controller:'content', action:'support') &#123;&#10;            faq(url:'http://faqs.mysite.com') // point to CMS&#10;            makeRequest(controller:'supportRequest', action:'create')&#10;        &#125;&#10;    &#125;&#10;    &#10;    // Some back&#45;end admin scaffolding stuff in a separate scope&#10;    admin &#123;&#10;        // Use "list" action as default item, even if its not default action&#10;        // and create automatic sub&#45;items for the other actions&#10;        books(controller:'bookAdmin', action:'list, create, search')&#10;        &#10;        // User admin, with default screen using "search" action&#10;        users(controller:'userAdmin', action:'search') &#123;&#10;            // Declare action alias so "create" is active for both "create" and "update" actions&#10;            create(action:'create', actionAliases:'update')&#10;        &#125;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>You can also use overrides in the navigation DSL to move items from one scope to another for example to move items declared by a plugin into your primary application navigation.
+<blockquote class="note">This part is not implemented in 1.0.M2/M3 - code sample to be written</blockquote><p class="paragraph"/>Using tags such as the <a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> and <a href="../ref/Navigation Tags/secondary.html" class="navigationTags">secondary</a> navigation tags you can render all the page elements you need.<p class="paragraph"/><h3>The Navigation DSL Definition</h3><p class="paragraph"/>The script must return a Closure in the <code>navigation</code> variable in the binding.<p class="paragraph"/>This closure represents the DSL and method invocations have a special meaning within the DSL.<p class="paragraph"/>The name used in method calls is used to construct the activation path of each item. So a call to "app" that has a call to "messages" which has a closure that calls "inbox" will create:
+<ol>
+<li>A scope called "app"</li>
+<li>A top-level item in the "app" scope, called "messages", with activation path <code>app/message</code></li>
+</ol><p class="paragraph"/># A nested item under "messages" called "inbox" with activation path <code>app/messages/inbox</code><p class="paragraph"/><h4>Top level method invocations (root scopes)</h4><p class="paragraph"/>The top-level method calls that pass a Closure define root scopes in the navigation structure.<p class="paragraph"/>The "app" scope is a prime example of this:<p class="paragraph"/><pre class="brush: groovy;">&#10;navigation = &#123;&#10;    app &#123;&#10;        home controller:'test', data:&#91;icon:'house'&#93;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>By default scopes defined by Navigation artefacts within plugins are automatically namespaced to prevent collisions with application namespaces.<p class="paragraph"/>Thus the scope "app" in a plugin called "SpringSecurityCore" would become the scope "plugin.springSecurityCore.app". If a plugin defines the scope with the <code>global:true</code> argument, this will not happen:<p class="paragraph"/><pre class="brush: groovy;">&#10;// Example of a plugin exposing a root scope without namespacing&#10;navigation = &#123;&#10;    app(global:true) &#123;&#10;        contact controller:'test', data:&#91;icon:'mail'&#93;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><h4>Nested method calls - defining navigation items</h4><p class="paragraph"/>The DSL supports the following arguments when defining a navigation items.<p class="paragraph"/><h4>Linking arguments</h4><p class="paragraph"/>These are <code>controller</code>, <code>action</code>, <code>uri</code>, <code>url</code> and <code>view</code>. These are passed to <code>g:link</code> to create links. The "view" attribute is handled internally and removed and converted to "uri" for the purpose of calling g:link<p class="paragraph"/>These values are passed through to the navigation tags for link rendering just as you would expect when calling <code>g:link</code>.<p class="paragraph"/>There are some special behaviours however:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>controller</code></td><td>Optional - it will be inherited from the parent node if the parent uses <code>controller</code> to create its link, or failing that it will use the name of the DSL method call</td></tr><tr class="table-even"><td><code>action</code></td><td>Optional - it will fall back to the name of the method call if the controller is specified or inherited. If the controller was not specified either (and hence "uses up" the method call name), this will use the default action of the controller or "index" if none is set. The <code>action</code> value can be a List or comma-delimited string. If it is, the first element is the action used to generate the item's link, and any other actions listed will have sub-items created for them, in alphabetical order.</td></tr><tr class="table-odd"><td><code>actionAliases</code></td><td>Optional - list of actions that will also <strong class="bold">activate</strong> this navigation item. The link is always to the <code>action</code> defined for the item in the DSL, but if the current controller/action resolves to an action in this alias list, the navigation item will appear to be active. Used for those situations where you have multiple actions presenting the same user view i.e. create/save, edit/update</td></tr></table><p class="paragraph"/><h4>Visibility and Status</h4><p class="paragraph"/>You can control per request whether items are visible or enabled, or set this in the navigation structure statically.<p class="paragraph"/>The arguments:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>visible</code></td><td>Determines whether the item is visible and can be a boolean or a Closure. If it is a Closure, it will receive a delegate that supplies request and application properties (see below)</td></tr><tr class="table-even"><td><code>enabled</code></td><td>Determines if the item is enabled or not and can be a boolean or a Closure. If it is a Closure, it will receive a delegate that supplies request and application properties (see below)</td></tr></table><p class="paragraph"/>Typically you will want to hide items if the user is not permitted to see them. An example of doing this with Spring Security Core:<p class="paragraph"/><pre class="brush: groovy;">&#10;import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils&#10;&#10;def loggedIn = &#123; &#45;&#62; &#10;    springSecurityService.principal instanceof String&#10;&#125;&#10;def loggedOut = &#123; &#45;&#62; &#10;    !(springSecurityService.principal instanceof String)&#10;&#125;&#10;def isAdmin = &#123; &#45;&#62; &#10;    SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')&#10;&#125;&#10;&#10;navigation = &#123;&#10;    app &#123;&#10;        home controller:'test', data:&#91;icon:'house'&#93;&#10;        …&#10;    &#125;&#10;    &#10;    admin &#123;&#10;        superUserStuff controller:'admin', visible: isAdmin&#10;        …&#10;    &#125;&#10;&#10;    user &#123;&#10;        login controller:'auth', action:'login', visible: notLoggedIn&#10;        logout controller:'auth', action:'logout', visible: loggedIn&#10;        signup controller:'auth', action:'signup', visible: notLoggedIn&#10;        profile controller:'auth', action:'profile', visible: loggedIn&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/>Note how the Closures are "def"'d in the script to make them reusable and reachable within the DSL<p class="paragraph"/>The closures receive a delegate which resolves the following standard Grails properties:
+<ul class="star">
+<li>grailsApplication</li>
+<li>pageScope</li>
+<li>session</li>
+<li>request</li>
+<li>controllerName</li>
+<li>actionName</li>
+<li>flash</li>
+<li>params</li>
+</ul><p class="paragraph"/>Any unresolved properties will resolve to the model (pageScope) and failing that, to the application's bean context, so you can resolve service beans etc by just accessing them by name.<p class="paragraph"/><h4>Title text</h4><p class="paragraph"/>The title of an item is the text used to display the navigation item.<p class="paragraph"/>Two arguments are used for this:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Argument</strong></th><th><strong class="bold">Usage</strong></th></tr><tr class="table-odd"><td><code>title</code></td><td>Optional. Represents an i18n message code to use. It defaults to "nav." plus the the item's activation path with "/" converted to "." so path <code>app/messages/inbox</code> becomes the i18n code <code>nav.app.messages.inbox</code></td></tr><tr class="table-even"><td><code>titleText</code></td><td>Optional. represents literal text to use for the navigation item title if the i18n bundle does not resolve anything for the value of <code>title</code></td></tr></table><p class="paragraph"/>For automatically created action navigation items, the titleText defaults to the "human friendly" form of the action name. i.e. "index" becomes "Index", "showItems" becomes "Show Items".<p class="paragraph"/><h4>Application custom data</h4><p class="paragraph"/>Each item can have arbitrary data associated with it - but note that this data is singleton and should not change at runtime.<p class="paragraph"/>Typically you would use this to associate some extra data such as an icon name, which you then use in custom menu rendering code.<p class="paragraph"/>Just put the values into the "data" Map:<p class="paragraph"/><pre class="brush: groovy;">&#10;navigation = &#123;&#10;    app &#123;&#10;        home controller:'test', action:'home', data:&#91;icon:'house'&#93;&#10;    &#125;&#10;&#125;&#10;</pre><p class="paragraph"/><h4>Ordering of items</h4><p class="paragraph"/>Items are ordered naturally in the order they are declared in the DSL.<p class="paragraph"/>However you may wish to manually order items, for example so that plugins (or the application) can inject items into certain positions in your navigation.<p class="paragraph"/>Just pass the integer value in the <code>order</code> argument:<p class="paragraph"/><pre class="brush: groovy;">&#10;navigation = &#123;&#10;    app &#123;&#10;        home controller:'test', action:'home', order:&#45;1000&#10;        about controller:'test', action:'about', order:100&#10;        contact controller:'test', action:'contact', order:500 data:&#91;icon:'mail'&#93;&#10;        messages(controller:'test', data:&#91;icon:'inbox'&#93;, order:10) &#123;&#10;            inbox action:'inbox'&#10;            archive action:'archive'&#10;            trash action:'trash', order:99999999 // always last&#10;        &#125;&#10;    &#125;&#10;</pre>
+
+
+
+<h2 id="navigation_tags">7.7 The Navigation Tags</h2>
+There are a few Navigation tags available, all detailed in the reference section.<p class="paragraph"/>The most common tags you will use are explained here.<p class="paragraph"/>It is important to understand that all the tags work by default using the current scope and activation path as determined by the request - but you can override scope and path on all of these tags to render anything you like.<p class="paragraph"/>Navigation is rendered by default as an HTML <code>&#60;ul&#62;</code> tag with an <code>&#60;li&#62;</code> containing a single link for each of the items. Nested items are rendered as nested <code>&#60;ul&#62;</code>.<p class="paragraph"/>All navigation rendering tags support attributes for CSS class, id and custom rendering of items if required. These are still always rendered within <code>&#60;ul&#62;</code>.<p class="paragraph"/><h3>nav:primary</h3><p class="paragraph"/>Use this tag to render the primary user navigation of your site:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:primary scope="admin" id="nav" class="admin"/&#62;&#10;&#10;&#60;%&#45;&#45; With custom item rendering &#45;&#45;%&#62;&#10;&#60;nav:primary scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#10;   &#60;p:callTag tag="g:link" attrs="$&#123;linkArgs + &#91;class:'nav button'&#93;&#125;"&#62;&#10;      &#60;nav:title item="$&#123;item&#125;"/&#62;&#10;   &#60;/p:callTag&#62;&#10;   &#60;/li&#62;&#10;&#60;/nav:primary&#62;&#10;</pre><p class="paragraph"/>This supports custom rendering in the same way as the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/>See the <a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> tag reference for full details.<p class="paragraph"/><h3>nav:secondary</h3><p class="paragraph"/>Use this tag to render the second-level navigation based on the selected item within the current primary navigation. The scope resolved by <code>nav:primary</code> is stored in the request so that this tag knows which scope to use:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:secondary id="secondary&#45;nav" class="admin"/&#62;&#10;</pre><p class="paragraph"/>This supports custom rendering in the same way as the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/>See the <a href="../ref/Navigation Tags/secondary.html" class="navigationTags">secondary</a> tag reference for full details.<p class="paragraph"/><h3>nav:menu</h3><p class="paragraph"/>The menu tag is used internally by the primary/secondary tags and can be called directly to render any part of the navigation structure, with any activation path.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:menu id="main&#45;nav"/&#62;&#10;&#10;&#60;%&#45;&#45; Render the admin nav 3&#45;deep, including all nested descendents whether active or not &#45;&#45;%&#62;&#10;&#60;nav:menu scope="admin" depth="3" forceChildren="true"/&#62;&#10;&#10;&#60;%&#45;&#45; With custom item rendering &#45;&#45;%&#62;&#10;&#60;nav:menu scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#10;   &#60;p:callTag tag="g:link" attrs="$&#123;linkArgs + &#91;class:'nav button'&#93;&#125;"&#62;&#10;      &#60;nav:title item="$&#123;item&#125;"/&#62;&#10;   &#60;/p:callTag&#62;&#10;   &#60;/li&#62;&#10;&#60;/nav:menu&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag reference for full details.<p class="paragraph"/><h3>nav:title</h3><p class="paragraph"/>This renders the i18n title of a specific navigation item passed to it; for use in custom menu rendering.<p class="paragraph"/><pre class="brush: groovy;">&#10;&#60;nav:primary scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#60;nav:title item="$&#123;item&#125;"/&#62;&#60;/li&#62;&#10;&#60;/nav:primary&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag reference for full details.<p class="paragraph"/><h3>nav:set</h3><p class="paragraph"/>You can call this tag from inside a controller or GSP if you need to define request-specific parameters.<p class="paragraph"/>You can "fudge" the current request's activation path or set the default scope to be used by navigation tags.<p class="paragraph"/>You may need to do this inside an error.gsp for example, or inside admin pages to reuse a generic theme that renders navigation using <code>nav:primary</code>.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;html&#62;&#10;&#60;body&#62;&#10;    &#60;!&#45;&#45; pretend we are in messages/inbox even though we are in a GSP with no controller &#45;&#45;&#62;&#10;    &#60;nav:set path="app/messages/inbox"/&#62;&#10;    &#60;nav:set scope="admin"/&#62;&#10;&#10;    &#60;!&#45;&#45; or set those together &#45;&#45;&#62;&#10;    &#60;nav:set path="app/messages/inbox" scope="admin"/&#62;&#10;&#10;    &#60;!&#45;&#45; these will use whatever the current active path and scope are &#45;&#45;&#62;&#10;    &#60;nav:primary/&#62;&#10;    &#60;nav:secondary/&#62;&#10;&#10;    &#60;p&#62;Something went wrong!&#60;/p&#62;&#10;&#60;/body&#62;&#10;&#60;/html&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/set.html" class="navigationTags">set</a> tag reference for full details.
+
+
+
+<h1 id="uiextension">8 UI Extensions</h1>
+Several simple UI Extensions are included in platform-core.<p class="paragraph"/>The tags supplied make it trivial to render links to controllers and actions
+using i18n messages, display messages to the end user, and render buttons and
+labels in i18n friendly ways.
+
+
+
+<h2 id="uix_tags">8.1 Tags</h2>
+<h3>Linking tags</h3><p class="paragraph"/>The <a href="../ref/Ui Extension Tags/smartLink.html" class="uiExtensionTags">smartLink</a> tag renders links for controllers and actions, automatically working out the text of the link using i18n.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;%&#45;&#45; Link to default action of BooksController &#45;&#45;%&#62;&#10;&#60;p:smartLink controller="books"/&#62;&#10;&#10;&#60;%&#45;&#45; Link to list action of current controller &#45;&#45;%&#62;&#10;&#60;p:smartLink action="list"/&#62;&#10;</pre><p class="paragraph"/>These will use i18n messages located by convention of the form: <code>action.<strong class="bold">controllerName</strong>.<strong class="bold">actionName</strong></code><p class="paragraph"/><h3>Label tag</h3><p class="paragraph"/>The label tag will render a &#60;label&#62; with the text optionally loaded from i18n:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:label text="field.user.name"/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/label.html" class="uiExtensionTags">label</a> for full details of the attributes, which include passing arguments to the i18n message.<p class="paragraph"/><h3>Button tag</h3><p class="paragraph"/>The button tag will render a text-based button using either a &#60;button&#62;, &#60;input type="submit"&#62; or &#60;a&#62; tag, with the text optionally loaded from i18n:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:button text="button.save"/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/button.html" class="uiExtensionTags">button</a> for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.<p class="paragraph"/><h3>Display message tag</h3><p class="paragraph"/>The displayMessage tag works with the <code>displayMessage</code> and <code>displayFlashMessage</code> controller methods to make it easy to render messages to the user in a uniform way.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:displayMessage/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/displayMessage.html" class="uiExtensionTags">displayMessage</a> for full details of the attributes and the <a href="../ref/Ui Extension Methods/displayMessage.html" class="uiExtensionMethods">displayMessage</a> and <a href="../ref/Ui Extension Methods/displayFlashMessage.html" class="uiExtensionMethods">displayFlashMessage</a> controller methods.<p class="paragraph"/>The tag will render both request and flash messages, and wraps them in a div with CSS classes according to the type of message.<p class="paragraph"/><h3>Branding tags</h3><p class="paragraph"/>There are several simple but useful site branding tags included. Commonly to be used in site footers and emails templates.
+<ul class="star">
+<li><a href="../ref/Ui Extension Tags/organization.html" class="uiExtensionTags">organization</a> - Renders the name of the business, taken from Config var <code>plugin.platformCore.organization.name</code></li>
+<li><a href="../ref/Ui Extension Tags/siteName.html" class="uiExtensionTags">siteName</a> - Renders the name of the site/product, taken from Config var <code>plugin.platformCore.site.name</code></li>
+<li><a href="../ref/Ui Extension Tags/siteURL.html" class="uiExtensionTags">siteURL</a> - Renders an absolute URL for the root of the site</li>
+<li><a href="../ref/Ui Extension Tags/siteLink.html" class="uiExtensionTags">siteLink</a> - Renders an absolute link to the site, with the site name as the link text</li>
+<li><a href="../ref/Ui Extension Tags/year.html" class="uiExtensionTags">year</a> - Renders the current year, for use in copyright footers</li>
+</ul><p class="paragraph"/>
+
+
+<h2 id="uix_properties">8.2 Properties</h2>
+
+New auto-namespaced equivalents of <code>session</code>, <code>request</code> and <code>flash</code> attributes are added to all <strong class="bold">controllers</strong> and <strong class="bold">taglibs</strong> exposed by plugins.<p class="paragraph"/>These properties are <a href="../ref/Ui Extension Properties/pluginRequestAttributes.html" class="uiExtensionProperties">pluginRequestAttributes</a>, <a href="../ref/Ui Extension Properties/pluginSession.html" class="uiExtensionProperties">pluginSession</a> and <a href="../ref/Ui Extension Properties/pluginFlash.html" class="uiExtensionProperties">pluginFlash</a>.<p class="paragraph"/>They allow you to access these attributes from plugin code without having to worry about key name clashes with other plugins or the application:<p class="paragraph"/><pre class="brush: groovy;">&#10;class MyController &#123;&#10;	def beginPasswordReset = &#123;&#10;		pluginSession.resetMode = true&#10;		pluginFlash.resetToken = resetTokenFactory.newTicket()&#10;	&#125;&#10;&#125;&#10;</pre><p class="paragraph"/>
+
+
+
+<h2 id="uix_code">8.3 Beans and utilities</h2>
+There are a some UI utility classes and beans available:
+<ul class="star">
+<li><a href="../ref/Beans/grailsUiExtensions.html" class="beans">grailsUiExtensions</a> - Provides methods for setting and getting displayMessages</li>
+<li><a href="../ref/Utility Classes/TagLibUtils.html" class="utilityClasses">TagLibUtils</a> - Provides helper functions for manipulating attributes, CSS class name lists etc.</li>
+</ul><p class="paragraph"/>
 
 
 <h1 id="convention">9 Convention API</h1>
 Pending
 
-                    </div>
-                </td>
-                <td id="col2">
+            </div>
+        </td>
+        <td id="col2">
             <div class="local clearfix">
                 <div class="local-title">
                     <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
@@ -354,10 +584,31 @@ Pending
                         <div class="menu-item"><a href="../ref/Beans/grailsSecurity.html">grailsSecurity</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Beans/grailsUiHelper.html">grailsUiHelper</a>
+                        <div class="menu-item"><a href="../ref/Beans/grailsUiExtensions.html">grailsUiExtensions</a>
                         </div>
                         
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Events Methods</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/countListeners.html">countListeners</a>
                         </div>
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/event.html">event</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/on.html">on</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/removeListeners.html">removeListeners</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Events%20Methods/waitFor.html">waitFor</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Global Properties</h1><div class="menu-sub">
@@ -366,7 +617,28 @@ Pending
                         <div class="menu-item"><a href="../ref/Global%20Properties/pluginConfig.html">pluginConfig</a>
                         </div>
                         
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Navigation Tags</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/menu.html">menu</a>
                         </div>
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/primary.html">primary</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/secondary.html">secondary</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/set.html">set</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Navigation%20Tags/title.html">title</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Plugin Conventions</h1><div class="menu-sub">
@@ -378,7 +650,7 @@ Pending
                         <div class="menu-item"><a href="../ref/Plugin%20Conventions/doWithConfigOptions.html">doWithConfigOptions</a>
                         </div>
                         
-                        </div>
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
@@ -387,7 +659,7 @@ Pending
                         <div class="menu-item"><a href="../ref/Scripts/update-header.html">update-header</a>
                         </div>
                         
-                        </div>
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Methods</h1><div class="menu-sub">
@@ -405,7 +677,7 @@ Pending
                         <div class="menu-item"><a href="../ref/Security%20Methods/withUser.html">withUser</a>
                         </div>
                         
-                        </div>
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Properties</h1><div class="menu-sub">
@@ -417,49 +689,49 @@ Pending
                         <div class="menu-item"><a href="../ref/Security%20Properties/securityInfo.html">securityInfo</a>
                         </div>
                         
-                        </div>
+                    </div>
                     </div>
                     
-                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Security</h1><div class="menu-sub">
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Tags</h1><div class="menu-sub">
                         
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/createLoginLink.html">createLoginLink</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/createLoginLink.html">createLoginLink</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/createLogoutLink.html">createLogoutLink</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/createLogoutLink.html">createLogoutLink</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/createSignupLink.html">createSignupLink</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/createSignupLink.html">createSignupLink</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/identity.html">identity</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/identity.html">identity</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/ifLoggedIn.html">ifLoggedIn</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/ifLoggedIn.html">ifLoggedIn</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/ifNotLoggedIn.html">ifNotLoggedIn</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/ifNotLoggedIn.html">ifNotLoggedIn</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/ifNotPermitted.html">ifNotPermitted</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/ifNotPermitted.html">ifNotPermitted</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/ifPermitted.html">ifPermitted</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/ifPermitted.html">ifPermitted</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/info.html">info</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/info.html">info</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/loginButton.html">loginButton</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/loginButton.html">loginButton</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/logoutButton.html">logoutButton</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/logoutButton.html">logoutButton</a>
                         </div>
                         
-                        <div class="menu-item"><a href="../ref/Tags%20Security/signupButton.html">signupButton</a>
+                        <div class="menu-item"><a href="../ref/Security%20Tags/signupButton.html">signupButton</a>
                         </div>
                         
-                        </div>
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags System</h1><div class="menu-sub">
@@ -471,49 +743,7 @@ Pending
                         <div class="menu-item"><a href="../ref/Tags%20System/requiresBean.html">requiresBean</a>
                         </div>
                         
-                        </div>
                     </div>
-                    
-                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Ui Extension</h1><div class="menu-sub">
-                        
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/button.html">button</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/callTag.html">callTag</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/displayMessage.html">displayMessage</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/dummyText.html">dummyText</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/joinClasses.html">joinClasses</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/label.html">label</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/organization.html">organization</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteLink.html">siteLink</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteName.html">siteName</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteURL.html">siteURL</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/smartLink.html">smartLink</a>
-                        </div>
-                        
-                        <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/year.html">year</a>
-                        </div>
-                        
-                        </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Methods</h1><div class="menu-sub">
@@ -525,7 +755,73 @@ Pending
                         <div class="menu-item"><a href="../ref/Ui%20Extension%20Methods/displayMessage.html">displayMessage</a>
                         </div>
                         
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Properties</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Properties/pluginFlash.html">pluginFlash</a>
                         </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Properties/pluginRequestAttributes.html">pluginRequestAttributes</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Properties/pluginSession.html">pluginSession</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Tags</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/attrIfSet.html">attrIfSet</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/button.html">button</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/callTag.html">callTag</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/displayMessage.html">displayMessage</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/dummyText.html">dummyText</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/joinClasses.html">joinClasses</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/label.html">label</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/organization.html">organization</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/siteLink.html">siteLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/siteName.html">siteName</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/siteURL.html">siteURL</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/smartLink.html">smartLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/text.html">text</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/textScope.html">textScope</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../ref/Ui%20Extension%20Tags/year.html">year</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Utility Classes</h1><div class="menu-sub">
@@ -534,23 +830,23 @@ Pending
                         <div class="menu-item"><a href="../ref/Utility%20Classes/TagLibUtils.html">TagLibUtils</a>
                         </div>
                         
-                        </div>
+                    </div>
                     </div>
                     
                 </div>
             </div>
         </td>
-            </tr>
-        </table>
+    </tr>
+</table>
 
-        <div id="footer">
-            &copy; 2012 Marc Palmer & Stéphane Maldini
-            Please contact the authors with any corrections or suggestions
-        </div>
+<div id="footer">
+    &copy; 2012 Marc Palmer & Stéphane Maldini
+    Please contact the authors with any corrections or suggestions
+</div>
 
 
 
 <script type="text/javascript" src="../js/docs.js"></script>
 
-    </body>
+</body>
 </html>

@@ -1,17 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.1 Tags 1.0.M1</title>
+    <title>8.1 Tags 1.0.M3</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript" src="../css/shCore.js"></script>
+    <script type="text/javascript" src="../css/shBrushXml.js"></script>
+    <script type="text/javascript" src="../css/shBrushGroovy.js"></script>
+    <link type="text/css" rel="stylesheet" href="../css/shCoreMidnight.css"/>
     <script type="text/javascript">
-function addJsClass() {
-    var classes = document.body.className.split(" ");
-    classes.push("js");
-    document.body.className = classes.join(" ");
-}
+        SyntaxHighlighter.config.stripBrs = true;
+        SyntaxHighlighter.defaults['smart-tabs'] = true;
+        SyntaxHighlighter.all();
+        function addJsClass() {
+            var classes = document.body.className.split(" ");
+            classes.push("js");
+            document.body.className = classes.join(" ");
+        }
     </script>
 </head>
 
@@ -30,22 +37,22 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/gettingStarted.html"><strong>2</strong><span>Getting Started</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>3</strong><span>UI Extensions</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>3</strong><span>Configuration API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/configuration.html"><strong>4</strong><span>Configuration API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/security.html"><strong>4</strong><span>Security API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/security.html"><strong>5</strong><span>Security API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>6</strong><span>Events API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>7</strong><span>Injection API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/nav.html"><strong>7</strong><span>Navigation API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/navigation.html"><strong>8</strong><span>Navigation API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
@@ -74,22 +81,22 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../../guide/gettingStarted.html">&lt;&lt; <strong>2</strong><span>Getting Started</span></a></div>
+                <div class="toc-item prev-left"><a href="../../guide/nav.html">&lt;&lt; <strong>7</strong><span>Navigation API</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../../guide/configuration.html"><strong>4</strong><span>Configuration API</span> >></a></div>
+                <div class="toc-item next-right"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>3.1 Tags - Reference Documentation</h1>
+                    <h1>8.1 Tags - Reference Documentation</h1>
 
-                    <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (stephane.maldini@gmail.com)</p>
+                    <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)</p>
 
-                    <p><strong>Version:</strong> 1.0.M1</p>
+                    <p><strong>Version:</strong> 1.0.M3</p>
 
                     
                 </div>
@@ -98,25 +105,22 @@ function addJsClass() {
 
                 
 
-<h2 id="uix_tags">3.1 Tags</h2>
-
-<h3>Linking tags</h3><p class="paragraph"/>The <a href="../ref/Tags Ui Extension/smartLink.html" class="tagsUiExtension">smartLink</a> tag renders links for controllers and actions, automatically working out the text of the link using i18n.<p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;%&#45;&#45; Link to default action of BooksController &#45;&#45;%&#62;</span>
-<span class="xml&#45;tag">&#60;g:smartLink controller=<span class="xml&#45;quote">"books"</span>/&#62;</span><p class="paragraph"/><span class="xml&#45;tag">&#60;%&#45;&#45; Link to list action of current controller &#45;&#45;%&#62;</span>
-<span class="xml&#45;tag">&#60;g:smartLink action=<span class="xml&#45;quote">"list"</span>/&#62;</span></pre></div><p class="paragraph"/>These will use i18n messages located by convention of the form: <code>action.<strong class="bold">controllerName</strong>.<strong class="bold">actionName</strong></code><p class="paragraph"/><h3>Label tag</h3><p class="paragraph"/>The label tag will render a &#60;label&#62; with the text optionally loaded from i18n:<p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;g:label text=<span class="xml&#45;quote">"field.user.name"</span>/&#62;</span></pre></div><p class="paragraph"/>See <a href="../ref/Tags Ui Extension/label.html" class="tagsUiExtension">label</a> for full details of the attributes, which include passing arguments to the i18n message.<p class="paragraph"/><h3>Button tag</h3><p class="paragraph"/>The button tag will render a text-based button using either a &#60;button&#62;, &#60;input type="submit"&#62; or &#60;a&#62; tag, with the text optionally loaded from i18n:<p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;g:button text=<span class="xml&#45;quote">"button.save"</span>/&#62;</span></pre></div><p class="paragraph"/>See <a href="../ref/Tags Ui Extension/button.html" class="tagsUiExtension">button</a> for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.<p class="paragraph"/><h3>Display message tag</h3><p class="paragraph"/>The displayMessage tag works with the <code>displayMessage</code> and <code>displayFlashMessage</code> controller methods to make it easy to render messages to the user in a uniform way.<p class="paragraph"/><div class="code"><pre><span class="xml&#45;tag">&#60;g:displayMessage/&#62;</span></pre></div><p class="paragraph"/>See <a href="../ref/Tags Ui Extension/displayMessage.html" class="tagsUiExtension">displayMessage</a> for full details of the attributes and the <a href="../ref/Ui Extension Methods/displayMessage.html" class="uiExtensionMethods">displayMessage</a> and <a href="../ref/Ui Extension Methods/displayFlashMessage.html" class="uiExtensionMethods">displayFlashMessage</a> controller methods.<p class="paragraph"/>The tag will render both request and flash messages, and wraps them in a div with CSS classes according to the type of message.<p class="paragraph"/><h3>Branding tags</h3><p class="paragraph"/>There are several simple but useful site branding tags included. Commonly to be used in site footers and emails templates.
+<h2 id="uix_tags">8.1 Tags</h2>
+<h3>Linking tags</h3><p class="paragraph"/>The <a href="../ref/Ui Extension Tags/smartLink.html" class="uiExtensionTags">smartLink</a> tag renders links for controllers and actions, automatically working out the text of the link using i18n.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;%&#45;&#45; Link to default action of BooksController &#45;&#45;%&#62;&#10;&#60;p:smartLink controller="books"/&#62;&#10;&#10;&#60;%&#45;&#45; Link to list action of current controller &#45;&#45;%&#62;&#10;&#60;p:smartLink action="list"/&#62;&#10;</pre><p class="paragraph"/>These will use i18n messages located by convention of the form: <code>action.<strong class="bold">controllerName</strong>.<strong class="bold">actionName</strong></code><p class="paragraph"/><h3>Label tag</h3><p class="paragraph"/>The label tag will render a &#60;label&#62; with the text optionally loaded from i18n:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:label text="field.user.name"/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/label.html" class="uiExtensionTags">label</a> for full details of the attributes, which include passing arguments to the i18n message.<p class="paragraph"/><h3>Button tag</h3><p class="paragraph"/>The button tag will render a text-based button using either a &#60;button&#62;, &#60;input type="submit"&#62; or &#60;a&#62; tag, with the text optionally loaded from i18n:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:button text="button.save"/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/button.html" class="uiExtensionTags">button</a> for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.<p class="paragraph"/><h3>Display message tag</h3><p class="paragraph"/>The displayMessage tag works with the <code>displayMessage</code> and <code>displayFlashMessage</code> controller methods to make it easy to render messages to the user in a uniform way.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:displayMessage/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/displayMessage.html" class="uiExtensionTags">displayMessage</a> for full details of the attributes and the <a href="../ref/Ui Extension Methods/displayMessage.html" class="uiExtensionMethods">displayMessage</a> and <a href="../ref/Ui Extension Methods/displayFlashMessage.html" class="uiExtensionMethods">displayFlashMessage</a> controller methods.<p class="paragraph"/>The tag will render both request and flash messages, and wraps them in a div with CSS classes according to the type of message.<p class="paragraph"/><h3>Branding tags</h3><p class="paragraph"/>There are several simple but useful site branding tags included. Commonly to be used in site footers and emails templates.
 <ul class="star">
-<li><a href="../ref/Tags Ui Extension/organization.html" class="tagsUiExtension">organization</a> - Renders the name of the business, taken from Config var <code>plugin.platformCore.organization.name</code></li>
-<li><a href="../ref/Tags Ui Extension/siteName.html" class="tagsUiExtension">siteName</a> - Renders the name of the site/product, taken from Config var <code>plugin.platformCore.site.name</code></li>
-<li><a href="../ref/Tags Ui Extension/siteURL.html" class="tagsUiExtension">siteURL</a> - Renders an absolute URL for the root of the site</li>
-<li><a href="../ref/Tags Ui Extension/siteLink.html" class="tagsUiExtension">siteLink</a> - Renders an absolute link to the site, with the site name as the link text</li>
-<li><a href="../ref/Tags Ui Extension/year.html" class="tagsUiExtension">year</a> - Renders the current year, for use in copyright footers</li>
+<li><a href="../ref/Ui Extension Tags/organization.html" class="uiExtensionTags">organization</a> - Renders the name of the business, taken from Config var <code>plugin.platformCore.organization.name</code></li>
+<li><a href="../ref/Ui Extension Tags/siteName.html" class="uiExtensionTags">siteName</a> - Renders the name of the site/product, taken from Config var <code>plugin.platformCore.site.name</code></li>
+<li><a href="../ref/Ui Extension Tags/siteURL.html" class="uiExtensionTags">siteURL</a> - Renders an absolute URL for the root of the site</li>
+<li><a href="../ref/Ui Extension Tags/siteLink.html" class="uiExtensionTags">siteLink</a> - Renders an absolute link to the site, with the site name as the link text</li>
+<li><a href="../ref/Ui Extension Tags/year.html" class="uiExtensionTags">year</a> - Renders the current year, for use in copyright footers</li>
 </ul><p class="paragraph"/>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../../guide/gettingStarted.html">&lt;&lt; <strong>2</strong><span>Getting Started</span></a></div>
+                <div class="toc-item prev-left"><a href="../../guide/nav.html">&lt;&lt; <strong>7</strong><span>Navigation API</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../../guide/configuration.html"><strong>4</strong><span>Configuration API</span> >></a></div>
+                <div class="toc-item next-right"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
@@ -131,206 +135,272 @@ function addJsClass() {
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Beans</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Beans/grailsConventions.html">grailsConventions</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Beans/grailsEvents.html">grailsEvents</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Beans/grailsInjection.html">grailsInjection</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Beans/grailsNavigation.html">grailsNavigation</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Beans/grailsPluginConfiguration.html">grailsPluginConfiguration</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Beans/grailsSecurity.html">grailsSecurity</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Beans/grailsUiHelper.html">grailsUiHelper</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Beans/grailsConventions.html">grailsConventions</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Beans/grailsEvents.html">grailsEvents</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Beans/grailsInjection.html">grailsInjection</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Beans/grailsNavigation.html">grailsNavigation</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Beans/grailsPluginConfiguration.html">grailsPluginConfiguration</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Beans/grailsSecurity.html">grailsSecurity</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Beans/grailsUiExtensions.html">grailsUiExtensions</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Events Methods</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../../ref/Events%20Methods/countListeners.html">countListeners</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Events%20Methods/event.html">event</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Events%20Methods/on.html">on</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Events%20Methods/removeListeners.html">removeListeners</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Events%20Methods/waitFor.html">waitFor</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Global Properties</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Global%20Properties/pluginConfig.html">pluginConfig</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Global%20Properties/pluginConfig.html">pluginConfig</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Navigation Tags</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../../ref/Navigation%20Tags/menu.html">menu</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Navigation%20Tags/primary.html">primary</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Navigation%20Tags/secondary.html">secondary</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Navigation%20Tags/set.html">set</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Navigation%20Tags/title.html">title</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Plugin Conventions</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfig.html">doWithConfig</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfigOptions.html">doWithConfigOptions</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfig.html">doWithConfig</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Plugin%20Conventions/doWithConfigOptions.html">doWithConfigOptions</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Scripts/update-header.html">update-header</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Scripts/update-header.html">update-header</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Methods</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Security%20Methods/userHasAllRoles.html">userHasAllRoles</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Security%20Methods/userHasAnyRole.html">userHasAnyRole</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Security%20Methods/userIsAllowed.html">userIsAllowed</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Security%20Methods/withUser.html">withUser</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Methods/userHasAllRoles.html">userHasAllRoles</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Methods/userHasAnyRole.html">userHasAnyRole</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Methods/userIsAllowed.html">userIsAllowed</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Methods/withUser.html">withUser</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Properties</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Security%20Properties/securityIdentity.html">securityIdentity</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Security%20Properties/securityInfo.html">securityInfo</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Properties/securityIdentity.html">securityIdentity</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Properties/securityInfo.html">securityInfo</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
-                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Security</h1><div class="menu-sub">
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Tags</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/createLoginLink.html">createLoginLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/createLogoutLink.html">createLogoutLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/createSignupLink.html">createSignupLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/identity.html">identity</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/ifLoggedIn.html">ifLoggedIn</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/ifNotLoggedIn.html">ifNotLoggedIn</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/ifNotPermitted.html">ifNotPermitted</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/ifPermitted.html">ifPermitted</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/info.html">info</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/loginButton.html">loginButton</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/logoutButton.html">logoutButton</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Security/signupButton.html">signupButton</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/createLoginLink.html">createLoginLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/createLogoutLink.html">createLogoutLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/createSignupLink.html">createSignupLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/identity.html">identity</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/ifLoggedIn.html">ifLoggedIn</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/ifNotLoggedIn.html">ifNotLoggedIn</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/ifNotPermitted.html">ifNotPermitted</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/ifPermitted.html">ifPermitted</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/info.html">info</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/loginButton.html">loginButton</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/logoutButton.html">logoutButton</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Security%20Tags/signupButton.html">signupButton</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags System</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20System/config.html">config</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20System/requiresBean.html">requiresBean</a>
-                            </div>
-                            
-                            </div>
-                    </div>
-                    
-                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Ui Extension</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/button.html">button</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/callTag.html">callTag</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/displayMessage.html">displayMessage</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/dummyText.html">dummyText</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/joinClasses.html">joinClasses</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/label.html">label</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/organization.html">organization</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteLink.html">siteLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteName.html">siteName</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/siteURL.html">siteURL</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/smartLink.html">smartLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Tags%20Ui%20Extension/year.html">year</a>
-                            </div>
-                            
-                            </div>
+                        <div class="menu-item"><a href="../../ref/Tags%20System/config.html">config</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Tags%20System/requiresBean.html">requiresBean</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Methods</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Methods/displayFlashMessage.html">displayFlashMessage</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../../ref/Ui%20Extension%20Methods/displayMessage.html">displayMessage</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Methods/displayFlashMessage.html">displayFlashMessage</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Methods/displayMessage.html">displayMessage</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Properties</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Properties/pluginFlash.html">pluginFlash</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Properties/pluginRequestAttributes.html">pluginRequestAttributes</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Properties/pluginSession.html">pluginSession</a>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Tags</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/attrIfSet.html">attrIfSet</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/button.html">button</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/callTag.html">callTag</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/displayMessage.html">displayMessage</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/dummyText.html">dummyText</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/joinClasses.html">joinClasses</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/label.html">label</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/organization.html">organization</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/siteLink.html">siteLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/siteName.html">siteName</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/siteURL.html">siteURL</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/smartLink.html">smartLink</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/text.html">text</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/textScope.html">textScope</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Ui%20Extension%20Tags/year.html">year</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Utility Classes</h1><div class="menu-sub">
                         
-                            
-                            <div class="menu-item"><a href="../../ref/Utility%20Classes/TagLibUtils.html">TagLibUtils</a>
-                            </div>
-                            
-                            </div>
+                        
+                        <div class="menu-item"><a href="../../ref/Utility%20Classes/TagLibUtils.html">TagLibUtils</a>
+                        </div>
+                        
+                    </div>
                     </div>
                     
                 </div>
