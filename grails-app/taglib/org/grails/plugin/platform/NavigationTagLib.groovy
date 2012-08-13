@@ -259,9 +259,8 @@ class NavigationTagLib {
         findNode(attrs.path) ?: [id:''] //workaround for 2.0.0 null return value bug, can't return null :(
     }
 
-    /**
-     * Render a breadcrumb, with optional custom rendering
-     */
+/*
+    * Work in progress - Render a breadcrumb, with optional custom rendering
     def breadcrumb = { attrs, body ->
         // @todo remove attributes and pass-through all that are left to <ul>
 
@@ -300,6 +299,7 @@ class NavigationTagLib {
             }
         }
     }
+*/
     
     /**
      * Render the i18n title of a navigation item

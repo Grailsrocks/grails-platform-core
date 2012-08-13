@@ -4,7 +4,7 @@ h2. Purpose
 
 Renders a text-based button as either a <button>, <a> or <input type="submit"> based on the supplied options.
 
-The text is loaded from i18n if required.
+The text is loaded from namespaced i18n using the same logic as the [text|uiExtensionTags] tag.
 
 h2. Example
 
