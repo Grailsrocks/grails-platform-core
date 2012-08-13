@@ -1,1 +1,6 @@
-This API is still under construction
+h1. grailsNavigation
+
+The grailsNavigation bean is an instance of
+[Navigation|api:org.grails.plugin.platform.navigation.Navigation] that provides access to the data structures behind the [Navigation API|guide:nav].
+
+

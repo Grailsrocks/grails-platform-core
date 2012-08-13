@@ -16,7 +16,7 @@ class PurchaseService {
     def getPurchases() {
         Purchase.findAllByUser(securityInfo)
     }
-    ...
+    …
 }
 {docx}
 

@@ -47,7 +47,7 @@ class SomeController{
 {note}
 Whenever an event is triggered, a task is submitted into the events bus thread pool and a Future returned, wrapped into EventReply.
 It's also planned to fully support reply-address pattern in a future version (replyTo parameter) which brings interesting
-features out of the box : non blocking response, streaming handler response one by one, forwarding using topic name instead of closure...
+features out of the box : non blocking response, streaming handler response one by one, forwarding using topic name instead of closure…
 {note}
 
 h3. Multiple replies

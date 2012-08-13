@@ -142,12 +142,12 @@ def isAdmin = { ->
 navigation = {
     app {
         home controller:'test', data:[icon:'house']
-        ...
+        …
     }
     
     admin {
         superUserStuff controller:'admin', visible: isAdmin
-        ...
+        …
     }
 
     user {

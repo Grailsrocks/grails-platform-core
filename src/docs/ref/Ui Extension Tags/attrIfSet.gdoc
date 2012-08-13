@@ -9,7 +9,7 @@ Useful for keeping HTML output clean when some model or other attribute may be n
 h2. Example
 
 {docx:xml}
-<img src="..." ${p.attrIfSet(value:imgW, name:'width')} 
+<img src="…" ${p.attrIfSet(value:imgW, name:'width')} 
     ${p.attrIfSet(value:imgH, name:'height')} 
     ${p.attrIfSet(value:altText, name:'alt')}/>
 {docx}

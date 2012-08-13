@@ -14,7 +14,7 @@ class PurchaseService {
     def getPurchases() {
         Purchase.findAllByEmail(securityIdentity)
     }
-    ...
+    …
 }
 {docx}
 

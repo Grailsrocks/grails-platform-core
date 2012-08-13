@@ -13,3 +13,5 @@ The following public methods are available on the bean:
 * def getPluginConfigFor(objectInstance) - Returns the full set of config for a specific object - automatically working out which plugin the object comes from.
 
 Note that all artefacts can get their plugin config directly with the [pluginConfig|globalProperties] global property.
+
+For the full API see [PluginConfiguration|api:org.grails.plugin.platform.config.PluginConfiguration] javadocs.
