@@ -35,21 +35,16 @@ class PluginUtils {
      */
     static String getNameOfDefiningPlugin(applicationContext, def object) {
         def originalObject = object
-//        println "In getNameOfDefiningPlugin for object [${originalObject.toString()} (${originalObject.dump()})], context $applicationContext"
         Class clazz
         if (object instanceof Class) {
-//            println "In getNameOfDefiningPlugin for object [${originalObject.toString()}] its a class"
             clazz = object
         } else {
-//            println "In getNameOfDefiningPlugin for object [${originalObject.toString()}] its a closure"
             while (object instanceof Closure) {
                 object = object.owner
             }
-//            println "In getNameOfDefiningPlugin for object [${originalObject.toString()}] its a closure, first non-closure owner is ${object}"
             clazz = object.getClass()
         } 
 
-//        println "In getNameOfDefiningPlugin class to check is ${clazz}"
         def appPlugin = findAppPlugin(applicationContext)
         def pluginAnnotation = clazz.getAnnotation(GrailsPlugin)
 

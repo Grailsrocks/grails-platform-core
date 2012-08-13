@@ -37,13 +37,13 @@ grails.project.dependency.resolution = {
             export = false
         }
 
-        compile(":hibernate:$grailsVersion"){
+        runtime(":resources:1.2-RC1") {
             export = false
         }
 
-        // Removed for now, made dev UI conditional on resources being installed
-        // so will still run, if ugly.
-        // runtime(':resources:1.1.6')
+        compile(":hibernate:$grailsVersion"){
+            export = false
+        }
 
         compile(':spock:0.6') {
             export = false

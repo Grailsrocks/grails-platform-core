@@ -300,7 +300,7 @@ class NavigationTagLib {
         }
     }
 */
-    
+
     /**
      * Render the i18n title of a navigation item
      * @attr item The navigation item (instance of NavigationItem)

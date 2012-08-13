@@ -4,12 +4,18 @@
         <meta name="layout" content="platform/dev"/>
     </head>
     <body>
-        <h1>Plugin Config</h1>
+        <div class="row">
+            <div class="span12">
+                <div class="page-heading">
+                    <h1>Plugin Config</h1>
+               </div>
         
-        <p>The current plugin's config is:
-            <pre>
-                ${configInfo.encodeAsHTML()}
-            </pre>
-        </p>
+                <p>The current plugin's config is:
+                    <pre>
+                        ${configInfo.encodeAsHTML()}
+                    </pre>
+                </p>
+            </div>
+        </div>
     </body>
 </html>

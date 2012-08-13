@@ -6,7 +6,7 @@ You will typically move from this to using the navigation DSL artefact for more 
 
 h3. What is a navigation item?
 
-An item is a place the user can reach in your navigation structure. Every item results in a menu item and link, and whether it is visible or enabled can be determined at runtime.
+An item is a place the user can reach in your navigation structure. Every item results in a menu item and link. Whether it is visible or enabled can be determined at runtime.
 
 Items are always inside one scope.
 

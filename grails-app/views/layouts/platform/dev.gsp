@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <g:layoutHead/>
     <plugin:isAvailable name="resources">
@@ -7,12 +8,20 @@
     </plugin:isAvailable>
 </head>
 <body>
-    <div id="nav">
-        <nav:primary class="nav nav-primary" scope="dev"/>
-        <hr/>
-        <nav:secondary class="nav nav-secondary"/>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="#">
+                  Grails Platform Core
+                </a>
+                <nav:primary class="nav" scope="dev"/>
+            </div>
+        </div>
     </div>
-    <g:layoutBody/>
+
+    <div class="container">
+        <g:layoutBody/>
+    </div>
 
     <plugin:isAvailable name="resources">
         <r:layoutResources/>
