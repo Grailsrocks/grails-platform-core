@@ -41,7 +41,7 @@ Platform-core Events bus provides a non-blocking way to send events by default, 
 * *getValues*
 * *getValue*
 Therefore you have the control on the execution flow if you want. Just keep in mind it does not block for processing right after event() call, which seems to be a
-sensible default for the bus. Eventual *Exceptions* will be raised after using one of the mentionned blocking methods  except if *onError* parameter is used.
+sensible default for the bus. Eventual *Exceptions* will be raised after using one of the mentioned blocking methods  except if *onError* parameter is used.
 
 {docx}
 class SomeController{
