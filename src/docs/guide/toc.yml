@@ -25,7 +25,7 @@ events:
   config: Configuration properties
 injection:
   title: Injection API
-navigation:
+nav:
   title: Navigation API
   navigation_concepts: Concepts
   navigation_getting_started: Getting Started

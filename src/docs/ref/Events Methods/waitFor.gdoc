@@ -1,6 +1,6 @@
-h1. userHasAnyRole(roleList)
+h1. waitFor(EventReply replies...)
 
-_Available in Controllers, Domains, Taglibs and Services_
+_Available in Controllers, Domains and Services_
 
 This method returns *true* if the current user has any of the roles listed.
 
