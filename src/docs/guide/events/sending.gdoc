@@ -5,9 +5,9 @@ We recommend using the former signature if you don't have any params, otherwise 
 
 Let's see what the key arguments are doing:
 * Topic argument is a *String* which represents channel subscribed by listeners.
-* _optionnal_ Data argument is an *Object* -_preferrably Serializable for IO facilities_- which represents the subject of your event such as a domain class.
-* _optionnal_ Params argument is a *Map* which represents sending behaviors including *namespace*.
-* _optionnal_ callbackClosure is a *Closure* triggered after an event completion.
+* _optional_ Data argument is an *Object* -_preferrably Serializable for IO facilities_- which represents the subject of your event such as a domain class.
+* _optional_ Params argument is a *Map* which represents sending behaviors including *namespace*.
+* _optional_ callbackClosure is a *Closure* triggered after an event completion.
 * The map notation allows you to reuse the same arguments than params plus *topic* for topic, *data* for data and *for* (shortcut for 'namespace'). If you specify *params*, it will use it for the *params* argument otherwise the first level map is used as *params*.
 
 There are several *params* arguments :
