@@ -2,7 +2,7 @@ h1. nav:primary
 
 h2. Purpose
 
-Renders a @<ul>@ menu structure for the primary scope within your [navigation|guide:navigation] structure.
+Renders a @<ul>@ menu structure for the primary scope within your [navigation|guide:nav] structure.
 
 The scope is automatically detected if not specified, and stored in the request so that the [secondary|navigationTags] tag automatically works with the same resolved scope.
 

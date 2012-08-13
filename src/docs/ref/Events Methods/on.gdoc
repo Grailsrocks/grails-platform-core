@@ -1,4 +1,4 @@
-h1. userHasAnyRole(roleList)
+h1. on(\[String namespace ,\] String topic, Closure callback)
 
 _Available in Controllers, Domains, Taglibs and Services_
 

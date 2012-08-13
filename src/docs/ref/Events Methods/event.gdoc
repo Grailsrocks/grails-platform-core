@@ -1,4 +1,10 @@
-h1. userHasAllRoles(roleList)
+h1. event(String topic \[, Object data, Map params\])
+
+_Available in Controllers, Domains, Taglibs and Services_
+
+This method returns *true* if the current user has all of the roles listed.
+
+h1. event(Map argument)
 
 _Available in Controllers, Domains, Taglibs and Services_
 

@@ -1,4 +1,4 @@
-h1. *Integer* countListeners(*String* listenerIdPattern)
+h1. countListeners(String listenerIdPattern)
 
 _Available in Controllers, Domains and Services_
 

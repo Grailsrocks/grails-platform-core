@@ -2,7 +2,7 @@ h1. nav:menu
 
 h2. Purpose
 
-Renders a @<ul>@ menu structure for a scope within your [navigation|guide:navigation] structure.
+Renders a @<ul>@ menu structure for a scope within your [navigation|guide:nav] structure.
 
 The menu tag is used internally by the primary/secondary tags and can be called directly to render any [scope|guide:navigation_concepts] in the navigation structure, with any [activation path|guide:navigation_concepts].
 
