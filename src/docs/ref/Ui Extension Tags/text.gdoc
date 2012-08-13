@@ -15,6 +15,7 @@ h2. Example
 <p:text code="hello">Welcome to our app!</p:text>
 <p:text codes="my.error.code,default.error.code">An error occurred!</p:text>
 <p:text codes="['my.error.code','default.error.code']">An error occurred!</p:text>
+<p:text error="${mybean.errors[0]}"/>
 {code}
 
 All of these messages will be resolved using @plugin.<GSP plugin name>.<code>@ and the body is used as a default if the message cannot be resolved.

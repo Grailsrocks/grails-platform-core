@@ -2,4 +2,5 @@ h1. grailsUiExtensions
 
 This bean provides the implementations of the [displayMessage|uiExtensionMethods] and [displayFlashMessage|uiExtensionMethods] methods, and access to the values set for the tags to render messages, as well as access to plugin-namespaced Session. Flash and Request attributes
 
-h2. Methods
+See the [UiExtensions|api:org.grails.plugin.platform.ui.UiExtensions] javadocs for details.
+

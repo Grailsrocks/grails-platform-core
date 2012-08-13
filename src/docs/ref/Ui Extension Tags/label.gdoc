@@ -11,8 +11,6 @@ h2. Example
 <p:label text="field.user.name" textArgs="[user.name]"/>
 {code}
 
-This is really useful for i18n.
-
 h2. Attributes
 
 {table}

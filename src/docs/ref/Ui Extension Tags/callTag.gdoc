@@ -21,10 +21,10 @@ All three of the above invocations achieve the same thing.
 h2. Attributes
 
 {table}
-*Name* | *Purpose* 
+*Name* | *Required* | *Purpose* 
 attrs | | Map of attributes to pass to the target tag. Any attributes (other than those listted here) specified on callTag will be merged into this Map
-tag | Required - The name of the tag, optionally including colon-separated namespace 
-bodyContent | Optional - A body to use for the tag when it is called. You can set this or use the body of the callTag itself, to pass a body to the tag you delegate to.
+tag | Yes | The name of the tag, optionally including colon-separated namespace 
+bodyContent | | A body to use for the tag when it is called. You can set this or use the body of the callTag itself, to pass a body to the tag you delegate to.
 {table}
 
 Any other attributes specified are passed through to the tag called.

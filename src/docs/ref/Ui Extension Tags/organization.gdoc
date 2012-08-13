@@ -6,7 +6,8 @@ Renders the name of the company or organisation that set in Config.
 
 This allows plugins to provide views that render your organization name in GSPs or emails, for example.
 
-The Config value is set in "plugin.platformCore.organization.name"
+The Config value is set in @plugin.platformCore.organization.name
+
 
 h2. Example
 
