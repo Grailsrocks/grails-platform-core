@@ -2,12 +2,14 @@ The features include in this release include:
 
 * Configuration API - Plugin-namespaced config, Config merging, validation and default values
 * Security API - An abstraction of basic security features that most applications require, with implementations to be provided by plugins or your application
-* UI Extensions - A set of tags and helper functions 
+* UI Extensions - A set of tags and helper properties and functions 
+* Navigation API - A standard artefact and DSL for navigation and tags for accessing this
+* Events API - A standard event bus that can be plugged in to any event implementation, with a lightweight default provider for in-app messaging
 
 Each feature is covered in more detail later in this documentation.
 
 The platform is very self-referential - it uses own APIs - for example to provide event hooks for Grails application lifecycle, to declare dynamic methods on your controller and service artefacts, and to declare the configuration values that it uses.
 
-All of these APIs are designed to be as simple as possible while providing some very high level features. 
+All of these APIs are designed to be as simple as possible.
 
 Use this platform to add tighter and more consistent integration to your own plugins.

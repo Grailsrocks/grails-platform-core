@@ -1,6 +1,7 @@
-h3. 1.0.M2-SNAPSHOT
+h3. 1.0.M2
 
 * Automatic convention controller navigation includes all actions, not just those with GET allowedMethod
+* Platform "dev" navigation scope items do not render when browsing /platform in your own applications.
 
 h3. 1.0.M1
 

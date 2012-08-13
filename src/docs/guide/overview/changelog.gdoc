@@ -1,8 +1,10 @@
 h3. 1.0.M2
+
 * Events API
 * New UI Extension tags p:text and p:textScope
 * New UI Extension properties pluginFlash, pluginSession, pluginRequestAttributes
 * Documentation for Events API, Navigation API, new UI Extensions
+* A little Grails treat for those browsing /platform/ on Mac
 
 h3. 1.0.M2-SNAPSHOT
 
