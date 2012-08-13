@@ -29,7 +29,7 @@
 
         <p>Secondary navigation for this path:</p>
         <nav:secondary path="${params.activePath}"/>
-
+<%--
         <p>Breadcrumb for this path:</p>
         <nav:breadcrumb path="${params.activePath}"/>
         
@@ -40,7 +40,7 @@
                 &raquo;
             </g:if>
         </nav:breadcrumb>
-        
+--%>        
         <p>Two-deep menu for this path:</p>
         <nav:menu scope="${params.activePath}" path="${params.activePath}" depth="2"/>
 

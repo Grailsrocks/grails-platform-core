@@ -75,26 +75,6 @@ This renders the i18n title of a specific navigation item passed to it; for use 
 
 See the [menu|navigationTags] tag reference for full details.
 
-h3. nav:breadcrumb
-
-Breadcrumbs are often used to render a list of links to the "ancestors" of the current navigation location. This tag will render these as a @<ul>@ list by traversing the "activation path" for the current request or that passed in as the "path" attribute.
-
-{code}
-<nav:breadcrumb/>
-
-<%-- Custom rendering without ul wrapper --%>
-<div class="breadcrumb">
-    <nav:breadcrumb custom="true">
-        <p:callTag tag="p:smartLink" attrs="${linkArgs}"/>
-        <g:if test="${\!last}">
-            &raquo;
-        </g:if>
-    </nav:breadcrumb>
-</div>
-{code}
-
-See the [breadcrumb|navigationTags] tag reference for full details.
-
 h3. nav:set
 
 You can call this tag from inside a controller or GSP if you need to define request-specific parameters.

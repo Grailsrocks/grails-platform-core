@@ -35,7 +35,11 @@ Usually you should factor out deep navigation into separate root scopes. For exa
 
 h3. What is an Activation Path?
 
-An activation path is a string that represents the currently active navigation item. This may be a few levels down in your navigation structure and represents the breadcrumb trail the user would see to get to the location they are currently viewing.
+An activation path is a string that represents the currently active navigation item. This may be a few levels down in your navigation structure and represents the breadcrumb trail the user would see to get to the location they are currently viewing. 
+
+{note}
+Breadcrumbs themselves represent a navigational superset of your app's primary navigation structure. They are not supported in this release of the API, because the work has not yet been done to declare breadcrumbs that represent non-navigational items i.e. nested content inside a multi-page document is not part of your regular site navigation.
+{note}
 
 The activation path is set on the current request and indicates which node is currently active. By default navigation API attempts to identify the correct activation path in your structure using the current controller and action, much like reverse URL mapping.
 
