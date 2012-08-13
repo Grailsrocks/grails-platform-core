@@ -23,7 +23,7 @@
 
 includeTargets << grailsScript("_GrailsDocs")
 
-target(addMacros:'New Macros') {
+target(addMacros: 'New Macros') {
     depends(setupDoc)
 
     config.grails.doc.css = config.grails?.doc?.css ?: new File("$platformCorePluginDir/src/docs/templates/css")
@@ -32,7 +32,7 @@ target(addMacros:'New Macros') {
     org.radeox.macro.MacroLoader.newInstance().add(org.radeox.macro.MacroRepository.instance, new org.radeox.macro.Preserved() {
         @Override
         String getName() {
-            'html'
+            'docx'
         }
 
         @Override
@@ -46,6 +46,8 @@ target(addMacros:'New Macros') {
             addSpecial('-' as char)
             addSpecial('#' as char)
             addSpecial('@' as char)
+            addSpecial('<' as char)
+            addSpecial('>' as char)
             addSpecial('\\' as char)
             addSpecial('\n' as char)
             addSpecial('\r' as char)
@@ -55,12 +57,14 @@ target(addMacros:'New Macros') {
         void execute(Writer writer, org.radeox.macro.parameter.MacroParameter params) {
             def content = replace(org.radeox.util.Encoder.unescape(params.content))
             if (params.length == 0) {
-                writer << content
+                writer << '<pre class="brush: groovy;">' << content << '</pre>'
             } else {
                 switch (params.get(0)) {
-                    case 'groovy':
-                        writer << '<pre class="brush: groovy;">' << content << '</pre>'
+                    case 'xml':
+                        writer << '<pre class="brush: xml;">' << content << '</pre>'
                         break
+                    default:
+                        writer << content
                 }
 
             }
@@ -68,7 +72,7 @@ target(addMacros:'New Macros') {
     })
 }
 
-target(extradocs:"Extra Docs") {
+target(extradocs: "Extra Docs") {
     depends(createConfig, addMacros, docs)
 }
 

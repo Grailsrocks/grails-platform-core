@@ -10,7 +10,7 @@ have installed.
 
 h2. Usage
 
-{code}
+{docx}
 class PurchaseService {
     void updatePurchasesForUser(String userName) {
         withUser(userName) {
@@ -21,7 +21,7 @@ class PurchaseService {
     }
     ...
 }
-{code}
+{docx}
 
 In this example you can see that the [securityInfo|securityProperties] is set according to the identity of the user passed to withUser.
 

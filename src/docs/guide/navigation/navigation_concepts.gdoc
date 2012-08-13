@@ -19,13 +19,13 @@ h3. What is a Scope?
 A scope is a name that identifies one or more navigation items. Top-level scopes are called root scopes and represent your main groupings of navigation items. For example you may have your application navigation for regular users and an admin root scope for backend administration.
 
 Example of scope names:
-{code}
+{docx}
 app                     // typically your default app navigation root scope
 app/messages            // the "messages" item in the "app" root scope
 admin/scaffolding/book  // the "book" item under "scaffolding" item in the "admin" scope
 plugin.cms/admin        // the "admin" item supplied by the "CMS" plugin
 plugin.socialFeed/feeds // the "feeds" item supplied by the "social-feed" plugin
-{code}
+{docx}
 
 Root scopes do not generate any menu links themselves, they are merely containers for your top level navigation items. They enable you to have multiple sets of navigation for different contexts.
 

@@ -6,7 +6,7 @@ h3. Simple reply
 
 Replying is a simple matter of returning an object from the listener method :
 
-{html:groovy}
+{docx}
 class SomeService{
     @Listener
     def logout(User user){
@@ -17,12 +17,12 @@ class SomeService{
        return disconnectDate
     }
 }
-{html}
+{docx}
 
 If listeners return non null objects, the caller can access them through the EventReply enveloppe returned immediatly
 after calling *event* method. The other option is the use of a *reply handler* :
 
-{html:groovy}
+{docx}
 class SomeController{
 
    def logout(){
@@ -42,7 +42,7 @@ class SomeController{
        render reply_future.get(30, TimeUnit.SECONDS)
    }
 }
-{html}
+{docx}
 
 {note}
 Whenever an event is triggered, a task is submitted into the events bus thread pool and a Future returned, wrapped into EventReply.
@@ -56,7 +56,7 @@ Multiple listeners can return values for the same topic/namespace. In this case,
 Remember that a valid result is a non null value, hence why even if 3 handlers have reacted but only 2 did return something, then you will only
 see 2 values in the *EventReply.values*.
 
-{html:groovy}
+{docx}
 class SomeController{
 
    def logout(){
@@ -69,7 +69,7 @@ class SomeController{
        render reply.values
    }
 }
-{html}
+{docx}
 
 h3. Exceptions
 
@@ -84,7 +84,7 @@ An *onError* parameter is available and accepts a *Closure{List<Throwable> error
 Exceptions in multiple listeners scenario don't interrupt the execution flow and leave a chance to others listeners to execute as well.
  The return value from a failing listener becomes the raised exception.
 
-{html:groovy}
+{docx}
 class SomeController{
 
    def logout(){
@@ -113,7 +113,7 @@ class SomeController{
 
    }
 }
-{html}
+{docx}
 
 h3. Waiting replies
 
@@ -122,7 +122,7 @@ It accepts as many events replies you want and returns the same array for functi
 EventReply also have a waitFor method for one-line waiting.
 
 
-{html:groovy}
+{docx}
 class SomeController{
 
    def logout(){
@@ -145,4 +145,4 @@ class SomeController{
 
    }
 }
-{html}
+{docx}

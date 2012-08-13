@@ -8,11 +8,11 @@ This uses the underlying security provider to test the condition.
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <s:ifLoggedIn>
     Thanks for logging in!
 </s:ifLoggedIn>
-{code}
+{docx}
 
 h2. Attributes
 

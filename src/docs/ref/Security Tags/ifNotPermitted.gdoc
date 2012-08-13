@@ -8,11 +8,11 @@ This uses the underlying security provider to test the condition.
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <s:ifNotPermitted role="ADMIN">
    Sorry you can't do this
 </s:ifNotPermitted>
-{code}
+{docx}
 
 h2. Attributes
 

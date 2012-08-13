@@ -21,7 +21,7 @@ and get maximum flexibility when required :
 
 In a nutshell, you will :
 * Send events :
-{html:groovy}
+{docx}
 class UserController{
 
    def registration(){
@@ -46,10 +46,10 @@ class UserController{
          }
   }
 }
-{html}
+{docx}
 
 * Write listeners (or event handler, or event reactor or whatever you call it):
-{html:groovy}
+{docx}
 class UserService{
 
    //use method name 'mailRegistration' as topic name
@@ -73,4 +73,4 @@ class UserService{
         }
   }
 }
-{html}
+{docx}

@@ -8,7 +8,7 @@ The main menu would use [primary|navigationTags] & [secondary|navigationTags] ta
 
 You would then render the user and footer navigation using the menu tag, and passing the user and footer scopes:
 
-{code}
+{docx}
 <html>
 <body>
     <nav:primary/>
@@ -25,7 +25,7 @@ You would then render the user and footer navigation using the menu tag, and pas
     </div>    
 </body>
 </html>
-{code}
+{docx}
 
 This results in a page where there are actually for navigation renderings, showing different scopes.
 

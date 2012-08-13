@@ -11,10 +11,10 @@ The Config value is set in @plugin.platformCore.organization.name
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <p:organization/>
 <p:organization encodeAs="JavaScript"/>
-{code}
+{docx}
 
 h2. Attributes
 

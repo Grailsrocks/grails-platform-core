@@ -9,14 +9,14 @@ have installed, and the type of the object is entirely dependent on this.
 
 h2. Usage
 
-{code}
+{docx}
 class PurchaseService {
     def getPurchases() {
         Purchase.findAllByEmail(securityIdentity)
     }
     ...
 }
-{code}
+{docx}
 
 Here the securityIdentity value is assumed to be an email address that is used to identify Purchases.
 

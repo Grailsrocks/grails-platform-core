@@ -29,7 +29,7 @@ h3. Tags
 
 Here's an example of some of the security tags available:
 
-{code}
+{docx}
 <s:identity/>
 <s:info property="email"/>
 <s:ifPermitted role="ROLE_ADMIN">
@@ -41,7 +41,7 @@ Here's an example of some of the security tags available:
 <a href="${s.createLoginLink()}">Log in</a>
 <a href="${s.createLogoutLink()}">Log out</a>
 <a href="${s.createSignupLink()}">Sign up</a>
-{code}
+{docx}
 
 See the *Tags Security* reference section for details.
 

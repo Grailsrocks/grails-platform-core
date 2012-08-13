@@ -8,7 +8,7 @@ The menu tag is used internally by the primary/secondary tags and can be called 
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <nav:menu/>
 
 <nav:menu id="main-nav"/>
@@ -38,7 +38,7 @@ h2. Example
          </g:if>
     </li>
 </nav:menu>
-{code}
+{docx}
 
 Note that with custom rendering the body is responsible for rendering any nested children also.
 h2. Attributes

@@ -11,7 +11,7 @@ If a provide does not implement ACLs this will return true.
 
 h2. Usage
 
-{code}
+{docx}
 class PurchaseService {
     void updatePurchase(Purchase p) {
         if (userIsAllowed(p, 'edit')) {
@@ -20,7 +20,7 @@ class PurchaseService {
     }
     ...
 }
-{code}
+{docx}
 
 h2. Arguments
 

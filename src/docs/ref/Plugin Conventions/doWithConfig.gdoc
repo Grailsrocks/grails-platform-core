@@ -5,7 +5,7 @@ configuration values into the applications config, and to configure other
 plugins' declared configuration values safely.
 
 The DSL takes the form of:
-{code}
+{docx}
 <pluginName> {
      <config.path.here> = <value>
 }
@@ -13,11 +13,11 @@ The DSL takes the form of:
 application {
      <config.path.here> = <value>
 }
-{code}
+{docx}
 
 So for example:
 
-{code}
+{docx}
 def doWithConfig = { config ->
     platformUi {
         ui.Bootstrap.button.cssClass = 'btn'
@@ -31,7 +31,7 @@ def doWithConfig = { config ->
         grails.x.y = config.p.q == 'something' ? true : false
     }
 }
-{code}
+{docx}
 
 The above code configures values of the "platform-ui" plugin, and also changes some legacy Grails global config value called "grails.x.y".
 

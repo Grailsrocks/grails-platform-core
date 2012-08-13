@@ -37,7 +37,7 @@ timeout | Long |  | Default timeout for execution time, throwing a TimeoutExcept
 \* | \* |  | Any attributes can be written to be used by plugins through EventDefinition.othersAttributes
 {table}
 
-{html:groovy}
+{docx}
 events = {
     //prevents any events in gorm namespace
     '*' namespace:'gorm', disabled:true
@@ -75,7 +75,7 @@ events = {
     //testTopic9 onError:'anotherTopicErrors', onReply:'anotherTopicReplies'
 
 }
-{html}
+{docx}
 
 h3. Reloading in Development mode
 

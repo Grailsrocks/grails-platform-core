@@ -10,9 +10,9 @@ Typically this will provide access to the user principal, but the type of the ob
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 Your full name is <s:info property="fullName"/>
-{code}
+{docx}
 
 h2. Attributes
 

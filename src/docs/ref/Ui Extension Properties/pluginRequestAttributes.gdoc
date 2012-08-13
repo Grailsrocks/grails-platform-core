@@ -5,14 +5,14 @@ defines the controller or taglib.
 
 Use this instead of @request[xxxx]@ in your plugin code, to prevent keys accidentally clashing across plugins and apps:
 
-{code}
+{docx}
 class MyPluginController {
     def index = {
         pluginRequestAttributes.message = 
             "This is safe, even if app or other plugin uses [message]"
     }
 }
-{code}
+{docx}
 
 The object returned is a @PropertyNamespacer@ instance, which supports property access, keySet() and toMap() to return only the keys and data
 that is provided by the plugin.

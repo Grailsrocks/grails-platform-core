@@ -10,9 +10,9 @@ To render a button that will take the user to this page, see [logoutButton|secur
 
 h2. Example
 
-{code:xml}
+{docx:xml}
 <s:createLogoutLink/>
-{code}
+{docx}
 
 h2. Attributes
 
