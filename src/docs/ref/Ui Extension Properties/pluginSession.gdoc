@@ -3,7 +3,7 @@ h1. pluginSession
 This property is available to controllers and taglibs, to provide access to the session attributes for only the plugin that
 defines the controller or taglib.
 
-Use this instead of @session[xxxx]@ in your plugin code, to prevent keys accidentally clashing across plugins and apps:
+Use this instead of @session\[xxxx\]@ in your plugin code, to prevent keys accidentally clashing across plugins and apps:
 
 {docx}
 class MyPluginController {

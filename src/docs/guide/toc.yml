@@ -37,6 +37,7 @@ nav:
 uiextension:
   title: UI Extensions
   uix_tags: Tags
+  uix_properties: Properties
   uix_code: Beans and utilities
 convention:
   title: Convention API

@@ -1,0 +1,17 @@
+
+New auto-namespaced equivalents of @session@, @request@ and @flash@ attributes are added to all *controllers* and *taglibs* exposed by plugins.
+
+These properties are [pluginRequestAttributes|uiExtensionProperties], [pluginSession|uiExtensionProperties] and [pluginFlash|uiExtensionProperties].
+
+They allow you to access these attributes from plugin code without having to worry about key name clashes with other plugins or the application:
+
+{docx}
+class MyController {
+	def beginPasswordReset = {
+		pluginSession.resetMode = true
+		pluginFlash.resetToken = resetTokenFactory.newTicket()
+	}
+}
+{docx} 
+
+
