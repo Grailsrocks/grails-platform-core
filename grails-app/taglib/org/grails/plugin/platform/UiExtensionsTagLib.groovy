@@ -82,7 +82,7 @@ class UiExtensionsTagLib {
     protected getMessageOrBody(Map attrs, Closure body) {
         def textCode = attrs.remove('text')
         def textCodeArgs = attrs.remove('textArgs')
-        def textFromCode = textCode ? p.text(code:textCode, args:textCodeArgs) : null
+        def textFromCode = textCode ? p.text(code:textCode, scope:attrs.textScope, plugin: attrs.textPlugin, args:textCodeArgs) : null
         if (textFromCode) {
             textFromCode = textFromCode.encodeAsHTML()
         }
@@ -219,7 +219,7 @@ class UiExtensionsTagLib {
      * Body is the default text if code does not resolve.
      */
     def text = { attrs, body ->
-        def i18nscope = pageScope['plugin.platformCore.ui.text.scope']
+        def i18nscope = attrsToTextScope(attrs) ?: pageScope['plugin.platformCore.ui.text.scope']
         if (!i18nscope) {
             def pluginPath = pageScope.pluginContextPath
             def pluginPathMatcher = pluginPath =~ '/plugins/(.+)-[\\d]+.*$'
@@ -284,12 +284,16 @@ class UiExtensionsTagLib {
         }
     }
 
+    private String attrsToTextScope(attrs) {
+        attrs.plugin ? "plugin.${attrs.plugin}" : attrs.scope
+    }
+
     /**
      * Set the scope of p:text i18n codes for the duration of this request
      * Used by GSPs in apps that override plugin GSPs, or just to scope all the i18n safely in an scenario
      */
     def textScope = { attrs ->
-        def scope = attrs.plugin ? "plugin.${attrs.plugin}" : attrs.scope
+        def scope = attrsToTextScope(attrs)
         pageScope['plugin.platformCore.ui.text.scope'] = scope ?: null
     }
  

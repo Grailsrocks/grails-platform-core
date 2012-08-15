@@ -84,6 +84,9 @@ class SecurityTagLib {
         if (!attrs.text) {
             attrs.text = 'security.log.out.button'
         }
+        if (!attrs.textPlugin) {
+            attrs.textPlugin = "platformCore" // we "own" i18n for security buttons
+        }
         attrs.putAll(grailsSecurity.createLink('logout'))
         out << p.button(attrs, body)
     }
@@ -95,6 +98,9 @@ class SecurityTagLib {
         if (!attrs.text) {
             attrs.text = 'security.log.in.button'
         }
+        if (!attrs.textPlugin) {
+            attrs.textPlugin = "platformCore" // we "own" i18n for security buttons
+        }
         attrs.putAll(grailsSecurity.createLink('login'))
         out << p.button(attrs, body)
     }
@@ -105,6 +111,9 @@ class SecurityTagLib {
         }
         if (!attrs.text) {
             attrs.text = 'security.sign.up.button'
+        }
+        if (!attrs.textPlugin) {
+            attrs.textPlugin = "platformCore" // we "own" i18n for security buttons
         }
         attrs.putAll(grailsSecurity.createLink('signup'))
         out << p.button(attrs, body)
