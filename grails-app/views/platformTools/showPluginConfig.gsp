@@ -10,11 +10,12 @@
                     <h1>Plugin Config</h1>
                </div>
         
-                <p>The current plugin's config is:
+                <p>All plugin config:
                     <pre>
-                        <p:prettyPrint value="${configInfo}"/>
+                        <p:prettyPrint value="${allConfigInfo}"/>
                     </pre>
                 </p>
+
             </div>
         </div>
     </body>
