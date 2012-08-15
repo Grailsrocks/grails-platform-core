@@ -200,7 +200,8 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
         // @todo we falsely report Map values as invalid config currently as flatten() flattens these too
         flatAppConf.each { k, v ->
             if (k.startsWith('plugin.')) {
-                if (!registeredKeys.contains(k)) {
+                if (!registeredKeys.contains(k) || 
+                    ((v instanceof Map) && !registeredKeys.find({ regK -> k.startsWith(regK+'.')})) ) {
                     // @todo should we fail fast here?
                     // @todo support wildcard configoptions
                     log.warn "Your configuration contains a value for [${k}] which is not declared by any plugin"
@@ -263,7 +264,7 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
                 }
                 def builder = new ConfigBuilder()
                 confDSL.delegate = builder
-                confDSL(grailsApplication.config)
+                confDSL(grailsApplication.config.clone()) // Deep clone app config to avoid side effects of querying existing config values
                 
                 def newConf
                 
@@ -282,7 +283,7 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
                 
                 // @todo run these in plugin dependency order? If two plugins set something on another plugin, which one wins?
                 builder._pluginConfigs.each { confPluginName, code -> 
-                    // @todo add safety check to prevent plugins configuring themselves (creates ordering problems)
+                    // @todo Do we need to a add safety check to prevent plugins configuring themselves (creates ordering problems?)
                     // @todo verify its a real plugin with exposed config
                     def pluginConf = parseConfigClosure(code)
                     newConf.plugin."$confPluginName" = pluginConf
@@ -383,7 +384,7 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
             
             // apply validator
             if (entry.validator) {
-                log.debug "Appling plugin config validator for ${scopedKey} to [$value]"
+                log.debug "Applying plugin config validator for ${scopedKey} to [$value]"
                 def msg = entry.validator.call(value)
                 if (msg != null) {
                     // @todo Do we fail fast? Probably not, we may want interaction

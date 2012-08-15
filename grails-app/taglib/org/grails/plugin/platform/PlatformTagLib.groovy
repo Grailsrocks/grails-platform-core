@@ -64,7 +64,7 @@ class PlatformTagLib {
             }
         } else if (value instanceof Collection) {
             for (entry in value) {
-                sb << prettyPrint(entry)
+                sb << prettyItem(entry)
             }
         } else {
             sb << "<li>${value?.encodeAsHTML()}</li>"
