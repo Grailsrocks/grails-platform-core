@@ -32,7 +32,7 @@ class PlatformToolsController {
     }
     
     def showPluginConfig = {
-        [allPluginConfig:grailsApplication.config.plugin]
+        [allPluginConfig:grailsApplication.config.plugin.flatten()]
     }
 
     def showNavigation = {

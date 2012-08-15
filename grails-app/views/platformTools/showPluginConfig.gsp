@@ -12,7 +12,7 @@
         
                 <p>All plugin config:
                     <pre>
-                        <p:prettyPrint value="${allConfigInfo}"/>
+                        <p:prettyPrint value="${allPluginConfig}"/>
                     </pre>
                 </p>
 
