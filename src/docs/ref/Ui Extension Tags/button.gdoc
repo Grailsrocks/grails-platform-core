@@ -24,6 +24,8 @@ kind | What kind of button to render. Value can be "button" (the default), or "a
 text | The text of the button, or an i18n code to resolve to use as the text 
 textArgs | Optional arguments to pass when creating the i18n message text 
 disabled | Optional - if set to "true" the button will be disabled
+textScope | | Optional prefix to use with code or codes. Overrides the automatic scoping behaviour
+textPlugin | | Optional plugin name in beanNameCase. Overrides the automatic scoping behaviour
 {table}
 
 Any other attributes specified are passed through to the output.

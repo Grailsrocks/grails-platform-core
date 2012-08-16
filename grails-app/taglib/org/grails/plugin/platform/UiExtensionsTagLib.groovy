@@ -43,6 +43,9 @@ class UiExtensionsTagLib {
     }
     
     def button = { attrs, body ->
+        if (log.debugEnabled) {
+            log.debug "p:button called with $attrs"
+        }
         def kind = attrs.remove('kind') ?: 'button'
         def text = getMessageOrBody(attrs, body)
         def dis = attrs.remove('disabled')?.toBoolean()
@@ -67,9 +70,7 @@ class UiExtensionsTagLib {
                 out << g.link(attrs, text)
                 break;
             case 'submit':
-                if (!attrs.value) {
-                    attrs.value = text
-                }
+                attrs.value = text
                 if (dis) {
                     attrs.disabled = "disabled"
                 }
@@ -80,14 +81,27 @@ class UiExtensionsTagLib {
     
     // @todo move this to TagLibUtils and use messageSource
     protected getMessageOrBody(Map attrs, Closure body) {
+        println "gMoB: $attrs"
         def textCode = attrs.remove('text')
         def textCodeArgs = attrs.remove('textArgs')
-        def textFromCode = textCode ? p.text(code:textCode, scope:attrs.textScope, plugin: attrs.textPlugin, args:textCodeArgs) : null
-        if (textFromCode) {
-            textFromCode = textFromCode.encodeAsHTML()
+        def textScope = attrs.remove('textScope')
+        def textPlugin = attrs.remove('textPlugin')
+        def textFromCode = textCode ? p.text(
+            code:textCode, 
+            default:null, // force null so we can detect it and only execute body if need be
+            scope:textScope, 
+            plugin:textPlugin, 
+            args:textCodeArgs) : null
+        if (textFromCode?.toString()) {
+            return textFromCode.encodeAsHTML()
+        } else {
+            // Use body but IF it is blank, fall back to smart i18n code as a visible placeholder
+            return body() ?: p.text(
+                code:textCode, 
+                scope:textScope,
+                plugin:textPlugin, 
+                args:textCodeArgs)
         }
-        def v = textFromCode ?: body()
-        return v
     }
 
     def displayMessage = { attrs ->
@@ -119,11 +133,12 @@ class UiExtensionsTagLib {
         }
     }
     
-    def smartLink = { attrs ->
+    def smartLink = { attrs, body ->
         def con = attrs.controller ?: controllerName
         def defaultAction = 'index' // make this ask the artefact which is default
         def act = attrs.action ?: defaultAction
-        def text = p.text(code:"action.${con}.${act}", encodeAs:'HTML')
+        attrs.text = "action.${con}.${act}"
+        def text = getMessageOrBody(attrs, body)
         out << g.link(attrs, text)
     }
     
@@ -219,6 +234,10 @@ class UiExtensionsTagLib {
      * Body is the default text if code does not resolve.
      */
     def text = { attrs, body ->
+        println "WTF: $attrs"
+        if (log.debugEnabled) {
+            log.debug "p:text called with attrs $attrs"
+        }
         def i18nscope = attrsToTextScope(attrs) ?: pageScope['plugin.platformCore.ui.text.scope']
         if (!i18nscope) {
             def pluginPath = pageScope.pluginContextPath
@@ -232,10 +251,13 @@ class UiExtensionsTagLib {
             }
         }
 
-        def bodyText = body() ?: attrs.default
+        def defaultText = attrs.containsKey('default') ? attrs.default : body()
+        if (log.debugEnabled) {
+            log.debug "p:text default text will be [$defaultText]"
+        }
         def codes = attrs.error ? attrs.error.codes : (attrs.codes ?: [attrs.code])
-        if (!codes && !bodyText) {
-            throwTagError "The attributes [codes], [code] and [default] - as well as the body are all empty. This tag is for rendering text!z"
+        if (!codes && !defaultText) {
+            throwTagError "The attributes [codes], [code] and [default] - as well as the body are all empty. This tag is for rendering text!"
         }
 
         if (i18nscope) {
@@ -244,10 +266,10 @@ class UiExtensionsTagLib {
                 if (log.debugEnabled) {
                     log.debug "Resolving scoped i18n message from scope [${i18nscope}] using code [${namespacedCode}]"
                 }
-                if (!bodyText) {
-                    bodyText = namespacedCode
+                if (!defaultText && !attrs.containsKey('default')) {
+                    defaultText = namespacedCode
                 }
-                
+
                 if (log.debugEnabled) {
                     log.debug "Attempting to resolve scoped i18n message code [${namespacedCode}]"
                 }
@@ -256,15 +278,23 @@ class UiExtensionsTagLib {
                     log.debug "Attempt to resolve scoped i18n message code [${namespacedCode}] yielded: ${msg}"
                 }
                 if (msg) {
+                    if (log.debugEnabled) {
+                        log.debug "Resolved scoped i18n message code [${namespacedCode}] and returning ${msg}"
+                    }
                     out << msg
                     return
                 }
             }
-            out << bodyText
+            if (log.debugEnabled) {
+                log.debug "Failed to resolve scoped i18n message codes, returning default ${defaultText}"
+            }
+            if (defaultText) {
+                out << defaultText
+            }
 
         } else {
-            if (!bodyText) {
-                bodyText = codes[0]
+            if (!defaultText && !attrs.containsKey('default') ) {
+                defaultText = codes[0]
             }            
 
             for (code in codes) {    
@@ -280,7 +310,9 @@ class UiExtensionsTagLib {
                     return
                 }
             }
-            out << bodyText
+            if (defaultText) {
+                out << defaultText
+            }
         }
     }
 

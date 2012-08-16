@@ -17,6 +17,8 @@ h2. Attributes
 *Name* | *Purpose* 
 text | The text of the label, or an i18n code to resolve to use as the text 
 textArgs | Optional arguments to pass when creating the i18n message text 
+textScope | | Optional prefix to use with code or codes. Overrides the automatic scoping behaviour
+textPlugin | | Optional plugin name in beanNameCase. Overrides the automatic scoping behaviour
 {table}
 
 Any other attributes specified are passed through to the output.

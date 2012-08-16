@@ -41,9 +41,9 @@ class PlatformTagLib {
         }
         def b = p.callTag(attrs, body)
         out << "<div class=\"tag-demo\">"
-        out << "<div class=\"tag-source\"><strong>GSP code:</strong><pre>\n"+markup.encodeAsHTML()+"</pre></div>"
-        out << "<div class=\"tag-result\"><strong>Result:</strong> ${b}</div>"
-        out << "<div class=\"tag-output\"><strong>Markup:</strong><pre>\n"+b.encodeAsHTML()+"</pre></div>"
+        out << "<div class=\"tag-source\"><h2>GSP code:</h2><pre>\n"+markup.encodeAsHTML()+"</pre></div>"
+        out << "<div class=\"tag-result\"><h2>Result:</h2> ${b}</div>"
+        out << "<div class=\"tag-output\"><h2>Markup:</h2><pre>\n"+b.encodeAsHTML()+"</pre></div>"
         out << "</div>"
     }
 

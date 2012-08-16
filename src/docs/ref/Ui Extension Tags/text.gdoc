@@ -30,4 +30,6 @@ error | | An Grails field error object
 args | | Arguments for i18n message
 default | | Default value for message if it cannot be resolved
 encodeAs | | Codec to apply to message, defaults to none
+scope | | Optional prefix to use with code or codes. Overrides the automatic scoping behaviour
+plugin | | Optional plugin name in beanNameCase. Overrides the automatic scoping behaviour
 {table}

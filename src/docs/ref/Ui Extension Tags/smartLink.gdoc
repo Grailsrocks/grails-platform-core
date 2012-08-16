@@ -8,15 +8,22 @@ h2. Example
 
 {docx:xml}
 <%-- Link to default action of BooksController --%>
-<ui:link controller="books"/>
+<p:smartLink controller="books"/>
 
 <%-- Link to list action of current controller --%>
-<ui:link action="list"/>
+<p:smartLink action="list"/>
 {docx}
 
 These will use i18n messages located by convention of the form: @action.*controllerName*.*actionName*@
 
 h2. Attributes
 
-All attributes are passed through to @p:link@
+{table}
+*Name* | *Required* | *Purpose* 
+textArgs | | Optional arguments to pass when creating the i18n message text 
+textScope | | Optional prefix to use with code or codes. Overrides the automatic scoping behaviour
+textPlugin | | Optional plugin name in beanNameCase. Overrides the automatic scoping behaviour
+{table}
+
+All other attributes are passed through to @g:link@
 

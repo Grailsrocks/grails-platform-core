@@ -15,17 +15,27 @@
                 <h2>Buttons</h2>
                 <p:tagDemo tag="p:button">Click me I'm a button</p:tagDemo>
                 <p:tagDemo tag="p:button" kind="anchor">Click me I'm a link</p:tagDemo>
-                <p:tagDemo tag="p:button" kind="submit">Click me I'm a submit</p:tagDemo>
+                <p:tagDemo tag="p:button" kind="submit" action="update">Click me I'm a submit</p:tagDemo>
+                <p:tagDemo tag="p:button" kind="button" text="text.from.i18n" textScope="my.i18n.scope">Click me I'm a button</p:tagDemo>
+                <p:tagDemo tag="p:button" kind="submit" action="update" text="text.from.i18n" textPlugin="emailConfirmation">Click me I'm a submit</p:tagDemo>
+                <p:tagDemo tag="p:button" kind="button" text="text.from.i18n" textScope="my.i18n.scope"/>
+                <p:tagDemo tag="p:button" kind="submit" action="update" text="text.from.i18n" textPlugin="emailConfirmation"/>
 
                 <h2>Labels</h2>
                 <g:form>
-                    <p:tagDemo tag="p:label" class="form-data" text="this.is.a.field"/>
+                    <p:tagDemo tag="p:label" class="form-data" for="field0" text="this.is.field.zero">With default text</p:tagDemo>
+                    <p:tagDemo tag="p:label" class="form-data" for="field1" text="this.is.a.field"/>
+                    <p:tagDemo tag="p:label" class="form-data" for="field2" text="this.is.another.field" textScope="my.i18n.scope"/>
+                    <p:tagDemo tag="p:label" class="form-data" for="field3" text="this.is.yet.another.field" textPlugin="emailConfirmation"/>
                 </g:form>
 
                 <h2>Smart Links</h2>
                 <p:tagDemo tag="p:smartLink" controller="platformTools"/>
+                <p:tagDemo tag="p:smartLink" controller="platformTools">With default link text</p:tagDemo>
                 <p:tagDemo tag="p:smartLink" controller="platformTools" action="showNavigation"/>
                 <p:tagDemo tag="p:smartLink" action="showPluginConfig"/>
+                <p:tagDemo tag="p:smartLink" action="showPluginConfig" textScope="my.i18n.scope"/>
+                <p:tagDemo tag="p:smartLink" action="showPluginConfig" textPlugin="emailConfirmation"/>
 
                 <h2>Branding</h2>
                 <p:tagDemo tag="p:organization"/>
