@@ -30,7 +30,7 @@ package org.grails.plugin.platform.events
 
 class EventDefinition implements Comparable<EventDefinition> {
     String topic
-    String namespace = 'app'
+    String namespace
 
     Class filterClass = null;
     Closure filterClosure = null;
