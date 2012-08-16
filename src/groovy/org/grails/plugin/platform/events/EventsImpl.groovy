@@ -325,7 +325,7 @@ class EventsImpl implements Events {
         }
 
         if (!definition.namespace) {
-            definition.namespace = APP_NAMESPACE
+            definition.namespace = definingPlugin ?: APP_NAMESPACE
         }
 
         def filter = arguments?.remove('filter')
