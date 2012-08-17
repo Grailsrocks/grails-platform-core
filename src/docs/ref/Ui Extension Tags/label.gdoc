@@ -7,18 +7,22 @@ Renders a <label> element, with the text loaded from i18n using the [text|uiExte
 h2. Example
 
 {docx:xml}
-<p:label text="field.user.name"/>
-<p:label text="field.user.name" textArgs="[user.name]"/>
+<p:label text="field.user.name" for="field1"/>
+<p:label text="field.user.name" textArgs="[user.name]" for="field2"/>
+<p:label text="another.field" for="field3">Some default text</p:label>
+<p:label for="field4">Just a label why use this?</p:label>
 {docx}
+
+The optional body is used as the default text of the label if the i18n code does not resolve using the [text|uiExtensionTags] tag message resolution rules.
 
 h2. Attributes
 
 {table}
-*Name* | *Purpose* 
-text | The text of the label, or an i18n code to resolve to use as the text 
-textArgs | Optional arguments to pass when creating the i18n message text 
-textScope | | Optional prefix to use with code or codes. Overrides the automatic scoping behaviour
-textPlugin | | Optional plugin name in beanNameCase. Overrides the automatic scoping behaviour
+*Name* | *Required* | *Purpose* 
+text | | The text of the label, or an i18n code to resolve to use as the text 
+textArgs | | Arguments to pass when creating the i18n message text 
+textScope | | Prefix to use with code or codes. Overrides the automatic scoping behaviour
+textPlugin | | Plugin name in beanNameCase. Overrides the automatic scoping behaviour
 {table}
 
 Any other attributes specified are passed through to the output.
