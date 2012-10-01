@@ -300,17 +300,61 @@ class PluginConfigurationImpl implements PluginConfiguration, ApplicationContext
                 if (log.debugEnabled) {
                     log.debug "Plugin ${pluginName} config changes being merged into main config: ${newConf}"
                 }
-                def merged = newConf.merge(grailsApplication.config) 
 
-                if (log.debugEnabled) {
-                    log.debug "Plugin ${pluginName} config changes replacing main config which is: ${grailsApplication.config}"
-                }
-                grailsApplication.config.putAll( merged)
+                // Do an empty-safe ConfigObject merge
+                mergeConfigs(newConf, grailsApplication.config)
+            }
+        }
+    }
 
-                if (log.debugEnabled) {
-                    log.debug "Plugin ${pluginName} config changes merged into main config resulted in: ${grailsApplication.config}"
+    /**
+     * Copies values from other into config, only if no value already exists in config
+     * Impl works around bug with other containing empty ConfigObject that obliterate non-Map valus in config
+     */
+    ConfigObject safeConfigMerge(Map config, Map other) {
+        for(entry in other) {
+            def configEntry = config[entry.key]
+            // Non-map and map values that have not been set are just copied
+            if(configEntry == null) {
+                config[entry.key] = entry.value
+                continue
+            }
+            else {
+                // We can only merge maps
+                if(configEntry instanceof Map) {
+                    if (configEntry.size() > 0 && entry.value instanceof Map) {
+                        // recurse
+                        safeConfigMerge(configEntry, entry.value)
+                    } // We can just assign if empty in config
+                    else if (configEntry.size() == 0) {
+                        config[entry.key] = entry.value
+                    }
                 }
             }
+        }
+        return config
+    }
+
+    /**
+     * Merge new into old, working around the problems with merging ConfigObjects that already have
+     * values or already have empty nodes in the old one
+     */
+    void mergeConfigs(ConfigObject newConfig, ConfigObject oldConfig) {
+        def merged = safeConfigMerge( newConfig, oldConfig)
+
+        if (log.debugEnabled) {
+            log.debug "Config merged with app config: ${merged}"
+        }
+
+        // put all the merged keys into main config
+        if (log.debugEnabled) {
+            log.debug "Config changes replacing main config which is: ${oldConfig}"
+        }
+
+        oldConfig.putAll( merged)
+
+        if (log.debugEnabled) {
+            log.debug "Config changes merged into main config resulted in: ${oldConfig}"
         }
     }
 

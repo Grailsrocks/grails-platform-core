@@ -81,7 +81,6 @@ class UiExtensionsTagLib {
     
     // @todo move this to TagLibUtils and use messageSource
     protected getMessageOrBody(Map attrs, Closure body) {
-        println "gMoB: $attrs"
         def textCode = attrs.remove('text')
         def textCodeArgs = attrs.remove('textArgs')
         def textScope = attrs.remove('textScope')
@@ -234,7 +233,6 @@ class UiExtensionsTagLib {
      * Body is the default text if code does not resolve.
      */
     def text = { attrs, body ->
-        println "WTF: $attrs"
         if (log.debugEnabled) {
             log.debug "p:text called with attrs $attrs"
         }
