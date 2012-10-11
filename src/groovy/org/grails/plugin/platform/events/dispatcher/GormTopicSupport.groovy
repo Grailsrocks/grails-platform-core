@@ -35,4 +35,5 @@ interface GormTopicSupport {
 
     void processCancel(Object evt, Object returnValue)
     String convertTopic(Object evt)
+    Object extractEntity(Object source)
 }

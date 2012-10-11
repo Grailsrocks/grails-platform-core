@@ -17,7 +17,6 @@
  */
 package org.grails.plugin.platform.events.publisher;
 
-import groovy.lang.Closure;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
 
@@ -43,5 +42,5 @@ public interface EventsPublisher {
     public static final String HEADERS = "headers";
 
     public EventReply event(final EventMessage event);
-    public EventReply eventAsync(final EventMessage event, Map<String,Object> params);
+    public EventReply eventAsync(final EventMessage event, Map<String, Object> params);
 }

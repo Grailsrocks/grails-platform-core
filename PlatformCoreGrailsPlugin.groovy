@@ -24,7 +24,7 @@ import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
-    def version = "1.0.M7-SNAPSHOT"
+    def version = "1.0.M6.1"
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
@@ -156,8 +156,7 @@ Grails Plugin Platform Core APIs
             grailsEventsRegistry(DefaultEventsRegistry)
             grailsEventsPublisher(DefaultEventsPublisher) {
                 grailsEventsRegistry = ref('grailsEventsRegistry')
-                taskExecutor = ref('grailsTopicExecutor')
-                if(manager.hasGrailsPlugin('hibernate'))
+                if(getBeanDefinition('persistenceInterceptor'))
                     persistenceInterceptor = ref("persistenceInterceptor")
                 catchFlushExceptions = config.events.catchFlushExceptions
             }

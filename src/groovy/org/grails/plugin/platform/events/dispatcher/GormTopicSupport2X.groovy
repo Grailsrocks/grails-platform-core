@@ -60,4 +60,9 @@ class GormTopicSupport2X implements GormTopicSupport {
         
         null
     }
+
+    Object extractEntity(Object source) {
+        //workaround for document db and hibernate gorm events
+        source.entityObject ?: source?.entityAccess?.entity
+    }
 }

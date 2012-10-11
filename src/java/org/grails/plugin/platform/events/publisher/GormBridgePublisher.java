@@ -18,16 +18,12 @@
 package org.grails.plugin.platform.events.publisher;
 
 import org.apache.log4j.Logger;
-import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
 import org.grails.plugin.platform.events.Events;
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.util.ReflectionUtils;
 
-import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,10 +64,7 @@ public class GormBridgePublisher implements ApplicationListener {
                 params.put(EventsPublisher.FORK, false);
 
                 EventReply reply = grailsEvents.event(GormTopicSupport.GORM_SOURCE, topic,
-                        ReflectionUtils.invokeMethod(
-                                ReflectionUtils.findMethod(applicationEvent.getClass(), "getEntityObject"),
-                                applicationEvent
-                        ), params);
+                        gormTopicSupport.extractEntity(applicationEvent), params);
                 try {
                     gormTopicSupport.processCancel(applicationEvent, reply != null ? reply.getValues() : null);
                 } catch (Throwable e) {

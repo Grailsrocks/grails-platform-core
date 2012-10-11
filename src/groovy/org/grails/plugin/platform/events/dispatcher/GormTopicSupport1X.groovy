@@ -20,8 +20,6 @@ package org.grails.plugin.platform.events.dispatcher;
 //import org.grails.datastore.mapping.engine.event.AbstractPersistenceEvent;
 
 
-import org.springframework.context.ApplicationEvent
-
 /**
  * @author Stephane Maldini <smaldini@vmware.com>
  * @version 1.0
@@ -38,6 +36,10 @@ class GormTopicSupport1X implements GormTopicSupport{
     }
 
     String convertTopic(Object evt) {
+        return null  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    Object extractEntity(Object source) {
         return null  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

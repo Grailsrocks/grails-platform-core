@@ -23,10 +23,13 @@ import org.codehaus.groovy.grails.support.PersistenceContextInterceptor;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.AsyncTaskExecutor;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Stephane Maldini <smaldini@vmware.com>
@@ -39,20 +42,23 @@ import java.util.concurrent.*;
  */
 public class DefaultEventsPublisher implements EventsPublisher {
 
+
+    private static final String EXECUTOR = "executor";
+    private static final String DEFAULT_EXECUTOR = "grailsTopicExecutor";
+    private static final String QUEUE_EXECUTOR = "grailsP2PExecutor";
     private final static Logger log = Logger.getLogger(DefaultEventsPublisher.class);
 
     private DefaultEventsRegistry grailsEventsRegistry;
-    protected AsyncTaskExecutor taskExecutor;
+
+    @Autowired
+    protected Map<String, AsyncTaskExecutor> taskExecutors;
+
     private PersistenceContextInterceptor persistenceInterceptor;
     private boolean catchFlushExceptions = false;
 
 
     public void setCatchFlushExceptions(boolean catchFlushExceptions) {
         this.catchFlushExceptions = catchFlushExceptions;
-    }
-
-    public void setTaskExecutor(AsyncTaskExecutor taskExecutor) {
-        this.taskExecutor = taskExecutor;
     }
 
     public void setPersistenceInterceptor(PersistenceContextInterceptor persistenceInterceptor) {
@@ -71,6 +77,10 @@ public class DefaultEventsPublisher implements EventsPublisher {
     }
 
     public EventReply eventAsync(final EventMessage event, final Map<String, Object> params) {
+        AsyncTaskExecutor taskExecutor = params != null && params.containsKey(EXECUTOR) ?
+                taskExecutors.get( params.get(EXECUTOR) ) :
+                taskExecutors.get(DEFAULT_EXECUTOR);
+
         Future<DefaultEventsRegistry.InvokeResult> invokeResult =
                 taskExecutor.submit(new Callback(event));
 

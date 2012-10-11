@@ -144,10 +144,10 @@ class EventsImpl implements Events {
                 log.debug "Sending event of namespace [$namespace] and topic [$topic] with data [${data}] and params [${params}]"
             }
             def reply
-            callback = callback ?: params?.get(EventsPublisher.ON_REPLY)
+            callback = callback ?: params?.get(EventsPublisher.ON_REPLY) as Closure
             if (params?.containsKey(EventsPublisher.FORK) && !params.remove(EventsPublisher.FORK)) {
                 reply = grailsEventsPublisher.event(eventMessage)
-                reply.onError = params?.get(EventsPublisher.ON_ERROR)
+                reply.onError = params?.get(EventsPublisher.ON_ERROR) as Closure
                 reply.throwError()
                 callback?.call(reply)
             } else
@@ -159,7 +159,7 @@ class EventsImpl implements Events {
     }
 
     EventMessage buildEvent(String pluginName, String namespace, String topic, data, Map params) {
-        boolean gormSession = params?.containsKey(EventsPublisher.GORM) ? params.remove(EventsPublisher.GORM) : true
+        boolean gormSession = params?.containsKey(EventsPublisher.GORM) ? params.remove(EventsPublisher.GORM) as boolean : true
         namespace = params?.remove(EventsPublisher.NAMESPACE) ?: namespace
         checkNamespace pluginName, namespace
 
@@ -205,7 +205,7 @@ class EventsImpl implements Events {
         null
     }
 
-    void registerListeners(Collection<Class<?>> serviceClasses) {
+    void registerListeners(Collection<Class> serviceClasses) {
 //            grailsEventsDispatcher.scanClassForMappings(serviceClass)
         def bean
         eachListener(serviceClasses) {String namespace, boolean hasInlineNamespace,
@@ -260,12 +260,12 @@ class EventsImpl implements Events {
     }
 
     void loadDSL(Class dslClass) {
-        Script dslInstance = dslClass.newInstance()
+        Script dslInstance = dslClass.newInstance() as Script
         dslInstance.binding.setVariable("grailsApplication", grailsApplication)
         dslInstance.binding.setVariable("ctx", grailsApplication.mainContext)
         dslInstance.binding.setVariable("config", grailsApplication.config)
         dslInstance.run()
-        def dsl = dslInstance.binding.getVariable('events')
+        def dsl = dslInstance.binding.getVariable('events') as Closure
         if (dsl) {
             registerEvents(dsl)
         } else {
@@ -332,11 +332,11 @@ class EventsImpl implements Events {
 
         if (filter) {
             if (Closure.isAssignableFrom(filter.getClass())) {
-                definition.filterClosure = filter
+                definition.filterClosure = filter as Closure
                 definition.filterEventMessage = EventMessage.isAssignableFrom(Closure.cast(filter).parameterTypes[0])
             }
             if (Class.isAssignableFrom(filter.getClass())) {
-                definition.filterClass = filter
+                definition.filterClass = filter as Class
             }
         }
 
