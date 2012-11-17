@@ -156,8 +156,7 @@ Grails Plugin Platform Core APIs
             grailsEventsRegistry(DefaultEventsRegistry)
             grailsEventsPublisher(DefaultEventsPublisher) {
                 grailsEventsRegistry = ref('grailsEventsRegistry')
-                if(getBeanDefinition('persistenceInterceptor'))
-                    persistenceInterceptor = ref("persistenceInterceptor")
+                persistenceInterceptor = ref("persistenceInterceptor")
                 catchFlushExceptions = config.events.catchFlushExceptions
             }
 
