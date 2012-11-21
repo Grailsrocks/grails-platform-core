@@ -42,6 +42,11 @@ interface Security {
      */
     String getUserIdentity()
 
+    /** 
+     * Determine whether a user with the given id already exists or not
+     */
+    boolean userExists(identity)
+
     /**
      * Get user info object i.e. email address, other stuff defined by the security implementation
      * @return An object of completely unknown type. Only for use if you know the security provider

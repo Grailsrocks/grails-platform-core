@@ -52,7 +52,8 @@ class SecurityImpl implements Security, ApplicationContextAware {
             getSecurityInfo(staticMethod:isDomain) {  ->
                 self.getUserInfo()
             }
-            copyFrom(self, ['withUser', 'userHasAnyRole', 'userHasAllRoles', 'userIsAllowed'], [staticMethod:isDomain])
+            copyFrom(self, ['userExists', 'withUser', 'userHasAnyRole', 'userHasAllRoles', 'userIsAllowed'], 
+                [staticMethod:isDomain])
         }
     }
 
@@ -60,6 +61,13 @@ class SecurityImpl implements Security, ApplicationContextAware {
         grailsSecurityBridge != null
     }
     
+    /** 
+     * Determine whether a user with the given id already exists or not
+     */
+    boolean userExists(identity) {
+        getSecurityBridge(true).userExists(identity)
+    }
+
     /**
      * Execute the closure pretending to be the user id specified
      */

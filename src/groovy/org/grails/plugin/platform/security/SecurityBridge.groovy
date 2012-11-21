@@ -61,6 +61,11 @@ interface SecurityBridge {
      */
     Map createLink(String action)
     
+    /** 
+     * Determine whether a user with the given id already exists or not
+     */
+    boolean userExists(identity)
+
     /**
      * Execute code masquerading as the specified user, for the duration of the Closure block
      * @return Whatever the closure returns
