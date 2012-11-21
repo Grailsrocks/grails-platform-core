@@ -31,23 +31,12 @@
 
                 <p>Secondary navigation for this path:</p>
                 <nav:secondary path="${params.activePath}"/>
-        <%--
-                <p>Breadcrumb for this path:</p>
-                <nav:breadcrumb path="${params.activePath}"/>
-                
-                <p>Breadcrumb for this path with custom render:</p>
-                <nav:breadcrumb path="${params.activePath}" custom="true">
-                    <p:callTag tag="p:smartLink" attrs="${linkArgs}"/>
-                    <g:if test="${!last}">
-                        &raquo;
-                    </g:if>
-                </nav:breadcrumb>
-        --%>        
+
                 <p>Two-deep menu for this path:</p>
-                <nav:menu scope="${params.activePath}" path="${params.activePath}" depth="2"/>
+                <nav:menu scope="${params.activePath}" path="${params.activePath}" class="" depth="2"/>
 
                 <p>Two-deep menu for this path with custom render:</p>
-                <nav:menu scope="${params.activePath}" path="${params.activePath}" custom="true" depth="2">
+                <nav:menu scope="${params.activePath}" path="${params.activePath}" class="" custom="true" depth="2">
                     Item: <p:callTag tag="p:smartLink" attrs="${linkArgs}"/>
                 </nav:menu>
 
