@@ -1,3 +1,11 @@
+h3. 1.0.RC1
+
+* Injected methods will not overwrite existing methods now, will warn instead
+* Added userExists method to security API
+* Unified i18N text and body handling in UI Extension tags
+* Improved dev-mode UI at /platform
+* Bug fixes and improvements to Events API
+
 h3. 1.0.M3
 
 Was: 1.0.M2 but due to release error we had to roll to M3.
