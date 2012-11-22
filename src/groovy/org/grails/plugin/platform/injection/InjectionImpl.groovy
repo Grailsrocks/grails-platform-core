@@ -118,10 +118,14 @@ class InjectionImpl implements Injection {
             if (log.debugEnabled) {
                 log.debug "Plugin [${pluginName}] adding${m.staticMethod ? ' static' : '' } method ${m.name}(${m.code.parameterTypes.name.join(',' )}) to [${clazz.name}]"
             }
-            if (m.staticMethod) {
-                mc.'static'."${m.name}" = m.code
-            } else {
-                mc[m.name] = m.code
+            try {
+                if (m.staticMethod) {
+                    mc.'static'."${m.name}" << m.code
+                } else {
+                    mc[m.name] << m.code
+                }
+            } catch (GroovyRuntimeException e) {
+                log.warn "Could not inject${m.staticMethod ? ' static' : '' } method ${m.name}(${m.code.parameterTypes.name.join(',' )}) in to [${clazz.name}], a method with that name and argument list already exists"
             }
         }
     }
