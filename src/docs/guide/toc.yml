@@ -23,8 +23,6 @@ events:
   secure: Securing events
   extensions: Extensions
   config: Configuration properties
-injection:
-  title: Injection API
 nav:
   title: Navigation API
   navigation_concepts: Concepts
@@ -39,6 +37,8 @@ uiextension:
   uix_tags: Tags
   uix_properties: Properties
   uix_code: Beans and utilities
+injection:
+  title: Injection API
 convention:
   title: Convention API
 
