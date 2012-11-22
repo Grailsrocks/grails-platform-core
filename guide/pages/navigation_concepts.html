@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>7.1 Concepts 1.0.M6</title>
+    <title>6.1 Concepts 1.0.RC1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -46,13 +46,13 @@
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/nav.html"><strong>6</strong><span>Navigation API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/nav.html"><strong>7</strong><span>Navigation API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>8</strong><span>Injection API</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
@@ -81,22 +81,22 @@
             <div id="main" class="corner-all">
 
                 
-                <div class="toc-item prev-left"><a href="../../guide/injection.html">&lt;&lt; <strong>6</strong><span>Injection API</span></a></div>
+                <div class="toc-item prev-left"><a href="../../guide/events.html">&lt;&lt; <strong>5</strong><span>Events Bus API</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span> >></a></div>
+                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>7.1 Concepts - Reference Documentation</h1>
+                    <h1>6.1 Concepts - Reference Documentation</h1>
 
                     <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)</p>
 
-                    <p><strong>Version:</strong> 1.0.M6</p>
+                    <p><strong>Version:</strong> 1.0.RC1</p>
 
                     
                 </div>
@@ -105,7 +105,7 @@
 
                 
 
-<h2 id="navigation_concepts">7.1 Concepts</h2>
+<h2 id="navigation_concepts">6.1 Concepts</h2>
 There are only three concepts to understand in the Navigation API - items, scopes and the activation path.<p class="paragraph"/>Out of the box, scopes are created for all your application and plugin controllers automatically by convention. Items are created in these scopes for every action on the controller.<p class="paragraph"/>You will typically move from this to using the navigation DSL artefact for more control over the navigation structure.<p class="paragraph"/><h3>What is a navigation item?</h3><p class="paragraph"/>An item is a place the user can reach in your navigation structure. Every item results in a menu item and link. Whether it is visible or enabled can be determined at runtime.<p class="paragraph"/>Items are always inside one scope.<p class="paragraph"/>Items can have child items.<p class="paragraph"/>Items must be resolvable from a controller/action pair, so the navigation API can always tell where the user is in the structure if the current controller/action is known and you have an item declared for them.<p class="paragraph"/><h3>What is a Scope?</h3><p class="paragraph"/>A scope is a name that identifies one or more navigation items. Top-level scopes are called root scopes and represent your main groupings of navigation items. For example you may have your application navigation for regular users and an admin root scope for backend administration.<p class="paragraph"/>Example of scope names:
 <div class="code"><pre>app                     // typically your <span class="java&#45;keyword">default</span> app navigation root scope
 app/messages            // the <span class="java&#45;quote">"messages"</span> item in the <span class="java&#45;quote">"app"</span> root scope
@@ -118,9 +118,9 @@ Breadcrumbs themselves represent a navigational superset of your app's primary n
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                <div class="toc-item prev-left"><a href="../../guide/injection.html">&lt;&lt; <strong>6</strong><span>Injection API</span></a></div>
+                <div class="toc-item prev-left"><a href="../../guide/events.html">&lt;&lt; <strong>5</strong><span>Events Bus API</span></a></div>
                 
-                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span> >></a></div>
+                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>

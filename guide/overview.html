@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>1 Overview 1.0.M6</title>
+    <title>1 Overview 1.0.RC1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -46,13 +46,13 @@
                     <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/nav.html"><strong>6</strong><span>Navigation API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/nav.html"><strong>7</strong><span>Navigation API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/injection.html"><strong>8</strong><span>Injection API</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
@@ -94,7 +94,7 @@
 
                     <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)</p>
 
-                    <p><strong>Version:</strong> 1.0.M6</p>
+                    <p><strong>Version:</strong> 1.0.RC1</p>
 
                     
                 </div>
@@ -134,7 +134,14 @@ The features include in this release include:
 
 
 <h2 id="changelog">1.2 Change log</h2>
-<h3>1.0.M3</h3><p class="paragraph"/>Was: 1.0.M2 but due to release error we had to roll to M3.
+<h3>1.0.RC1</h3>
+<ul class="star">
+<li>Injected methods will not overwrite existing methods now, will warn instead</li>
+<li>Added userExists method to security API</li>
+<li>Unified i18N text and body handling in UI Extension tags</li>
+<li>Improved dev-mode UI at /platform</li>
+<li>Bug fixes and improvements to Events API</li>
+</ul><p class="paragraph"/><h3>1.0.M3</h3><p class="paragraph"/>Was: 1.0.M2 but due to release error we had to roll to M3.
 <ul class="star">
 <li>Events API</li>
 <li>New UI Extension tags p:text and p:textScope</li>

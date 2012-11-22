@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>7.5 Rendering other menus 1.0.M6</title>
+    <title>6.5 Rendering other menus 1.0.RC1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -46,13 +46,13 @@
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/nav.html"><strong>6</strong><span>Navigation API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/nav.html"><strong>7</strong><span>Navigation API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>8</strong><span>Injection API</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
@@ -81,22 +81,22 @@
             <div id="main" class="corner-all">
 
                 
-                <div class="toc-item prev-left"><a href="../../guide/injection.html">&lt;&lt; <strong>6</strong><span>Injection API</span></a></div>
+                <div class="toc-item prev-left"><a href="../../guide/events.html">&lt;&lt; <strong>5</strong><span>Events Bus API</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span> >></a></div>
+                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>7.5 Rendering other menus - Reference Documentation</h1>
+                    <h1>6.5 Rendering other menus - Reference Documentation</h1>
 
                     <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)</p>
 
-                    <p><strong>Version:</strong> 1.0.M6</p>
+                    <p><strong>Version:</strong> 1.0.RC1</p>
 
                     
                 </div>
@@ -105,15 +105,15 @@
 
                 
 
-<h2 id="menu_navigation">7.5 Rendering other menus</h2>
+<h2 id="menu_navigation">6.5 Rendering other menus</h2>
 You can render any part of your navigation structure as a menu as many times as you like anywhere in your pages, using the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/><h3>Rendering multiple navigation scopes on the same page</h3><p class="paragraph"/>A typical contemporary application will have something like three separate menus used on most pages; main, user and footer.<p class="paragraph"/>The main menu would use <a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> &#38; <a href="../ref/Navigation Tags/secondary.html" class="navigationTags">secondary</a> tags.<p class="paragraph"/>You would then render the user and footer navigation using the menu tag, and passing the user and footer scopes:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;html&#62;&#10;&#60;body&#62;&#10;    &#60;nav:primary/&#62;&#10;    &#60;nav:secondary/&#62;&#10;&#10;    &#60;div id="user&#45;nav"&#62;&#10;        &#60;nav:menu scope="user"/&#62;&#10;    &#60;/div&#62;    &#10;&#10;    &#60;g:layoutBody/&#62;&#10;&#10;    &#60;div id="footer&#45;nav"&#62;&#10;        &#60;nav:menu scope="footer"/&#62;&#10;    &#60;/div&#62;    &#10;&#60;/body&#62;&#10;&#60;/html&#62;&#10;</pre><p class="paragraph"/>This results in a page where there are actually for navigation renderings, showing different scopes.<p class="paragraph"/>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                <div class="toc-item prev-left"><a href="../../guide/injection.html">&lt;&lt; <strong>6</strong><span>Injection API</span></a></div>
+                <div class="toc-item prev-left"><a href="../../guide/events.html">&lt;&lt; <strong>5</strong><span>Events Bus API</span></a></div>
                 
-                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span> >></a></div>
+                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>

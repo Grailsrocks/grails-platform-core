@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>7.7 The Navigation Tags 1.0.M6</title>
+    <title>6.7 The Navigation Tags 1.0.RC1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -46,13 +46,13 @@
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/nav.html"><strong>6</strong><span>Navigation API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/nav.html"><strong>7</strong><span>Navigation API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/injection.html"><strong>8</strong><span>Injection API</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
@@ -81,22 +81,22 @@
             <div id="main" class="corner-all">
 
                 
-                <div class="toc-item prev-left"><a href="../../guide/injection.html">&lt;&lt; <strong>6</strong><span>Injection API</span></a></div>
+                <div class="toc-item prev-left"><a href="../../guide/events.html">&lt;&lt; <strong>5</strong><span>Events Bus API</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span> >></a></div>
+                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>7.7 The Navigation Tags - Reference Documentation</h1>
+                    <h1>6.7 The Navigation Tags - Reference Documentation</h1>
 
                     <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)</p>
 
-                    <p><strong>Version:</strong> 1.0.M6</p>
+                    <p><strong>Version:</strong> 1.0.RC1</p>
 
                     
                 </div>
@@ -105,16 +105,16 @@
 
                 
 
-<h2 id="navigation_tags">7.7 The Navigation Tags</h2>
+<h2 id="navigation_tags">6.7 The Navigation Tags</h2>
 There are a few Navigation tags available, all detailed in the reference section.<p class="paragraph"/>The most common tags you will use are explained here.<p class="paragraph"/>It is important to understand that all the tags work by default using the current scope and activation path as determined by the request - but you can override scope and path on all of these tags to render anything you like.<p class="paragraph"/>Navigation is rendered by default as an HTML <code>&#60;ul&#62;</code> tag with an <code>&#60;li&#62;</code> containing a single link for each of the items. Nested items are rendered as nested <code>&#60;ul&#62;</code>.<p class="paragraph"/>All navigation rendering tags support attributes for CSS class, id and custom rendering of items if required. These are still always rendered within <code>&#60;ul&#62;</code>.<p class="paragraph"/><h3>nav:primary</h3><p class="paragraph"/>Use this tag to render the primary user navigation of your site:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:primary scope="admin" id="nav" class="admin"/&#62;&#10;&#10;&#60;%&#45;&#45; With custom item rendering &#45;&#45;%&#62;&#10;&#60;nav:primary scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#10;   &#60;p:callTag tag="g:link" attrs="$&#123;linkArgs + &#91;class:'nav button'&#93;&#125;"&#62;&#10;      &#60;nav:title item="$&#123;item&#125;"/&#62;&#10;   &#60;/p:callTag&#62;&#10;   &#60;/li&#62;&#10;&#60;/nav:primary&#62;&#10;</pre><p class="paragraph"/>This supports custom rendering in the same way as the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/>See the <a href="../ref/Navigation Tags/primary.html" class="navigationTags">primary</a> tag reference for full details.<p class="paragraph"/><h3>nav:secondary</h3><p class="paragraph"/>Use this tag to render the second-level navigation based on the selected item within the current primary navigation. The scope resolved by <code>nav:primary</code> is stored in the request so that this tag knows which scope to use:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:secondary id="secondary&#45;nav" class="admin"/&#62;&#10;</pre><p class="paragraph"/>This supports custom rendering in the same way as the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag.<p class="paragraph"/>See the <a href="../ref/Navigation Tags/secondary.html" class="navigationTags">secondary</a> tag reference for full details.<p class="paragraph"/><h3>nav:menu</h3><p class="paragraph"/>The menu tag is used internally by the primary/secondary tags and can be called directly to render any part of the navigation structure, with any activation path.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;nav:menu id="main&#45;nav"/&#62;&#10;&#10;&#60;%&#45;&#45; Render the admin nav 3&#45;deep, including all nested descendents whether active or not &#45;&#45;%&#62;&#10;&#60;nav:menu scope="admin" depth="3" forceChildren="true"/&#62;&#10;&#10;&#60;%&#45;&#45; With custom item rendering &#45;&#45;%&#62;&#10;&#60;nav:menu scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#10;   &#60;p:callTag tag="g:link" attrs="$&#123;linkArgs + &#91;class:'nav button'&#93;&#125;"&#62;&#10;      &#60;nav:title item="$&#123;item&#125;"/&#62;&#10;   &#60;/p:callTag&#62;&#10;   &#60;/li&#62;&#10;&#60;/nav:menu&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag reference for full details.<p class="paragraph"/><h3>nav:title</h3><p class="paragraph"/>This renders the i18n title of a specific navigation item passed to it; for use in custom menu rendering.<p class="paragraph"/><pre class="brush: groovy;">&#10;&#60;nav:primary scope="admin" id="nav" class="admin" custom="true"&#62;&#10;   &#60;li&#62;&#60;nav:title item="$&#123;item&#125;"/&#62;&#60;/li&#62;&#10;&#60;/nav:primary&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/menu.html" class="navigationTags">menu</a> tag reference for full details.<p class="paragraph"/><h3>nav:set</h3><p class="paragraph"/>You can call this tag from inside a controller or GSP if you need to define request-specific parameters.<p class="paragraph"/>You can "fudge" the current request's activation path or set the default scope to be used by navigation tags.<p class="paragraph"/>You may need to do this inside an error.gsp for example, or inside admin pages to reuse a generic theme that renders navigation using <code>nav:primary</code>.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;html&#62;&#10;&#60;body&#62;&#10;    &#60;!&#45;&#45; pretend we are in messages/inbox even though we are in a GSP with no controller &#45;&#45;&#62;&#10;    &#60;nav:set path="app/messages/inbox"/&#62;&#10;    &#60;nav:set scope="admin"/&#62;&#10;&#10;    &#60;!&#45;&#45; or set those together &#45;&#45;&#62;&#10;    &#60;nav:set path="app/messages/inbox" scope="admin"/&#62;&#10;&#10;    &#60;!&#45;&#45; these will use whatever the current active path and scope are &#45;&#45;&#62;&#10;    &#60;nav:primary/&#62;&#10;    &#60;nav:secondary/&#62;&#10;&#10;    &#60;p&#62;Something went wrong!&#60;/p&#62;&#10;&#60;/body&#62;&#10;&#60;/html&#62;&#10;</pre><p class="paragraph"/>See the <a href="../ref/Navigation Tags/set.html" class="navigationTags">set</a> tag reference for full details.
 
 
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                <div class="toc-item prev-left"><a href="../../guide/injection.html">&lt;&lt; <strong>6</strong><span>Injection API</span></a></div>
+                <div class="toc-item prev-left"><a href="../../guide/events.html">&lt;&lt; <strong>5</strong><span>Events Bus API</span></a></div>
                 
-                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span> >></a></div>
+                <div class="toc-item next-right"><a href="../../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>

@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>8 UI Extensions 1.0.M6</title>
+    <title>7 UI Extensions 1.0.RC1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -46,13 +46,13 @@
                     <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/nav.html"><strong>6</strong><span>Navigation API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/nav.html"><strong>7</strong><span>Navigation API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/uiextension.html"><strong>7</strong><span>UI Extensions</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/injection.html"><strong>8</strong><span>Injection API</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
@@ -81,22 +81,22 @@
             <div id="main" class="corner-all">
 
                 
-                <div class="toc-item prev-left"><a href="../guide/nav.html">&lt;&lt; <strong>7</strong><span>Navigation API</span></a></div>
+                <div class="toc-item prev-left"><a href="../guide/nav.html">&lt;&lt; <strong>6</strong><span>Navigation API</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                <div class="toc-item next-right"><a href="../guide/convention.html"><strong>9</strong><span>Convention API</span> >></a></div>
+                <div class="toc-item next-right"><a href="../guide/injection.html"><strong>8</strong><span>Injection API</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>8 UI Extensions - Reference Documentation</h1>
+                    <h1>7 UI Extensions - Reference Documentation</h1>
 
                     <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)</p>
 
-                    <p><strong>Version:</strong> 1.0.M6</p>
+                    <p><strong>Version:</strong> 1.0.RC1</p>
 
                     
                 </div>
@@ -105,13 +105,13 @@
                 <div id="table-of-content">
                     <h2>Table of Contents</h2>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#uix_tags"><strong>8.1</strong><span>Tags</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#uix_tags"><strong>7.1</strong><span>Tags</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#uix_properties"><strong>8.2</strong><span>Properties</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#uix_properties"><strong>7.2</strong><span>Properties</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0px"><a href="#uix_code"><strong>8.3</strong><span>Beans and utilities</span></a>
+                    <div class="toc-item" style="margin-left:0px"><a href="#uix_code"><strong>7.3</strong><span>Beans and utilities</span></a>
                     </div>
                     
                 </div>
@@ -119,14 +119,14 @@
 
                 
 
-<h1 id="uiextension">8 UI Extensions</h1>
+<h1 id="uiextension">7 UI Extensions</h1>
 Several simple UI Extensions are included in platform-core.<p class="paragraph"/>The tags supplied make it trivial to render links to controllers and actions
 using i18n messages, display messages to the end user, and render buttons and
 labels in i18n friendly ways.
 
 
 
-<h2 id="uix_tags">8.1 Tags</h2>
+<h2 id="uix_tags">7.1 Tags</h2>
 <h3>Linking tags</h3><p class="paragraph"/>The <a href="../ref/Ui Extension Tags/smartLink.html" class="uiExtensionTags">smartLink</a> tag renders links for controllers and actions, automatically working out the text of the link using i18n.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;%&#45;&#45; Link to default action of BooksController &#45;&#45;%&#62;&#10;&#60;p:smartLink controller="books"/&#62;&#10;&#10;&#60;%&#45;&#45; Link to list action of current controller &#45;&#45;%&#62;&#10;&#60;p:smartLink action="list"/&#62;&#10;</pre><p class="paragraph"/>These will use i18n messages located by convention of the form: <code>action.<strong class="bold">controllerName</strong>.<strong class="bold">actionName</strong></code><p class="paragraph"/><h3>Label tag</h3><p class="paragraph"/>The label tag will render a &#60;label&#62; with the text optionally loaded from i18n:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:label text="field.user.name"/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/label.html" class="uiExtensionTags">label</a> for full details of the attributes, which include passing arguments to the i18n message.<p class="paragraph"/><h3>Button tag</h3><p class="paragraph"/>The button tag will render a text-based button using either a &#60;button&#62;, &#60;input type="submit"&#62; or &#60;a&#62; tag, with the text optionally loaded from i18n:<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:button text="button.save"/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/button.html" class="uiExtensionTags">button</a> for full details of the attributes, which include setting the kind of button rendered and passing arguments to the i18n message.<p class="paragraph"/><h3>Display message tag</h3><p class="paragraph"/>The displayMessage tag works with the <code>displayMessage</code> and <code>displayFlashMessage</code> controller methods to make it easy to render messages to the user in a uniform way.<p class="paragraph"/><pre class="brush: xml;">&#10;&#60;p:displayMessage/&#62;&#10;</pre><p class="paragraph"/>See <a href="../ref/Ui Extension Tags/displayMessage.html" class="uiExtensionTags">displayMessage</a> for full details of the attributes and the <a href="../ref/Ui Extension Methods/displayMessage.html" class="uiExtensionMethods">displayMessage</a> and <a href="../ref/Ui Extension Methods/displayFlashMessage.html" class="uiExtensionMethods">displayFlashMessage</a> controller methods.<p class="paragraph"/>The tag will render both request and flash messages, and wraps them in a div with CSS classes according to the type of message.<p class="paragraph"/><h3>Branding tags</h3><p class="paragraph"/>There are several simple but useful site branding tags included. Commonly to be used in site footers and emails templates.
 <ul class="star">
 <li><a href="../ref/Ui Extension Tags/organization.html" class="uiExtensionTags">organization</a> - Renders the name of the business, taken from Config var <code>plugin.platformCore.organization.name</code></li>
@@ -137,13 +137,13 @@ labels in i18n friendly ways.
 </ul><p class="paragraph"/>
 
 
-<h2 id="uix_properties">8.2 Properties</h2>
+<h2 id="uix_properties">7.2 Properties</h2>
 
 New auto-namespaced equivalents of <code>session</code>, <code>request</code> and <code>flash</code> attributes are added to all <strong class="bold">controllers</strong> and <strong class="bold">taglibs</strong> exposed by plugins.<p class="paragraph"/>These properties are <a href="../ref/Ui Extension Properties/pluginRequestAttributes.html" class="uiExtensionProperties">pluginRequestAttributes</a>, <a href="../ref/Ui Extension Properties/pluginSession.html" class="uiExtensionProperties">pluginSession</a> and <a href="../ref/Ui Extension Properties/pluginFlash.html" class="uiExtensionProperties">pluginFlash</a>.<p class="paragraph"/>They allow you to access these attributes from plugin code without having to worry about key name clashes with other plugins or the application:<p class="paragraph"/><pre class="brush: groovy;">&#10;class MyController &#123;&#10;	def beginPasswordReset = &#123;&#10;		pluginSession.resetMode = true&#10;		pluginFlash.resetToken = resetTokenFactory.newTicket()&#10;	&#125;&#10;&#125;&#10;</pre><p class="paragraph"/>
 
 
 
-<h2 id="uix_code">8.3 Beans and utilities</h2>
+<h2 id="uix_code">7.3 Beans and utilities</h2>
 There are a some UI utility classes and beans available:
 <ul class="star">
 <li><a href="../ref/Beans/grailsUiExtensions.html" class="beans">grailsUiExtensions</a> - Provides methods for setting and getting displayMessages</li>
@@ -153,9 +153,9 @@ There are a some UI utility classes and beans available:
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                <div class="toc-item prev-left"><a href="../guide/nav.html">&lt;&lt; <strong>7</strong><span>Navigation API</span></a></div>
+                <div class="toc-item prev-left"><a href="../guide/nav.html">&lt;&lt; <strong>6</strong><span>Navigation API</span></a></div>
                 
-                <div class="toc-item next-right"><a href="../guide/convention.html"><strong>9</strong><span>Convention API</span> >></a></div>
+                <div class="toc-item next-right"><a href="../guide/injection.html"><strong>8</strong><span>Injection API</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
