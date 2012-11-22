@@ -49,9 +49,6 @@ navigation = {
 }
 {docx}
 
-You can also use overrides in the navigation DSL to move items from one scope to another for example to move items declared by a plugin into your primary application navigation.
-{note}This part is not implemented in 1.0.M2/M3 - code sample to be written{note}
-
 Using tags such as the [primary|navigationTags] and [secondary|navigationTags] navigation tags you can render all the page elements you need. 
 
 h3. The Navigation DSL Definition
@@ -62,9 +59,9 @@ This closure represents the DSL and method invocations have a special meaning wi
 
 The name used in method calls is used to construct the activation path of each item. So a call to "app" that has a call to "messages" which has a closure that calls "inbox" will create:
 
-# A scope called "app"
-# A top-level item in the "app" scope, called "messages", with activation path @app/message@
-# A nested item under "messages" called "inbox" with activation path @app/messages/inbox@
+* A scope called "app"
+* A top-level item in the "app" scope, called "messages", with activation path @app/message@
+* A nested item under "messages" called "inbox" with activation path @app/messages/inbox@
 
 h4. Top level method invocations (root scopes)
 
