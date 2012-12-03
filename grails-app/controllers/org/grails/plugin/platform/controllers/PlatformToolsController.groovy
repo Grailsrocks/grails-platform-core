@@ -36,7 +36,11 @@ class PlatformToolsController {
     }
 
     def showNavigation = {
-        [navScopes:grailsNavigation.scopes]
+        [
+            navScopes:grailsNavigation.scopes,
+            navNodesById:grailsNavigation.nodesById,
+            navNodesByControllerAction:grailsNavigation.nodesByControllerAction
+        ]
     }
 
     def showEvents = {
