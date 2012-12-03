@@ -19,13 +19,13 @@
                 
                 <p>The current active path is "${nav.activePath().encodeAsHTML()}", which means the active node is ${nav.activeNode()?.id.encodeAsHTML()}</p>
 
-                <p>Show navigation for the active path:</p>
+                <h2>Test navigation for the active path</h2>
                 <g:form action="showNavigation">
                     <input name="activePath" value="${params.activePath}" size="80"/>
                     <input type="submit"/>
                 </g:form>
 
-                <p>First active node for this path is: ${nav.firstActiveNode(path:params.activePath)?.id}</p>
+                <p>First active node for the path [${params.activePath}] is: ${nav.firstActiveNode(path:params.activePath)?.id}</p>
                 <p>Primary navigation for this path:</p>
                 <nav:primary scope="${nav.scopeForActivationPath(path:params.activePath)}" path="${params.activePath}"/>
 
@@ -40,29 +40,42 @@
                     Item: <p:callTag tag="p:smartLink" attrs="${linkArgs}"/>
                 </nav:menu>
 
-                <p>The available navigation scopes are:
-                    <ul>
-                    <g:each in="${navScopes}" var="scope"> 
-                        <li>${scope.name.encodeAsHTML()}
-                        <nav:items scope="${scope}" var="item">
-                            id: ${item.id.encodeAsHTML()}
-                                <g:if test="${item.id == params.activePath}"><strong>ACTIVE</strong></g:if>
-                                <br/>
-                                name: ${item.name.encodeAsHTML()}<br/>
-                                order: ${item.order.encodeAsHTML()}<br/>
-                                link args: ${item.linkArgs.encodeAsHTML()} (<p:callTag tag="g:link" attrs="${new HashMap(item.linkArgs)}">Test</p:callTag>)<br/>
-                                action aliases: ${item.actionAliases?.encodeAsHTML()}<br/>
-                                title: ${item.titleMessageCode.encodeAsHTML()} (<g:message code="${item.titleMessageCode}" encodeAs="HTML"/>)<br/>
-                                default title: ${item.titleDefault.encodeAsHTML()}<br/>
-                                data: ${item.data.encodeAsHTML()}<br/>
-                                visible: ${item.visibleClosure ? 'from Closure' : item.visible}<br/>
-                                enabled: ${item.enabledClosure ? 'from Closure' : item.enabled}<br/>
-                        </nav:items>
-                        </li>
-                    </g:each>
-                    </ul>
-                </p>
-                
+                <h2>Available navigation scopes</h2>
+                <ul>
+                <g:each in="${navScopes}" var="scope"> 
+                    <li>${scope.name.encodeAsHTML()}
+                    <nav:items scope="${scope}" var="item">
+                        id: ${item.id.encodeAsHTML()}
+                            <g:if test="${item.id == params.activePath}"><strong>ACTIVE</strong></g:if>
+                            <br/>
+                            name: ${item.name.encodeAsHTML()}<br/>
+                            order: ${item.order.encodeAsHTML()}<br/>
+                            link args: ${item.linkArgs.encodeAsHTML()} (<p:callTag tag="g:link" attrs="${new HashMap(item.linkArgs)}">Test</p:callTag>)<br/>
+                            action aliases: ${item.actionAliases?.encodeAsHTML()}<br/>
+                            title: ${item.titleMessageCode.encodeAsHTML()} (<g:message code="${item.titleMessageCode}" encodeAs="HTML"/>)<br/>
+                            default title: ${item.titleDefault.encodeAsHTML()}<br/>
+                            data: ${item.data.encodeAsHTML()}<br/>
+                            visible: ${item.visibleClosure ? 'from Closure' : item.visible}<br/>
+                            enabled: ${item.enabledClosure ? 'from Closure' : item.enabled}<br/>
+                    </nav:items>
+                    </li>
+                </g:each>
+                </ul>
+            
+                <h2>Nodes by id cache</h2>
+                <ul>
+                <g:each in="${navNodesById}" var="n"> 
+                    <li>${n.key.encodeAsHTML()} &raquo; ${n.value.name.encodeAsHTML()} <g:if test="${n.value instanceof org.grails.plugin.platform.navigation.NavigationItem}"> (${n.value.linkArgs.encodeAsHTML()})</g:if></li>
+                </g:each>
+                </ul>
+
+                <h2>Nodes by controller/action</h2>
+                <ul>
+                <g:each in="${navNodesByControllerAction}" var="n"> 
+                    <li>${n.key.encodeAsHTML()} &raquo; ${n.value.name.encodeAsHTML()} (${n.value.linkArgs.encodeAsHTML()})</li>
+                </g:each>
+                </ul>
+
                 <footer>
                     <p>This is our footer navigation</p>
                     <nav:menu scope="footer"/>
