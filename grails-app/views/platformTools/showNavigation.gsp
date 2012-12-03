@@ -20,8 +20,8 @@
                 <p>The current active path is "${nav.activePath().encodeAsHTML()}", which means the active node is ${nav.activeNode()?.id.encodeAsHTML()}</p>
 
                 <h2>Test navigation for the active path</h2>
-                <g:form action="showNavigation">
-                    <input name="activePath" value="${params.activePath}" size="80"/>
+                <g:form mapping="platformNormal" action="showNavigation">
+                    <input type="text" name="activePath" value="${params.activePath}" size="80"/>
                     <input type="submit"/>
                 </g:form>
 
