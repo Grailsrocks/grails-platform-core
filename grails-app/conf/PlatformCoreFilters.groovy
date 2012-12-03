@@ -44,7 +44,8 @@ class PlatformCoreFilters {
                             OSX = UA.indexOf('OS X 10_8')
                         }
                         if (OSX > -1) {
-                            redirect(mapping:'platformFancy', action:actionName, id:params.id)
+                            redirect(mapping:'platformFancy', action:actionName, id:params.id, params:params)
+                            return false
                         }
                     }
                 }
