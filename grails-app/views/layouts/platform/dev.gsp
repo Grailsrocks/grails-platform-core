@@ -11,9 +11,7 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
-                <a class="brand" href="#">
-                  Grails Platform Core
-                </a>
+                <g:link class="brand" controller="platformTools">Grails Platform Core</g:link>
                 <nav:primary class="nav" scope="dev"/>
             </div>
         </div>
