@@ -201,11 +201,17 @@ class NavigationImpl implements Navigation {
     }
     
     void clearCaches() {
+        if (log.debugEnabled) {
+            log.debug "Clearing navigation caches"
+        }
         nodesByControllerAction = [:]
         nodesById = [:]
     }
     
     void clearScopes() {
+        if (log.debugEnabled) {
+            log.debug "Clearing navigation scopes"
+        }
         rootScopes = [:]
     }
     
@@ -216,6 +222,9 @@ class NavigationImpl implements Navigation {
     }
 
     void updateCaches() {
+        if (log.debugEnabled) {
+            log.debug "Updating navigation caches for root scopes: ${rootScopes.keySet()}"
+        }
         for (scope in rootScopes.values()) { 
             for (node in scope.children) {
                 updateCachesForItem(node)
@@ -241,6 +250,9 @@ class NavigationImpl implements Navigation {
     }
     
     void loadDSL(Class dslClass) {
+        if (log.debugEnabled) {
+            log.debug "Loading navigation DSL from calss ${dslClass}"
+        }
         def dslInstance = dslClass.newInstance()
         dslInstance.run()
         def dsl = dslInstance.binding.getVariable('navigation')
@@ -265,7 +277,6 @@ class NavigationImpl implements Navigation {
     }
 
     void registerNavigation(Closure dsl) {
-        clearCaches() // this may hose other stuff
         List<DSLCommand> commands = new DSLEvaluator().evaluate(dsl)
         String definingPlugin = PluginUtils.getNameOfDefiningPlugin(grailsApplication.mainContext, dsl)
         parseDSL(commands, null, definingPlugin)
