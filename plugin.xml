@@ -1,0 +1,35 @@
+<plugin name='platform-core' version='1.0.RC2' grailsVersion='1.3 &gt; *'>
+  <author>Marc Palmer</author>
+  <authorEmail>marc@grailsrocks.com</authorEmail>
+  <title>Plugin Platform Core</title>
+  <description>Grails Plugin Platform Core APIs
+</description>
+  <documentation>http://grails.org/plugin/platform-core</documentation>
+  <type>PlatformCoreGrailsPlugin</type>
+  <resources>
+    <resource>PlatformCoreBootStrap</resource>
+    <resource>PlatformCoreFilters</resource>
+    <resource>PlatformCoreResources</resource>
+    <resource>PlatformCoreUrlMappings</resource>
+    <resource>org.grails.plugin.platform.controllers.PlatformToolsController</resource>
+    <resource>org.grails.plugin.platform.NavigationTagLib</resource>
+    <resource>org.grails.plugin.platform.PlatformTagLib</resource>
+    <resource>org.grails.plugin.platform.SecurityTagLib</resource>
+    <resource>org.grails.plugin.platform.SystemTagLib</resource>
+    <resource>org.grails.plugin.platform.UiExtensionsTagLib</resource>
+  </resources>
+  <repositories>
+    <repository name='grailsCentral' url='http://grails.org/plugins' />
+    <repository name='http://repo.grails.org/grails/core' url='http://repo.grails.org/grails/core/' />
+    <repository name='http://grails.org/plugins' url='http://grails.org/plugins' />
+    <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
+  </repositories>
+  <dependencies>
+    <build>
+      <dependency group='org.grails' name='grails-gdoc-engine' version='1.0.1' />
+    </build>
+  </dependencies>
+  <plugins />
+  <runtimePluginRequirements />
+  <behavior />
+</plugin>

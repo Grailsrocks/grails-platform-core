@@ -1,0 +1,4543 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"namespace",
+				"namespacedCode"
+			],
+			[
+				"throw",
+				"throwTagError"
+			],
+			[
+				"plugin",
+				"pluginRequestAttributes"
+			],
+			[
+				"di",
+				"displayMessage"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "grails-app/taglib/org/grails/plugin/platform/UiExtensionsTagLib.groovy",
+			"settings":
+			{
+				"buffer_size": 18671,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 77 files for \"configurationholder\"\n\n0 matches across 0 files\n\n\nSearching 77 files for \"grailsapplication.config\"\n\n/Users/marc/Projects/checkout/grails-platform-core/PlatformCoreGrailsPlugin.groovy:\n  192  \n  193      def doWithDynamicMethods = { ctx ->\n  194:         def config = ctx.grailsApplication.config.plugin.platformCore\n  195          ctx.grailsInjection.initInjections()\n  196  \n  ...\n  224  \n  225      def doWithInjection = { ctx ->\n  226:         def config = ctx.grailsApplication.config.plugin.platformCore\n  227  \n  228          if (!config.security.disabled) {\n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/conf/PlatformCoreBootStrap.groovy:\n   48              println \"  Environment: ${Environment.current}\"\n   49              println '  Database configuration: '\n   50:             def ds = grailsApplication.config.dataSource\n   51              println \"    Hibernate DDL mode: ${ds.dbCreate}\"\n   52              if (ds.jndiName) {\n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/conf/PlatformCoreFilters.groovy:\n   24  \n   25      def filters = {\n   26:         if (!grailsApplication.config.plugin.platformCore.navigation.disabled) {\n   27              navigationActivator(controller: '*', action: '*') {\n   28                  before = {\n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/controllers/org/grails/plugin/platform/controllers/PlatformToolsController.groovy:\n   33      \n   34      def showPluginConfig = {\n   35:         [allPluginConfig:grailsApplication.config.plugin.flatten()]\n   36      }\n   37  \n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/taglib/org/grails/plugin/platform/SystemTagLib.groovy:\n   27      \n   28      def config = { attrs ->\n   29:         def conf = grailsApplication.config.flatten()\n   30          def n = attrs.name\n   31          if (!n) {\n\n/Users/marc/Projects/checkout/grails-platform-core/src/groovy/org/grails/plugin/platform/config/PluginConfigurationImpl.groovy:\n  109       */\n  110      protected void setConfigValueByPath(String fullPath, value, boolean overwriteExisting = true) {\n  111:         def config = grailsApplication.config\n  112          \n  113          def parentConfObj\n  ...\n  147       */\n  148      ConfigObject getPluginConfig(String pluginName) {\n  149:         grailsApplication.config.plugin[pluginName]\n  150      }\n  151      \n  ...\n  187          // Now validate plugin config\n  188          applyPluginConfigurationDefaultValuesAndConstraints()\n  189:         log.debug \"After applying doWithConfig and doWithConfigOptions, application config is: ${grailsApplication.config}\"\n  190          \n  191          verifyConfig()\n  ...\n  197      void verifyConfig() {\n  198          def registeredKeys = pluginConfigurationEntries*.fullConfigKey as Set\n  199:         def flatAppConf = grailsApplication.config.flatten()\n  200          // @todo we falsely report Map values as invalid config currently as flatten() flattens these too\n  201          flatAppConf.each { k, v ->\n  ...\n  218      void migrateLegacyConfigValues(boolean overwriteExisting) {\n  219          def registeredKeys = legacyPluginConfigurationEntries\n  220:         def flatAppConf = grailsApplication.config.flatten()\n  221          // Find all configs that are legacy and copy them to the correct plugin scoped config\n  222          flatAppConf.keySet().each { k ->\n  ...\n  227                  // @todo We have to get a new config here as it may have changed during processing\n  228                  // Otherwise we get a CME\n  229:                 def latestConf = grailsApplication.config.flatten()\n  230                  def currentValue = latestConf.getAt(newKey)\n  231                  if (currentValue != v) {\n  ...\n  249      void mergeDoWithConfig() {\n  250          if (log.debugEnabled) {\n  251:             log.debug \"About to merge plugin configs into main Config which is currently: ${grailsApplication.config}\"\n  252          }\n  253  \n  ...\n  265                  def builder = new ConfigBuilder()\n  266                  confDSL.delegate = builder\n  267:                 confDSL(grailsApplication.config.clone()) // Deep clone app config to avoid side effects of querying existing config values\n  268                  \n  269                  def newConf\n  ...\n  301                      log.debug \"Plugin ${pluginName} config changes being merged into main config: ${newConf}\"\n  302                  }\n  303:                 def merged = newConf.merge(grailsApplication.config) \n  304  \n  305                  if (log.debugEnabled) {\n  306:                     log.debug \"Plugin ${pluginName} config changes replacing main config which is: ${grailsApplication.config}\"\n  307                  }\n  308:                 grailsApplication.config.putAll( merged)\n  309  \n  310                  if (log.debugEnabled) {\n  311:                     log.debug \"Plugin ${pluginName} config changes merged into main config resulted in: ${grailsApplication.config}\"\n  312                  }\n  313              }\n  ...\n  320      void applyAppPluginConfiguration(ConfigObject appPluginConfig) {\n  321          log.debug \"Applying user-supplied plugin configuration...\"\n  322:         def conf = grailsApplication.config\n  323          def flatConf = conf.flatten()\n  324          def pluginConf = appPluginConfig\n  ...\n  362      void applyPluginConfigurationDefaultValuesAndConstraints() {\n  363          log.debug \"Applying plugin configuration constraints...\"\n  364:         def conf = grailsApplication.config\n  365          def flatConf = conf.flatten()\n  366          \n\n/Users/marc/Projects/checkout/grails-platform-core/src/groovy/org/grails/plugin/platform/events/EventsImpl.groovy:\n   62  \n   63              def self = theContext.grailsEvents\n   64:             //def config = theContext.grailsApplication.config.plugin.platformCore\n   65  \n   66              event { String topic, Closure callback ->\n   ..\n  264          dslInstance.binding.setVariable(\"grailsApplication\", grailsApplication)\n  265          dslInstance.binding.setVariable(\"ctx\", grailsApplication.mainContext)\n  266:         dslInstance.binding.setVariable(\"config\", grailsApplication.config)\n  267          dslInstance.run()\n  268          def dsl = dslInstance.binding.getVariable('events')\n\n/Users/marc/Projects/checkout/grails-platform-core/test/unit/org/grails/plugin/platform/config/PluginConfigurationSpec.groovy:\n   70  \n   71          when:\n   72:         pc.grailsApplication.config = new ConfigSlurper().parse(new ClosureInvokingScript(appConf))\n   73          pc.applyAppPluginConfiguration( new ConfigSlurper().parse(new ClosureInvokingScript(pluginConf)) )\n   74:         def flatConf = pc.grailsApplication.config.flatten()\n   75          \n   76          then:\n\n24 matches across 8 files\n\n\nSearching 77 files for \"println\"\n\n/Users/marc/Projects/checkout/grails-platform-core/PlatformCoreGrailsPlugin.groovy:\n  289              this.getClassLoader().loadClass(className)\n  290          } catch (ClassNotFoundException e) {\n  291:             println \"ERROR: Could not load $className\"\n  292              null\n  293          }\n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/conf/PlatformCoreBootStrap.groovy:\n   37          if (pluginConfig?.show.startup.info) {\n   38              def w = 70\n   39:             println '='*w\n   40              def name = grailsApplication.metadata.'app.name'\n   41              def ver = grailsApplication.metadata.'app.version'\n   42              def welcome = \"Application: \"+(ver ? \"$name $ver\" : name)\n   43  \n   44:             println ''\n   45:             println welcome.center(w)\n   46:             println(('-'*welcome.length()).center(w))\n   47:             println ''\n   48:             println \"  Environment: ${Environment.current}\"\n   49:             println '  Database configuration: '\n   50              def ds = grailsApplication.config.dataSource\n   51:             println \"    Hibernate DDL mode: ${ds.dbCreate}\"\n   52              if (ds.jndiName) {\n   53:                 println \"    JNDI: ${ds.jndiName}\"\n   54              } else {\n   55:                 println \"    URL: ${ds.url}\"\n   56:                 println \"    Driver: ${ds.driverClassName}\"\n   57:                 println \"    User: ${ds.username}\"\n   58              }\n   59  \n   60:             println '='*w\n   61          }\n   62      }\n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/conf/TestEvents.groovy:\n   19  \n   20  events = {\n   21:     //sampleHello namespace:'lal', onReply: { println 'joy' }\n   22      beforeInsert\n   23  }\n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/controllers/org/grails/plugin/platform/test/SampleController.groovy:\n   44  \n   45          def book = Book.get(1)\n   46:         println 'loading author'\n   47          render book?.authors\n   48      }\n   ..\n   54      def testInlineListener = {\n   55          def listener = on(\"afterInsert\") {Book book ->\n   56:             println \"test $book\"\n   57          }\n   58          render \"$listener registered\"\n   ..\n   68          def async2 = event for:'lal', topic:'sampleHello', data:'{\"message\":\"world B\"}'\n   69  \n   70: //        def _stream = stream 'someNamespace://samplehello' | reply { println it } | error { println it } << 'test'\n   71  //        _stream.send()\n   72  \n   ..\n   83  \n   84          def reply = { r ->\n   85:             println 'hidden test'\n   86          }\n   87  \n   88          def error = { r ->\n   89:             println 'test----' + r\n   90          }\n   91  \n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/services/org/grails/plugin/platform/test/SampleService.groovy:\n   37      @Listener(topic = 'beforeInsert', namespace = 'gorm')\n   38      void beforeInsertBook(EventMessage msg) {\n   39:         println \"will insert domain - $msg.data\"\n   40      }\n   41  \n   42      @Listener(topic = 'beforeInsert', namespace = 'gorm')\n   43      void beforeInsertAuthor(Author author) {\n   44:         println \"will insert author - $author.name\"\n   45      }\n   46  \n   47      @Listener(namespace = 'gorm')\n   48      void afterInsert(Author author) {\n   49:         println \"after insert author -  $author.name\"\n   50      }\n   51  \n   52      @Listener(topic = 'sampleHello', namespace = 'platformCore')\n   53      def testEvent() {\n   54:         println \"Hello (bas) !!!!!\"\n   55          'worked 1'\n   56      }\n   ..\n   58      @Listener(namespace = 'lal')\n   59      def sampleHello(test) {\n   60:         println \"Hello (bis) - $test\"\n   61      }\n   62  \n   63      @Listener(namespace = 'lal', topic='sampleHella')\n   64      def sampleHella(test) {\n   65:         println \"Adios bus) - $test\"\n   66          while(1)\n   67              sleep(3000)\n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/taglib/org/grails/plugin/platform/UiExtensionsTagLib.groovy:\n   82      // @todo move this to TagLibUtils and use messageSource\n   83      protected getMessageOrBody(Map attrs, Closure body) {\n   84:         println \"gMoB: $attrs\"\n   85          def textCode = attrs.remove('text')\n   86          def textCodeArgs = attrs.remove('textArgs')\n   ..\n  235       */\n  236      def text = { attrs, body ->\n  237:         println \"WTF: $attrs\"\n  238          if (log.debugEnabled) {\n  239              log.debug \"p:text called with attrs $attrs\"\n\n/Users/marc/Projects/checkout/grails-platform-core/scripts/UpdateHeader.groovy:\n   48      def header = new File(basedir, 'HEADER.TXT')\n   49      if (!header.exists()) {\n   50:         println \"You have no HEADER.TXT file - creating one for you using ASL 2 License. Change this if you need to and run this script again.\"\n   51          header.setText(APACHE_2_LICENSE, 'UTF-8')\n   52      }\n   ..\n   65          \n   66      if (ant.project.properties.doContinue != 'y') {\n   67:         println \"You chickened out, that's OK.\"\n   68          return\n   69      }\n   ..\n   80                  newF << m[0][3]\n   81                  f.setText(newF.toString(), 'UTF-8')\n   82:                 println \"Replaced header in file: $f\"\n   83              } else {\n   84                  m = NO_HEADER_PATTERN.matcher(t)\n   ..\n   89                      newF << m[0][2]\n   90                      f.setText(newF.toString(), 'UTF-8')\n   91:                     println \"Replaced header in file: $f\"\n   92                  }\n   93              }\n\n/Users/marc/Projects/checkout/grails-platform-core/test/unit/org/grails/plugin/platform/config/PluginConfigurationTests.groovy:\n   33          assertTrue config.a.b instanceof ConfigObject\n   34          assertTrue config.a.b.c instanceof ConfigObject\n   35:         println \"config.a.b.c: \"+config.a.b.c?.dump()\n   36          \n   37          assertTrue config.a.b.c.enabled instanceof Boolean\n\n34 matches across 8 files\n\n\nSearching 78 files for \"dummytext\"\n\n/Users/marc/Projects/checkout/grails-platform-core/grails-app/taglib/org/grails/plugin/platform/UiExtensionsTagLib.groovy:\n  328      }\n  329   \n  330:     def dummyText = { attrs -> \n  331          def n = attrs.size ? attrs.size.toString().toInteger() : 0\n  332          if (!n) {\n\n1 match in 1 file\n\n\nSearching 78 files for \"error con\"\n\n0 matches across 0 files\n",
+			"settings":
+			{
+				"buffer_size": 13267,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "test/unit/org/grails/plugin/platform/config/PluginConfigurationTests.groovy",
+			"settings":
+			{
+				"buffer_size": 4312,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/marc/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+			"settings":
+			{
+				"buffer_size": 13148,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/platformTools/showUiExtensions.gsp",
+			"settings":
+			{
+				"buffer_size": 4032,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/taglib/org/grails/plugin/platform/PlatformTagLib.groovy",
+			"settings":
+			{
+				"buffer_size": 2903,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/util/TagLibUtils.groovy",
+			"settings":
+			{
+				"buffer_size": 5744,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extenstion Tags/text.gdoc",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "PlatformCoreGrailsPlugin.groovy",
+			"settings":
+			{
+				"buffer_size": 11215,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/ui/UiExtensions.groovy",
+			"settings":
+			{
+				"buffer_size": 6025,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/events/EventsImpl.groovy",
+			"settings":
+			{
+				"buffer_size": 14576,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/events/secure.gdoc",
+			"settings":
+			{
+				"buffer_size": 177,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/nav/using_navigation_dsl.gdoc",
+			"settings":
+			{
+				"buffer_size": 9097,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/gettingStarted.gdoc",
+			"settings":
+			{
+				"buffer_size": 849,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/security.gdoc",
+			"settings":
+			{
+				"buffer_size": 2742,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/events/replying.gdoc",
+			"settings":
+			{
+				"buffer_size": 5015,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Events Methods/countListeners.gdoc",
+			"settings":
+			{
+				"buffer_size": 678,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Events Methods/event.gdoc",
+			"settings":
+			{
+				"buffer_size": 2576,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Events Methods/on.gdoc",
+			"settings":
+			{
+				"buffer_size": 1112,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Events Methods/removeListeners.gdoc",
+			"settings":
+			{
+				"buffer_size": 663,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Events Methods/waitFor.gdoc",
+			"settings":
+			{
+				"buffer_size": 1573,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Security Methods/userHasAllRoles.gdoc",
+			"settings":
+			{
+				"buffer_size": 546,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Security Methods/userHasAnyRole.gdoc",
+			"settings":
+			{
+				"buffer_size": 538,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Security Methods/userIsAllowed.gdoc",
+			"settings":
+			{
+				"buffer_size": 683,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Security Methods/withUser.gdoc",
+			"settings":
+			{
+				"buffer_size": 926,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Security Properties/securityIdentity.gdoc",
+			"settings":
+			{
+				"buffer_size": 581,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Security Properties/securityInfo.gdoc",
+			"settings":
+			{
+				"buffer_size": 636,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/attrIfSet.gdoc",
+			"settings":
+			{
+				"buffer_size": 608,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "target/docs/index.html",
+			"settings":
+			{
+				"buffer_size": 26394,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/navigation/navigation_tags.gdoc",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/navigation/navigation_concepts.gdoc",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/platformTools/showNavigation.gsp",
+			"settings":
+			{
+				"buffer_size": 3495,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/java/org/grails/plugin/platform/events/publisher/EventsPublisher.java",
+			"settings":
+			{
+				"buffer_size": 1589,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/taglib/org/grails/plugin/platform/NavigationTagLib.groovy",
+			"settings":
+			{
+				"buffer_size": 12300,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/taglib/org/grails/plugin/platform/SystemTagLib.groovy",
+			"settings":
+			{
+				"buffer_size": 1555,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Tags System/requiresBean.gdoc",
+			"settings":
+			{
+				"buffer_size": 634,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Methods/displayMessage.gdoc",
+			"settings":
+			{
+				"buffer_size": 1058,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/button.gdoc",
+			"settings":
+			{
+				"buffer_size": 1269,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/test.gsp",
+			"settings":
+			{
+				"buffer_size": 189,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/textScope.gdoc",
+			"settings":
+			{
+				"buffer_size": 1305,
+				"line_ending": "Unix",
+				"name": "h1. p:textScope"
+			}
+		},
+		{
+			"file": "grails-app/views/_test_fragment.gsp",
+			"settings":
+			{
+				"buffer_size": 70,
+				"line_ending": "Unix",
+				"name": "<p:textScope scope=\"xxxxx.yyyyy\"/>"
+			}
+		},
+		{
+			"file": "grails-app/conf/UrlMappings.groovy",
+			"settings":
+			{
+				"buffer_size": 151,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/text.gdoc",
+			"settings":
+			{
+				"buffer_size": 1331,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/callTag.gdoc",
+			"settings":
+			{
+				"buffer_size": 917,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/displayMessage.gdoc",
+			"settings":
+			{
+				"buffer_size": 1558,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/label.gdoc",
+			"settings":
+			{
+				"buffer_size": 1023,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/organization.gdoc",
+			"settings":
+			{
+				"buffer_size": 502,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/siteLink.gdoc",
+			"settings":
+			{
+				"buffer_size": 587,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/siteName.gdoc",
+			"settings":
+			{
+				"buffer_size": 502,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/siteURL.gdoc",
+			"settings":
+			{
+				"buffer_size": 702,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Tags/smartLink.gdoc",
+			"settings":
+			{
+				"buffer_size": 923,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/uiextension/uix_code.gdoc",
+			"settings":
+			{
+				"buffer_size": 260,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Beans/grailsUiExtensions.gdoc",
+			"settings":
+			{
+				"buffer_size": 393,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Beans/grailsEvents.gdoc",
+			"settings":
+			{
+				"buffer_size": 379,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/conf/PlatformCoreResources.groovy",
+			"settings":
+			{
+				"buffer_size": 297,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/layouts/platform/dev.gsp",
+			"settings":
+			{
+				"buffer_size": 721,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/layouts/platform/overlay.gsp",
+			"settings":
+			{
+				"buffer_size": 305,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/conf/BuildConfig.groovy",
+			"settings":
+			{
+				"buffer_size": 1646,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/navigation/NavigationImpl.groovy",
+			"settings":
+			{
+				"buffer_size": 24734,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/util/PluginUtils.groovy",
+			"settings":
+			{
+				"buffer_size": 2113,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/platformTools/index.gsp",
+			"settings":
+			{
+				"buffer_size": 1333,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/conf/PlatformCoreFilters.groovy",
+			"settings":
+			{
+				"buffer_size": 1956,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/navigation/navigation_getting_started.gdoc",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/navigation/NavigationItem.groovy",
+			"settings":
+			{
+				"buffer_size": 4162,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/navigation/NavigationScope.groovy",
+			"settings":
+			{
+				"buffer_size": 2453,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/controllers/org/grails/plugin/platform/controllers/PlatformToolsController.groovy",
+			"settings":
+			{
+				"buffer_size": 2013,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web-app/css/bootstrap.min.css",
+			"settings":
+			{
+				"buffer_size": 82573,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "web-app/css/platformTools.css",
+			"settings":
+			{
+				"buffer_size": 193,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/platformTools/showPluginConfig.gsp",
+			"settings":
+			{
+				"buffer_size": 541,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/java/org/grails/plugin/platform/events/EventReply.java",
+			"settings":
+			{
+				"buffer_size": 5082,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/views/platformTools/_uiOverlay.gsp",
+			"settings":
+			{
+				"buffer_size": 16,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/navigation/menu_navigation.gdoc",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/navigation/navigation_by_convention.gdoc",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Beans/grailsNavigation.gdoc",
+			"settings":
+			{
+				"buffer_size": 217,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Beans/grailsPluginConfiguration.gdoc",
+			"settings":
+			{
+				"buffer_size": 968,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Beans/grailsSecurity.gdoc",
+			"settings":
+			{
+				"buffer_size": 343,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/toc.yml",
+			"settings":
+			{
+				"buffer_size": 1314,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/uiextension/uix_properties.gdoc",
+			"settings":
+			{
+				"buffer_size": 603,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/uiextension/uix_tags.gdoc",
+			"settings":
+			{
+				"buffer_size": 2298,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Ui Extension Properties/pluginSession.gdoc",
+			"settings":
+			{
+				"buffer_size": 648,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/overview/changelog.gdoc",
+			"settings":
+			{
+				"buffer_size": 1462,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/overview.gdoc",
+			"settings":
+			{
+				"buffer_size": 641,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/overview/apis.gdoc",
+			"settings":
+			{
+				"buffer_size": 1071,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/overview/knownissues.gdoc",
+			"settings":
+			{
+				"buffer_size": 700,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/guide/events/sending.gdoc",
+			"settings":
+			{
+				"buffer_size": 5730,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/config/PluginConfiguration.groovy",
+			"settings":
+			{
+				"buffer_size": 1544,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/config/PluginConfigurationImpl.groovy",
+			"settings":
+			{
+				"buffer_size": 19485,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/util/ClosureInvokingScript.groovy",
+			"settings":
+			{
+				"buffer_size": 1149,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/config/ConfigBuilder.groovy",
+			"settings":
+			{
+				"buffer_size": 1365,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/taglib/org/grails/plugin/platform/SecurityTagLib.groovy",
+			"settings":
+			{
+				"buffer_size": 3595,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/i18n/messages.properties",
+			"settings":
+			{
+				"buffer_size": 221,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Utility Classes/TagLibUtils.gdoc",
+			"settings":
+			{
+				"buffer_size": 205,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/conf/PlatformCoreUrlMappings.groovy",
+			"settings":
+			{
+				"buffer_size": 1115,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/docs/ref/Scripts/update-header.gdoc",
+			"settings":
+			{
+				"buffer_size": 505,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/conventions/Conventions.groovy",
+			"settings":
+			{
+				"buffer_size": 1287,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/security/Security.groovy",
+			"settings":
+			{
+				"buffer_size": 3426,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/security/SecurityImpl.groovy",
+			"settings":
+			{
+				"buffer_size": 6255,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/security/SecurityBridge.groovy",
+			"settings":
+			{
+				"buffer_size": 2501,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/conf/PlatformCoreBootStrap.groovy",
+			"settings":
+			{
+				"buffer_size": 2097,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/groovy/org/grails/plugin/platform/injection/InjectionImpl.groovy",
+			"settings":
+			{
+				"buffer_size": 5123,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "This API is partly implemented but for internal use only at this time.",
+			"file": "src/docs/guide/injection.gdoc",
+			"file_size": 7,
+			"file_write_time": 1345200673000000,
+			"settings":
+			{
+				"buffer_size": 70,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "This API is partly implemented but for internal use only at this time.\n",
+			"file": "src/docs/guide/convention.gdoc",
+			"file_size": 71,
+			"file_write_time": 1353588149000000,
+			"settings":
+			{
+				"buffer_size": 71,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 294.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": true,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/marc/Projects/checkout/grails-platform-core/src/docs/guide/navigation/using_navigation_dsl.gdoc",
+		"/Users/marc/Projects/checkout/grails-platform-core/src/docs/ref/Navigation Tags/breadcrumb.gdoc",
+		"/Users/marc/Projects/checkout/grails-platform-ui/grails-app/views/_ui/_default/_fieldError.gsp",
+		"/Users/marc/Projects/checkout/grails-platform-ui/grails-app/views/_ui/_default/_fieldHint.gsp",
+		"/Users/marc/Projects/checkout/grails-platform-ui/grails-app/views/_ui/_default/_fieldLabel.gsp",
+		"/Users/marc/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap",
+		"/Users/marc/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/marc/Library/Application Support/Sublime Text 2/Packages/User/HTML.sublime-settings",
+		"/Users/marc/Projects/checkout/grails-platform-ui/grails-app/views/_ui/_default/_input.gsp",
+		"/Users/marc/Library/Application Support/Sublime Text 2/Packages/User/Plain text.sublime-settings",
+		"/Users/marc/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/marc/Projects/checkout/grails-platform-ui/src/docs/ref/Ui Tags/tabs.gdoc"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"*.groovy",
+			"*.gdoc",
+			"*.java,*.groovy",
+			"*.java;*.groovy",
+			"*.gdoc",
+			"",
+			"*.groovy",
+			"*.gdoc",
+			"*.gsp",
+			"gsp",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"error con",
+			"menu",
+			"text =",
+			"dummytext",
+			"println",
+			"grailsapplication.config",
+			"configurationholder",
+			"grailsapplication.config",
+			"configurationholder",
+			"filter sa",
+			"smutils",
+			"update-header",
+			"open",
+			"shell",
+			"smartli",
+			"bodyText",
+			"p.text",
+			"!z",
+			"p.text",
+			"text =",
+			"submit",
+			"temobe",
+			"getmess",
+			"getmessage",
+			"p.text",
+			"getmessagepr",
+			"link =",
+			"getmessagepr",
+			"text =",
+			"parseconfig",
+			"dowithconfig",
+			"applying plug",
+			"defa",
+			"apply",
+			"containskey",
+			"onerror",
+			"m2",
+			"m3",
+			"m2",
+			".M2",
+			"[",
+			"..x",
+			"...",
+			"glyph",
+			"make",
+			"scope",
+			"setact",
+			"nodesby",
+			"node",
+			"event(",
+			"nodesByControllerAction",
+			"controller",
+			"breadcrumb",
+			"gsp",
+			"breadcr",
+			"breadcrumb",
+			"displayme",
+			"getmessageo",
+			"= {",
+			"breadcr",
+			"scope",
+			"fork",
+			"spring",
+			"p.text",
+			"tabs",
+			"getmessage",
+			"field =",
+			"resolvetagn",
+			"grailsnameutils",
+			"fieldinput",
+			"field",
+			"fuekd",
+			"codec",
+			"tobo",
+			"p:text",
+			"gsp",
+			"cunt"
+		],
+		"highlight": true,
+		"in_selection": true,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"defaultText",
+			"…"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 101,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "grails-app/taglib/org/grails/plugin/platform/UiExtensionsTagLib.groovy",
+					"settings":
+					{
+						"buffer_size": 18671,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8900,
+								8900
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 1.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"settings":
+					{
+						"buffer_size": 13267,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										295,
+										319
+									],
+									[
+										488,
+										512
+									],
+									[
+										838,
+										862
+									],
+									[
+										1131,
+										1155
+									],
+									[
+										1530,
+										1554
+									],
+									[
+										1785,
+										1809
+									],
+									[
+										2158,
+										2182
+									],
+									[
+										2329,
+										2353
+									],
+									[
+										2622,
+										2646
+									],
+									[
+										2852,
+										2876
+									],
+									[
+										3221,
+										3245
+									],
+									[
+										3606,
+										3630
+									],
+									[
+										3938,
+										3962
+									],
+									[
+										4134,
+										4158
+									],
+									[
+										4507,
+										4531
+									],
+									[
+										4697,
+										4721
+									],
+									[
+										4772,
+										4796
+									],
+									[
+										4981,
+										5005
+									],
+									[
+										5236,
+										5260
+									],
+									[
+										5530,
+										5554
+									],
+									[
+										5839,
+										5863
+									],
+									[
+										6188,
+										6212
+									],
+									[
+										6489,
+										6513
+									],
+									[
+										6725,
+										6749
+									],
+									[
+										7077,
+										7084
+									],
+									[
+										7362,
+										7369
+									],
+									[
+										7618,
+										7625
+									],
+									[
+										7648,
+										7655
+									],
+									[
+										7693,
+										7700
+									],
+									[
+										7754,
+										7761
+									],
+									[
+										7784,
+										7791
+									],
+									[
+										7851,
+										7858
+									],
+									[
+										7971,
+										7978
+									],
+									[
+										8081,
+										8088
+									],
+									[
+										8167,
+										8174
+									],
+									[
+										8219,
+										8226
+									],
+									[
+										8286,
+										8293
+									],
+									[
+										8369,
+										8376
+									],
+									[
+										8579,
+										8586
+									],
+									[
+										8821,
+										8828
+									],
+									[
+										9020,
+										9027
+									],
+									[
+										9290,
+										9297
+									],
+									[
+										9313,
+										9320
+									],
+									[
+										9443,
+										9450
+									],
+									[
+										9543,
+										9550
+									],
+									[
+										9850,
+										9857
+									],
+									[
+										10044,
+										10051
+									],
+									[
+										10210,
+										10217
+									],
+									[
+										10393,
+										10400
+									],
+									[
+										10556,
+										10563
+									],
+									[
+										10718,
+										10725
+									],
+									[
+										11073,
+										11080
+									],
+									[
+										11281,
+										11288
+									],
+									[
+										11592,
+										11599
+									],
+									[
+										11894,
+										11901
+									],
+									[
+										12096,
+										12103
+									],
+									[
+										12357,
+										12364
+									],
+									[
+										12709,
+										12716
+									],
+									[
+										13062,
+										13071
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								13206,
+								13206
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 5,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4860.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "test/unit/org/grails/plugin/platform/config/PluginConfigurationTests.groovy",
+					"settings":
+					{
+						"buffer_size": 4312,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								749,
+								749
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/Users/marc/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+					"settings":
+					{
+						"buffer_size": 13148,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "grails-app/views/platformTools/showUiExtensions.gsp",
+					"settings":
+					{
+						"buffer_size": 4032,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2707,
+								2707
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "grails-app/taglib/org/grails/plugin/platform/PlatformTagLib.groovy",
+					"settings":
+					{
+						"buffer_size": 2903,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								742,
+								742
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/groovy/org/grails/plugin/platform/util/TagLibUtils.groovy",
+					"settings":
+					{
+						"buffer_size": 5744,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5666,
+								5666
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/docs/ref/Ui Extenstion Tags/text.gdoc",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "PlatformCoreGrailsPlugin.groovy",
+					"settings":
+					{
+						"buffer_size": 11215,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1205,
+								1205
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 176.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/groovy/org/grails/plugin/platform/ui/UiExtensions.groovy",
+					"settings":
+					{
+						"buffer_size": 6025,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3869,
+								3869
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/groovy/org/grails/plugin/platform/events/EventsImpl.groovy",
+					"settings":
+					{
+						"buffer_size": 14576,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 776.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/docs/guide/events/secure.gdoc",
+					"settings":
+					{
+						"buffer_size": 177,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								101,
+								101
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "src/docs/guide/nav/using_navigation_dsl.gdoc",
+					"settings":
+					{
+						"buffer_size": 9097,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2580,
+								2580
+							],
+							[
+								2922,
+								2922
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 606.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "src/docs/guide/gettingStarted.gdoc",
+					"settings":
+					{
+						"buffer_size": 849,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								360,
+								360
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "src/docs/guide/security.gdoc",
+					"settings":
+					{
+						"buffer_size": 2742,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 226.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "src/docs/guide/events/replying.gdoc",
+					"settings":
+					{
+						"buffer_size": 5015,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4063,
+								4063
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1651.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "src/docs/ref/Events Methods/countListeners.gdoc",
+					"settings":
+					{
+						"buffer_size": 678,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "src/docs/ref/Events Methods/event.gdoc",
+					"settings":
+					{
+						"buffer_size": 2576,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 3,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "src/docs/ref/Events Methods/on.gdoc",
+					"settings":
+					{
+						"buffer_size": 1112,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "src/docs/ref/Events Methods/removeListeners.gdoc",
+					"settings":
+					{
+						"buffer_size": 663,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "src/docs/ref/Events Methods/waitFor.gdoc",
+					"settings":
+					{
+						"buffer_size": 1573,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "src/docs/ref/Security Methods/userHasAllRoles.gdoc",
+					"settings":
+					{
+						"buffer_size": 546,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 22,
+					"file": "src/docs/ref/Security Methods/userHasAnyRole.gdoc",
+					"settings":
+					{
+						"buffer_size": 538,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 23,
+					"file": "src/docs/ref/Security Methods/userIsAllowed.gdoc",
+					"settings":
+					{
+						"buffer_size": 683,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 24,
+					"file": "src/docs/ref/Security Methods/withUser.gdoc",
+					"settings":
+					{
+						"buffer_size": 926,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 25,
+					"file": "src/docs/ref/Security Properties/securityIdentity.gdoc",
+					"settings":
+					{
+						"buffer_size": 581,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 26,
+					"file": "src/docs/ref/Security Properties/securityInfo.gdoc",
+					"settings":
+					{
+						"buffer_size": 636,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 27,
+					"file": "src/docs/ref/Ui Extension Tags/attrIfSet.gdoc",
+					"settings":
+					{
+						"buffer_size": 608,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								421,
+								421
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 28,
+					"file": "target/docs/index.html",
+					"settings":
+					{
+						"buffer_size": 26394,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 29,
+					"file": "src/docs/guide/navigation/navigation_tags.gdoc",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 30,
+					"file": "src/docs/guide/navigation/navigation_concepts.gdoc",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 719.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 31,
+					"file": "grails-app/views/platformTools/showNavigation.gsp",
+					"settings":
+					{
+						"buffer_size": 3495,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1449,
+								1449
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 204.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 32,
+					"file": "src/java/org/grails/plugin/platform/events/publisher/EventsPublisher.java",
+					"settings":
+					{
+						"buffer_size": 1589,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 33,
+					"file": "grails-app/taglib/org/grails/plugin/platform/NavigationTagLib.groovy",
+					"settings":
+					{
+						"buffer_size": 12300,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4362,
+								4362
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1184.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 34,
+					"file": "grails-app/taglib/org/grails/plugin/platform/SystemTagLib.groovy",
+					"settings":
+					{
+						"buffer_size": 1555,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 35,
+					"file": "src/docs/ref/Tags System/requiresBean.gdoc",
+					"settings":
+					{
+						"buffer_size": 634,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 36,
+					"file": "src/docs/ref/Ui Extension Methods/displayMessage.gdoc",
+					"settings":
+					{
+						"buffer_size": 1058,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1058,
+								1058
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 37,
+					"file": "src/docs/ref/Ui Extension Tags/button.gdoc",
+					"settings":
+					{
+						"buffer_size": 1269,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								627,
+								627
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 38,
+					"file": "grails-app/views/test.gsp",
+					"settings":
+					{
+						"buffer_size": 189,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								189,
+								189
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 39,
+					"file": "src/docs/ref/Ui Extension Tags/textScope.gdoc",
+					"settings":
+					{
+						"buffer_size": 1305,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1305,
+								1305
+							]
+						],
+						"settings":
+						{
+							"auto_name": "h1. p:textScope",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 40,
+					"file": "grails-app/views/_test_fragment.gsp",
+					"settings":
+					{
+						"buffer_size": 70,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								70,
+								70
+							]
+						],
+						"settings":
+						{
+							"auto_name": "<p:textScope scope=\"xxxxx.yyyyy\"/>",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 41,
+					"file": "grails-app/conf/UrlMappings.groovy",
+					"settings":
+					{
+						"buffer_size": 151,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								151,
+								151
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 42,
+					"file": "src/docs/ref/Ui Extension Tags/text.gdoc",
+					"settings":
+					{
+						"buffer_size": 1331,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1233,
+								1233
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 43,
+					"file": "src/docs/ref/Ui Extension Tags/callTag.gdoc",
+					"settings":
+					{
+						"buffer_size": 917,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								630,
+								597
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 44,
+					"file": "src/docs/ref/Ui Extension Tags/displayMessage.gdoc",
+					"settings":
+					{
+						"buffer_size": 1558,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								813,
+								813
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 45,
+					"file": "src/docs/ref/Ui Extension Tags/label.gdoc",
+					"settings":
+					{
+						"buffer_size": 1023,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								542,
+								542
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 46,
+					"file": "src/docs/ref/Ui Extension Tags/organization.gdoc",
+					"settings":
+					{
+						"buffer_size": 502,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								273,
+								273
+							],
+							[
+								502,
+								502
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 47,
+					"file": "src/docs/ref/Ui Extension Tags/siteLink.gdoc",
+					"settings":
+					{
+						"buffer_size": 587,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								585,
+								585
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 48,
+					"file": "src/docs/ref/Ui Extension Tags/siteName.gdoc",
+					"settings":
+					{
+						"buffer_size": 502,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								216,
+								216
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 49,
+					"file": "src/docs/ref/Ui Extension Tags/siteURL.gdoc",
+					"settings":
+					{
+						"buffer_size": 702,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								173,
+								173
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 50,
+					"file": "src/docs/ref/Ui Extension Tags/smartLink.gdoc",
+					"settings":
+					{
+						"buffer_size": 923,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								773,
+								773
+							],
+							[
+								922,
+								922
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 51,
+					"file": "src/docs/guide/uiextension/uix_code.gdoc",
+					"settings":
+					{
+						"buffer_size": 260,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								58,
+								58
+							],
+							[
+								260,
+								260
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 52,
+					"file": "src/docs/ref/Beans/grailsUiExtensions.gdoc",
+					"settings":
+					{
+						"buffer_size": 393,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								393,
+								393
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 53,
+					"file": "src/docs/ref/Beans/grailsEvents.gdoc",
+					"settings":
+					{
+						"buffer_size": 379,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								182,
+								182
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 54,
+					"file": "grails-app/conf/PlatformCoreResources.groovy",
+					"settings":
+					{
+						"buffer_size": 297,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								44,
+								16
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 55,
+					"file": "grails-app/views/layouts/platform/dev.gsp",
+					"settings":
+					{
+						"buffer_size": 721,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								721
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 56,
+					"file": "grails-app/views/layouts/platform/overlay.gsp",
+					"settings":
+					{
+						"buffer_size": 305,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								130,
+								130
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 57,
+					"file": "grails-app/conf/BuildConfig.groovy",
+					"settings":
+					{
+						"buffer_size": 1646,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 58,
+					"file": "src/groovy/org/grails/plugin/platform/navigation/NavigationImpl.groovy",
+					"settings":
+					{
+						"buffer_size": 24734,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								19145,
+								19145
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 59,
+					"file": "src/groovy/org/grails/plugin/platform/util/PluginUtils.groovy",
+					"settings":
+					{
+						"buffer_size": 2113,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1709,
+								1709
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 89.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 60,
+					"file": "grails-app/views/platformTools/index.gsp",
+					"settings":
+					{
+						"buffer_size": 1333,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								234,
+								234
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 61,
+					"file": "grails-app/conf/PlatformCoreFilters.groovy",
+					"settings":
+					{
+						"buffer_size": 1956,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1128,
+								1128
+							],
+							[
+								1297,
+								1297
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 62,
+					"file": "src/docs/guide/navigation/navigation_getting_started.gdoc",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 63,
+					"file": "src/groovy/org/grails/plugin/platform/navigation/NavigationItem.groovy",
+					"settings":
+					{
+						"buffer_size": 4162,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							],
+							[
+								1030,
+								1045
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 64,
+					"file": "src/groovy/org/grails/plugin/platform/navigation/NavigationScope.groovy",
+					"settings":
+					{
+						"buffer_size": 2453,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1405,
+								1405
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false,
+							"wrap_width": 120
+						},
+						"translation.x": 0.0,
+						"translation.y": 222.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 65,
+					"file": "grails-app/controllers/org/grails/plugin/platform/controllers/PlatformToolsController.groovy",
+					"settings":
+					{
+						"buffer_size": 2013,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1298,
+								1314
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Grails/Controller/GrailsController.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 66,
+					"file": "web-app/css/bootstrap.min.css",
+					"settings":
+					{
+						"buffer_size": 82573,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23947,
+								23947
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 67,
+					"file": "web-app/css/platformTools.css",
+					"settings":
+					{
+						"buffer_size": 193,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								193,
+								193
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 68,
+					"file": "grails-app/views/platformTools/showPluginConfig.gsp",
+					"settings":
+					{
+						"buffer_size": 541,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								541,
+								541
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 69,
+					"file": "src/java/org/grails/plugin/platform/events/EventReply.java",
+					"settings":
+					{
+						"buffer_size": 5082,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3979,
+								3979
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1482.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 70,
+					"file": "grails-app/views/platformTools/_uiOverlay.gsp",
+					"settings":
+					{
+						"buffer_size": 16,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16,
+								16
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 71,
+					"file": "src/docs/guide/navigation/menu_navigation.gdoc",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 72,
+					"file": "src/docs/guide/navigation/navigation_by_convention.gdoc",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 73,
+					"file": "src/docs/ref/Beans/grailsNavigation.gdoc",
+					"settings":
+					{
+						"buffer_size": 217,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								119,
+								82
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 74,
+					"file": "src/docs/ref/Beans/grailsPluginConfiguration.gdoc",
+					"settings":
+					{
+						"buffer_size": 968,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								963,
+								963
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 75,
+					"file": "src/docs/ref/Beans/grailsSecurity.gdoc",
+					"settings":
+					{
+						"buffer_size": 343,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								342,
+								342
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 76,
+					"file": "src/docs/guide/toc.yml",
+					"settings":
+					{
+						"buffer_size": 1314,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1277,
+								1277
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/YAML/YAML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 77,
+					"file": "src/docs/guide/uiextension/uix_properties.gdoc",
+					"settings":
+					{
+						"buffer_size": 603,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 78,
+					"file": "src/docs/guide/uiextension/uix_tags.gdoc",
+					"settings":
+					{
+						"buffer_size": 2298,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								17
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 79,
+					"file": "src/docs/ref/Ui Extension Properties/pluginSession.gdoc",
+					"settings":
+					{
+						"buffer_size": 648,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								599,
+								599
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 80,
+					"file": "src/docs/guide/overview/changelog.gdoc",
+					"settings":
+					{
+						"buffer_size": 1462,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								90,
+								90
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 81,
+					"file": "src/docs/guide/overview.gdoc",
+					"settings":
+					{
+						"buffer_size": 641,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 82,
+					"file": "src/docs/guide/overview/apis.gdoc",
+					"settings":
+					{
+						"buffer_size": 1071,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1071,
+								1071
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 83,
+					"file": "src/docs/guide/overview/knownissues.gdoc",
+					"settings":
+					{
+						"buffer_size": 700,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								700,
+								700
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 84,
+					"file": "src/docs/guide/events/sending.gdoc",
+					"settings":
+					{
+						"buffer_size": 5730,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3324,
+								3324
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 632.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 85,
+					"file": "src/groovy/org/grails/plugin/platform/config/PluginConfiguration.groovy",
+					"settings":
+					{
+						"buffer_size": 1544,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 86,
+					"file": "src/groovy/org/grails/plugin/platform/config/PluginConfigurationImpl.groovy",
+					"settings":
+					{
+						"buffer_size": 19485,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13781,
+								13781
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 87,
+					"file": "src/groovy/org/grails/plugin/platform/util/ClosureInvokingScript.groovy",
+					"settings":
+					{
+						"buffer_size": 1149,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1141,
+								1141
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 88,
+					"file": "src/groovy/org/grails/plugin/platform/config/ConfigBuilder.groovy",
+					"settings":
+					{
+						"buffer_size": 1365,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1365,
+								1365
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 89,
+					"file": "grails-app/taglib/org/grails/plugin/platform/SecurityTagLib.groovy",
+					"settings":
+					{
+						"buffer_size": 3595,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1374,
+								1374
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 90,
+					"file": "grails-app/i18n/messages.properties",
+					"settings":
+					{
+						"buffer_size": 221,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								122,
+								122
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/JavaProperties.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 91,
+					"file": "src/docs/ref/Utility Classes/TagLibUtils.gdoc",
+					"settings":
+					{
+						"buffer_size": 205,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 92,
+					"file": "grails-app/conf/PlatformCoreUrlMappings.groovy",
+					"settings":
+					{
+						"buffer_size": 1115,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1115,
+								1115
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 93,
+					"file": "src/docs/ref/Scripts/update-header.gdoc",
+					"settings":
+					{
+						"buffer_size": 505,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								162,
+								162
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 94,
+					"file": "src/groovy/org/grails/plugin/platform/conventions/Conventions.groovy",
+					"settings":
+					{
+						"buffer_size": 1287,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1287,
+								1287
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 95,
+					"file": "src/groovy/org/grails/plugin/platform/security/Security.groovy",
+					"settings":
+					{
+						"buffer_size": 3426,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1431,
+								1553
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 388.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 96,
+					"file": "src/groovy/org/grails/plugin/platform/security/SecurityImpl.groovy",
+					"settings":
+					{
+						"buffer_size": 6255,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2372,
+								2372
+							],
+							[
+								2387,
+								2387
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 495.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 97,
+					"file": "src/groovy/org/grails/plugin/platform/security/SecurityBridge.groovy",
+					"settings":
+					{
+						"buffer_size": 2501,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2190,
+								2190
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 494.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 98,
+					"file": "grails-app/conf/PlatformCoreBootStrap.groovy",
+					"settings":
+					{
+						"buffer_size": 2097,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1768,
+								1776
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 99,
+					"file": "src/groovy/org/grails/plugin/platform/injection/InjectionImpl.groovy",
+					"settings":
+					{
+						"buffer_size": 5123,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4873,
+								4873
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4770.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 100,
+					"file": "src/docs/guide/injection.gdoc",
+					"settings":
+					{
+						"buffer_size": 70,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								70
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 101,
+					"file": "src/docs/guide/convention.gdoc",
+					"settings":
+					{
+						"buffer_size": 71,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								71,
+								71
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"conven",
+				"src/docs/guide/convention.gdoc"
+			],
+			[
+				"inje",
+				"src/docs/guide/injection.gdoc"
+			],
+			[
+				"yml",
+				"src/docs/guide/toc.yml"
+			],
+			[
+				"",
+				"src/docs/guide/overview/changelog.gdoc"
+			],
+			[
+				"bootstr",
+				"grails-app/conf/PlatformCoreBootStrap.groovy"
+			],
+			[
+				"injec",
+				"src/groovy/org/grails/plugin/platform/injection/InjectionImpl.groovy"
+			],
+			[
+				"secimpl",
+				"src/groovy/org/grails/plugin/platform/security/SecurityImpl.groovy"
+			],
+			[
+				"chang",
+				"src/docs/guide/overview/changelog.gdoc"
+			],
+			[
+				"navtag",
+				"grails-app/taglib/org/grails/plugin/platform/NavigationTagLib.groovy"
+			],
+			[
+				"navgs",
+				"grails-app/views/platformTools/showNavigation.gsp"
+			],
+			[
+				"platboot",
+				"grails-app/conf/PlatformCoreBootStrap.groovy"
+			],
+			[
+				"secbr",
+				"src/groovy/org/grails/plugin/platform/security/SecurityBridge.groovy"
+			],
+			[
+				"secuimpl",
+				"src/groovy/org/grails/plugin/platform/security/SecurityImpl.groovy"
+			],
+			[
+				"security",
+				"src/groovy/org/grails/plugin/platform/security/Security.groovy"
+			],
+			[
+				"gdoc",
+				"src/docs/guide/security.gdoc"
+			],
+			[
+				"securitygv",
+				"src/groovy/org/grails/plugin/platform/security/Security.groovy"
+			],
+			[
+				"filter",
+				"grails-app/conf/PlatformCoreFilters.groovy"
+			],
+			[
+				"taglib",
+				"grails-app/taglib/org/grails/plugin/platform/PlatformTagLib.groovy"
+			],
+			[
+				"convent",
+				"src/groovy/org/grails/plugin/platform/conventions/Conventions.groovy"
+			],
+			[
+				"configimpl",
+				"src/groovy/org/grails/plugin/platform/config/PluginConfigurationImpl.groovy"
+			],
+			[
+				"onfiggv",
+				"src/groovy/org/grails/plugin/platform/config/PluginConfiguration.groovy"
+			],
+			[
+				"buildconf",
+				"grails-app/conf/BuildConfig.groovy"
+			],
+			[
+				"closu",
+				"src/groovy/org/grails/plugin/platform/util/ClosureInvokingScript.groovy"
+			],
+			[
+				"uitagl",
+				"grails-app/taglib/org/grails/plugin/platform/UiExtensionsTagLib.groovy"
+			],
+			[
+				"bldcon",
+				"grails-app/conf/BuildConfig.groovy"
+			],
+			[
+				"taglibut",
+				"src/groovy/org/grails/plugin/platform/util/TagLibUtils.groovy"
+			],
+			[
+				"update-",
+				"src/docs/ref/Scripts/update-header.gdoc"
+			],
+			[
+				"uie",
+				"src/groovy/org/grails/plugin/platform/ui/UiExtensions.groovy"
+			],
+			[
+				"controll",
+				"grails-app/controllers/org/grails/plugin/platform/controllers/PlatformToolsController.groovy"
+			],
+			[
+				"urlmappgv",
+				"grails-app/conf/PlatformCoreUrlMappings.groovy"
+			],
+			[
+				"urlmap",
+				"/Users/marc/Projects/checkout/grails-platform-core/grails-app/conf/UrlMappings.groovy"
+			],
+			[
+				"button",
+				"src/docs/ref/Ui Extension Tags/button.gdoc"
+			],
+			[
+				"uiextag",
+				"grails-app/taglib/org/grails/plugin/platform/UiExtensionsTagLib.groovy"
+			],
+			[
+				"label",
+				"src/docs/ref/Ui Extension Tags/label.gdoc"
+			],
+			[
+				"plattag",
+				"grails-app/taglib/org/grails/plugin/platform/PlatformTagLib.groovy"
+			],
+			[
+				"uiexgs",
+				"grails-app/views/platformTools/showUiExtensions.gsp"
+			],
+			[
+				"uitagli",
+				"grails-app/taglib/org/grails/plugin/platform/UiExtensionsTagLib.groovy"
+			],
+			[
+				"uiextgdoc",
+				"src/docs/ref/Ui Extension Tags/text.gdoc"
+			],
+			[
+				"uitaglibgdoc",
+				"src/docs/ref/Utility Classes/TagLibUtils.gdoc"
+			],
+			[
+				"msgprop",
+				"grails-app/i18n/messages.properties"
+			],
+			[
+				"sectag",
+				"grails-app/taglib/org/grails/plugin/platform/SecurityTagLib.groovy"
+			],
+			[
+				"configbuil",
+				"src/groovy/org/grails/plugin/platform/config/ConfigBuilder.groovy"
+			],
+			[
+				"closurein",
+				"src/groovy/org/grails/plugin/platform/util/ClosureInvokingScript.groovy"
+			],
+			[
+				"pconfimpl",
+				"src/groovy/org/grails/plugin/platform/config/PluginConfigurationImpl.groovy"
+			],
+			[
+				"pluginconf",
+				"src/groovy/org/grails/plugin/platform/config/PluginConfiguration.groovy"
+			],
+			[
+				"show",
+				"grails-app/views/platformTools/showPluginConfig.gsp"
+			],
+			[
+				"controlgv",
+				"/Users/marc/Projects/checkout/grails-platform-core/grails-app/controllers/org/grails/plugin/platform/controllers/PlatformToolsController.groovy"
+			],
+			[
+				"showpl",
+				"/Users/marc/Projects/checkout/grails-platform-core/grails-app/views/platformTools/showPluginConfig.gsp"
+			],
+			[
+				"displaymsggd",
+				"/Users/marc/Projects/checkout/grails-platform-core/src/docs/ref/Ui Extension Methods/displayMessage.gdoc"
+			],
+			[
+				"displaygd",
+				"/Users/marc/Projects/checkout/grails-platform-core/src/docs/ref/Ui Extension Tags/displayMessage.gdoc"
+			],
+			[
+				"plugingv",
+				"PlatformCoreGrailsPlugin.groovy"
+			],
+			[
+				"bldconf",
+				"grails-app/conf/BuildConfig.groovy"
+			],
+			[
+				"overvi",
+				"src/docs/guide/overview.gdoc"
+			],
+			[
+				"change",
+				"src/docs/guide/overview/changelog.gdoc"
+			],
+			[
+				"pluginses",
+				"src/docs/ref/Ui Extension Properties/pluginSession.gdoc"
+			],
+			[
+				"plattaglib",
+				"grails-app/taglib/org/grails/plugin/platform/PlatformTagLib.groovy"
+			],
+			[
+				"devgsp",
+				"grails-app/views/layouts/platform/dev.gsp"
+			],
+			[
+				"res",
+				"grails-app/conf/PlatformCoreResources.groovy"
+			],
+			[
+				"overlaygsp",
+				"grails-app/views/platformTools/_uiOverlay.gsp"
+			],
+			[
+				"overl",
+				"grails-app/views/platformTools/_uiOverlay.gsp"
+			],
+			[
+				"showplu",
+				"grails-app/views/platformTools/showPluginConfig.gsp"
+			],
+			[
+				"platcss",
+				"web-app/css/platformTools.css"
+			],
+			[
+				"showui",
+				"grails-app/views/platformTools/showUiExtensions.gsp"
+			],
+			[
+				"indexgsp",
+				"grails-app/views/platformTools/index.gsp"
+			],
+			[
+				"dvgsp",
+				"grails-app/views/layouts/platform/dev.gsp"
+			],
+			[
+				"boots",
+				"web-app/css/bootstrap.min.css"
+			],
+			[
+				"pluginut",
+				"src/groovy/org/grails/plugin/platform/util/PluginUtils.groovy"
+			],
+			[
+				"platcon",
+				"grails-app/controllers/org/grails/plugin/platform/controllers/PlatformToolsController.groovy"
+			],
+			[
+				"navscope",
+				"src/groovy/org/grails/plugin/platform/navigation/NavigationScope.groovy"
+			],
+			[
+				"navitem",
+				"src/groovy/org/grails/plugin/platform/navigation/NavigationItem.groovy"
+			],
+			[
+				"navimpl",
+				"src/groovy/org/grails/plugin/platform/navigation/NavigationImpl.groovy"
+			],
+			[
+				"navigv",
+				"src/groovy/org/grails/plugin/platform/navigation/NavigationImpl.groovy"
+			],
+			[
+				"bld",
+				"grails-app/conf/BuildConfig.groovy"
+			],
+			[
+				"resources",
+				"grails-app/conf/PlatformCoreResources.groovy"
+			],
+			[
+				"grailsev",
+				"src/docs/ref/Beans/grailsEvents.gdoc"
+			],
+			[
+				"grailsuiexg",
+				"src/docs/ref/Beans/grailsUiExtensions.gdoc"
+			],
+			[
+				"site",
+				"src/docs/ref/Ui Extension Tags/siteURL.gdoc"
+			],
+			[
+				"labelgd",
+				"src/docs/ref/Ui Extension Tags/label.gdoc"
+			],
+			[
+				"callta",
+				"src/docs/ref/Ui Extension Tags/callTag.gdoc"
+			],
+			[
+				"textg",
+				"src/docs/ref/Ui Extension Tags/text.gdoc"
+			],
+			[
+				"uix_",
+				"src/docs/guide/uiextension/uix_code.gdoc"
+			],
+			[
+				"testsc",
+				"src/docs/ref/Ui Extension Tags/testScope.gdoc"
+			],
+			[
+				"smartlink",
+				"src/docs/ref/Ui Extension Tags/smartLink.gdoc"
+			],
+			[
+				"siteurl",
+				"src/docs/ref/Ui Extension Tags/siteURL.gdoc"
+			],
+			[
+				"sitename",
+				"src/docs/ref/Ui Extension Tags/siteName.gdoc"
+			],
+			[
+				"sitenam",
+				"src/docs/ref/Ui Extension Tags/siteName.gdoc"
+			],
+			[
+				"sitelink",
+				"src/docs/ref/Ui Extension Tags/siteLink.gdoc"
+			],
+			[
+				"organi",
+				"src/docs/ref/Ui Extension Tags/organization.gdoc"
+			],
+			[
+				"lablgd",
+				"src/docs/ref/Ui Extension Tags/label.gdoc"
+			],
+			[
+				"displame",
+				"src/docs/ref/Ui Extension Tags/displayMessage.gdoc"
+			],
+			[
+				"calltag",
+				"src/docs/ref/Ui Extension Tags/callTag.gdoc"
+			],
+			[
+				"txtgdoc",
+				"src/docs/ref/Ui Extension Tags/text.gdoc"
+			],
+			[
+				"buttongd",
+				"src/docs/ref/Ui Extension Tags/button.gdoc"
+			],
+			[
+				"displaym",
+				"src/docs/ref/Ui Extension Methods/displayMessage.gdoc"
+			],
+			[
+				"requi",
+				"src/docs/ref/Tags System/requiresBean.gdoc"
+			],
+			[
+				"taglibgv",
+				"grails-app/taglib/org/grails/plugin/platform/SystemTagLib.groovy"
+			],
+			[
+				"nagtag",
+				"grails-app/taglib/org/grails/plugin/platform/NavigationTagLib.groovy"
+			],
+			[
+				"enetspub",
+				"src/java/org/grails/plugin/platform/events/publisher/EventsPublisher.java"
+			],
+			[
+				"event",
+				"src/groovy/org/grails/plugin/platform/events/EventsImpl.groovy"
+			],
+			[
+				"uiext",
+				"src/groovy/org/grails/plugin/platform/ui/UiExtensions.groovy"
+			],
+			[
+				"texgd",
+				"src/docs/ref/Ui Extenstion Tags/text.gdoc"
+			],
+			[
+				"taglibu",
+				"src/groovy/org/grails/plugin/platform/util/TagLibUtils.groovy"
+			],
+			[
+				"uigsp",
+				"grails-app/views/platformTools/showUiExtensions.gsp"
+			],
+			[
+				"extagl",
+				"grails-app/taglib/org/grails/plugin/platform/UiExtensionsTagLib.groovy"
+			],
+			[
+				"uis",
+				"grails-app/views/platformUi/_uisample.gsp"
+			],
+			[
+				"uisam",
+				"grails-app/views/platformUi/_uisample.gsp"
+			],
+			[
+				"uisets",
+				"src/groovy/org/grails/plugin/platform/ui/UISets.groovy"
+			],
+			[
+				"uitag",
+				"grails-app/taglib/org/grails/plugin/platform/UITagLib.groovy"
+			],
+			[
+				"fieldgsp",
+				"grails-app/views/_ui/_default/_field.gsp"
+			],
+			[
+				"tagli",
+				"grails-app/taglib/org/grails/plugin/platform/UITagLib.groovy"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 239.0,
+	"status_bar_visible": true
+}
