@@ -42,7 +42,7 @@ APACHE_2_LICENSE = """
 """
 srcFileTypes = ['.groovy', '.java']
 
-target("update-header": "Makes sure all source files contain a license") {
+target("updateHeader": "Makes sure all source files contain a license") {
     depends(checkVersion, parseArguments)
 
     def header = new File(basedir, 'HEADER.TXT')
@@ -95,4 +95,4 @@ Make sure you have backups/checked them in first! Continue?""",
     }
 }
 
-setDefaultTarget("update-header")
+setDefaultTarget("updateHeader")
