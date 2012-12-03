@@ -137,6 +137,9 @@ class NavigationTagLib {
                 out << " class=\"${cssClass.encodeAsHTML()}\""
             }
             out << ">"
+            if (log.debugEnabled) {
+                log.debug "Rendering menu for scope [${scope}] which has children ${scopeNode.children.name}"
+            }
             for (n in scopeNode.children) {
                 if (n.isVisible(callbackContext)) {
                     def active = activeNodes.contains(n)
@@ -170,6 +173,8 @@ class NavigationTagLib {
                 }
             }
             out << "</ul>"
+        } else if (log.debugEnabled) {
+            log.debug "Attempt to render menu for scope [${scope}] but there was no navigation node found for that scope."
         }
     }
     
