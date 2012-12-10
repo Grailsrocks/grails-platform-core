@@ -23,7 +23,10 @@ import org.codehaus.groovy.grails.support.PersistenceContextInterceptor;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.task.AsyncTaskExecutor;
 
 import java.util.Map;
@@ -40,7 +43,7 @@ import java.util.concurrent.TimeUnit;
  * <p/>
  * [Does stuff]
  */
-public class DefaultEventsPublisher implements EventsPublisher {
+public class DefaultEventsPublisher implements EventsPublisher, ApplicationContextAware {
 
 
     private static final String EXECUTOR = "executor";
@@ -111,6 +114,17 @@ public class DefaultEventsPublisher implements EventsPublisher {
         return reply;
     }
 
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        //try to lazy load contextInterceptor
+        if(persistenceInterceptor == null){
+            try{
+                persistenceInterceptor = applicationContext.getBean("persistenceInterceptor", PersistenceContextInterceptor.class);
+            }catch (BeansException ex){
+                log.debug("No persistence context interceptor found", ex);
+            }
+        }
+    }
+
     //INTERNAL
 
     private class Callback implements Callable<DefaultEventsRegistry.InvokeResult> {
@@ -122,7 +136,7 @@ public class DefaultEventsPublisher implements EventsPublisher {
         }
 
         public DefaultEventsRegistry.InvokeResult call() {
-            boolean gormSession = event.isGormSession();
+            boolean gormSession = persistenceInterceptor != null && event.isGormSession();
             if (gormSession) {
                 persistenceInterceptor.init();
             }
