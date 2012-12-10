@@ -27,6 +27,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.AsyncTaskExecutor;
 
 import java.util.Map;
@@ -43,7 +44,7 @@ import java.util.concurrent.TimeUnit;
  * <p/>
  * [Does stuff]
  */
-public class DefaultEventsPublisher implements EventsPublisher, ApplicationContextAware {
+public class DefaultEventsPublisher implements EventsPublisher, ApplicationContextAware, InitializingBean {
 
 
     private static final String EXECUTOR = "executor";
@@ -58,7 +59,7 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationConte
 
     private PersistenceContextInterceptor persistenceInterceptor;
     private boolean catchFlushExceptions = false;
-
+    private ApplicationContext context;
 
     public void setCatchFlushExceptions(boolean catchFlushExceptions) {
         this.catchFlushExceptions = catchFlushExceptions;
@@ -114,15 +115,19 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationConte
         return reply;
     }
 
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void afterPropertiesSet() throws BeansException {
         //try to lazy load contextInterceptor
         if(persistenceInterceptor == null){
             try{
-                persistenceInterceptor = applicationContext.getBean("persistenceInterceptor", PersistenceContextInterceptor.class);
+                persistenceInterceptor = context.getBean("persistenceInterceptor", PersistenceContextInterceptor.class);
             }catch (BeansException ex){
                 log.debug("No persistence context interceptor found", ex);
             }
         }
+    }
+
+    public void setApplicationContext(ApplicationContext context) {
+        this.context = context;
     }
 
     //INTERNAL
