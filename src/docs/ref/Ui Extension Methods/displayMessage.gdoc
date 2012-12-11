@@ -21,6 +21,8 @@ If using the Map arguments form, the @args@ supported are:
 text | The text of the label, or an i18n code to resolve to use as the text 
 textArgs | Optional arguments to pass when creating the i18n message text 
 type | Optional message type indicator i.e. 'warning', 'error', 'info', 'debug' 
+class | Optional CSS class to apply
+cssPrefix | Optional prefix to apply if "type" is supplied, prepended to the type name
 {table}
 
 This method stores the message information in the current request scope.

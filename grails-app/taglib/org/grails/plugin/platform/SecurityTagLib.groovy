@@ -53,6 +53,7 @@ class SecurityTagLib {
     
     def ifPermitted = { attrs, body ->
         // @todo using bean + action here we can also implement object permission checks
+        // @todo add support for multiple roles
         grailsSecurity.ifUserHasRole(attrs.role) {
             out << body()
         }
@@ -60,6 +61,7 @@ class SecurityTagLib {
 
     def ifNotPermitted = { attrs, body ->
         // @todo using bean + action here we can also implement object permission checks
+        // @todo add support for multiple roles
         if (!grailsSecurity.userHasAllRoles(attrs.role)) {
             out << body()
         }
