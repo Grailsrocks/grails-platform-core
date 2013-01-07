@@ -265,7 +265,7 @@ class EventsImpl implements Events {
         dslInstance.binding.setVariable("ctx", grailsApplication.mainContext)
         dslInstance.binding.setVariable("config", grailsApplication.config)
         dslInstance.run()
-        def dsl = dslInstance.binding.getVariable('events') as Closure
+        def dsl = dslInstance.binding.hasProperty('events') ? dslInstance.binding.getVariable('events') as Closure : null
         if (dsl) {
             registerEvents(dsl)
         } else {

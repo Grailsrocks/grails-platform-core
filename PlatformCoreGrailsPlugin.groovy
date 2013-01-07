@@ -24,7 +24,7 @@ import org.grails.plugin.platform.events.registry.DefaultEventsRegistry
 
 class PlatformCoreGrailsPlugin {
     // the plugin version
-    def version = "1.0.RC3"
+    def version = "1.0.RC3-SNAPSHOT"
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3 > *"
@@ -156,7 +156,7 @@ Grails Plugin Platform Core APIs
             grailsEventsRegistry(DefaultEventsRegistry)
             grailsEventsPublisher(DefaultEventsPublisher) {
                 grailsEventsRegistry = ref('grailsEventsRegistry')
-//                persistenceInterceptor = ref("persistenceInterceptor")
+                persistenceInterceptor = ref("persistenceInterceptor")
                 catchFlushExceptions = config.events.catchFlushExceptions
             }
 

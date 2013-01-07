@@ -36,7 +36,7 @@ public class EventMessage<D> implements Serializable {
     final private String event;
     final private D data;
     final private Boolean gormSession;
-    final private Map<String, Serializable> headers;
+    final private Map<String, String> headers;
 
     public EventMessage(String event, D data) {
         this(event, data, null);
@@ -50,7 +50,7 @@ public class EventMessage<D> implements Serializable {
         this(event, data, namespace, gormSession, null);
     }
 
-    public EventMessage(String event, D data, String namespace, boolean gormSession, Map<String,Serializable> headers) {
+    public EventMessage(String event, D data, String namespace, boolean gormSession, Map<String,String> headers) {
         this.event = event;
         this.data = data;
         this.namespace = namespace;
@@ -77,7 +77,7 @@ public class EventMessage<D> implements Serializable {
         return gormSession;
     }
 
-    public Map<String, Serializable> getHeaders() {
+    public Map<String, String> getHeaders() {
         return headers;
     }
 }
