@@ -27,10 +27,10 @@ log4j = {
 grails.views.gsp.encoding="UTF-8"
 grails.views.default.codec="none" // none, html, base64
 
-grails.doc.title = "Grails Plugin Platform Core"
-grails.doc.subtitle = "APIs and Tags for advanced Plugin integration"
+grails.doc.title = "Grails Platform Core"
+grails.doc.subtitle = "Provides the Platform Core APIs and Tags"
 grails.doc.images = new File("resources/img")
 grails.doc.authors = "Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (smaldini@vmware.com)"
 grails.doc.license = "ASL 2"
-grails.doc.copyright = "&copy; 2012 Marc Palmer & Stéphane Maldini"
+grails.doc.copyright = "&copy; 2012 Marc Palmer &amp; Stéphane Maldini"
 grails.doc.footer = "Please contact the authors with any corrections or suggestions"
