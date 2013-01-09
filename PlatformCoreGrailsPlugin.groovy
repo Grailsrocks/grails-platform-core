@@ -82,17 +82,13 @@ Grails Plugin Platform Core APIs
     boolean platformInitialized
 
     void initPlatform(application) {
-        if (!platformInitialized) {
-            // The terrible things we have to do...
-            def hackyInstance = org.grails.plugin.platform.config.PluginConfigurationFactory.instance
-            hackyInstance.grailsApplication = application
-            hackyInstance.pluginManager = org.codehaus.groovy.grails.plugins.PluginManagerHolder.pluginManager
-            hackyInstance.applyConfig()
+        // The terrible things we have to do...
+        def hackyInstance = org.grails.plugin.platform.config.PluginConfigurationFactory.instance
+        hackyInstance.grailsApplication = application
+        hackyInstance.pluginManager = org.codehaus.groovy.grails.plugins.PluginManagerHolder.pluginManager
+        hackyInstance.applyConfig()
 
-            // Trigger doPlatformBuildInit(pluginManager)
-        }
-
-        platformInitialized = true
+        // Trigger doPlatformBuildInit(pluginManager)
     }
 
     /**
