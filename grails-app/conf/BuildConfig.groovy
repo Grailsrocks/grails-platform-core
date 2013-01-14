@@ -46,8 +46,8 @@ grails.project.dependency.resolution = {
             export = false
         }
 
-        compile(':spock:0.6') {
-            export = false
-        }
+        // compile(':spock:0.7-groovy-2.0') {
+        //     export = false
+        // }
     }
 }
