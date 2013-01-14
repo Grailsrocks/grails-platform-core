@@ -57,11 +57,11 @@ The script must return a Closure in the @navigation@ variable in the binding.
 
 This closure represents the DSL and method invocations have a special meaning within the DSL.
 
-The name used in method calls is used to construct the activation path of each item. So a call to "app" that has a call to "messages" which has a closure that calls "inbox" will create:
+The name used in method calls is used to construct the activation path of each item. So a call to "app" that has a call to "messages" which has a closure that calls "inbox" will create the following:
 
 * A scope called "app"
-* A top-level item in the "app" scope, called "messages", with activation path @app/message@
-* A nested item under "messages" called "inbox" with activation path @app/messages/inbox@
+* A top-level item in the "app" scope, called "messages", with activation path @"app/message"@
+* A nested item under "messages" called "inbox" with activation path @"app/messages/inbox"@
 
 h4. Top level method invocations (root scopes)
 
