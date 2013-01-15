@@ -21,6 +21,7 @@ import groovy.lang.Closure;
 import org.apache.log4j.Logger;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.ListenerId;
+import org.grails.plugin.platform.events.utils.EventsUtils;
 import org.springframework.aop.framework.Advised;
 import org.springframework.util.ReflectionUtils;
 
@@ -112,7 +113,7 @@ public class DefaultEventsRegistry implements EventsRegistry {
             log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");
         }
 
-        ListenerId listener = ListenerId.build(namespace, topic, bean, callback);
+        ListenerId listener = ListenerId.build(namespace, topic, EventsUtils.unproxy(bean), callback);
 
         ListenerHandler handler = new ListenerHandler(bean, callback, listener);
 

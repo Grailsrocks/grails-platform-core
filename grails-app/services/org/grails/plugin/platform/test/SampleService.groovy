@@ -51,8 +51,7 @@ class SampleService {
 
     @Listener(topic = 'sampleHello', namespace = 'platformCore')
     def testEvent() throws Exception{
-        throw new Exception()
-        println "Hello (bas) !!!!!"
+        println "Hello (bas) !!!!!!"
         'worked 1'
     }
 
