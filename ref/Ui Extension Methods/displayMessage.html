@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Grails Plugin Platform Core 1.0.RC2</title>
+    <title>Grails Platform Core 1.0.RC3</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -72,7 +72,7 @@
         
         
     </div>
-    <p>APIs and Tags for advanced Plugin integration</p>
+    <p>Provides the Platform Core APIs and Tags</p>
 </div>
 
 
@@ -87,7 +87,7 @@
 <code>displayMessage(Map args)</code> - set the message arguments (or message code)<p class="paragraph"/><blockquote class="note">
 When plugins call this method, their "text" value is automatically namespaced with "plugin.&#60;pluginName&#62;." so this effectively
 forces all usage in plugins to use i18n messages for text - which is a good thing, because it means the application can override the UI text.
-</blockquote><p class="paragraph"/>If using the Map arguments form, the <code>args</code> supported are:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Name</strong></th><th><strong class="bold">Purpose</strong></th></tr><tr class="table-odd"><td>text</td><td>The text of the label, or an i18n code to resolve to use as the text</td></tr><tr class="table-even"><td>textArgs</td><td>Optional arguments to pass when creating the i18n message text</td></tr><tr class="table-odd"><td>type</td><td>Optional message type indicator i.e. 'warning', 'error', 'info', 'debug'</td></tr></table><p class="paragraph"/>This method stores the message information in the current request scope.<p class="paragraph"/><p class="paragraph"/>
+</blockquote><p class="paragraph"/>If using the Map arguments form, the <code>args</code> supported are:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Name</strong></th><th><strong class="bold">Purpose</strong></th></tr><tr class="table-odd"><td>text</td><td>The text of the label, or an i18n code to resolve to use as the text</td></tr><tr class="table-even"><td>textArgs</td><td>Optional arguments to pass when creating the i18n message text</td></tr><tr class="table-odd"><td>type</td><td>Optional message type indicator i.e. 'warning', 'error', 'info', 'debug'</td></tr><tr class="table-even"><td>class</td><td>Optional CSS class to apply</td></tr><tr class="table-odd"><td>cssPrefix</td><td>Optional prefix to apply if "type" is supplied, prepended to the type name</td></tr></table><p class="paragraph"/>This method stores the message information in the current request scope.<p class="paragraph"/><p class="paragraph"/>
             </div>
         </td>
         <td id="col2">
@@ -214,6 +214,9 @@ forces all usage in plugins to use i18n messages for text - which is a good thin
                         <div class="menu-sub">
                             
                             
+                            <div class="menu-item"><a href="../../ref/Security%20Methods/userExists.html">userExists</a>
+                            </div>
+                            
                             <div class="menu-item"><a href="../../ref/Security%20Methods/userHasAllRoles.html">userHasAllRoles</a>
                             </div>
                             
@@ -288,14 +291,14 @@ forces all usage in plugins to use i18n messages for text - which is a good thin
                     </div>
                     
                     <div class="menu-block">
-                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Tags System</h1>
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">System Tags</h1>
                         <div class="menu-sub">
                             
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20System/config.html">config</a>
+                            <div class="menu-item"><a href="../../ref/System%20Tags/config.html">config</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../../ref/Tags%20System/requiresBean.html">requiresBean</a>
+                            <div class="menu-item"><a href="../../ref/System%20Tags/requiresBean.html">requiresBean</a>
                             </div>
                             
                         </div>
@@ -403,7 +406,7 @@ forces all usage in plugins to use i18n messages for text - which is a good thin
 </table>
 
 <div id="footer">
-    &copy; 2012 Marc Palmer & Stéphane Maldini
+    &copy; 2012 Marc Palmer &amp; Stéphane Maldini
     Please contact the authors with any corrections or suggestions
 </div>
 

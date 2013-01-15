@@ -1,271 +1,276 @@
-<HTML>
-<BODY BGCOLOR="white">
-<PRE>
-<FONT color="green">001</FONT>    /* Copyright 2011-2012 the original author or authors:<a name="line.1"></a>
-<FONT color="green">002</FONT>     *<a name="line.2"></a>
-<FONT color="green">003</FONT>     *    Marc Palmer (marc@grailsrocks.com)<a name="line.3"></a>
-<FONT color="green">004</FONT>     *    Stéphane Maldini (smaldini@vmware.com)<a name="line.4"></a>
-<FONT color="green">005</FONT>     *<a name="line.5"></a>
-<FONT color="green">006</FONT>     * Licensed under the Apache License, Version 2.0 (the "License");<a name="line.6"></a>
-<FONT color="green">007</FONT>     * you may not use this file except in compliance with the License.<a name="line.7"></a>
-<FONT color="green">008</FONT>     * You may obtain a copy of the License at<a name="line.8"></a>
-<FONT color="green">009</FONT>     *<a name="line.9"></a>
-<FONT color="green">010</FONT>     *      http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
-<FONT color="green">011</FONT>     *<a name="line.11"></a>
-<FONT color="green">012</FONT>     * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
-<FONT color="green">013</FONT>     * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
-<FONT color="green">014</FONT>     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
-<FONT color="green">015</FONT>     * See the License for the specific language governing permissions and<a name="line.15"></a>
-<FONT color="green">016</FONT>     * limitations under the License.<a name="line.16"></a>
-<FONT color="green">017</FONT>     */<a name="line.17"></a>
-<FONT color="green">018</FONT>    package org.grails.plugin.platform.events.registry;<a name="line.18"></a>
-<FONT color="green">019</FONT>    <a name="line.19"></a>
-<FONT color="green">020</FONT>    import groovy.lang.Closure;<a name="line.20"></a>
-<FONT color="green">021</FONT>    import org.apache.log4j.Logger;<a name="line.21"></a>
-<FONT color="green">022</FONT>    import org.grails.plugin.platform.events.EventMessage;<a name="line.22"></a>
-<FONT color="green">023</FONT>    import org.grails.plugin.platform.events.ListenerId;<a name="line.23"></a>
-<FONT color="green">024</FONT>    import org.springframework.aop.framework.Advised;<a name="line.24"></a>
-<FONT color="green">025</FONT>    import org.springframework.util.ReflectionUtils;<a name="line.25"></a>
-<FONT color="green">026</FONT>    <a name="line.26"></a>
-<FONT color="green">027</FONT>    import java.lang.reflect.InvocationTargetException;<a name="line.27"></a>
-<FONT color="green">028</FONT>    import java.lang.reflect.Method;<a name="line.28"></a>
-<FONT color="green">029</FONT>    import java.util.ArrayList;<a name="line.29"></a>
-<FONT color="green">030</FONT>    import java.util.HashSet;<a name="line.30"></a>
-<FONT color="green">031</FONT>    import java.util.List;<a name="line.31"></a>
-<FONT color="green">032</FONT>    import java.util.Set;<a name="line.32"></a>
-<FONT color="green">033</FONT>    <a name="line.33"></a>
-<FONT color="green">034</FONT>    /**<a name="line.34"></a>
-<FONT color="green">035</FONT>     * @author Stephane Maldini &lt;smaldini@vmware.com&gt;<a name="line.35"></a>
-<FONT color="green">036</FONT>     * @version 1.0<a name="line.36"></a>
-<FONT color="green">037</FONT>     * @file<a name="line.37"></a>
-<FONT color="green">038</FONT>     * @date 02/01/12<a name="line.38"></a>
-<FONT color="green">039</FONT>     * @section DESCRIPTION<a name="line.39"></a>
-<FONT color="green">040</FONT>     * &lt;p/&gt;<a name="line.40"></a>
-<FONT color="green">041</FONT>     * [Does stuff]<a name="line.41"></a>
-<FONT color="green">042</FONT>     */<a name="line.42"></a>
-<FONT color="green">043</FONT>    public class DefaultEventsRegistry implements EventsRegistry {<a name="line.43"></a>
-<FONT color="green">044</FONT>    <a name="line.44"></a>
-<FONT color="green">045</FONT>        static final private Logger log = Logger.getLogger(DefaultEventsRegistry.class);<a name="line.45"></a>
-<FONT color="green">046</FONT>    <a name="line.46"></a>
-<FONT color="green">047</FONT>        private Set&lt;ListenerHandler&gt; listeners = new HashSet&lt;ListenerHandler&gt;();<a name="line.47"></a>
-<FONT color="green">048</FONT>    <a name="line.48"></a>
-<FONT color="green">049</FONT>        /*<a name="line.49"></a>
-<FONT color="green">050</FONT>            API<a name="line.50"></a>
-<FONT color="green">051</FONT>         */<a name="line.51"></a>
-<FONT color="green">052</FONT>    <a name="line.52"></a>
-<FONT color="green">053</FONT>        public String on(String namespace, String topic, Closure callback) {<a name="line.53"></a>
-<FONT color="green">054</FONT>            return registerHandler(callback, namespace, topic);<a name="line.54"></a>
-<FONT color="green">055</FONT>        }<a name="line.55"></a>
-<FONT color="green">056</FONT>    <a name="line.56"></a>
-<FONT color="green">057</FONT>        public String on(String namespace, String topic, Object bean, String callbackName) {<a name="line.57"></a>
-<FONT color="green">058</FONT>            return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic);<a name="line.58"></a>
-<FONT color="green">059</FONT>        }<a name="line.59"></a>
-<FONT color="green">060</FONT>    <a name="line.60"></a>
-<FONT color="green">061</FONT>        public String on(String namespace, String topic, Object bean, Method callback) {<a name="line.61"></a>
-<FONT color="green">062</FONT>            return registerHandler(bean, callback, namespace, topic);<a name="line.62"></a>
-<FONT color="green">063</FONT>        }<a name="line.63"></a>
-<FONT color="green">064</FONT>    <a name="line.64"></a>
-<FONT color="green">065</FONT>        public int removeListeners(String callbackId) {<a name="line.65"></a>
-<FONT color="green">066</FONT>            ListenerId listener = ListenerId.parse(callbackId);<a name="line.66"></a>
-<FONT color="green">067</FONT>            if (listener == null)<a name="line.67"></a>
-<FONT color="green">068</FONT>                return 0;<a name="line.68"></a>
-<FONT color="green">069</FONT>            synchronized (listeners) {<a name="line.69"></a>
-<FONT color="green">070</FONT>                Set&lt;ListenerHandler&gt; listeners = findAll(listener);<a name="line.70"></a>
-<FONT color="green">071</FONT>                for (ListenerHandler _listener : listeners) {<a name="line.71"></a>
-<FONT color="green">072</FONT>                    this.listeners.remove(_listener);<a name="line.72"></a>
-<FONT color="green">073</FONT>                }<a name="line.73"></a>
-<FONT color="green">074</FONT>            }<a name="line.74"></a>
-<FONT color="green">075</FONT>    <a name="line.75"></a>
-<FONT color="green">076</FONT>            return listeners.size();<a name="line.76"></a>
-<FONT color="green">077</FONT>        }<a name="line.77"></a>
-<FONT color="green">078</FONT>    <a name="line.78"></a>
-<FONT color="green">079</FONT>        public int countListeners(String callbackId) {<a name="line.79"></a>
-<FONT color="green">080</FONT>            ListenerId listener = ListenerId.parse(callbackId);<a name="line.80"></a>
-<FONT color="green">081</FONT>            if (listener == null)<a name="line.81"></a>
-<FONT color="green">082</FONT>                return 0;<a name="line.82"></a>
-<FONT color="green">083</FONT>    <a name="line.83"></a>
-<FONT color="green">084</FONT>            return findAll(listener).size();<a name="line.84"></a>
-<FONT color="green">085</FONT>        }<a name="line.85"></a>
-<FONT color="green">086</FONT>    <a name="line.86"></a>
-<FONT color="green">087</FONT>        /*<a name="line.87"></a>
-<FONT color="green">088</FONT>           INTERNAL<a name="line.88"></a>
-<FONT color="green">089</FONT>        */<a name="line.89"></a>
-<FONT color="green">090</FONT>    <a name="line.90"></a>
-<FONT color="green">091</FONT>        private String registerHandler(Closure callback, String namespace, String topic) {<a name="line.91"></a>
-<FONT color="green">092</FONT>            if (log.isDebugEnabled()) {<a name="line.92"></a>
-<FONT color="green">093</FONT>                log.debug("Registering event handler [" + callback.getClass() + "] for topic [" + topic + "]");<a name="line.93"></a>
-<FONT color="green">094</FONT>            }<a name="line.94"></a>
-<FONT color="green">095</FONT>    <a name="line.95"></a>
-<FONT color="green">096</FONT>            ListenerId listener = ListenerId.build(namespace, topic, callback);<a name="line.96"></a>
-<FONT color="green">097</FONT>            ListenerHandler handler = new ListenerHandler(callback, ReflectionUtils.findMethod(<a name="line.97"></a>
-<FONT color="green">098</FONT>                    callback.getClass(),<a name="line.98"></a>
-<FONT color="green">099</FONT>                    "call",<a name="line.99"></a>
-<FONT color="green">100</FONT>                    Object.class<a name="line.100"></a>
-<FONT color="green">101</FONT>            ), listener);<a name="line.101"></a>
-<FONT color="green">102</FONT>    <a name="line.102"></a>
-<FONT color="green">103</FONT>            synchronized (listeners) {<a name="line.103"></a>
-<FONT color="green">104</FONT>                listeners.add(handler);<a name="line.104"></a>
-<FONT color="green">105</FONT>            }<a name="line.105"></a>
-<FONT color="green">106</FONT>    <a name="line.106"></a>
-<FONT color="green">107</FONT>            return listener.toString();<a name="line.107"></a>
-<FONT color="green">108</FONT>        }<a name="line.108"></a>
-<FONT color="green">109</FONT>    <a name="line.109"></a>
-<FONT color="green">110</FONT>        private String registerHandler(Object bean, Method callback, String namespace, String topic) {<a name="line.110"></a>
-<FONT color="green">111</FONT>            if (log.isDebugEnabled()) {<a name="line.111"></a>
-<FONT color="green">112</FONT>                log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");<a name="line.112"></a>
-<FONT color="green">113</FONT>            }<a name="line.113"></a>
-<FONT color="green">114</FONT>    <a name="line.114"></a>
-<FONT color="green">115</FONT>            ListenerId listener = ListenerId.build(namespace, topic, bean, callback);<a name="line.115"></a>
-<FONT color="green">116</FONT>    <a name="line.116"></a>
-<FONT color="green">117</FONT>            ListenerHandler handler = new ListenerHandler(bean, callback, listener);<a name="line.117"></a>
-<FONT color="green">118</FONT>    <a name="line.118"></a>
-<FONT color="green">119</FONT>            synchronized (listeners) {<a name="line.119"></a>
-<FONT color="green">120</FONT>                listeners.add(handler);<a name="line.120"></a>
-<FONT color="green">121</FONT>            }<a name="line.121"></a>
-<FONT color="green">122</FONT>    <a name="line.122"></a>
-<FONT color="green">123</FONT>            return listener.toString();<a name="line.123"></a>
-<FONT color="green">124</FONT>        }<a name="line.124"></a>
-<FONT color="green">125</FONT>    <a name="line.125"></a>
-<FONT color="green">126</FONT>        private Set&lt;ListenerHandler&gt; findAll(ListenerId listener) {<a name="line.126"></a>
-<FONT color="green">127</FONT>            if (log.isDebugEnabled()) {<a name="line.127"></a>
-<FONT color="green">128</FONT>                log.debug("Finding listeners matching listener id [" + listener.toString() + "]");<a name="line.128"></a>
-<FONT color="green">129</FONT>            }<a name="line.129"></a>
-<FONT color="green">130</FONT>            Set&lt;ListenerHandler&gt; listeners =<a name="line.130"></a>
-<FONT color="green">131</FONT>                    new HashSet&lt;ListenerHandler&gt;();<a name="line.131"></a>
-<FONT color="green">132</FONT>    <a name="line.132"></a>
-<FONT color="green">133</FONT>            for (ListenerHandler _listener : this.listeners) {<a name="line.133"></a>
-<FONT color="green">134</FONT>                if (listener.matches(_listener.getListenerId())) {<a name="line.134"></a>
-<FONT color="green">135</FONT>                    listeners.add(_listener);<a name="line.135"></a>
-<FONT color="green">136</FONT>                }<a name="line.136"></a>
-<FONT color="green">137</FONT>            }<a name="line.137"></a>
-<FONT color="green">138</FONT>    <a name="line.138"></a>
-<FONT color="green">139</FONT>            return listeners;<a name="line.139"></a>
-<FONT color="green">140</FONT>        }<a name="line.140"></a>
-<FONT color="green">141</FONT>    <a name="line.141"></a>
-<FONT color="green">142</FONT>        public InvokeResult invokeListeners(EventMessage evt) {<a name="line.142"></a>
-<FONT color="green">143</FONT>            if (log.isDebugEnabled()) {<a name="line.143"></a>
-<FONT color="green">144</FONT>                log.debug("Invoking listeners for event [" + evt.getEvent() + "] namespaced on [" + evt.getNamespace() + "] with data [" + evt.getData() + "]");<a name="line.144"></a>
-<FONT color="green">145</FONT>            }<a name="line.145"></a>
-<FONT color="green">146</FONT>            ListenerId listener = new ListenerId(evt.getNamespace(), evt.getEvent());<a name="line.146"></a>
-<FONT color="green">147</FONT>            Set&lt;ListenerHandler&gt; listeners = findAll(listener);<a name="line.147"></a>
-<FONT color="green">148</FONT>    <a name="line.148"></a>
-<FONT color="green">149</FONT>            if (log.isDebugEnabled()) {<a name="line.149"></a>
-<FONT color="green">150</FONT>                log.debug("Found " + listeners.size() + " listeners for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");<a name="line.150"></a>
-<FONT color="green">151</FONT>            }<a name="line.151"></a>
-<FONT color="green">152</FONT>            List&lt;Object&gt; results = new ArrayList&lt;Object&gt;();<a name="line.152"></a>
-<FONT color="green">153</FONT>            Object result;<a name="line.153"></a>
-<FONT color="green">154</FONT>            for (ListenerHandler _listener : listeners) {<a name="line.154"></a>
-<FONT color="green">155</FONT>                if (log.isDebugEnabled()) {<a name="line.155"></a>
-<FONT color="green">156</FONT>                    log.debug("Invoking listener [" + _listener.bean.getClass() + '.' + _listener.method.getName() + "(arg)] for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");<a name="line.156"></a>
-<FONT color="green">157</FONT>                }<a name="line.157"></a>
-<FONT color="green">158</FONT>                try {<a name="line.158"></a>
-<FONT color="green">159</FONT>                    result = _listener.invoke(evt);<a name="line.159"></a>
-<FONT color="green">160</FONT>                } catch (Throwable throwable) {<a name="line.160"></a>
-<FONT color="green">161</FONT>                    result = throwable;<a name="line.161"></a>
-<FONT color="green">162</FONT>                }<a name="line.162"></a>
-<FONT color="green">163</FONT>                if (result != null) results.add(result);<a name="line.163"></a>
-<FONT color="green">164</FONT>            }<a name="line.164"></a>
-<FONT color="green">165</FONT>    <a name="line.165"></a>
-<FONT color="green">166</FONT>            Object resultValues = null;<a name="line.166"></a>
-<FONT color="green">167</FONT>            // Make sure no-result does not cause an error<a name="line.167"></a>
-<FONT color="green">168</FONT>            if (results.size() &gt;= 1) {<a name="line.168"></a>
-<FONT color="green">169</FONT>                if (results.size() != 1) {<a name="line.169"></a>
-<FONT color="green">170</FONT>                    resultValues = results;<a name="line.170"></a>
-<FONT color="green">171</FONT>                } else {<a name="line.171"></a>
-<FONT color="green">172</FONT>                    resultValues = results.get(0);<a name="line.172"></a>
-<FONT color="green">173</FONT>                }<a name="line.173"></a>
-<FONT color="green">174</FONT>            }<a name="line.174"></a>
-<FONT color="green">175</FONT>            return new InvokeResult(results.size(), resultValues);<a name="line.175"></a>
-<FONT color="green">176</FONT>        }<a name="line.176"></a>
-<FONT color="green">177</FONT>    <a name="line.177"></a>
-<FONT color="green">178</FONT>        public class InvokeResult {<a name="line.178"></a>
-<FONT color="green">179</FONT>            private int invoked;<a name="line.179"></a>
-<FONT color="green">180</FONT>            private Object result;<a name="line.180"></a>
-<FONT color="green">181</FONT>    <a name="line.181"></a>
-<FONT color="green">182</FONT>            public int getInvoked() {<a name="line.182"></a>
-<FONT color="green">183</FONT>                return invoked;<a name="line.183"></a>
-<FONT color="green">184</FONT>            }<a name="line.184"></a>
-<FONT color="green">185</FONT>    <a name="line.185"></a>
-<FONT color="green">186</FONT>            public Object getResult() {<a name="line.186"></a>
-<FONT color="green">187</FONT>                return result;<a name="line.187"></a>
-<FONT color="green">188</FONT>            }<a name="line.188"></a>
-<FONT color="green">189</FONT>    <a name="line.189"></a>
-<FONT color="green">190</FONT>            public InvokeResult(int invoked, Object result) {<a name="line.190"></a>
-<FONT color="green">191</FONT>                this.invoked = invoked;<a name="line.191"></a>
-<FONT color="green">192</FONT>                this.result = result;<a name="line.192"></a>
-<FONT color="green">193</FONT>            }<a name="line.193"></a>
-<FONT color="green">194</FONT>        }<a name="line.194"></a>
-<FONT color="green">195</FONT>    <a name="line.195"></a>
-<FONT color="green">196</FONT>        private static class ListenerHandler implements EventHandler {<a name="line.196"></a>
-<FONT color="green">197</FONT>            private Object bean;<a name="line.197"></a>
-<FONT color="green">198</FONT>            private Method method;<a name="line.198"></a>
-<FONT color="green">199</FONT>            private ListenerId listenerId;<a name="line.199"></a>
-<FONT color="green">200</FONT>            private boolean useEventMessage = false;<a name="line.200"></a>
-<FONT color="green">201</FONT>            private boolean noArgs = false;<a name="line.201"></a>
-<FONT color="green">202</FONT>    <a name="line.202"></a>
-<FONT color="green">203</FONT>            public ListenerHandler(Object bean, Method m, ListenerId listenerId) {<a name="line.203"></a>
-<FONT color="green">204</FONT>                this.listenerId = listenerId;<a name="line.204"></a>
-<FONT color="green">205</FONT>                this.method = m;<a name="line.205"></a>
-<FONT color="green">206</FONT>    <a name="line.206"></a>
-<FONT color="green">207</FONT>                if (m.getParameterTypes().length &gt; 0) {<a name="line.207"></a>
-<FONT color="green">208</FONT>                    Class type = m.getParameterTypes()[0];<a name="line.208"></a>
-<FONT color="green">209</FONT>                    useEventMessage = EventMessage.class.isAssignableFrom(type);<a name="line.209"></a>
-<FONT color="green">210</FONT>                    if (useEventMessage &amp;&amp; log.isDebugEnabled()) {<a name="line.210"></a>
-<FONT color="green">211</FONT>                        log.debug("Listener " + bean.getClass() + "." + method.getName() + " will receive EventMessage enveloppe");<a name="line.211"></a>
-<FONT color="green">212</FONT>                    }<a name="line.212"></a>
-<FONT color="green">213</FONT>                } else {<a name="line.213"></a>
-<FONT color="green">214</FONT>                    noArgs = true;<a name="line.214"></a>
-<FONT color="green">215</FONT>                }<a name="line.215"></a>
-<FONT color="green">216</FONT>                this.bean = bean;<a name="line.216"></a>
-<FONT color="green">217</FONT>                //this.mapping = mapping;<a name="line.217"></a>
-<FONT color="green">218</FONT>            }<a name="line.218"></a>
-<FONT color="green">219</FONT>    <a name="line.219"></a>
-<FONT color="green">220</FONT>            public Object invoke(EventMessage _arg) throws Throwable {<a name="line.220"></a>
-<FONT color="green">221</FONT>                Object res = null;<a name="line.221"></a>
-<FONT color="green">222</FONT>    <a name="line.222"></a>
-<FONT color="green">223</FONT>                Object arg = this.isUseEventMessage() ? _arg : _arg.getData();<a name="line.223"></a>
-<FONT color="green">224</FONT>    <a name="line.224"></a>
-<FONT color="green">225</FONT>                if (log.isDebugEnabled()) {<a name="line.225"></a>
-<FONT color="green">226</FONT>                    StringBuilder argTypes = new StringBuilder();<a name="line.226"></a>
-<FONT color="green">227</FONT>                    for (Object e : method.getParameterTypes()) {<a name="line.227"></a>
-<FONT color="green">228</FONT>                        argTypes.append(e.toString());<a name="line.228"></a>
-<FONT color="green">229</FONT>                        argTypes.append(',');<a name="line.229"></a>
-<FONT color="green">230</FONT>                    }<a name="line.230"></a>
-<FONT color="green">231</FONT>                    log.debug("About to invoke listener method " + bean.getClass() + "." + method.getName() + " with arg type " + argTypes +<a name="line.231"></a>
-<FONT color="green">232</FONT>                            " with arg " + arg.toString());<a name="line.232"></a>
-<FONT color="green">233</FONT>                }<a name="line.233"></a>
-<FONT color="green">234</FONT>                try {<a name="line.234"></a>
-<FONT color="green">235</FONT>                    if (noArgs) {<a name="line.235"></a>
-<FONT color="green">236</FONT>                        res = method.invoke(bean);<a name="line.236"></a>
-<FONT color="green">237</FONT>                    } else {<a name="line.237"></a>
-<FONT color="green">238</FONT>                        res = method.invoke(bean, arg);<a name="line.238"></a>
-<FONT color="green">239</FONT>                    }<a name="line.239"></a>
-<FONT color="green">240</FONT>                } catch (IllegalArgumentException e) {<a name="line.240"></a>
-<FONT color="green">241</FONT>                    //ignoring<a name="line.241"></a>
-<FONT color="green">242</FONT>                    if (log.isDebugEnabled()) {<a name="line.242"></a>
-<FONT color="green">243</FONT>                        log.debug("Ignoring call to " + bean.getClass() + "." + method.getName() + " with args " + arg.toString() + " - illegal arg exception: " + e.toString());<a name="line.243"></a>
-<FONT color="green">244</FONT>                    }<a name="line.244"></a>
-<FONT color="green">245</FONT>                } catch (Throwable e) {<a name="line.245"></a>
-<FONT color="green">246</FONT>                    if (log.isDebugEnabled()) {<a name="line.246"></a>
-<FONT color="green">247</FONT>                        log.debug("Failing call to " + bean.getClass() + "." + method.getName() + " with args " + arg.toString() + " : " + e.toString());<a name="line.247"></a>
-<FONT color="green">248</FONT>                    }<a name="line.248"></a>
-<FONT color="green">249</FONT>                    throw e;<a name="line.249"></a>
-<FONT color="green">250</FONT>                }<a name="line.250"></a>
-<FONT color="green">251</FONT>    <a name="line.251"></a>
-<FONT color="green">252</FONT>                return res;<a name="line.252"></a>
-<FONT color="green">253</FONT>            }<a name="line.253"></a>
-<FONT color="green">254</FONT>    <a name="line.254"></a>
-<FONT color="green">255</FONT>            public ListenerId getListenerId() {<a name="line.255"></a>
-<FONT color="green">256</FONT>                return listenerId;<a name="line.256"></a>
-<FONT color="green">257</FONT>            }<a name="line.257"></a>
-<FONT color="green">258</FONT>    <a name="line.258"></a>
-<FONT color="green">259</FONT>            public boolean isUseEventMessage() {<a name="line.259"></a>
-<FONT color="green">260</FONT>                return useEventMessage;<a name="line.260"></a>
-<FONT color="green">261</FONT>            }<a name="line.261"></a>
-<FONT color="green">262</FONT>        }<a name="line.262"></a>
-<FONT color="green">263</FONT>    <a name="line.263"></a>
-<FONT color="green">264</FONT>    <a name="line.264"></a>
-<FONT color="green">265</FONT>    }<a name="line.265"></a>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* Copyright 2011-2012 the original author or authors:<a name="line.1"></a>
+<span class="sourceLineNo">002</span> *<a name="line.2"></a>
+<span class="sourceLineNo">003</span> *    Marc Palmer (marc@grailsrocks.com)<a name="line.3"></a>
+<span class="sourceLineNo">004</span> *    Stéphane Maldini (smaldini@vmware.com)<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * Licensed under the Apache License, Version 2.0 (the "License");<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * you may not use this file except in compliance with the License.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * You may obtain a copy of the License at<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *      http://www.apache.org/licenses/LICENSE-2.0<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * Unless required by applicable law or agreed to in writing, software<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * See the License for the specific language governing permissions and<a name="line.15"></a>
+<span class="sourceLineNo">016</span> * limitations under the License.<a name="line.16"></a>
+<span class="sourceLineNo">017</span> */<a name="line.17"></a>
+<span class="sourceLineNo">018</span>package org.grails.plugin.platform.events.registry;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>import groovy.lang.Closure;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import org.apache.log4j.Logger;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import org.grails.plugin.platform.events.EventMessage;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import org.grails.plugin.platform.events.ListenerId;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import org.springframework.aop.framework.Advised;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import org.springframework.util.ReflectionUtils;<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>import java.lang.reflect.InvocationTargetException;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import java.lang.reflect.Method;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>import java.util.ArrayList;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>import java.util.HashSet;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>import java.util.List;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>import java.util.Set;<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>/**<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * @author Stephane Maldini &lt;smaldini@vmware.com&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * @version 1.0<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * @file<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * @date 02/01/12<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * @section DESCRIPTION<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * &lt;p/&gt;<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * [Does stuff]<a name="line.41"></a>
+<span class="sourceLineNo">042</span> */<a name="line.42"></a>
+<span class="sourceLineNo">043</span>public class DefaultEventsRegistry implements EventsRegistry {<a name="line.43"></a>
+<span class="sourceLineNo">044</span><a name="line.44"></a>
+<span class="sourceLineNo">045</span>    static final private Logger log = Logger.getLogger(DefaultEventsRegistry.class);<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>    private Set&lt;ListenerHandler&gt; listeners = new HashSet&lt;ListenerHandler&gt;();<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>    /*<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        API<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     */<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>    public String on(String namespace, String topic, Closure callback) {<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        return registerHandler(callback, namespace, topic);<a name="line.54"></a>
+<span class="sourceLineNo">055</span>    }<a name="line.55"></a>
+<span class="sourceLineNo">056</span><a name="line.56"></a>
+<span class="sourceLineNo">057</span>    public String on(String namespace, String topic, Object bean, String callbackName) {<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        return registerHandler(bean, ReflectionUtils.findMethod(bean.getClass(), callbackName), namespace, topic);<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    }<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>    public String on(String namespace, String topic, Object bean, Method callback) {<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        return registerHandler(bean, callback, namespace, topic);<a name="line.62"></a>
+<span class="sourceLineNo">063</span>    }<a name="line.63"></a>
+<span class="sourceLineNo">064</span><a name="line.64"></a>
+<span class="sourceLineNo">065</span>    public int removeListeners(String callbackId) {<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        ListenerId listener = ListenerId.parse(callbackId);<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        if (listener == null)<a name="line.67"></a>
+<span class="sourceLineNo">068</span>            return 0;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        synchronized (listeners) {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>            Set&lt;ListenerHandler&gt; listeners = findAll(listener);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>            for (ListenerHandler _listener : listeners) {<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                this.listeners.remove(_listener);<a name="line.72"></a>
+<span class="sourceLineNo">073</span>            }<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        }<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>        return listeners.size();<a name="line.76"></a>
+<span class="sourceLineNo">077</span>    }<a name="line.77"></a>
+<span class="sourceLineNo">078</span><a name="line.78"></a>
+<span class="sourceLineNo">079</span>    public int countListeners(String callbackId) {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        ListenerId listener = ListenerId.parse(callbackId);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        if (listener == null)<a name="line.81"></a>
+<span class="sourceLineNo">082</span>            return 0;<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>        return findAll(listener).size();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>    }<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>    /*<a name="line.87"></a>
+<span class="sourceLineNo">088</span>       INTERNAL<a name="line.88"></a>
+<span class="sourceLineNo">089</span>    */<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>    private String registerHandler(Closure callback, String namespace, String topic) {<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        if (log.isDebugEnabled()) {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>            log.debug("Registering event handler [" + callback.getClass() + "] for topic [" + topic + "]");<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        }<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>        ListenerId listener = ListenerId.build(namespace, topic, callback);<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        ListenerHandler handler = new ListenerHandler(callback, ReflectionUtils.findMethod(<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                callback.getClass(),<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                "call",<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                Object.class<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        ), listener);<a name="line.101"></a>
+<span class="sourceLineNo">102</span><a name="line.102"></a>
+<span class="sourceLineNo">103</span>        synchronized (listeners) {<a name="line.103"></a>
+<span class="sourceLineNo">104</span>            listeners.add(handler);<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        }<a name="line.105"></a>
+<span class="sourceLineNo">106</span><a name="line.106"></a>
+<span class="sourceLineNo">107</span>        return listener.toString();<a name="line.107"></a>
+<span class="sourceLineNo">108</span>    }<a name="line.108"></a>
+<span class="sourceLineNo">109</span><a name="line.109"></a>
+<span class="sourceLineNo">110</span>    private String registerHandler(Object bean, Method callback, String namespace, String topic) {<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        if (log.isDebugEnabled()) {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>            log.debug("Registering event handler on bean [" + bean + "] method [" + callback + "] for topic [" + topic + "]");<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        }<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>        ListenerId listener = ListenerId.build(namespace, topic, bean, callback);<a name="line.115"></a>
+<span class="sourceLineNo">116</span><a name="line.116"></a>
+<span class="sourceLineNo">117</span>        ListenerHandler handler = new ListenerHandler(bean, callback, listener);<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>        synchronized (listeners) {<a name="line.119"></a>
+<span class="sourceLineNo">120</span>            listeners.add(handler);<a name="line.120"></a>
+<span class="sourceLineNo">121</span>        }<a name="line.121"></a>
+<span class="sourceLineNo">122</span><a name="line.122"></a>
+<span class="sourceLineNo">123</span>        return listener.toString();<a name="line.123"></a>
+<span class="sourceLineNo">124</span>    }<a name="line.124"></a>
+<span class="sourceLineNo">125</span><a name="line.125"></a>
+<span class="sourceLineNo">126</span>    private Set&lt;ListenerHandler&gt; findAll(ListenerId listener) {<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        if (log.isDebugEnabled()) {<a name="line.127"></a>
+<span class="sourceLineNo">128</span>            log.debug("Finding listeners matching listener id [" + listener.toString() + "]");<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        }<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        Set&lt;ListenerHandler&gt; listeners =<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                new HashSet&lt;ListenerHandler&gt;();<a name="line.131"></a>
+<span class="sourceLineNo">132</span><a name="line.132"></a>
+<span class="sourceLineNo">133</span>        for (ListenerHandler _listener : this.listeners) {<a name="line.133"></a>
+<span class="sourceLineNo">134</span>            if (listener.matches(_listener.getListenerId())) {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                listeners.add(_listener);<a name="line.135"></a>
+<span class="sourceLineNo">136</span>            }<a name="line.136"></a>
+<span class="sourceLineNo">137</span>        }<a name="line.137"></a>
+<span class="sourceLineNo">138</span><a name="line.138"></a>
+<span class="sourceLineNo">139</span>        return listeners;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>    }<a name="line.140"></a>
+<span class="sourceLineNo">141</span><a name="line.141"></a>
+<span class="sourceLineNo">142</span>    public InvokeResult invokeListeners(EventMessage evt) {<a name="line.142"></a>
+<span class="sourceLineNo">143</span>        if (log.isDebugEnabled()) {<a name="line.143"></a>
+<span class="sourceLineNo">144</span>            log.debug("Invoking listeners for event [" + evt.getEvent() + "] namespaced on [" + evt.getNamespace() + "] with data [" + evt.getData() + "]");<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        }<a name="line.145"></a>
+<span class="sourceLineNo">146</span>        ListenerId listener = new ListenerId(evt.getNamespace(), evt.getEvent());<a name="line.146"></a>
+<span class="sourceLineNo">147</span>        Set&lt;ListenerHandler&gt; listeners = findAll(listener);<a name="line.147"></a>
+<span class="sourceLineNo">148</span><a name="line.148"></a>
+<span class="sourceLineNo">149</span>        if (log.isDebugEnabled()) {<a name="line.149"></a>
+<span class="sourceLineNo">150</span>            log.debug("Found " + listeners.size() + " listeners for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");<a name="line.150"></a>
+<span class="sourceLineNo">151</span>        }<a name="line.151"></a>
+<span class="sourceLineNo">152</span>        List&lt;Object&gt; results = new ArrayList&lt;Object&gt;();<a name="line.152"></a>
+<span class="sourceLineNo">153</span>        Object result;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>        for (ListenerHandler _listener : listeners) {<a name="line.154"></a>
+<span class="sourceLineNo">155</span>            if (log.isDebugEnabled()) {<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                log.debug("Invoking listener [" + _listener.bean.getClass() + '.' + _listener.method.getName() + "(arg)] for event [" + evt.getEvent() + "] with data [" + evt.getData() + "]");<a name="line.156"></a>
+<span class="sourceLineNo">157</span>            }<a name="line.157"></a>
+<span class="sourceLineNo">158</span>            try {<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                result = _listener.invoke(evt);<a name="line.159"></a>
+<span class="sourceLineNo">160</span>            } catch (Throwable throwable) {<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                result = throwable;<a name="line.161"></a>
+<span class="sourceLineNo">162</span>            }<a name="line.162"></a>
+<span class="sourceLineNo">163</span>            if (result != null) results.add(result);<a name="line.163"></a>
+<span class="sourceLineNo">164</span>        }<a name="line.164"></a>
+<span class="sourceLineNo">165</span><a name="line.165"></a>
+<span class="sourceLineNo">166</span>        Object resultValues = null;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>        // Make sure no-result does not cause an error<a name="line.167"></a>
+<span class="sourceLineNo">168</span>        if (results.size() &gt;= 1) {<a name="line.168"></a>
+<span class="sourceLineNo">169</span>            if (results.size() != 1) {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                resultValues = results;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>            } else {<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                resultValues = results.get(0);<a name="line.172"></a>
+<span class="sourceLineNo">173</span>            }<a name="line.173"></a>
+<span class="sourceLineNo">174</span>        }<a name="line.174"></a>
+<span class="sourceLineNo">175</span>        return new InvokeResult(results.size(), resultValues);<a name="line.175"></a>
+<span class="sourceLineNo">176</span>    }<a name="line.176"></a>
+<span class="sourceLineNo">177</span><a name="line.177"></a>
+<span class="sourceLineNo">178</span>    public class InvokeResult {<a name="line.178"></a>
+<span class="sourceLineNo">179</span>        private int invoked;<a name="line.179"></a>
+<span class="sourceLineNo">180</span>        private Object result;<a name="line.180"></a>
+<span class="sourceLineNo">181</span><a name="line.181"></a>
+<span class="sourceLineNo">182</span>        public int getInvoked() {<a name="line.182"></a>
+<span class="sourceLineNo">183</span>            return invoked;<a name="line.183"></a>
+<span class="sourceLineNo">184</span>        }<a name="line.184"></a>
+<span class="sourceLineNo">185</span><a name="line.185"></a>
+<span class="sourceLineNo">186</span>        public Object getResult() {<a name="line.186"></a>
+<span class="sourceLineNo">187</span>            return result;<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        }<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>        public InvokeResult(int invoked, Object result) {<a name="line.190"></a>
+<span class="sourceLineNo">191</span>            this.invoked = invoked;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>            this.result = result;<a name="line.192"></a>
+<span class="sourceLineNo">193</span>        }<a name="line.193"></a>
+<span class="sourceLineNo">194</span>    }<a name="line.194"></a>
+<span class="sourceLineNo">195</span><a name="line.195"></a>
+<span class="sourceLineNo">196</span>    private static class ListenerHandler implements EventHandler {<a name="line.196"></a>
+<span class="sourceLineNo">197</span>        private Object bean;<a name="line.197"></a>
+<span class="sourceLineNo">198</span>        private Method method;<a name="line.198"></a>
+<span class="sourceLineNo">199</span>        private ListenerId listenerId;<a name="line.199"></a>
+<span class="sourceLineNo">200</span>        private boolean useEventMessage = false;<a name="line.200"></a>
+<span class="sourceLineNo">201</span>        private boolean noArgs = false;<a name="line.201"></a>
+<span class="sourceLineNo">202</span><a name="line.202"></a>
+<span class="sourceLineNo">203</span>        public ListenerHandler(Object bean, Method m, ListenerId listenerId) {<a name="line.203"></a>
+<span class="sourceLineNo">204</span>            this.listenerId = listenerId;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>            this.method = m;<a name="line.205"></a>
+<span class="sourceLineNo">206</span><a name="line.206"></a>
+<span class="sourceLineNo">207</span>            if (m.getParameterTypes().length &gt; 0) {<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                Class type = m.getParameterTypes()[0];<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                useEventMessage = EventMessage.class.isAssignableFrom(type);<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                if (useEventMessage &amp;&amp; log.isDebugEnabled()) {<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                    log.debug("Listener " + bean.getClass() + "." + method.getName() + " will receive EventMessage enveloppe");<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                }<a name="line.212"></a>
+<span class="sourceLineNo">213</span>            } else {<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                noArgs = true;<a name="line.214"></a>
+<span class="sourceLineNo">215</span>            }<a name="line.215"></a>
+<span class="sourceLineNo">216</span>            this.bean = bean;<a name="line.216"></a>
+<span class="sourceLineNo">217</span>            //this.mapping = mapping;<a name="line.217"></a>
+<span class="sourceLineNo">218</span>        }<a name="line.218"></a>
+<span class="sourceLineNo">219</span><a name="line.219"></a>
+<span class="sourceLineNo">220</span>        public Object invoke(EventMessage _arg) throws Throwable {<a name="line.220"></a>
+<span class="sourceLineNo">221</span>            Object res = null;<a name="line.221"></a>
+<span class="sourceLineNo">222</span><a name="line.222"></a>
+<span class="sourceLineNo">223</span>            Object arg = this.isUseEventMessage() ? _arg : _arg.getData();<a name="line.223"></a>
+<span class="sourceLineNo">224</span><a name="line.224"></a>
+<span class="sourceLineNo">225</span>            if (log.isDebugEnabled()) {<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                StringBuilder argTypes = new StringBuilder();<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                for (Object e : method.getParameterTypes()) {<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                    argTypes.append(e.toString());<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                    argTypes.append(',');<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                }<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                log.debug("About to invoke listener method " + bean.getClass() + "." + method.getName() + " with arg type " + argTypes +<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                        " with arg " + arg.toString());<a name="line.232"></a>
+<span class="sourceLineNo">233</span>            }<a name="line.233"></a>
+<span class="sourceLineNo">234</span>            try {<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                if (noArgs) {<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                    res = method.invoke(bean);<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                } else {<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                    res = method.invoke(bean, arg);<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                }<a name="line.239"></a>
+<span class="sourceLineNo">240</span>            } catch (IllegalArgumentException e) {<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                //ignoring<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                if (log.isDebugEnabled()) {<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                    log.debug("Ignoring call to " + bean.getClass() + "." + method.getName() + " with args " + arg.toString() + " - illegal arg exception: " + e.toString());<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                }<a name="line.244"></a>
+<span class="sourceLineNo">245</span>            } catch (Throwable e) {<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                if (log.isDebugEnabled()) {<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                    log.debug("Failing call to " + bean.getClass() + "." + method.getName() + " with args " + arg.toString() + " : " + e.toString());<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                }<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                throw e;<a name="line.249"></a>
+<span class="sourceLineNo">250</span>            }<a name="line.250"></a>
+<span class="sourceLineNo">251</span><a name="line.251"></a>
+<span class="sourceLineNo">252</span>            return res;<a name="line.252"></a>
+<span class="sourceLineNo">253</span>        }<a name="line.253"></a>
+<span class="sourceLineNo">254</span><a name="line.254"></a>
+<span class="sourceLineNo">255</span>        public ListenerId getListenerId() {<a name="line.255"></a>
+<span class="sourceLineNo">256</span>            return listenerId;<a name="line.256"></a>
+<span class="sourceLineNo">257</span>        }<a name="line.257"></a>
+<span class="sourceLineNo">258</span><a name="line.258"></a>
+<span class="sourceLineNo">259</span>        public boolean isUseEventMessage() {<a name="line.259"></a>
+<span class="sourceLineNo">260</span>            return useEventMessage;<a name="line.260"></a>
+<span class="sourceLineNo">261</span>        }<a name="line.261"></a>
+<span class="sourceLineNo">262</span>    }<a name="line.262"></a>
+<span class="sourceLineNo">263</span><a name="line.263"></a>
+<span class="sourceLineNo">264</span><a name="line.264"></a>
+<span class="sourceLineNo">265</span>}<a name="line.265"></a>
 
 
 
@@ -326,6 +331,7 @@
 
 
 
-</PRE>
-</BODY>
-</HTML>
+</pre>
+</div>
+</body>
+</html>
