@@ -1,0 +1,30 @@
+h1. userExists(identity)
+
+_Available in Controllers, Domains, Taglibs and Services_
+
+This method returns *true* if the specified user identity is recognized as a valid user by the current security provider.
+
+The implementation of this method is provided by the security provider you
+have installed.
+
+If a provide does not implement ACLs this will return true.
+
+h2. Usage
+
+{docx}
+class MessagesService {
+    void findUserMessages(String user) {
+        if (userExists(user)) {
+            …
+        }
+    }
+    …
+}
+{docx}
+
+h2. Arguments
+
+{table}
+*Name* | *Description*
+identity | The user id of the user. What this is depends on the provider you are using
+{table}
