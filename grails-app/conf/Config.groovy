@@ -8,7 +8,7 @@ log4j = {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
     debug 'org.grails.plugin.platform.navigation', 'grails.app'
-    debug 'org.grails.plugin.platform.events'
+    //debug 'org.grails.plugin.platform.events'
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP

@@ -64,10 +64,16 @@ class SampleController {
 
         response.outputStream << "sync event with replies values : " + event('sampleHello', '{"message":"world"}', [namespace:'lal']).waitFor() + " \n\n"
 
-        //event ('platformCore://sampleHello')
+        event ('platformCore://sampleHello')
         println 'test'
 
-        def async1 = event for:'platformCore', topic:'sampleHello',  data:'{"message":"world A"}'
+        def async1
+        try{
+             async1 = event for:'platformCore', topic:'sampleHello',  data:'{"message":"world A"}' , fork:false
+        }catch(e){
+            log.error e
+            log.error e,e
+        }
         def async2 = event for:'lal', topic:'sampleHello', data:'{"message":"world B"}'
 
 //        def _stream = stream 'someNamespace://samplehello' | reply { println it } | error { println it } << 'test'
