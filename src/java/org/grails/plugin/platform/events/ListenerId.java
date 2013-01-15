@@ -63,7 +63,7 @@ public class ListenerId implements Serializable {
         this.methodName = methodName;
         this.hashCode = hashCode;
         this.namespace = namespace;
-        if (topic != null && !topic.isEmpty()) {
+        if (topic != null && !topic.equals("")) {
             this.topic = topic;
         }
     }

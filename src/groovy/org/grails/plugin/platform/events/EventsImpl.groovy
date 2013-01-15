@@ -254,22 +254,22 @@ class EventsImpl implements Events {
     }
 
     void registerEvents(Closure dsl) {
-        List<DSLCommand> commands = new DSLEvaluator().evaluate(dsl)
+        List<DSLCommand> commands = new DSLEvaluator().evaluate(dsl,grailsApplication)
         String definingPlugin = PluginUtils.getNameOfDefiningPlugin(grailsApplication.mainContext, dsl)
         parseDSL(commands, definingPlugin)
     }
 
     void loadDSL(Class dslClass) {
         Script dslInstance = dslClass.newInstance() as Script
-        dslInstance.binding.setVariable("grailsApplication", grailsApplication)
-        dslInstance.binding.setVariable("ctx", grailsApplication.mainContext)
-        dslInstance.binding.setVariable("config", grailsApplication.config)
+        dslInstance.binding["grailsApplication"] = grailsApplication
+        dslInstance.binding["ctx"] = grailsApplication.mainContext
+        dslInstance.binding["config"] = grailsApplication.config
         dslInstance.run()
-        def dsl = dslInstance.binding.hasProperty('events') ? dslInstance.binding.getVariable('events') as Closure : null
+        def dsl = dslInstance.binding['events'] ? dslInstance.binding['events'] as Closure : null
         if (dsl) {
             registerEvents(dsl)
         } else {
-            log.warn "Tried to load events data from artefact [${artefact.clazz}] but no 'events' value was found in the script"
+            log.warn "Tried to load events data from artefact [${dslClass}] but no 'events' value was found in the script"
         }
     }
 

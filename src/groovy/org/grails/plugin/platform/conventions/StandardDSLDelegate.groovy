@@ -17,6 +17,7 @@
  */
 package org.grails.plugin.platform.conventions
 
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.slf4j.LoggerFactory
 
 /**
@@ -24,15 +25,17 @@ import org.slf4j.LoggerFactory
  * method calls and property access, with child nodes for methods taking a closure
  */
 class StandardDSLDelegate {
-    
+
     final __log = LoggerFactory.getLogger(StandardDSLDelegate)
-    
+
     private List<DSLCommand> __results
-    
-    StandardDSLDelegate(List<DSLCommand> results) {
+    private GrailsApplication grailsApplication
+
+    StandardDSLDelegate(List<DSLCommand> results, GrailsApplication grailsApplication) {
         this.__results = results
+        this.grailsApplication = grailsApplication
     }
-    
+
     private __newBlock(String name, args, Closure body) {
         DSLCommand cmd
         if (this.@__log.debugEnabled) {
@@ -44,46 +47,61 @@ class StandardDSLDelegate {
             cmd = new DSLBlockCommand(name: name, arguments: args ?: [])
         }
         List<DSLCommand> results = []
-        def nestedDelegate = new StandardDSLDelegate(results)
+        def nestedDelegate = new StandardDSLDelegate(results, grailsApplication)
         body.resolveStrategy = Closure.DELEGATE_FIRST
         body.delegate = nestedDelegate
         body()
         cmd.children = results
-        return cmd        
+        return cmd
     }
-    
+
     def methodMissing(String name, args) {
         DSLCommand command
-        
+
         if (args) {
             if (args.size() == 1) {
                 if (args[0] instanceof Map) {
-                    command = new DSLNamedArgsCallCommand(name: name, arguments:args[0])
-                } else if (args[0] instanceof Closure){
+                    command = new DSLNamedArgsCallCommand(name: name, arguments: args[0])
+                } else if (args[0] instanceof Closure) {
                     command = __newBlock(name, null, args[0])
                 } else {
-                    command = new DSLSetValueCommand(name: name, value:args[0])
+                    command = new DSLSetValueCommand(name: name, value: args[0])
                 }
             } else {
                 if (args[-1] instanceof Closure) {
-                    command = __newBlock(name, args[0..args.size()-2], args[-1])
+                    command = __newBlock(name, args[0..args.size() - 2], args[-1])
                 } else {
-                    command = new DSLCallCommand(name: name, arguments:args)
+                    command = new DSLCallCommand(name: name, arguments: args)
                 }
             }
         } else {
-            command = new DSLCallCommand(name: name, arguments:[])
+            command = new DSLCallCommand(name: name, arguments: [])
         }
-        
+
         if (command) {
             this.@__results << command
         } else {
             throw new IllegalArgumentException('Standard DSL Builder does not understand a call to [$name] with [${args}]')
         }
     }
-    
+
     def propertyMissing(String name, value) {
-        this.@__results << new DSLSetValueCommand(name: name, value:value)
+        this.@__results << new DSLSetValueCommand(name: name, value: value)
         value
+    }
+
+    def propertyMissing(String name) {
+        if (grailsApplication) {
+            switch (name) {
+                case 'grailsApplication': return grailsApplication
+                    break
+                case 'ctx': return grailsApplication.mainContext
+                    break
+                case 'config': return grailsApplication.config
+                    break
+            }
+        }
+
+        this.@__results << new DSLGetValueCommand(name: name)
     }
 }   

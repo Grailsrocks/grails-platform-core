@@ -17,17 +17,8 @@
  */
 package org.grails.plugin.platform.conventions
 
-import org.slf4j.LoggerFactory
-
 /**
- * Evaluates a DSL and returns the command structure of it
+ * Encapsulate a DSL command that sets a property value
  */
-class DSLEvaluator {
-    
-    final log = LoggerFactory.getLogger(DSLEvaluator)
-
-    List<DSLCommand> evaluate(Closure c, grailsApplication = null) {
-        def builder = new StandardDSLBuilder(grailsApplication: grailsApplication)
-        builder.build(c)
-    }
+class DSLGetValueCommand extends DSLCommand {
 }

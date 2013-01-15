@@ -18,6 +18,8 @@
 //import org.grails.plugin.platform.test.Book
 
 events = {
-    //sampleHello namespace:'lal', onReply: { println 'joy' }
-    beforeInsert
+
+    sampleHello namespace:'platformCore', filter:{
+        true
+    }
 }

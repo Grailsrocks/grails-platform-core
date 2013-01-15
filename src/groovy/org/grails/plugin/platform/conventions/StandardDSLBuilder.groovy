@@ -33,10 +33,11 @@ import org.slf4j.LoggerFactory
 class StandardDSLBuilder {
     
     final log = LoggerFactory.getLogger(StandardDSLBuilder)
+    def grailsApplication
 
     List<DSLCommand> build(Closure c, args = null) {
         List<DSLCommand> results = []
-        def delegateBuilder = new StandardDSLDelegate(results)
+        def delegateBuilder = new StandardDSLDelegate(results, grailsApplication)
         c.delegate = delegateBuilder
         c.resolveStrategy = Closure.DELEGATE_FIRST
         if (args) {
