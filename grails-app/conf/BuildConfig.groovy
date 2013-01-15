@@ -30,6 +30,8 @@ grails.project.dependency.resolution = {
         build('org.grails:grails-gdoc-engine:1.0.1') {
             export = false
         }
+
+        test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
     }
 
     plugins {
@@ -46,8 +48,8 @@ grails.project.dependency.resolution = {
             export = false
         }
 
-        // compile(':spock:0.7-groovy-2.0') {
-        //     export = false
-        // }
+        test(":spock:0.7") {
+          exclude "spock-grails-support"
+        }
     }
 }
