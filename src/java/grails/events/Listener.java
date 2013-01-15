@@ -36,5 +36,5 @@ public @interface Listener {
 
     String topic() default "";
     String namespace() default "";
-    boolean proxySupport() default false;
+    boolean proxySupport() default true;
 }

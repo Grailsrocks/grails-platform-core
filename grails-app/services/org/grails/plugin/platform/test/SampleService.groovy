@@ -51,6 +51,8 @@ class SampleService {
 
     @Listener(topic = 'sampleHello', namespace = 'platformCore')
     def testEvent() {
+        println this
+        println "Hello (bas) !!!!!"
         println "Hello (bas) !!!!!"
         'worked 1'
     }

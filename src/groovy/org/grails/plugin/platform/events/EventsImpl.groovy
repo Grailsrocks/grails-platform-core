@@ -219,7 +219,7 @@ class EventsImpl implements Events {
 
             // If there is no match with a known event, or there is a declared event and it is not disabled,
             // add the listener
-            log.info "Register event listener $serviceClass.name#$method.name for topic $topic and namespace $namespace"
+            log.info "Register event listener $serviceClass.name#$method.name for topic $topic and namespace $namespace and proxy support $proxySupport"
             if (!definition) {
                 log.warn "Event listener $serviceClass.name#$method.name declared for topic $topic and namespace $namespace but no such event is declared, you may never receive it"
             }
