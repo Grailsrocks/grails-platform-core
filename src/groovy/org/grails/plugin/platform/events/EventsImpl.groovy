@@ -164,7 +164,7 @@ class EventsImpl implements Events {
 
     EventMessage buildEvent(String pluginName, String namespace, String topic, data, Map params) {
         boolean gormSession = params?.containsKey(EventsPublisher.GORM) ? params.remove(EventsPublisher.GORM) as boolean : true
-        namespace = params?.remove(EventsPublisher.NAMESPACE) ?: namespace ?: ListenerId.parse(topic)
+        namespace = params?.remove(EventsPublisher.NAMESPACE) ?: namespace ?: ListenerId.parse(topic).namespace
         checkNamespace pluginName, namespace
 
         namespace = namespace ?: APP_NAMESPACE
