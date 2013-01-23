@@ -75,7 +75,7 @@ class EventsImpl implements Events {
                 self.event(null, topic, data, pluginParam, callback)
             }
 
-            event { String topic, data = null, Map params = null, Closure callback = null ->
+            event { String topic, data = null, Map params = [:], Closure callback = null ->
                 if (pluginName) {
                     params = params ? pluginParam + params : pluginParam
                 }
