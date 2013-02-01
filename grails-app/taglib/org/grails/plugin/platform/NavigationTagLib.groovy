@@ -65,7 +65,7 @@ class NavigationTagLib {
         
         // There's only a secondary if something is active
         if (pathNodes?.size()) {
-            def currentScope = grailsNavigation.scopeByName(grailsNavigation.getDefaultScope(request))
+            def currentScope = grailsNavigation.scopeByName( attrs.scope ?: grailsNavigation.getDefaultScope(request))
             def target = pathNodes[-1]
             if (log.debugEnabled) {
                 log.debug "Rendering secondary nav, active node is in currentScope ${currentScope?.name}?: ${target.inScope(currentScope)}"
