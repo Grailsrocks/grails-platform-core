@@ -23,6 +23,7 @@ import org.codehaus.groovy.grails.support.PersistenceContextInterceptor;
 import org.grails.plugin.platform.events.EventMessage;
 import org.grails.plugin.platform.events.EventReply;
 import org.grails.plugin.platform.events.registry.DefaultEventsRegistry;
+import org.slf4j.MDC;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -141,6 +142,10 @@ public class DefaultEventsPublisher implements EventsPublisher, ApplicationConte
         }
 
         public DefaultEventsRegistry.InvokeResult call() {
+
+            // Populate the MDC inherited from the calling environment
+            MDC.setContextMap(event.getMdc());
+
             boolean gormSession = persistenceInterceptor != null && event.isGormSession();
             if (gormSession) {
                 persistenceInterceptor.init();
