@@ -18,6 +18,7 @@
 package org.grails.plugin.platform.events;
 
 import org.grails.plugin.platform.events.dispatcher.GormTopicSupport;
+import org.slf4j.MDC;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class EventMessage<D> implements Serializable {
     final private D data;
     final private Boolean gormSession;
     final private Map<String, String> headers;
+    final private Map mdc;
 
     public EventMessage(String event, D data) {
         this(event, data, null);
@@ -56,6 +58,7 @@ public class EventMessage<D> implements Serializable {
         this.namespace = namespace;
         this.gormSession = gormSession;
         this.headers = headers;
+        this.mdc = MDC.getCopyOfContextMap();
     }
 
     public D getData() {
@@ -79,5 +82,9 @@ public class EventMessage<D> implements Serializable {
 
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public Map getMdc() {
+        return mdc;
     }
 }
