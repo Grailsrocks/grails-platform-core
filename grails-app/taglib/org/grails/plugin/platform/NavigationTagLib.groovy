@@ -141,7 +141,7 @@ class NavigationTagLib {
                 log.debug "Rendering menu for scope [${scope}] which has children ${scopeNode.children.name}"
             }
             for (n in scopeNode.children) {
-                if (n.isVisible(callbackContext)) {
+                if (n.isVisible(callbackContext + [navItem: n])) {
                     def active = activeNodes.contains(n)
                     def enabled = n.isEnabled(callbackContext)
                     
