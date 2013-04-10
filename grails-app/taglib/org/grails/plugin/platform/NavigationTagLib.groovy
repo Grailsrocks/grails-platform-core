@@ -312,8 +312,18 @@ class NavigationTagLib {
      * @attr codec Optional codec to apply. If none specified defaults to HTML
      */
     def title = { attrs ->
+        def callbackContext = [
+                grailsApplication:grailsApplication,
+                pageScope:pageScope,
+                session:session,
+                request:request,
+                controllerName:controllerName,
+                actionName:actionName,
+                flash:flash,
+                params:params
+        ]
         def item = attrs.item
         def codec = attrs.codec == null ? 'HTML' : attrs.codec
-        out << g.message(code:item.titleMessageCode, default:item.titleDefault, encodeAs:codec ?: null)
+        out << g.message(code:item.titleMessageCode, default:item.getTitleDefault(callbackContext), encodeAs:codec ?: null)
     }
 }
