@@ -28,6 +28,7 @@ class NavigationItem extends NavigationScope {
     private Integer order
     
     private String titleDefault
+    private Closure titleDefaultClosure
     
     private Map linkArgs
     private List actionAliases
@@ -48,7 +49,8 @@ class NavigationItem extends NavigationScope {
         this.linkArgs = args.linkArgs.asImmutable()
         this.actionAliases = args.actionAliases
         this.titleMessageCode = args.titleMessageCode
-        this.titleDefault = args.titleDefault
+        this.titleDefault = args.titleDefault instanceof Closure ? '' : args.titleDefault
+        this.titleDefaultClosure = args.titleDefault instanceof Closure ?  args.titleDefault : null
         if (args.visible == null) {
             args.visible = true
         }
@@ -101,8 +103,12 @@ class NavigationItem extends NavigationScope {
         this.titleMessageCode
     }
     
-    String getTitleDefault() {
-        this.titleDefault
+    String getTitleDefault(context) {
+        if (this.titleDefaultClosure != null) {
+            return invokeCallback(this.titleDefaultClosure, context)
+        } else {
+            return this.titleDefault
+        }
     }
     
     Closure getVisibleClosure() {
