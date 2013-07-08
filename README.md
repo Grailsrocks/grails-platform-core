@@ -1,6 +1,6 @@
 # This repository is defunct
 
-The Grails Platform Core plugin is now maintained at [http://github.com/grails-plugins/grails-platform-core/]().
+The Grails Platform Core plugin is now maintained at [http://github.com/grails-plugins/grails-platform-core/](http://github.com/grails-plugins/grails-platform-core/).
 
 
 
