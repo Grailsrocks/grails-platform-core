@@ -132,11 +132,7 @@ class NavigationTagLib {
         
         def scopeNode = grailsNavigation.nodeForId(scope)
         if (scopeNode) {
-            out << "<ul${id}"
-            if (cssClass) {
-                out << " class=\"${cssClass.encodeAsHTML()}\""
-            }
-            out << ">"
+            StringBuilder content = new StringBuilder()
             if (log.debugEnabled) {
                 log.debug "Rendering menu for scope [${scope}] which has children ${scopeNode.children.name}"
             }
@@ -149,7 +145,7 @@ class NavigationTagLib {
                     if (customBody) {
                         // Always give custom body a clone of the link args as they can't use the ones from item
                         // Custom body is responsible for rendering nested items
-                        out << body([item:n, linkArgs:linkArgs, active:active, enabled:enabled])        
+                        content.append(body([item:n, linkArgs:linkArgs, active:active, enabled:enabled]))
                     } else {
                         def liClass 
                         if (active) {
@@ -158,21 +154,29 @@ class NavigationTagLib {
                         if (!enabled) {
                             liClass = ' class="disabled"'
                         }
-                        out << "<li${liClass ?: ''}>"
-                        out << g.link(linkArgs, nav.title(item:n, codec:''))
+                        content.append("<li${liClass ?: ''}>")
+                        content.append(g.link(linkArgs, nav.title(item:n, codec:'')))
 
                         if ((active || alwaysRenderChildren) && (depth > 1)) {
                             def nestedAttrs = attrs.clone()
                             nestedAttrs.depth = depth - 1
                             nestedAttrs.scope = n.id
-                            out << nav.menu(nestedAttrs, body)
+                            content.append(nav.menu(nestedAttrs, body))
                         }
 
-                        out << "</li>"
+                        content.append("</li>")
                     }
                 }
             }
-            out << "</ul>"
+            if (!content.toString().empty) {
+                out << "<ul${id}"
+                if (cssClass) {
+                    out << " class=\"${cssClass.encodeAsHTML()}\""
+                }
+                out << ">"
+                out << content.toString()
+                out << "</ul>"
+            }
         } else if (log.debugEnabled) {
             log.debug "Attempt to render menu for scope [${scope}] but there was no navigation node found for that scope."
         }
